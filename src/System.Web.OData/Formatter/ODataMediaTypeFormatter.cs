@@ -15,16 +15,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using System.Web.OData.Adapters;
 using System.Web.OData.Batch;
 using System.Web.OData.Extensions;
 using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
 using System.Web.OData.Properties;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {
@@ -338,7 +342,7 @@ namespace System.Web.OData.Formatter
                 type = type.GetGenericArguments()[0];
             }
 
-            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, Request);
+            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;
         }
 
@@ -370,10 +374,7 @@ namespace System.Web.OData.Formatter
                     oDataReaderSettings.BaseUri = GetBaseAddressInternal(Request);
                     oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-                    IODataRequestMessage oDataRequestMessage = new ODataMessageWrapper(readStream, contentHeaders, Request.GetODataContentIdMapping())
-                    {
-                        Container = Request.GetRequestContainer()
-                    };
+                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, contentHeaders, Request.GetODataContentIdMapping(), Request.GetRequestContainer());
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
 
                     Request.RegisterForDispose(oDataMessageReader);
@@ -382,10 +383,9 @@ namespace System.Web.OData.Formatter
                     {
                         Path = path,
                         Model = model,
-                        Request = Request,
+                        Request = new WebApiRequestMessage(Request),
                         ResourceType = type,
                         ResourceEdmType = expectedPayloadType,
-                        RequestContext = Request.GetRequestContext(),
                     };
 
                     result = deserializer.Read(oDataMessageReader, type, readContext);
@@ -462,19 +462,16 @@ namespace System.Web.OData.Formatter
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(Request);
+            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(new WebApiRequestHeaders(Request.Headers));
             string annotationFilter = null;
             if (!String.IsNullOrEmpty(preferHeader))
             {
-                ODataMessageWrapper messageWrapper = new ODataMessageWrapper(writeStream, content.Headers);
+                ODataMessageWrapper messageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers);
                 messageWrapper.SetHeader(RequestPreferenceHelpers.PreferHeaderName, preferHeader);
                 annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
             }
 
-            ODataMessageWrapper responseMessageWrapper = new ODataMessageWrapper(writeStream, content.Headers)
-            {
-                Container = Request.GetRequestContainer()
-            };
+            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers, Request.GetRequestContainer());
             IODataResponseMessage responseMessage = responseMessageWrapper;
             if (annotationFilter != null)
             {
@@ -504,25 +501,27 @@ namespace System.Web.OData.Formatter
                 Path = (path == null || IsOperationPath(path)) ? null : path.ODLPath,
             };
 
-            MediaTypeHeaderValue contentType = null;
+            ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
             if (contentHeaders != null && contentHeaders.ContentType != null)
             {
-                contentType = contentHeaders.ContentType;
+                MediaTypeHeaderValue contentType = contentHeaders.ContentType;
+                IEnumerable<KeyValuePair<string, string>> parameters =
+                    contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
+                metadataLevel= ODataMediaTypes.GetMetadataLevel(contentType.MediaType, parameters);
             }
 
             using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
             {
                 ODataSerializerContext writeContext = new ODataSerializerContext()
                 {
-                    Request = Request,
-                    RequestContext = Request.GetRequestContext(),
-                    Url = urlHelper,
+                    Request = new WebApiRequestMessage(Request),
+                    Url = new WebApiUrlHelper(urlHelper),
                     NavigationSource = targetNavigationSource,
                     Model = model,
                     RootElementName = GetRootElementName(path) ?? "root",
                     SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet,
                     Path = path,
-                    MetadataLevel = ODataMediaTypes.GetMetadataLevel(contentType),
+                    MetadataLevel = metadataLevel,
                     SelectExpandClause = Request.ODataProperties().SelectExpandClause
                 };
 
@@ -574,10 +573,10 @@ namespace System.Web.OData.Formatter
         private ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
             ODataDeserializerProvider deserializerProvider, out IEdmTypeReference expectedPayloadType)
         {
-            expectedPayloadType = GetExpectedPayloadType(type, path, model);
+            expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);
 
             // Get the deserializer using the CLR type first from the deserializer provider.
-            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, Request);
+            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, new WebApiRequestMessage(Request));
             if (deserializer == null && expectedPayloadType != null)
             {
                 // we are in typeless mode, get the deserializer using the edm type from the path.
@@ -617,7 +616,7 @@ namespace System.Web.OData.Formatter
                     type = value == null ? type : value.GetType();
                 }
 
-                serializer = serializerProvider.GetODataPayloadSerializer(type, Request);
+                serializer = serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
                 if (serializer == null)
                 {
                     string message = Error.Format(SRResources.TypeCannotBeSerialized, type.Name, typeof(ODataMediaTypeFormatter).Name);
@@ -653,48 +652,6 @@ namespace System.Web.OData.Formatter
                 }
             }
             return null;
-        }
-
-        internal static bool TryGetInnerTypeForDelta(ref Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
-            {
-                type = type.GetGenericArguments()[0];
-                return true;
-            }
-
-            return false;
-        }
-
-        internal static IEdmTypeReference GetExpectedPayloadType(Type type, ODataPath path, IEdmModel model)
-        {
-            IEdmTypeReference expectedPayloadType = null;
-
-            if (typeof(IEdmObject).IsAssignableFrom(type))
-            {
-                // typeless mode. figure out the expected payload type from the OData Path.
-                IEdmType edmType = path.EdmType;
-                if (edmType != null)
-                {
-                    expectedPayloadType = EdmLibHelpers.ToEdmTypeReference(edmType, isNullable: false);
-                    if (expectedPayloadType.TypeKind() == EdmTypeKind.Collection)
-                    {
-                        IEdmTypeReference elementType = expectedPayloadType.AsCollection().ElementType();
-                        if (elementType.IsEntity())
-                        {
-                            // collection of entities cannot be CREATE/UPDATEd. Instead, the request would contain a single entry.
-                            expectedPayloadType = elementType;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                TryGetInnerTypeForDelta(ref type);
-                expectedPayloadType = model.GetEdmTypeReference(type);
-            }
-
-            return expectedPayloadType;
         }
 
         /// <summary>

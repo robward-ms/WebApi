@@ -9,13 +9,18 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
 using System.Web.OData.Properties;
-using System.Web.OData.Routing;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {
@@ -137,10 +142,9 @@ namespace System.Web.OData.Formatter
                 {
                     Path = path,
                     Model = edmModel,
-                    Request = request,
+                    Request = new WebApiRequestMessage(request),
                     ResourceType = bindingContext.ModelType,
                     ResourceEdmType = edmTypeReference,
-                    RequestContext = request.GetRequestContext()
                 };
             }
         }

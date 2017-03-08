@@ -17,10 +17,12 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
         /// <param name="controllers">The controllers collection.</param>
+        /// <param name="options">The configuration options.</param>
         /// <returns>A mutable list of the default OData routing conventions.</returns>
         public static IList<IODataRoutingConvention> CreateDefaultWithAttributeRouting(
             string routeName,
-            IEnumerable<IWebApiControllerDescriptor> controllers)
+            IEnumerable<IWebApiControllerDescriptor> controllers,
+            IWebApiOptions options)
         {
             if (controllers == null)
             {
@@ -33,7 +35,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             }
 
             IList<IODataRoutingConvention> routingConventions = CreateDefault();
-            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(routeName, controllers);
+            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(routeName, controllers, options);
             routingConventions.Insert(0, routingConvention);
             return routingConventions;
         }

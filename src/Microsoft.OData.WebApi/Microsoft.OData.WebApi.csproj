@@ -11,6 +11,9 @@
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.OData.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
@@ -38,9 +41,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -48,27 +53,13 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Common\CollectionExtensions.cs">
-      <Link>Common\CollectionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ListWrapperCollection.cs">
-      <Link>Common\ListWrapperCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\PropertyHelper.cs">
-      <Link>Common\PropertyHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TaskHelpers.cs">
-      <Link>Common\TaskHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TaskHelpersExtensions.cs">
-      <Link>Common\TaskHelpersExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Error.cs">
-      <Link>Common\Error.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TypeExtensions.cs">
-      <Link>Common\TypeExtensions.cs</Link>
-    </Compile>
+    <Compile Include="Common\CollectionExtensions.cs" />
+    <Compile Include="Common\ListWrapperCollection.cs" />
+    <Compile Include="Common\PropertyHelper.cs" />
+    <Compile Include="Common\TaskHelpers.cs" />
+    <Compile Include="Common\TaskHelpersExtensions.cs" />
+    <Compile Include="Common\Error.cs" />
+    <Compile Include="Common\TypeExtensions.cs" />
     <Compile Include="Builder\Conventions\Attributes\CountAttributeEdmPropertyConvention.cs" />
     <Compile Include="Builder\Conventions\Attributes\CountAttributeEdmTypeConvention.cs" />
     <Compile Include="Builder\Conventions\Attributes\FilterAttributeEdmPropertyConvention.cs" />
@@ -126,7 +117,25 @@
     <Compile Include="Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="Formatter\ODataModelBinderConverter.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProviderProxy.cs" />
+    <Compile Include="HttpMethodHelper.cs" />
+    <Compile Include="Interfaces\IWebApiControllerDescriptor.cs" />
+    <Compile Include="Interfaces\IWebApiActionMatch.cs" />
+    <Compile Include="Interfaces\IWebApiActionDescriptor.cs" />
+    <Compile Include="Interfaces\IWebApiErrorHelper.cs" />
+    <Compile Include="Interfaces\IWebApiOptions.cs" />
+    <Compile Include="Interfaces\IWebApiUrlHelper.cs" />
+    <Compile Include="Interfaces\IWebApiAssembliesResolver.cs" />
+    <Compile Include="Interfaces\IWebApiControllerContext.cs" />
+    <Compile Include="Interfaces\IWebApiContext.cs" />
+    <Compile Include="Interfaces\IWebApiHeaderCollection.cs" />
+    <Compile Include="Interfaces\IWebApiRequestMessage.cs" />
+    <Compile Include="ODataControllerBase.cs" />
     <Compile Include="ODataQueryContextExtensions.cs" />
+    <Compile Include="Placeholder\NonValidatingParameterBindingAttribute.cs" />
+    <Compile Include="WebApiDefaultAssembliesResolver.cs" />
+    <Compile Include="WebApiEntityTagHeaderValue.cs" />
+    <Compile Include="Placeholder\ODataPathParameterBindingAttribute.cs" />
+    <Compile Include="Placeholder\ODataQueryParameterBindingAttribute.cs" />
     <Compile Include="Query\CountAttribute.cs" />
     <Compile Include="Query\SelectAttribute.cs" />
     <Compile Include="Query\ExpandConfiguration.cs" />
@@ -201,7 +210,6 @@
     <Compile Include="FunctionImportComparer.cs" />
     <Compile Include="Formatter\Deserialization\EnumDeserializationHelpers.cs" />
     <Compile Include="Formatter\Deserialization\ODataEnumDeserializer.cs" />
-    <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\Serialization\ODataEnumSerializer.cs" />
     <Compile Include="Query\NonFilterableAttribute.cs" />
     <Compile Include="Builder\Conventions\Attributes\NonFilterableAttributeEdmPropertyConvention.cs" />
@@ -230,8 +238,6 @@
     <Compile Include="Formatter\Deserialization\ODataEntityReferenceLinkBase.cs" />
     <Compile Include="Formatter\Deserialization\ODataItemBase.cs" />
     <Compile Include="Formatter\Serialization\TypedEdmStructuredObject.cs" />
-    <Compile Include="Formatter\ODataBinaryValueMediaTypeMapping.cs" />
-    <Compile Include="Formatter\ODataPrimitiveValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataValueExtensions.cs" />
     <Compile Include="Formatter\Serialization\ODataEntityReferenceLinksSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataRawValueSerializer.cs" />
@@ -298,7 +304,6 @@
     <Compile Include="Builder\Conventions\AssociationSetDiscoveryConvention.cs" />
     <Compile Include="Builder\Conventions\Attributes\DataMemberAttributeEdmPropertyConvention.cs" />
     <Compile Include="Formatter\Deserialization\CollectionDeserializationHelpers.cs" />
-    <Compile Include="Formatter\ODataMediaTypeFormatters.cs" />
     <Compile Include="Formatter\ODataMediaTypes.cs" />
     <Compile Include="Query\CountQueryOption.cs" />
     <Compile Include="Query\OrderByItNode.cs" />
@@ -388,7 +393,6 @@
     <Compile Include="ResourceSetContext.cs" />
     <Compile Include="Formatter\EdmPrimitiveHelpers.cs" />
     <Compile Include="Formatter\EdmTypeReferenceEqualityComparer.cs" />
-    <Compile Include="Formatter\ODataModelBinderProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataErrorSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataMetadataSerializer.cs" />
     <Compile Include="PageResultOfT.cs" />
@@ -428,7 +432,6 @@
     <Compile Include="TimeZoneInfoHelper.cs" />
     <Compile Include="UnqualifiedCallAndEnumPrefixFreeResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Formatter\ODataMediaTypeFormatter.cs" />
     <Compile Include="Formatter\Serialization\DefaultODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataCollectionSerializer.cs" />
@@ -447,22 +450,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SRResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\CommonWebApiResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommonWebApiResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Common\CommonWebApiResources.resx">
-      <Link>Properties\CommonWebApiResources.resx</Link>
+    <EmbeddedResource Include="Properties\CommonWebApiResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>CommonWebApiResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\SRResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="..\Common\CommonWebApiResources.Designer.cs">
-      <Link>Properties\CommonWebApiResources.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CommonWebApiResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml" />
@@ -470,5 +474,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
