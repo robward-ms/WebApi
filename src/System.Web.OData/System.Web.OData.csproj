@@ -11,6 +11,9 @@
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.OData.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
@@ -58,27 +61,17 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Common\CollectionExtensions.cs">
-      <Link>Common\CollectionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\ListWrapperCollection.cs">
-      <Link>Common\ListWrapperCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\PropertyHelper.cs">
-      <Link>Common\PropertyHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TaskHelpers.cs">
-      <Link>Common\TaskHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TaskHelpersExtensions.cs">
-      <Link>Common\TaskHelpersExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Error.cs">
-      <Link>Common\Error.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\TypeExtensions.cs">
-      <Link>Common\TypeExtensions.cs</Link>
-    </Compile>
+    <Compile Include="Adapters\WebApiActionDescriptor.cs" />
+    <Compile Include="Adapters\WebApiActionMatch.cs" />
+    <Compile Include="Adapters\WebApiAssembliesResolver.cs" />
+    <Compile Include="Adapters\WebApiContext.cs" />
+    <Compile Include="Adapters\WebApiControllerContext.cs" />
+    <Compile Include="Adapters\WebApiControllerDescriptor.cs" />
+    <Compile Include="Adapters\WebApiErrorHelper.cs" />
+    <Compile Include="Adapters\WebApiOptions.cs" />
+    <Compile Include="Adapters\WebApiRequestHeaders.cs" />
+    <Compile Include="Adapters\WebApiRequestMessage.cs" />
+    <Compile Include="Adapters\WebApiUrlHelper.cs" />
     <Compile Include="Batch\ChangeSetRequestItem.cs" />
     <Compile Include="Batch\ChangeSetResponseItem.cs" />
     <Compile Include="Batch\DefaultODataBatchHandler.cs" />
@@ -102,7 +95,13 @@
     <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Formatter\Deserialization\ODataDeserializerProviderProxy.cs" />
+    <Compile Include="Formatter\ODataBinaryValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataCountMediaTypeMapping.cs" />
+    <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
+    <Compile Include="Formatter\ODataMediaTypeFormatter.cs" />
+    <Compile Include="Formatter\ODataMediaTypeFormatters.cs" />
+    <Compile Include="Formatter\ODataModelBinderProvider.cs" />
+    <Compile Include="Formatter\ODataPrimitiveValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataRawValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\QueryStringMediaTypeMapping.cs" />
     <Compile Include="FromODataUriAttribute.cs" />
@@ -111,6 +110,7 @@
     <Compile Include="NonValidatingParameterBindingAttribute.cs" />
     <Compile Include="ODataController.cs" />
     <Compile Include="ODataFormattingAttribute.cs" />
+    <Compile Include="ODataMessageWrapperHelper.cs" />
     <Compile Include="ODataNullValueMessageHandler.cs" />
     <Compile Include="ODataQueryParameterBindingAttribute.cs" />
     <Compile Include="ODataRoutingAttribute.cs" />
@@ -135,20 +135,11 @@
     <Compile Include="Routing\ODataVersionConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Common\CommonWebApiResources.resx">
-      <Link>Properties\CommonWebApiResources.resx</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\SRResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="..\Common\CommonWebApiResources.Designer.cs">
-      <Link>Properties\CommonWebApiResources.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CommonWebApiResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml" />
@@ -156,6 +147,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.WebApi\Microsoft.OData.WebApi.csproj">
+      <Project>{ba08ab97-4f92-4dcd-9bfa-0d5b1927430e}</Project>
+      <Name>Microsoft.OData.WebApi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

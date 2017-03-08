@@ -5,6 +5,8 @@ using System.Diagnostics.Contracts;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -46,7 +48,7 @@ namespace System.Web.OData.Formatter.Deserialization
         }
 
         /// <inheritdoc />
-        public override ODataDeserializer GetODataDeserializer(Type type, HttpRequestMessage request)
+        public override ODataDeserializer GetODataDeserializer(Type type, IWebApiRequestMessage request)
         {
             return RequestContainer.GetRequiredService<ODataDeserializerProvider>()
                 .GetODataDeserializer(type, request);

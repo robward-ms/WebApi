@@ -3,10 +3,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Batch
 {
@@ -47,10 +50,25 @@ namespace System.Web.OData.Batch
 
             if (contentIdToLocationMapping != null && contentId != null)
             {
-                ContentIdHelpers.AddLocationHeaderToMapping(response, contentIdToLocationMapping, contentId);
+                AddLocationHeaderToMapping(response, contentIdToLocationMapping, contentId);
             }
 
             return response;
+        }
+
+        private static void AddLocationHeaderToMapping(
+            HttpResponseMessage response,
+            IDictionary<string, string> contentIdToLocationMapping,
+            string contentId)
+        {
+            Contract.Assert(response != null);
+            Contract.Assert(contentIdToLocationMapping != null);
+            Contract.Assert(contentId != null);
+
+            if (response.Headers.Location != null)
+            {
+                contentIdToLocationMapping.Add(contentId, response.Headers.Location.AbsoluteUri);
+            }
         }
 
         /// <inheritdoc/>

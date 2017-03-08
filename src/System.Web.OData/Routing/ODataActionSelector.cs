@@ -9,10 +9,14 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using System.Web.OData.Properties;
-using System.Web.OData.Routing.Conventions;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Routing
 {
@@ -79,7 +83,11 @@ namespace System.Web.OData.Routing
             ILookup<string, HttpActionDescriptor> actionMap = _innerSelector.GetActionMapping(controllerContext.ControllerDescriptor);
             foreach (IODataRoutingConvention routingConvention in routingConventions)
             {
-                string actionName = routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+                string actionName = routingConvention.SelectAction(
+                    odataPath,
+                    new WebApiControllerContext(controllerContext),
+                    new WebApiActionMatch(actionMap));
+
                 if (actionName != null)
                 {
                     routeData.Values[ODataRouteConstants.Action] = actionName;

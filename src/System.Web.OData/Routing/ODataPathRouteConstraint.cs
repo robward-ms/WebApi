@@ -6,11 +6,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using System.Web.OData.Properties;
-using System.Web.OData.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Routing
 {
@@ -168,7 +172,7 @@ namespace System.Web.OData.Routing
         {
             foreach (IODataRoutingConvention routingConvention in request.GetRoutingConventions())
             {
-                string controllerName = routingConvention.SelectController(path, request);
+                string controllerName = routingConvention.SelectController(path, new WebApiRequestMessage(request));
                 if (controllerName != null)
                 {
                     return controllerName;

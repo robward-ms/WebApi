@@ -13,15 +13,17 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using System.Web.OData.Properties;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Extensions
 {
@@ -134,8 +136,9 @@ namespace System.Web.OData.Extensions
                 }
 
                 // get the etag handler, and parse the etag
+                WebApiEntityTagHeaderValue adaptedValue = new WebApiEntityTagHeaderValue(entityTagHeaderValue.Tag, entityTagHeaderValue.IsWeak);
                 IDictionary<string, object> properties =
-                    configuration.GetETagHandler().ParseETag(entityTagHeaderValue) ?? new Dictionary<string, object>();
+                    configuration.GetETagHandler().ParseETag(adaptedValue) ?? new Dictionary<string, object>();
                 IList<object> parsedETagValues = properties.Select(property => property.Value).AsList();
 
                 // get property names from request
