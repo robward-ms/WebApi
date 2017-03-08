@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// This class describes the settings to use during query composition.
@@ -31,7 +31,7 @@ namespace System.Web.OData.Query
         /// The maximum number of query results to return based on the type or property,
         /// or <c>null</c> if there is no limit.
         /// </value>
-        internal int? ModelBoundPageSize
+        public int? ModelBoundPageSize
         {
             get
             {

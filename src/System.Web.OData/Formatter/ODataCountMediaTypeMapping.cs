@@ -7,7 +7,9 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.OData.Extensions;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Formatter
 {

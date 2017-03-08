@@ -1,22 +1,30 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Formatter.Serialization;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Builder.Conventions
+namespace Microsoft.OData.WebApi.Builder.Conventions
 {
-    internal static class ConventionsHelpers
+    /// <summary>
+    /// Helprs for builder conventions.
+    /// </summary>
+    public static class ConventionsHelpers
     {
+        /// <summary>
+        /// Get the entity keys from a resource context.
+        /// </summary>
+        /// <param name="resourceContext">The resource context from which to extract the entity keys.</param>
+        /// <returns>The entity keys.</returns>
         public static IEnumerable<KeyValuePair<string, object>> GetEntityKey(ResourceContext resourceContext)
         {
             Contract.Assert(resourceContext != null);
@@ -48,6 +56,11 @@ namespace System.Web.OData.Builder.Conventions
             return ConvertValue(value);
         }
 
+        /// <summary>
+        /// Convert an object to a OData value.
+        /// </summary>
+        /// <param name="value">The object to convert.</param>
+        /// <returns>An OData value.</returns>
         public static object ConvertValue(object value)
         {
             Contract.Assert(value != null);
@@ -66,6 +79,11 @@ namespace System.Web.OData.Builder.Conventions
             return value;
         }
 
+        /// <summary>
+        /// Get the entity key values from a resource context.
+        /// </summary>
+        /// <param name="resourceContext">The resource context from which to extract the entity key values.</param>
+        /// <returns>The entity key values.</returns>
         public static string GetEntityKeyValue(ResourceContext resourceContext)
         {
             Contract.Assert(resourceContext != null);
@@ -92,7 +110,12 @@ namespace System.Web.OData.Builder.Conventions
             }
         }
 
-        // Get properties of this structural type that are not already declared in the base structural type and are not already ignored.
+        /// <summary>
+        /// Get properties of this structural type that are not already declared in the base structural type and are not already ignored.
+        /// </summary>
+        /// <param name="structural">The structural type.</param>
+        /// <param name="includeReadOnly">True to include read-only properties; false otherwise.</param>
+        /// <returns>The properties of this structural type.</returns>
         public static IEnumerable<PropertyInfo> GetProperties(StructuralTypeConfiguration structural, bool includeReadOnly)
         {
             IEnumerable<PropertyInfo> allProperties = GetAllProperties(structural, includeReadOnly);
@@ -107,7 +130,12 @@ namespace System.Web.OData.Builder.Conventions
             }
         }
 
-        // Get all properties of this type (that are not already ignored).
+        /// <summary>
+        /// Get all properties of this type (that are not already ignored).
+        /// </summary>
+        /// <param name="type">The type from which to get properties.</param>
+        /// <param name="includeReadOnly">True to include read-only properties; false otherwise.</param>
+        /// <returns>All properties of this type.</returns>
         public static IEnumerable<PropertyInfo> GetAllProperties(StructuralTypeConfiguration type, bool includeReadOnly)
         {
             if (type == null)
@@ -122,6 +150,11 @@ namespace System.Web.OData.Builder.Conventions
                     && (includeReadOnly || p.GetSetMethod() != null || p.PropertyType.IsCollection()));
         }
 
+        /// <summary>
+        /// Determine if a PropertyInfo represents a valid structural type.
+        /// </summary>
+        /// <param name="propertyInfo">The PropertyInfo to test.</param>
+        /// <returns>True if a PropertyInfo represents a valid structural type; false otherwise.</returns>
         public static bool IsValidStructuralProperty(this PropertyInfo propertyInfo)
         {
             if (propertyInfo == null)
@@ -147,7 +180,11 @@ namespace System.Web.OData.Builder.Conventions
             return false;
         }
 
-        // Gets the ignored properties from this type and the base types.
+        /// <summary>
+        /// Gets the ignored properties from this type and the base types.
+        /// </summary>
+        /// <param name="structuralType">The structural type.</param>
+        /// <returns>The ignored properties from this type and the base types.</returns>
         public static IEnumerable<PropertyInfo> IgnoredProperties(this StructuralTypeConfiguration structuralType)
         {
             if (structuralType == null)
@@ -166,6 +203,11 @@ namespace System.Web.OData.Builder.Conventions
             }
         }
 
+        /// <summary>
+        /// Determine if a Type represents a valid structural type.
+        /// </summary>
+        /// <param name="type">The Type to test.</param>
+        /// <returns>True if a Type represents a valid structural type; false otherwise.</returns>
         public static bool IsValidStructuralPropertyType(this Type type)
         {
             if (type == null)
@@ -181,7 +223,11 @@ namespace System.Web.OData.Builder.Conventions
                      || (type.IsCollection(out elementType) && elementType == typeof(object)));
         }
 
-        // gets the primitive odata uri representation.
+        /// <summary>
+        /// Gets the primitive odata uri representation from a value.
+        /// </summary>
+        /// <param name="value">The value from which to get the primitive odata uri representation.</param>
+        /// <returns>The primitive odata uri representation.</returns>
         public static string GetUriRepresentationForValue(object value)
         {
             Contract.Assert(value != null);

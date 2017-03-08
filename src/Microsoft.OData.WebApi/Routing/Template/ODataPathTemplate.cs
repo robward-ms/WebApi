@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Routing.Template
+namespace Microsoft.OData.WebApi.Routing.Template
 {
     /// <summary>
     /// Represents a template for an <see cref="ODataPath"/> that can be matched to an actual <see cref="ODataPath"/>.

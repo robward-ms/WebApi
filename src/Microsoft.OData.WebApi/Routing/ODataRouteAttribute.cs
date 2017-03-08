@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace System.Web.OData.Routing
+using System;
+
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
-    /// Represents an attribute that can be placed on an action of an <see cref="ODataController"/> to specify
+    /// Represents an attribute that can be placed on an action of an <see cref="ODataControllerBase"/> to specify
     /// the OData URLs that the action handles.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

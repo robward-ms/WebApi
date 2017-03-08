@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace System.Web.OData.Builder
+using System;
+
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// Represents an <see cref="Attribute"/> that can be placed on a property to specify

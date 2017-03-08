@@ -1,22 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing.Template;
+using System.Web;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing.Template;
 using ODL = Microsoft.OData.UriParser;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
     /// Parses an OData path as an <see cref="ODataPath"/> into an OData link.
@@ -98,14 +97,14 @@ namespace System.Web.OData.Routing
 
         private ODataPath Parse(string serviceRoot, string odataPath, IServiceProvider requestContainer, bool template)
         {
-            ODataUriParser uriParser;
+            ODL.ODataUriParser uriParser;
             Uri serviceRootUri = null;
             Uri fullUri = null;
             NameValueCollection queryString = null;
             IEdmModel model = requestContainer.GetRequiredService<IEdmModel>();
             if (template)
             {
-                uriParser = new ODataUriParser(model, new Uri(odataPath, UriKind.Relative), requestContainer);
+                uriParser = new ODL.ODataUriParser(model, new Uri(odataPath, UriKind.Relative), requestContainer);
                 uriParser.EnableUriTemplateParsing = true;
             }
             else
@@ -118,8 +117,8 @@ namespace System.Web.OData.Routing
                         : serviceRoot + "/");
 
                 fullUri = new Uri(serviceRootUri, odataPath);
-                queryString = fullUri.ParseQueryString();
-                uriParser = new ODataUriParser(model, serviceRootUri, fullUri, requestContainer);
+                queryString = HttpUtility.ParseQueryString(fullUri.Query);
+                uriParser = new ODL.ODataUriParser(model, serviceRootUri, fullUri, requestContainer);
             }
 
             if (UrlKeyDelimiter != null)
@@ -141,7 +140,7 @@ namespace System.Web.OData.Routing
             {
                 path = uriParser.ParsePath();
             }
-            catch (ODataUnrecognizedPathException ex)
+            catch (ODL.ODataUnrecognizedPathException ex)
             {
                 if (ex.ParsedSegments != null &&
                     ex.ParsedSegments.Any() &&
@@ -185,7 +184,7 @@ namespace System.Web.OData.Routing
                         if (entityIdSegment != null)
                         {
                             // Create another ODataUriParser to parse $id, which is absolute or relative.
-                            ODataUriParser parser = new ODataUriParser(model, serviceRootUri, entityIdSegment.Id, requestContainer);
+                            ODL.ODataUriParser parser = new ODL.ODataUriParser(model, serviceRootUri, entityIdSegment.Id, requestContainer);
                             id = parser.ParsePath().LastSegment as ODL.KeySegment;
                         }
                     }

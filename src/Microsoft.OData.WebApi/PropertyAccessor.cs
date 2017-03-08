@@ -2,10 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Reflection;
-using System.Web.Http;
-using WebApiResources = System.Web.OData.Properties.SRResources;
+using Microsoft.OData.WebApi.Common;
+using WebApiResources = Microsoft.OData.WebApi.Properties.SRResources;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Represents a strategy for Getting and Setting a PropertyInfo on <typeparamref name="TStructuralType"/>

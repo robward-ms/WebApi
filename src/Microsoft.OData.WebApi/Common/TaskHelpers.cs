@@ -1,12 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace System.Threading.Tasks
+using System;
+using System.Threading.Tasks;
+
+namespace Microsoft.OData.WebApi.Common
 {
     /// <summary>
     /// Helpers for safely using Task libraries. 
     /// </summary>
-    internal static class TaskHelpers
+    public static class TaskHelpers
     {
         private static readonly Task _defaultCompleted = Task.FromResult<AsyncVoid>(default(AsyncVoid));
 
@@ -15,7 +18,7 @@ namespace System.Threading.Tasks
         /// <summary>
         /// Returns a canceled Task. The task is completed, IsCanceled = True, IsFaulted = False.
         /// </summary>
-        internal static Task Canceled()
+        public static Task Canceled()
         {
             return CancelCache<AsyncVoid>.Canceled;
         }
@@ -23,7 +26,7 @@ namespace System.Threading.Tasks
         /// <summary>
         /// Returns a canceled Task of the given type. The task is completed, IsCanceled = True, IsFaulted = False.
         /// </summary>
-        internal static Task<TResult> Canceled<TResult>()
+        public static Task<TResult> Canceled<TResult>()
         {
             return CancelCache<TResult>.Canceled;
         }
@@ -31,7 +34,7 @@ namespace System.Threading.Tasks
         /// <summary>
         /// Returns a completed task that has no result. 
         /// </summary>        
-        internal static Task Completed()
+        public static Task Completed()
         {
             return _defaultCompleted;
         }
@@ -39,7 +42,7 @@ namespace System.Threading.Tasks
         /// <summary>
         /// Returns an error task. The task is Completed, IsCanceled = False, IsFaulted = True
         /// </summary>
-        internal static Task FromError(Exception exception)
+        public static Task FromError(Exception exception)
         {
             return FromError<AsyncVoid>(exception);
         }
@@ -48,14 +51,18 @@ namespace System.Threading.Tasks
         /// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
-        internal static Task<TResult> FromError<TResult>(Exception exception)
+        public static Task<TResult> FromError<TResult>(Exception exception)
         {
             TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
             tcs.SetException(exception);
             return tcs.Task;
         }
 
-        internal static Task<object> NullResult()
+        /// <summary>
+        /// A completed Task with a null result.
+        /// </summary>
+        /// <returns></returns>
+        public static Task<object> NullResult()
         {
             return _completedTaskReturningNull;
         }
@@ -63,15 +70,18 @@ namespace System.Threading.Tasks
         /// <summary>
         /// Used as the T in a "conversion" of a Task into a Task{T}
         /// </summary>
-        private struct AsyncVoid
+        public struct AsyncVoid
         {
         }
 
         /// <summary>
         /// This class is a convenient cache for per-type cancelled tasks
         /// </summary>
-        private static class CancelCache<TResult>
+        public static class CancelCache<TResult>
         {
+            /// <summary>
+            /// Gets a Canceled task for type TResult.
+            /// </summary>
             public static readonly Task<TResult> Canceled = GetCancelledTask();
 
             private static Task<TResult> GetCancelledTask()

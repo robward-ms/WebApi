@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using Microsoft.OData;
-
-namespace System.Web.OData.Formatter
+namespace Microsoft.OData.WebApi.Formatter
 {
     internal static class ODataValueExtensions
     {

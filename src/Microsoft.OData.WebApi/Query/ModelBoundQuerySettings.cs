@@ -2,9 +2,9 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// This class describes the model bound settings to use during query composition.
@@ -18,7 +18,10 @@ namespace System.Web.OData.Query
         private Dictionary<string, bool> _orderByConfigurations = new Dictionary<string, bool>();
         private Dictionary<string, bool> _filterConfigurations = new Dictionary<string, bool>();
 
-        internal static ModelBoundQuerySettings DefaultModelBoundQuerySettings = new ModelBoundQuerySettings
+        /// <summary>
+        /// Get the default settings.
+        /// </summary>
+        public static ModelBoundQuerySettings DefaultModelBoundQuerySettings = new ModelBoundQuerySettings
         {
             _maxTop = 0
         };

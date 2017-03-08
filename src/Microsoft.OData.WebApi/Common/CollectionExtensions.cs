@@ -1,16 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace System.Collections.Generic
+namespace Microsoft.OData.WebApi.Common
 {
     /// <summary>
     /// Helper extension methods for fast use of collections.
     /// </summary>
-    internal static class CollectionExtensions
+    public static class CollectionExtensions
     {
         /// <summary>
         /// Return a new array with the value added to the end. Slow and best suited to long lived arrays with few writes relative to reads.

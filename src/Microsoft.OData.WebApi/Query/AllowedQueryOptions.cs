@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace System.Web.OData.Query
+using System;
+
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// OData query options to allow for querying.
@@ -70,7 +72,7 @@ namespace System.Web.OData.Query
         Apply = 0x400,
 
         /// <summary>
-        /// A value that corresponds to the default query options supported by <see cref="EnableQueryAttribute"/>.
+        /// A value that corresponds to the default query options supported.
         /// </summary>
         Supported = Filter | OrderBy | Top | Skip | Count | Select | Expand | Format | Apply,
 

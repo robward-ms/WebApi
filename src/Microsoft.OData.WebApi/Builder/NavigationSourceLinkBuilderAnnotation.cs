@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// <see cref="NavigationSourceLinkBuilderAnnotation" /> is a class used to annotate an <see cref="IEdmNavigationSource" /> inside an <see cref="IEdmModel" />
@@ -156,8 +157,12 @@ namespace System.Web.OData.Builder
             return null;
         }
 
-        // Build an id link unconditionally, it doesn't depend on metadata level but does require a non-null link builder.
-        internal Uri BuildIdLink(ResourceContext instanceContext)
+        /// <summary>
+        /// Build an id link unconditionally, it doesn't depend on metadata level but does require a non-null link builder.
+        /// </summary>
+        /// <param name="instanceContext"></param>
+        /// <returns>An id link.</returns>
+        public Uri BuildIdLink(ResourceContext instanceContext)
         {
             return BuildIdLink(instanceContext, ODataMetadataLevel.FullMetadata);
         }
@@ -185,8 +190,12 @@ namespace System.Web.OData.Builder
             return null;
         }
 
-        // Build an edit link unconditionally, it doesn't depend on metadata level but does require a non-null link builder.
-        internal Uri BuildEditLink(ResourceContext instanceContext)
+        /// <summary>
+        /// Build an edit link unconditionally, it doesn't depend on metadata level but does require a non-null link builder.
+        /// </summary>
+        /// <param name="instanceContext"></param>
+        /// <returns>An edit link.</returns>
+        public Uri BuildEditLink(ResourceContext instanceContext)
         {
             return BuildEditLink(instanceContext, ODataMetadataLevel.FullMetadata, null);
         }

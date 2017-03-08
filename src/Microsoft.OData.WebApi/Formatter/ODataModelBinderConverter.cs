@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,22 +9,19 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Web.Http;
-using System.Web.OData.Batch;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.OData.WebApi.Formatter
 {
     /// <summary>
     /// Expose functionality to convert an function parameter value into a CLR object.
@@ -89,7 +87,13 @@ namespace System.Web.OData.Formatter
             return ConvertResourceOrResourceSet(graph, edmTypeReference, readContext);
         }
 
-        internal static object ConvertTo(string valueString, Type type)
+        /// <summary>
+        /// Convert a string value into an object of a particular Type.
+        /// </summary>
+        /// <param name="valueString">The value string to convert.</param>
+        /// <param name="type">The Type to which to convert.</param>
+        /// <returns>An object of a particular Type with value from the value string.</returns>
+        public static object ConvertTo(string valueString, Type type)
         {
             if (valueString == null)
             {
@@ -224,7 +228,7 @@ namespace System.Web.OData.Formatter
                 return null;
             }
 
-            HttpRequestMessage request = readContext.Request;
+            IWebApiRequestMessage request = readContext.Request;
             ODataMessageReaderSettings oDataReaderSettings = request.GetReaderSettings();
 
             using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(valueString)))
@@ -237,8 +241,6 @@ namespace System.Web.OData.Formatter
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage,
                         oDataReaderSettings, readContext.Model))
                 {
-                    request.RegisterForDispose(oDataMessageReader);
-
                     if (edmTypeReference.IsCollection())
                     {
                         return ConvertResourceSet(oDataMessageReader, edmTypeReference, readContext);
@@ -364,12 +366,12 @@ namespace System.Web.OData.Formatter
                 return source;
             }
 
-            HttpRequestMessage request = readContext.Request;
+            IWebApiRequestMessage request = readContext.Request;
 
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
             string serviceRoot = GetServiceRoot(request);
             IEnumerable<KeyValuePair<string, object>> keyValues = GetKeys(pathHandler, serviceRoot, resource.Id,
-                request.GetRequestContainer());
+                request.RequestContainer);
 
             IList<IEdmStructuralProperty> keys = entityTypeReference.Key().ToList();
 
@@ -397,10 +399,10 @@ namespace System.Web.OData.Formatter
             return source;
         }
 
-        private static string GetServiceRoot(HttpRequestMessage request)
+        private static string GetServiceRoot(IWebApiRequestMessage request)
         {
-            return request.GetUrlHelper().CreateODataLink(
-                request.ODataProperties().RouteName,
+            return request.UrlHelper.CreateODataLink(
+                request.Context.RouteName,
                 request.GetPathHandler(),
                 new List<ODataPathSegment>());
         }

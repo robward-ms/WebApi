@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// The result of a $select and $expand projection is represented as an <see cref="ISelectExpandWrapper"/>
     /// instance. That instance can be projected into an <see cref="IDictionary{TKey,TValue}"/> instance by calling
-    /// <see cref="ISelectExpandWrapper.ToDictionary(Func{IEdmModel,IEdmStructuredType,IPropertyMapper})"/>. 
+    /// ISelectExpandWrapper.ToDictionary(Func{TResult}). 
     /// That method will use the function to construct an <see cref="IPropertyMapper"/> that will map the property 
     /// names in that projection to the keys in the returned <see cref="IDictionary{TKey,TValue}"/>.
     /// The main purpose of converting an <see cref="ISelectExpandWrapper"/> instance into an 

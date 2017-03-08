@@ -6,14 +6,23 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataAction = Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
-    internal class ContainmentPathBuilder
+    /// <summary>
+    /// Class to build a path for a ContainedEntitySet.
+    /// </summary>
+    public class ContainmentPathBuilder
     {
         private List<ODataPathSegment> _segments;
 
+        /// <summary>
+        /// Compute the contain path for a given path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>A contain path for a given path</returns>
         public ODataPath TryComputeCanonicalContainingPath(ODataPath path)
         {
             Contract.Assert(path != null);
