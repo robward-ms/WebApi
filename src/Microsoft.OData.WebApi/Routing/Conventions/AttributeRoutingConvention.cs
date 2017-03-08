@@ -1,21 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing.Template;
-using Microsoft.OData;
-using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing.Template;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// Represents a routing convention that looks for <see cref="ODataRouteAttribute"/>s to match an <see cref="ODataPath"/>
@@ -27,16 +22,16 @@ namespace System.Web.OData.Routing.Conventions
 
         private readonly string _routeName;
 
-        private IDictionary<ODataPathTemplate, HttpActionDescriptor> _attributeMappings;
+        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> _attributeMappings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
-        /// <param name="configuration">The <see cref="HttpConfiguration"/> to use for figuring out all the controllers to
-        /// look for a match.</param>
-        public AttributeRoutingConvention(string routeName, HttpConfiguration configuration)
-            : this(routeName, configuration, _defaultPathHandler)
+        /// <param name="controllers">The controllers in which to look for a match.</param>
+        /// <param name="options">The configuration options.</param>
+        public AttributeRoutingConvention(string routeName, IEnumerable<IWebApiControllerDescriptor> controllers, IWebApiOptions options)
+            : this(routeName, controllers, _defaultPathHandler, options)
         {
         }
 
@@ -44,62 +39,11 @@ namespace System.Web.OData.Routing.Conventions
         /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
-        /// <param name="configuration">The <see cref="HttpConfiguration"/> to use for figuring out all the controllers to
-        /// look for a match.</param>
+        /// <param name="controllers">The controllers in which to look for a match.</param>
         /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
-        public AttributeRoutingConvention(string routeName, HttpConfiguration configuration,
-            IODataPathTemplateHandler pathTemplateHandler)
-            : this(routeName, pathTemplateHandler)
-        {
-            if (configuration == null)
-            {
-                throw Error.ArgumentNull("configuration");
-            }
-
-            IODataPathHandler pathHandler = pathTemplateHandler as IODataPathHandler;
-            // if settings is not on local, use the global configuration settings.
-            if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
-            {
-                ODataUrlKeyDelimiter urlKeyDelimiter = configuration.GetUrlKeyDelimiter();
-                pathHandler.UrlKeyDelimiter = urlKeyDelimiter;
-            }
-
-            Action<HttpConfiguration> oldInitializer = configuration.Initializer;
-            bool initialized = false;
-            configuration.Initializer = (config) =>
-            {
-                if (!initialized)
-                {
-                    initialized = true;
-                    oldInitializer(config);
-                    IHttpControllerSelector controllerSelector = config.Services.GetHttpControllerSelector();
-                    _attributeMappings = BuildAttributeMappings(controllerSelector.GetControllerMapping().Values);
-                }
-            };
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
-        /// </summary>
-        /// <param name="routeName">The name of the route.</param>
-        /// <param name="controllers">The collection of controllers to search for a match.</param>
-        public AttributeRoutingConvention(string routeName,
-            IEnumerable<HttpControllerDescriptor> controllers)
-            : this(routeName, controllers, _defaultPathHandler)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
-        /// </summary>
-        /// <param name="routeName">The name of the route.</param>
-        /// <param name="controllers">The collection of controllers to search for a match.</param>
-        /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "See note on <see cref=\"ShouldMapController()\"> method.")]
-        public AttributeRoutingConvention(string routeName,
-            IEnumerable<HttpControllerDescriptor> controllers,
-            IODataPathTemplateHandler pathTemplateHandler)
+        /// <param name="options">The configuration options.</param>
+        public AttributeRoutingConvention(string routeName, IEnumerable<IWebApiControllerDescriptor> controllers,
+            IODataPathTemplateHandler pathTemplateHandler, IWebApiOptions options)
             : this(routeName, pathTemplateHandler)
         {
             if (controllers == null)
@@ -107,7 +51,26 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllers");
             }
 
+            // if settings is not on local, use the global configuration settings.
+            IODataPathHandler pathHandler = pathTemplateHandler as IODataPathHandler;
+            if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
+            {
+                ODataUrlKeyDelimiter urlKeyDelimiter = options.UrlKeyDelimiter;
+                pathHandler.UrlKeyDelimiter = urlKeyDelimiter;
+            }
+
+            ////Action<HttpConfiguration> oldInitializer = configuration.Initializer;
+            ////bool initialized = false;
+            ////configuration.Initializer = (config) =>
+            ////{
+            ////    if (!initialized)
+            ////    {
+            ////        initialized = true;
+            ////        oldInitializer(config);
+            ////        IHttpControllerSelector controllerSelector = config.Services.GetHttpControllerSelector();
             _attributeMappings = BuildAttributeMappings(controllers);
+                ////}
+            ////};
         }
 
         private AttributeRoutingConvention(string routeName, IODataPathTemplateHandler pathTemplateHandler)
@@ -131,7 +94,7 @@ namespace System.Web.OData.Routing.Conventions
         /// </summary>
         public IODataPathTemplateHandler ODataPathTemplateHandler { get; private set; }
 
-        internal IDictionary<ODataPathTemplate, HttpActionDescriptor> AttributeMappings
+        internal IDictionary<ODataPathTemplate, IWebApiActionDescriptor> AttributeMappings
         {
             get
             {
@@ -154,20 +117,20 @@ namespace System.Web.OData.Routing.Conventions
         /// </summary>
         /// <param name="controller">The controller.</param>
         /// <returns><c>true</c> if this controller should be included in the map; <c>false</c> otherwise.</returns>
-        public virtual bool ShouldMapController(HttpControllerDescriptor controller)
+        public virtual bool ShouldMapController(IWebApiControllerDescriptor controller)
         {
             return true;
         }
 
         /// <inheritdoc />
-        public string SelectController(ODataPath odataPath, HttpRequestMessage request)
+        public string SelectController(ODataPath odataPath, IWebApiRequestMessage request)
         {
             Dictionary<string, object> values = new Dictionary<string, object>();
 
-            foreach (KeyValuePair<ODataPathTemplate, HttpActionDescriptor> attributeMapping in AttributeMappings)
+            foreach (KeyValuePair<ODataPathTemplate, IWebApiActionDescriptor> attributeMapping in AttributeMappings)
             {
                 ODataPathTemplate template = attributeMapping.Key;
-                HttpActionDescriptor action = attributeMapping.Value;
+                IWebApiActionDescriptor action = attributeMapping.Value;
 
                 if (action.SupportedHttpMethods.Contains(request.Method) && template.TryMatch(odataPath, values))
                 {
@@ -182,11 +145,11 @@ namespace System.Web.OData.Routing.Conventions
         }
 
         /// <inheritdoc />
-        public string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-            ILookup<string, HttpActionDescriptor> actionMap)
+        public string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+            IWebApiActionMatch actionMatch)
         {
             var routeData = controllerContext.Request.GetRouteData();
-            var routingConventionsStore = controllerContext.Request.ODataProperties().RoutingConventionsStore;
+            var routingConventionsStore = controllerContext.Request.Context.RoutingConventionsStore;
 
             object value;
             if (controllerContext.Request.Properties.TryGetValue("AttributeRouteData", out value))
@@ -203,7 +166,7 @@ namespace System.Web.OData.Routing.Conventions
                         }
                         else
                         {
-                            routeData.Values.Add(item);
+                            routeData.Add(item);
                         }
                     }
 
@@ -214,22 +177,20 @@ namespace System.Web.OData.Routing.Conventions
             return null;
         }
 
-        private IDictionary<ODataPathTemplate, HttpActionDescriptor> BuildAttributeMappings(IEnumerable<HttpControllerDescriptor> controllers)
+        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> BuildAttributeMappings(IEnumerable<IWebApiControllerDescriptor> controllers)
         {
-            Dictionary<ODataPathTemplate, HttpActionDescriptor> attributeMappings =
-                new Dictionary<ODataPathTemplate, HttpActionDescriptor>();
+            Dictionary<ODataPathTemplate, IWebApiActionDescriptor> attributeMappings =
+                new Dictionary<ODataPathTemplate, IWebApiActionDescriptor>();
 
-            foreach (HttpControllerDescriptor controller in controllers)
+            foreach (IWebApiControllerDescriptor controller in controllers)
             {
                 if (IsODataController(controller) && ShouldMapController(controller))
                 {
-                    IHttpActionSelector actionSelector = controller.Configuration.Services.GetActionSelector();
-                    ILookup<string, HttpActionDescriptor> actionMapping = actionSelector.GetActionMapping(controller);
-                    HttpActionDescriptor[] actions = actionMapping.SelectMany(a => a).ToArray();
+                    IWebApiActionDescriptor[] actions = controller.GetActions();
 
                     foreach (string prefix in GetODataRoutePrefixes(controller))
                     {
-                        foreach (HttpActionDescriptor action in actions)
+                        foreach (IWebApiActionDescriptor action in actions)
                         {
                             IEnumerable<ODataPathTemplate> pathTemplates = GetODataPathTemplates(prefix, action);
                             foreach (ODataPathTemplate pathTemplate in pathTemplates)
@@ -244,12 +205,12 @@ namespace System.Web.OData.Routing.Conventions
             return attributeMappings;
         }
 
-        private static bool IsODataController(HttpControllerDescriptor controller)
+        private static bool IsODataController(IWebApiControllerDescriptor controller)
         {
-            return typeof(ODataController).IsAssignableFrom(controller.ControllerType);
+            return typeof(ODataControllerBase).IsAssignableFrom(controller.ControllerType);
         }
 
-        private static IEnumerable<string> GetODataRoutePrefixes(HttpControllerDescriptor controllerDescriptor)
+        private static IEnumerable<string> GetODataRoutePrefixes(IWebApiControllerDescriptor controllerDescriptor)
         {
             Contract.Assert(controllerDescriptor != null);
 
@@ -279,7 +240,7 @@ namespace System.Web.OData.Routing.Conventions
             }
         }
 
-        private IEnumerable<ODataPathTemplate> GetODataPathTemplates(string prefix, HttpActionDescriptor action)
+        private IEnumerable<ODataPathTemplate> GetODataPathTemplates(string prefix, IWebApiActionDescriptor action)
         {
             Contract.Assert(action != null);
 
@@ -290,7 +251,7 @@ namespace System.Web.OData.Routing.Conventions
                 .Where(template => template != null);
         }
 
-        private ODataPathTemplate GetODataPathTemplate(string prefix, string pathTemplate, HttpActionDescriptor action)
+        private ODataPathTemplate GetODataPathTemplate(string prefix, string pathTemplate, IWebApiActionDescriptor action)
         {
             if (prefix != null && !pathTemplate.StartsWith("/", StringComparison.Ordinal))
             {
@@ -321,7 +282,7 @@ namespace System.Web.OData.Routing.Conventions
                 // We are NOT in a request but establishing the attribute routing convention.
                 // So use the root container rather than the request container.
                 odataPathTemplate = ODataPathTemplateHandler.ParseTemplate(pathTemplate,
-                    action.Configuration.GetODataRootContainer(_routeName));
+                    action.GetODataRootContainer(_routeName));
             }
             catch (ODataException e)
             {

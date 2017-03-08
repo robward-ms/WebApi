@@ -1,25 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using ExtensionMethods = Microsoft.OData.Edm.ExtensionMethods;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     internal static class RoutingConventionHelpers
     {
-        public static string SelectAction(this IEdmOperation operation, ILookup<string, HttpActionDescriptor> actionMap, bool isCollection)
+        public static string SelectAction(this IEdmOperation operation, IWebApiActionMatch actionMatch, bool isCollection)
         {
-            Contract.Assert(actionMap != null);
+            Contract.Assert(actionMatch != null);
 
             if (operation == null)
             {
@@ -52,7 +52,7 @@ namespace System.Web.OData.Routing.Conventions
                 string targetActionName = isCollection
                     ? operation.Name + "OnCollectionOf" + entityType.Name
                     : operation.Name + "On" + entityType.Name;
-                return actionMap.FindMatchingAction(targetActionName, operation.Name);
+                return actionMatch.FindMatchingAction(targetActionName, operation.Name);
             }
 
             return null;
@@ -149,12 +149,12 @@ namespace System.Web.OData.Routing.Conventions
             return true;
         }
 
-        public static void AddKeyValueToRouteData(this HttpControllerContext controllerContext, KeySegment segment, string keyName = "key")
+        public static void AddKeyValueToRouteData(this IWebApiControllerContext controllerContext, KeySegment segment, string keyName = "key")
         {
             Contract.Assert(controllerContext != null);
             Contract.Assert(segment != null);
 
-            IDictionary<string, object> routingConventionsStore = controllerContext.Request.ODataProperties().RoutingConventionsStore;
+            IDictionary<string, object> routingConventionsStore = controllerContext.Request.Context.RoutingConventionsStore;
 
             IEdmEntityType entityType = segment.EdmType as IEdmEntityType;
             Contract.Assert(entityType != null);
@@ -187,7 +187,7 @@ namespace System.Web.OData.Routing.Conventions
                     newKeyName = keyName;
                 }
 
-                AddKeyValues(newKeyName, keyValuePair.Value, keyProperty.Type, controllerContext.RouteData.Values, routingConventionsStore);
+                AddKeyValues(newKeyName, keyValuePair.Value, keyProperty.Type, controllerContext.RouteData, routingConventionsStore);
             }
         }
 
@@ -223,12 +223,12 @@ namespace System.Web.OData.Routing.Conventions
             odataValues[prefixName] = odataValue;
         }
 
-        public static void AddFunctionParameterToRouteData(this HttpControllerContext controllerContext, OperationSegment functionSegment)
+        public static void AddFunctionParameterToRouteData(this IWebApiControllerContext controllerContext, OperationSegment functionSegment)
         {
             Contract.Assert(controllerContext != null);
             Contract.Assert(functionSegment != null);
 
-            IDictionary<string, object> routingConventionsStore = controllerContext.Request.ODataProperties().RoutingConventionsStore;
+            IDictionary<string, object> routingConventionsStore = controllerContext.Request.Context.RoutingConventionsStore;
 
             IEdmFunction function = functionSegment.Operations.First() as IEdmFunction;
             if (function == null)
@@ -241,7 +241,7 @@ namespace System.Web.OData.Routing.Conventions
                 string name = parameter.Name;
                 object value = functionSegment.GetParameterValue(name);
 
-                AddFunctionParameters(function, name, value, controllerContext.RouteData.Values,
+                AddFunctionParameters(function, name, value, controllerContext.RouteData,
                     routingConventionsStore, null);
             }
         }

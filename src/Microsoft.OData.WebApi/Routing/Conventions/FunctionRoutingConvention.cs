@@ -2,13 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles function invocations.
@@ -16,8 +15,8 @@ namespace System.Web.OData.Routing.Conventions
     public class FunctionRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-            ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+            IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -29,12 +28,12 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
-                throw Error.ArgumentNull("actionMap");
+                throw Error.ArgumentNull("actionMatch");
             }
 
-            if (controllerContext.Request.Method == HttpMethod.Get)
+            if (HttpMethodHelper.IsGet(controllerContext.Request.Method))
             {
                 string actionName = null;
                 OperationSegment function = null;
@@ -43,7 +42,7 @@ namespace System.Web.OData.Routing.Conventions
                     case "~/entityset/key/cast/function":
                     case "~/entityset/key/function":
                         function = odataPath.Segments.Last() as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: false);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: false);
                         if (actionName != null)
                         {
                             controllerContext.AddKeyValueToRouteData((KeySegment)odataPath.Segments[1]);
@@ -52,7 +51,7 @@ namespace System.Web.OData.Routing.Conventions
                     case "~/entityset/key/cast/function/$count":
                     case "~/entityset/key/function/$count":
                         function = odataPath.Segments[odataPath.Segments.Count - 2] as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: false);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: false);
                         if (actionName != null)
                         {
                             controllerContext.AddKeyValueToRouteData((KeySegment)odataPath.Segments[1]);
@@ -61,22 +60,22 @@ namespace System.Web.OData.Routing.Conventions
                     case "~/entityset/cast/function":
                     case "~/entityset/function":
                         function = odataPath.Segments.Last() as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: true);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: true);
                         break;
                     case "~/entityset/cast/function/$count":
                     case "~/entityset/function/$count":
                         function = odataPath.Segments[odataPath.Segments.Count - 2] as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: true);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: true);
                         break;
                     case "~/singleton/function":
                     case "~/singleton/cast/function":
                         function = odataPath.Segments.Last() as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: false);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: false);
                         break;
                     case "~/singleton/function/$count":
                     case "~/singleton/cast/function/$count":
                         function = odataPath.Segments[odataPath.Segments.Count - 2] as OperationSegment;
-                        actionName = GetFunction(function).SelectAction(actionMap, isCollection: false);
+                        actionName = GetFunction(function).SelectAction(actionMatch, isCollection: false);
                         break;
                 }
                 

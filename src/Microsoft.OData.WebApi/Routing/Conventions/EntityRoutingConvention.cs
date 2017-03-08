@@ -2,14 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles operating on entities by key.
@@ -17,7 +15,7 @@ namespace System.Web.OData.Routing.Conventions
     public class EntityRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -29,18 +27,17 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
-                throw Error.ArgumentNull("actionMap");
+                throw Error.ArgumentNull("actionMatch");
             }
 
             if (odataPath.PathTemplate == "~/entityset/key" ||
                 odataPath.PathTemplate == "~/entityset/key/cast")
             {
-                HttpMethod httpMethod = controllerContext.Request.Method;
                 string httpMethodName;
 
-                switch (httpMethod.ToString().ToUpperInvariant())
+                switch (controllerContext.Request.Method.ToUpperInvariant())
                 {
                     case "GET":
                         httpMethodName = "Get";
@@ -64,7 +61,7 @@ namespace System.Web.OData.Routing.Conventions
                 IEdmEntityType entityType = (IEdmEntityType)odataPath.EdmType;
 
                 // e.g. Try GetCustomer first, then fallback on Get action name
-                string actionName = actionMap.FindMatchingAction(
+                string actionName = actionMatch.FindMatchingAction(
                     httpMethodName + entityType.Name,
                     httpMethodName);
 

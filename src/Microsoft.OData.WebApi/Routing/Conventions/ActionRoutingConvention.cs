@@ -2,13 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles action invocations.
@@ -16,7 +15,8 @@ namespace System.Web.OData.Routing.Conventions
     public class ActionRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMatch actionMatch)
+
         {
             if (odataPath == null)
             {
@@ -28,18 +28,18 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
-                throw Error.ArgumentNull("actionMap");
+                throw Error.ArgumentNull("actionMatch");
             }
 
-            if (controllerContext.Request.Method == HttpMethod.Post)
+            if (HttpMethodHelper.IsPost(controllerContext.Request.Method))
             {
                 switch (odataPath.PathTemplate)
                 {
                     case "~/entityset/key/cast/action":
                     case "~/entityset/key/action":
-                        string actionName = GetAction(odataPath).SelectAction(actionMap, isCollection: false);
+                        string actionName = GetAction(odataPath).SelectAction(actionMatch, isCollection: false);
                         if (actionName != null)
                         {
                             KeySegment keySegment = (KeySegment)odataPath.Segments[1];
@@ -48,10 +48,10 @@ namespace System.Web.OData.Routing.Conventions
                         return actionName;
                     case "~/entityset/cast/action":
                     case "~/entityset/action":
-                        return GetAction(odataPath).SelectAction(actionMap, isCollection: true);
+                        return GetAction(odataPath).SelectAction(actionMatch, isCollection: true);
                     case "~/singleton/action":
                     case "~/singleton/cast/action":
-                        return GetAction(odataPath).SelectAction(actionMap, isCollection: false);
+                        return GetAction(odataPath).SelectAction(actionMatch, isCollection: false);
                 }
             }
 

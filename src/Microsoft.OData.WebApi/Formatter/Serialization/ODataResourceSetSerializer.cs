@@ -1,21 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
-using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Query;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// OData serializer for serializing a collection of <see cref="IEdmEntityType" /> or <see cref="IEdmComplexType"/>
@@ -118,7 +117,7 @@ namespace System.Web.OData.Formatter.Serialization
             if (resourceSerializer == null)
             {
                 throw new SerializationException(
-                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName()));
             }
 
             // save this for later to support JSON odata.streaming.
@@ -181,7 +180,6 @@ namespace System.Web.OData.Formatter.Serialization
                 ResourceSetContext resourceSetContext = new ResourceSetContext
                 {
                     Request = writeContext.Request,
-                    RequestContext = writeContext.RequestContext,
                     EntitySetBase = writeContext.NavigationSource as IEdmEntitySetBase,
                     Url = writeContext.Url,
                     ResourceSetInstance = resourceSetInstance
@@ -215,9 +213,9 @@ namespace System.Web.OData.Formatter.Serialization
                 }
                 else if (writeContext.Request != null)
                 {
-                    resourceSet.NextPageLink = writeContext.Request.ODataProperties().NextLink;
+                    resourceSet.NextPageLink = writeContext.Request.Context.NextLink;
 
-                    long? countValue = writeContext.Request.ODataProperties().TotalCount;
+                    long? countValue = writeContext.Request.Context.TotalCount;
                     if (countValue.HasValue)
                     {
                         resourceSet.Count = countValue.Value;
@@ -344,7 +342,7 @@ namespace System.Web.OData.Formatter.Serialization
 
             if (navigationLink != null)
             {
-                return HttpRequestMessageExtensions.GetNextPageLink(navigationLink, pageSize);
+                return writeContext.Request.GetNextPageLink(navigationLink, pageSize);
             }
 
             return null;

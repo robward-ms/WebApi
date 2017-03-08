@@ -1,25 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Query.Expressions;
-using Microsoft.OData;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query.Expressions;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// ODataSerializer for serializing instances of <see cref="IEdmEntityType"/> or <see cref="IEdmComplexType"/>
@@ -382,11 +380,7 @@ namespace System.Web.OData.Formatter.Serialization
             bool nullDynamicPropertyEnabled = false;
             if (resourceContext.Request != null)
             {
-                HttpConfiguration configuration = resourceContext.Request.GetConfiguration();
-                if (configuration != null)
-                {
-                    nullDynamicPropertyEnabled = configuration.HasEnabledNullDynamicProperty();
-                }
+                nullDynamicPropertyEnabled = resourceContext.Request.Options.NullDynamicPropertyIsEnabled;
             }
 
             IEdmStructuredType structuredType = resourceContext.StructuredType;
@@ -493,8 +487,8 @@ namespace System.Web.OData.Formatter.Serialization
         {
             if (resourceContext.Request != null)
             {
-                HttpConfiguration configuration = resourceContext.Request.GetConfiguration();
-                if (configuration == null)
+                IServiceProvider requestContainer = resourceContext.Request.RequestContainer;
+                if (requestContainer == null)
                 {
                     throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
                 }
@@ -517,7 +511,7 @@ namespace System.Web.OData.Formatter.Serialization
                 {
                     properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
                 }
-                EntityTagHeaderValue etagHeaderValue = configuration.GetETagHandler().CreateETag(properties);
+                WebApiEntityTagHeaderValue etagHeaderValue = requestContainer.GetRequiredService<IETagHandler>().CreateETag(properties);
                 if (etagHeaderValue != null)
                 {
                     return etagHeaderValue.ToString();
@@ -794,7 +788,7 @@ namespace System.Web.OData.Formatter.Serialization
             if (serializer == null)
             {
                 throw new SerializationException(
-                    Error.Format(SRResources.TypeCannotBeSerialized, structuralProperty.Type.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                    Error.Format(SRResources.TypeCannotBeSerialized, structuralProperty.Type.FullName()));
             }
 
             object propertyValue = resourceContext.GetPropertyValue(structuralProperty.Name);

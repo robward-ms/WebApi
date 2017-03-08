@@ -1,14 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Net.Http;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
-    internal static class ContentIdHelpers
+    /// <summary>
+    /// Helper functions for ContentIds
+    /// </summary>
+    public static class ContentIdHelpers
     {
+        /// <summary>
+        /// Resolve the ContentId from a Url.
+        /// </summary>
+        /// <param name="url">The Url for which to generate the ContentId.</param>
+        /// <param name="contentIdToLocationMapping"></param>
+        /// <returns></returns>
         public static string ResolveContentId(string url, IDictionary<string, string> contentIdToLocationMapping)
         {
             Contract.Assert(url != null);
@@ -50,21 +59,6 @@ namespace System.Web.OData
             }
 
             return url;
-        }
-
-        public static void AddLocationHeaderToMapping(
-            HttpResponseMessage response,
-            IDictionary<string, string> contentIdToLocationMapping,
-            string contentId)
-        {
-            Contract.Assert(response != null);
-            Contract.Assert(contentIdToLocationMapping != null);
-            Contract.Assert(contentId != null);
-
-            if (response.Headers.Location != null)
-            {
-                contentIdToLocationMapping.Add(contentId, response.Headers.Location.AbsoluteUri);
-            }
         }
 
         private static bool IsContentIdCharacter(char c)

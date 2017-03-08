@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Linq;
-using System.Web.Http;
-using System.Web.Http.Controllers;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that always selects the action named HandleUnmappedRequest if that action is present.
@@ -15,7 +14,7 @@ namespace System.Web.OData.Routing.Conventions
         private const string UnmappedRequestActionName = "HandleUnmappedRequest";
 
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -27,12 +26,12 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
                 throw Error.ArgumentNull("actionMap");
             }
 
-            if (actionMap.Contains(UnmappedRequestActionName))
+            if (actionMatch.Contains(UnmappedRequestActionName))
             {
                 return UnmappedRequestActionName;
             }

@@ -2,17 +2,17 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Query;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     internal static class ODataQueryContextExtensions
     {
-        public static IAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
+        public static IWebApiAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
         {
-            return context.RequestContainer.GetRequiredService<IAssembliesResolver>();
+            return context.RequestContainer.GetRequiredService<IWebApiAssembliesResolver>();
         }
 
         public static ODataQuerySettings UpdateQuerySettings(this ODataQueryContext context, ODataQuerySettings querySettings, IQueryable query)

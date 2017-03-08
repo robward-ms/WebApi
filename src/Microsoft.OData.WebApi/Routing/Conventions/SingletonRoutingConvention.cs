@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles the singleton.
@@ -16,8 +14,8 @@ namespace System.Web.OData.Routing.Conventions
     public class SingletonRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-            ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+            IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -29,7 +27,7 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
                 throw Error.ArgumentNull("actionMap");
             }
@@ -42,7 +40,7 @@ namespace System.Web.OData.Routing.Conventions
                 if (httpMethodName != null)
                 {
                     // e.g. Try Get{SingletonName} first, then fallback on Get action name
-                    return actionMap.FindMatchingAction(
+                    return actionMatch.FindMatchingAction(
                         httpMethodName + singletonSegment.Singleton.Name,
                         httpMethodName);
                 }
@@ -56,7 +54,7 @@ namespace System.Web.OData.Routing.Conventions
                 if (httpMethodName != null)
                 {
                     // e.g. Try Get{SingletonName}From{EntityTypeName} first, then fallback on Get action name
-                    return actionMap.FindMatchingAction(
+                    return actionMatch.FindMatchingAction(
                         httpMethodName + singletonSegment.Singleton.Name + "From" + entityType.Name,
                         httpMethodName + "From" + entityType.Name);
                 }
@@ -65,10 +63,10 @@ namespace System.Web.OData.Routing.Conventions
             return null;
         }
 
-        private static string GetActionNamePrefix(HttpMethod method)
+        private static string GetActionNamePrefix(string method)
         {
             string actionNamePrefix;
-            switch (method.Method.ToUpperInvariant())
+            switch (method.ToUpperInvariant())
             {
                 case "GET":
                     actionNamePrefix = "Get";

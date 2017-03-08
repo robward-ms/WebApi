@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Net.Http;
-using System.Web.Http.Controllers;
-using System.Web.OData.Routing;
+using System;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Routing;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
-    /// This class encapsulates the state and settings that get passed to <see cref="ODataDeserializer"/>
-    /// from the <see cref="ODataMediaTypeFormatter"/>.
+    /// This class encapsulates the state and settings that get passed to <see cref="ODataDeserializer"/>.
     /// </summary>
     public class ODataDeserializerContext
     {
@@ -40,10 +39,7 @@ namespace System.Web.OData.Formatter.Deserialization
         /// <summary>
         /// Gets or sets the HTTP Request that is being deserialized.
         /// </summary>
-        public HttpRequestMessage Request { get; set; }
-
-        /// <summary>Gets or sets the request context.</summary>
-        public HttpRequestContext RequestContext { get; set; }
+        public IWebApiRequestMessage Request { get; set; }
 
         internal bool IsDeltaOfT
         {
@@ -79,7 +75,7 @@ namespace System.Web.OData.Formatter.Deserialization
                 return ResourceEdmType;
             }
 
-            return ODataMediaTypeFormatter.GetExpectedPayloadType(type, Path, Model);
+            return EdmLibHelpers.GetExpectedPayloadType(type, Path, Model);
         }
     }
 }

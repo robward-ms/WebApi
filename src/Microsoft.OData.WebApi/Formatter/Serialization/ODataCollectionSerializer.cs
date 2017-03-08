@@ -1,17 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Web.Http;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// ODataSerializer for serializing collection of primitive or enum types.
@@ -87,14 +86,14 @@ namespace System.Web.OData.Formatter.Serialization
 
             if (writeContext.Request != null)
             {
-                if (writeContext.Request.ODataProperties().NextLink != null)
+                if (writeContext.Request.Context.NextLink != null)
                 {
-                    collectionStart.NextPageLink = writeContext.Request.ODataProperties().NextLink;
+                    collectionStart.NextPageLink = writeContext.Request.Context.NextLink;
                 }
 
-                if (writeContext.Request.ODataProperties().TotalCount != null)
+                if (writeContext.Request.Context.TotalCount != null)
                 {
-                    collectionStart.Count = writeContext.Request.ODataProperties().TotalCount;
+                    collectionStart.Count = writeContext.Request.Context.TotalCount;
                 }
             }
 
@@ -158,8 +157,7 @@ namespace System.Web.OData.Formatter.Serialization
                     if (itemSerializer == null)
                     {
                         throw new SerializationException(
-                            Error.Format(SRResources.TypeCannotBeSerialized, actualType.FullName(),
-                            typeof(ODataMediaTypeFormatter).Name));
+                            Error.Format(SRResources.TypeCannotBeSerialized, actualType.FullName()));
                     }
 
                     // ODataCollectionWriter expects the individual elements in the collection to be the underlying

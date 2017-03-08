@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Query.Validators
+namespace Microsoft.OData.WebApi.Query.Validators
 {
     /// <summary>
     /// Represents a validator used to validate OData queries based on the <see cref="ODataValidationSettings"/>.
@@ -64,7 +62,7 @@ namespace System.Web.OData.Query.Validators
                 options.Filter.Validate(validationSettings);
             }
 
-            if (options.Count != null || ODataCountMediaTypeMapping.IsCountRequest(options.Request))
+            if (options.Count != null || options.Request.IsCountRequest())
             {
                 ValidateQueryOptionAllowed(AllowedQueryOptions.Count, validationSettings.AllowedQueryOptions);
 

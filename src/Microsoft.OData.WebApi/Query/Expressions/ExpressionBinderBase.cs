@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Diagnostics.CodeAnalysis;
@@ -9,17 +10,16 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// The base class for all expression binders.
@@ -58,7 +58,7 @@ namespace System.Web.OData.Query.Expressions
 
         internal ODataQuerySettings QuerySettings { get; set; }
 
-        internal IAssembliesResolver AssembliesResolver { get; set; }
+        internal IWebApiAssembliesResolver AssembliesResolver { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionBinderBase"/> class.
@@ -70,10 +70,10 @@ namespace System.Web.OData.Query.Expressions
 
             QuerySettings = requestContainer.GetRequiredService<ODataQuerySettings>();
             Model = requestContainer.GetRequiredService<IEdmModel>();
-            AssembliesResolver = requestContainer.GetRequiredService<IAssembliesResolver>();
+            AssembliesResolver = requestContainer.GetRequiredService<IWebApiAssembliesResolver>();
         }
 
-        internal ExpressionBinderBase(IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+        internal ExpressionBinderBase(IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
             : this(model, querySettings)
         {
             AssembliesResolver = assembliesResolver;

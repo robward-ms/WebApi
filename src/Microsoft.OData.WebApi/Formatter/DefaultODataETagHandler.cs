@@ -1,24 +1,31 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Web.Http;
-using System.Web.OData.Builder.Conventions;
-using Microsoft.OData;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.OData.WebApi.Formatter
 {
-    internal class DefaultODataETagHandler : IETagHandler
+    /// <summary>
+    /// The default OData ETag handler.
+    /// </summary>
+    public class DefaultODataETagHandler : IETagHandler
     {
         /// <summary>null liternal that needs to be return in ETag value when the value is null</summary>
         private const string NullLiteralInETag = "null";
 
         private const char Separator = ',';
 
-        public EntityTagHeaderValue CreateETag(IDictionary<string, object> properties)
+        /// <summary>
+        /// Create an ETag from properties.
+        /// </summary>
+        /// <param name="properties">The properties used to create the ETag.</param>
+        /// <returns>An ETag from properties.</returns>
+        public WebApiEntityTagHeaderValue CreateETag(IDictionary<string, object> properties)
         {
             if (properties == null)
             {
@@ -57,10 +64,15 @@ namespace System.Web.OData.Formatter
 
             builder.Append('\"');
             string tag = builder.ToString();
-            return new EntityTagHeaderValue(tag, isWeak: true);
+            return new WebApiEntityTagHeaderValue(tag, isWeak: true);
         }
 
-        public IDictionary<string, object> ParseETag(EntityTagHeaderValue etagHeaderValue)
+        /// <summary>
+        /// PArse an ETag into properties.
+        /// </summary>
+        /// <param name="etagHeaderValue">The ETag to parse.</param>
+        /// <returns>The properties of the ETag.</returns>
+        public IDictionary<string, object> ParseETag(WebApiEntityTagHeaderValue etagHeaderValue)
         {
             if (etagHeaderValue == null)
             {

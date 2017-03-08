@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles reading structural properties.
@@ -18,7 +17,7 @@ namespace System.Web.OData.Routing.Conventions
     public class PropertyRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -30,9 +29,9 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
-                throw Error.ArgumentNull("actionMap");
+                throw Error.ArgumentNull("actionMatch");
             }
 
             string prefix;
@@ -45,7 +44,7 @@ namespace System.Web.OData.Routing.Conventions
                 string actionName;
                 if (cast == null)
                 {
-                    actionName = actionMap.FindMatchingAction(
+                    actionName = actionMatch.FindMatchingAction(
                         prefix + property.Name + "From" + declaringType.Name,
                         prefix + property.Name);
                 }
@@ -62,7 +61,7 @@ namespace System.Web.OData.Routing.Conventions
                     }
 
                     // for example: GetCityOfSubAddressFromVipCustomer or GetCityOfSubAddress
-                    actionName = actionMap.FindMatchingAction(
+                    actionName = actionMatch.FindMatchingAction(
                         prefix + property.Name + "Of" + typeCast.Name + "From" + declaringType.Name,
                         prefix + property.Name + "Of" + typeCast.Name);
                 }
@@ -84,7 +83,7 @@ namespace System.Web.OData.Routing.Conventions
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
             Justification = "These are simple conversion function and cannot be split up.")]
-        private static IEdmProperty GetProperty(ODataPath odataPath, HttpMethod method, out string prefix,
+        private static IEdmProperty GetProperty(ODataPath odataPath, string method, out string prefix,
             out TypeSegment cast)
         {
             prefix = String.Empty;
@@ -99,7 +98,7 @@ namespace System.Web.OData.Routing.Conventions
                 PropertySegment tempSegment =
                     (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 1];
 
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
                     case "GET":
                         prefix = "Get";
@@ -137,7 +136,7 @@ namespace System.Web.OData.Routing.Conventions
                 PropertySegment tempSegment =
                     (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 2];
                 TypeSegment tempCast = (TypeSegment)odataPath.Segments.Last();
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
                     case "GET":
                         prefix = "Get";
@@ -170,7 +169,7 @@ namespace System.Web.OData.Routing.Conventions
                      odataPath.PathTemplate == "~/singleton/cast/property/$count")
             {
                 PropertySegment tempSegment = (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 2];
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
                     case "GET":
                         prefix = "Get";

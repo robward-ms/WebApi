@@ -1,20 +1,29 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Formatter;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
-    internal static class TypeHelper
+    /// <summary>
+    /// Type help functions.
+    /// </summary>
+    public static class TypeHelper
     {
+        /// <summary>
+        /// Convert type to a null-able Type.
+        /// </summary>
+        /// <param name="t">The type to convent.</param>
+        /// <returns>The null-able version of t.</returns>
         public static Type ToNullable(this Type t)
         {
             if (t.IsNullable())
@@ -27,7 +36,11 @@ namespace System.Web.OData
             }
         }
 
-        // Gets the collection element type.
+        /// <summary>
+        /// Gets the collection element type from Type.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>The collection element type from Type.</returns>
         public static Type GetInnerElementType(this Type type)
         {
             Type elementType;
@@ -37,12 +50,23 @@ namespace System.Web.OData
             return elementType;
         }
 
+        /// <summary>
+        /// Determine if Type represents a collection.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>True if Type represents a collection; false otherwise.</returns>
         public static bool IsCollection(this Type type)
         {
             Type elementType;
             return type.IsCollection(out elementType);
         }
 
+        /// <summary>
+        /// Determine if Type represents a collection.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <param name="elementType">The element Type in the collection.</param>
+        /// <returns>True if Type represents a collection; false otherwise.</returns>
         public static bool IsCollection(this Type type, out Type elementType)
         {
             if (type == null)
@@ -74,23 +98,43 @@ namespace System.Web.OData
             return false;
         }
 
+        /// <summary>
+        /// Get the underlying type of Type.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>The underlying type of Type.</returns>
         public static Type GetUnderlyingTypeOrSelf(Type type)
         {
             return Nullable.GetUnderlyingType(type) ?? type;
         }
 
+        /// <summary>
+        /// Determine if Type is an enumeration.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>True if Type is an enumeration; otherwise false;</returns>
         public static bool IsEnum(Type type)
         {
             Type underlyingTypeOrSelf = GetUnderlyingTypeOrSelf(type);
             return underlyingTypeOrSelf.IsEnum;
         }
-        
+
+        /// <summary>
+        /// Determine if Type is a DateTime.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>True if Type is a DateTime; otherwise false;</returns>
         public static bool IsDateTime(Type type)
         {
             Type underlyingTypeOrSelf = GetUnderlyingTypeOrSelf(type);
             return Type.GetTypeCode(underlyingTypeOrSelf) == TypeCode.DateTime;
         }
 
+        /// <summary>
+        /// Determine if Type is a TimeSpan.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <returns>True if Type is a TimeSpan; otherwise false;</returns>
         public static bool IsTimeSpan(Type type)
         {
             Type underlyingTypeOrSelf = GetUnderlyingTypeOrSelf(type);
@@ -149,7 +193,7 @@ namespace System.Web.OData
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        internal static Type GetImplementedIEnumerableType(Type type)
+        public static Type GetImplementedIEnumerableType(Type type)
         {
             // get inner type from Task<T>
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
@@ -185,7 +229,7 @@ namespace System.Web.OData
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching all exceptions in this case is the right to do.")]
         // This code is copied from DefaultHttpControllerTypeResolver.GetControllerTypes.
-        internal static IEnumerable<Type> GetLoadedTypes(IAssembliesResolver assembliesResolver)
+        internal static IEnumerable<Type> GetLoadedTypes(IWebApiAssembliesResolver assembliesResolver)
         {
             List<Type> result = new List<Type>();
 

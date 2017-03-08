@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -8,16 +9,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// Translates an OData $filter parse tree represented by <see cref="FilterClause"/> to
@@ -80,7 +80,7 @@ namespace System.Web.OData.Query.Expressions
 
         private FilterBinder(
             IEdmModel model,
-            IAssembliesResolver assembliesResolver,
+            IWebApiAssembliesResolver assembliesResolver,
             ODataQuerySettings querySettings,
             Type filterType)
             : base(model, assembliesResolver, querySettings)
@@ -89,13 +89,13 @@ namespace System.Web.OData.Query.Expressions
         }
 
         internal static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterClause, IEdmModel model,
-            IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+            IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
             return Bind(filterClause, typeof(TEntityType), model, assembliesResolver, querySettings) as Expression<Func<TEntityType, bool>>;
         }
 
         internal static Expression Bind(FilterClause filterClause, Type filterType, IEdmModel model,
-            IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+            IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
             if (filterClause == null)
             {

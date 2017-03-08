@@ -1,25 +1,26 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Properties;
-using System.Web.OData.Query.Expressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query.Expressions;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// This defines a $apply OData query option for querying.
     /// </summary>
     public class ApplyQueryOption
     {
-        private readonly IAssembliesResolver _assembliesResolver;
+        private readonly IWebApiAssembliesResolver _assembliesResolver;
 
         private ApplyClause _applyClause;
         private ODataQueryOptionParser _queryOptionParser;

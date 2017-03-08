@@ -2,15 +2,13 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web.Http;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// This defines a composite OData query options that can be used to perform query composition.
@@ -25,7 +23,7 @@ namespace System.Web.OData.Query
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information</param>
         /// <param name="request">The incoming request message</param>
-        public ODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        public ODataQueryOptions(ODataQueryContext context, IWebApiRequestMessage request)
             : base(context, request)
         {
             if (Context.ElementClrType == null)
@@ -84,7 +82,7 @@ namespace System.Web.OData.Query
             return base.ApplyTo(query, querySettings);
         }
 
-        internal override ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        internal override ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
         {
             return Request.GetETag<TEntity>(etagHeaderValue);
         }

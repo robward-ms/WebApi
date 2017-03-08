@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles navigation properties.
@@ -16,7 +16,7 @@ namespace System.Web.OData.Routing.Conventions
     public class NavigationRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMatch actionMatch)
         {
             if (odataPath == null)
             {
@@ -28,12 +28,12 @@ namespace System.Web.OData.Routing.Conventions
                 throw Error.ArgumentNull("controllerContext");
             }
 
-            if (actionMap == null)
+            if (actionMatch == null)
             {
                 throw Error.ArgumentNull("actionMap");
             }
 
-            HttpMethod method = controllerContext.Request.Method;
+            string method = controllerContext.Request.Method;
             string actionNamePrefix = GetActionMethodPrefix(method);
             if (actionNamePrefix == null)
             {
@@ -57,20 +57,20 @@ namespace System.Web.OData.Routing.Conventions
 
                 // It is not valid to *Post* to any non-collection valued navigation property.
                 if (navigationProperty.TargetMultiplicity() != EdmMultiplicity.Many &&
-                    method == HttpMethod.Post)
+                    HttpMethodHelper.IsPost(method))
                 {
                     return null;
                 }
 
                 // It is not valid to *Put/Patch" to any collection-valued navigation property.
                 if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.Many &&
-                    (method == HttpMethod.Put || "PATCH" == method.Method.ToUpperInvariant()))
+                    (HttpMethodHelper.IsPost(method) || HttpMethodHelper.IsPatch(method)))
                 {
                     return null;
                 }
 
                 // *Get* is the only supported method for $count request.
-                if (odataPath.Segments.Last() is CountSegment && method != HttpMethod.Get)
+                if (odataPath.Segments.Last() is CountSegment && !HttpMethodHelper.IsGet(method))
                 {
                     return null;
                 }
@@ -78,7 +78,7 @@ namespace System.Web.OData.Routing.Conventions
                 if (declaringType != null)
                 {
                     // e.g. Try GetNavigationPropertyFromDeclaringType first, then fallback on GetNavigationProperty action name
-                    string actionName = actionMap.FindMatchingAction(
+                    string actionName = actionMatch.FindMatchingAction(
                         actionNamePrefix + navigationProperty.Name + "From" + declaringType.Name,
                         actionNamePrefix + navigationProperty.Name);
 
@@ -98,9 +98,9 @@ namespace System.Web.OData.Routing.Conventions
             return null;
         }
 
-        private static string GetActionMethodPrefix(HttpMethod method)
+        private static string GetActionMethodPrefix(string method)
         {
-            switch (method.Method.ToUpperInvariant())
+            switch (method.ToUpperInvariant())
             {
                 case "GET":
                     return "Get";

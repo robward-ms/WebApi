@@ -1,17 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Http.Routing;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing;
 using Microsoft.OData.Edm;
-using SelectExpandClause = Microsoft.OData.UriParser.SelectExpandClause;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// Context information used by the <see cref="ODataSerializer"/> when serializing objects in OData message format.
@@ -47,7 +47,6 @@ namespace System.Web.OData.Formatter.Serialization
             ODataSerializerContext context = resource.SerializerContext;
 
             Request = context.Request;
-            RequestContext = context.RequestContext;
             Url = context.Url;
             Model = context.Model;
             Path = context.Path;
@@ -73,17 +72,17 @@ namespace System.Web.OData.Formatter.Serialization
         /// <summary>
         /// Gets or sets the HTTP Request whose response is being serialized.
         /// </summary>
-        public HttpRequestMessage Request { get; set; }
+        public IWebApiRequestMessage Request { get; set; }
 
         /// <summary>
-        /// Gets or sets the request context.
+        /// Gets or sets the <see cref="IWebApiUrlHelper"/> to use for generating OData links.
         /// </summary>
-        public HttpRequestContext RequestContext { get; set; }
+        public IWebApiUrlHelper Url { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="UrlHelper"/> to use for generating OData links.
+        /// Gets or sets the <see cref="IWebApiErrorHelper"/> to use for generating OData errors.
         /// </summary>
-        public UrlHelper Url { get; set; }
+        public IWebApiErrorHelper ErrorHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the navigation source.
@@ -96,7 +95,7 @@ namespace System.Web.OData.Formatter.Serialization
         public IEdmModel Model { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="ODataPath"/> of the request.
+        /// Gets or sets the <see cref="Routing.ODataPath"/> of the request.
         /// </summary>
         public ODataPath Path { get; set; }
 

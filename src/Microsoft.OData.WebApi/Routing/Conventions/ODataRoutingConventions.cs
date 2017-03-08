@@ -2,9 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// Provides helper methods for creating routing conventions.
@@ -15,15 +16,15 @@ namespace System.Web.OData.Routing.Conventions
         /// Creates a mutable list of the default OData routing conventions with attribute routing enabled.
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
-        /// <param name="configuration">The server configuration.</param>
+        /// <param name="controllers">The controllers collection.</param>
         /// <returns>A mutable list of the default OData routing conventions.</returns>
         public static IList<IODataRoutingConvention> CreateDefaultWithAttributeRouting(
             string routeName,
-            HttpConfiguration configuration)
+            IEnumerable<IWebApiControllerDescriptor> controllers)
         {
-            if (configuration == null)
+            if (controllers == null)
             {
-                throw Error.ArgumentNull("configuration");
+                throw Error.ArgumentNull("controllers");
             }
 
             if (routeName == null)
@@ -32,7 +33,7 @@ namespace System.Web.OData.Routing.Conventions
             }
 
             IList<IODataRoutingConvention> routingConventions = CreateDefault();
-            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(routeName, configuration);
+            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(routeName, controllers);
             routingConventions.Insert(0, routingConvention);
             return routingConventions;
         }

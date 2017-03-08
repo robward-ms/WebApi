@@ -1,25 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Web.Http;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
-using System.Web.OData.Query.Validators;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query.Validators;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// This defines a composite OData query options that can be used to perform query composition.
@@ -48,7 +46,7 @@ namespace System.Web.OData.Query
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information.</param>
         /// <param name="request">The incoming request message.</param>
-        public ODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        public ODataQueryOptions(ODataQueryContext context, IWebApiRequestMessage request)
         {
             if (context == null)
             {
@@ -62,7 +60,7 @@ namespace System.Web.OData.Query
 
             // Set the request container into context
             Contract.Assert(context.RequestContainer == null);
-            context.RequestContainer = request.GetRequestContainer();
+            context.RequestContainer = request.RequestContainer;
 
             // Remember the context and request
             Context = context;
@@ -78,7 +76,7 @@ namespace System.Web.OData.Query
                 context.NavigationSource,
                 queryParameters);
 
-            _queryOptionParser.Resolver = request.GetRequestContainer().GetRequiredService<ODataUriResolver>();
+            _queryOptionParser.Resolver = request.RequestContainer.GetRequiredService<ODataUriResolver>();
 
             BuildQueryOptions(queryParameters);
 
@@ -93,7 +91,7 @@ namespace System.Web.OData.Query
         /// <summary>
         /// Gets the request message associated with this instance.
         /// </summary>
-        public HttpRequestMessage Request { get; private set; }
+        public IWebApiRequestMessage Request { get; private set; }
 
         /// <summary>
         /// Gets the raw string of all the OData query options
@@ -149,7 +147,7 @@ namespace System.Web.OData.Query
             {
                 if (!_etagIfMatchChecked && _etagIfMatch == null)
                 {
-                    EntityTagHeaderValue etagHeaderValue = Request.Headers.IfMatch.SingleOrDefault();
+                    WebApiEntityTagHeaderValue etagHeaderValue = Request.Headers.IfMatch.SingleOrDefault();
                     _etagIfMatch = GetETag(etagHeaderValue);
                     _etagIfMatchChecked = true;
                 }
@@ -167,7 +165,7 @@ namespace System.Web.OData.Query
             {
                 if (!_etagIfNoneMatchChecked && _etagIfNoneMatch == null)
                 {
-                    EntityTagHeaderValue etagHeaderValue = Request.Headers.IfNoneMatch.SingleOrDefault();
+                    WebApiEntityTagHeaderValue etagHeaderValue = Request.Headers.IfNoneMatch.SingleOrDefault();
                     _etagIfNoneMatch = GetETag(etagHeaderValue);
                     if (_etagIfNoneMatch != null)
                     {
@@ -283,7 +281,7 @@ namespace System.Web.OData.Query
             if (IsAvailableODataQueryOption(Apply, AllowedQueryOptions.Apply))
             {
                 result = Apply.ApplyTo(result, querySettings);
-                Request.ODataProperties().ApplyClause = Apply.ApplyClause;
+                Request.Context.ApplyClause = Apply.ApplyClause;
                 this.Context.ElementClrType = Apply.ResultClrType;
             }
 
@@ -295,16 +293,16 @@ namespace System.Web.OData.Query
 
             if (IsAvailableODataQueryOption(Count, AllowedQueryOptions.Count))
             {
-                if (Request.ODataProperties().TotalCountFunc == null)
+                if (Request.Context.TotalCountFunc == null)
                 {
                     Func<long> countFunc = Count.GetEntityCountFunc(result);
                     if (countFunc != null)
                     {
-                        Request.ODataProperties().TotalCountFunc = countFunc;
+                        Request.Context.TotalCountFunc = countFunc;
                     }
                 }
 
-                if (ODataCountMediaTypeMapping.IsCountRequest(Request))
+                if (Request.IsCountRequest())
                 {
                     return result;
                 }
@@ -372,10 +370,10 @@ namespace System.Web.OData.Query
                 bool resultsLimited;
                 result = LimitResults(result, pageSize, out resultsLimited);
                 if (resultsLimited && Request.RequestUri != null && Request.RequestUri.IsAbsoluteUri &&
-                    Request.ODataProperties().NextLink == null)
+                    Request.Context.NextLink == null)
                 {
                     Uri nextPageLink = Request.GetNextPageLink(pageSize);
-                    Request.ODataProperties().NextLink = nextPageLink;
+                    Request.Context.NextLink = nextPageLink;
                 }
             }
 
@@ -576,7 +574,7 @@ namespace System.Web.OData.Query
             return truncatedCollection.AsQueryable();
         }
 
-        internal virtual ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        internal virtual ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
         {
             return Request.GetETag(etagHeaderValue);
         }
@@ -785,7 +783,7 @@ namespace System.Web.OData.Query
                     Context, _queryOptionParser);
             }
 
-            if (ODataCountMediaTypeMapping.IsCountRequest(Request))
+            if (Request.IsCountRequest())
             {
                 Count = new CountQueryOption(
                     "true",
@@ -826,7 +824,7 @@ namespace System.Web.OData.Query
                     SelectExpand.Context,
                     processedClause);
 
-                Request.ODataProperties().SelectExpandClause = processedClause;
+                Request.Context.SelectExpandClause = processedClause;
 
                 var type = typeof(T);
                 if (type == typeof(IQueryable))

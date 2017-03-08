@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Net.Http;
+using System;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Interfaces;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// An ODataSerializerProvider is a factory for creating <see cref="ODataSerializer"/>s.
@@ -24,6 +25,6 @@ namespace System.Web.OData.Formatter.Serialization
         /// <param name="type">The <see cref="Type"/> for which the serializer is being requested.</param>
         /// <param name="request">The request for which the response is being serialized.</param>
         /// <returns>The <see cref="ODataSerializer"/> for the given type.</returns>
-        public abstract ODataSerializer GetODataPayloadSerializer(Type type, HttpRequestMessage request);
+        public abstract ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request);
     }
 }
