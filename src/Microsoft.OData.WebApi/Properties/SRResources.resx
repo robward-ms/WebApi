@@ -860,7 +860,7 @@
     <value>The navigation property binding path '{0}' is not valid. The last segment must be the navigation property '{1}'.</value>
   </data>
   <data name="NavigationPropertyBindingPathNotSupported" xml:space="preserve">
-    <value>The navigation property binding path segment '{0}' of member type '{1}' is not supported.</value>
+    <value>The navigation property binding path segment '{0}' is not supported.</value>
   </data>
   <data name="NavigationPropertyBindingPathNotInHierarchy" xml:space="preserve">
     <value>The type '{0}' of the binding type cast segment '{1}' is not a part of the type '{2}' hierarchy.</value>

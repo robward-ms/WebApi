@@ -49,7 +49,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions
             if (targetEntityType == null)
             {
                 throw Error.InvalidOperation(SRResources.TargetEntityTypeMissing, navigationProperty.Name,
-                    navigationProperty.PropertyInfo.ReflectedType.FullName);
+                    navigationProperty.PropertyInfo.DeclaringType.FullName);
             }
 
             bool hasSingletonAttribute = navigationProperty.PropertyInfo.GetCustomAttributes<SingletonAttribute>().Any();

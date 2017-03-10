@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
@@ -37,13 +38,13 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("clrType");
             }
 
-            if (!clrType.IsEnum)
+            if (!clrType.GetTypeInfo().IsEnum)
             {
                 throw Error.Argument("clrType", SRResources.TypeCannotBeEnum, clrType.FullName);
             }
 
             ClrType = clrType;
-            IsFlags = clrType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+            IsFlags = clrType.GetTypeInfo().GetCustomAttributes(typeof(FlagsAttribute), false).Any();
             UnderlyingType = Enum.GetUnderlyingType(clrType);
             ModelBuilder = builder;
             _name = clrType.EdmName();

@@ -92,8 +92,8 @@ namespace Microsoft.OData.WebApi.Builder
                 if (leftType != rightType)
                 {
                     throw Error.InvalidOperation(SRResources.EqualExpressionsMustHaveSameTypes,
-                        left.ReflectedType.FullName, left.Name, left.PropertyType.FullName,
-                        right.ReflectedType.FullName, right.Name, right.PropertyType.FullName);
+                        left.DeclaringType.FullName, left.Name, left.PropertyType.FullName,
+                        right.DeclaringType.FullName, right.Name, right.PropertyType.FullName);
                 }
 
                 _properties.Add(left, right);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.WebApi.Builder
             if (propertyInfo == null)
             {
                 throw Error.InvalidOperation(SRResources.MemberExpressionsMustBeProperties,
-                    memberNode.Member.ReflectedType.FullName, memberNode.Member.Name);
+                    memberNode.Member.DeclaringType.FullName, memberNode.Member.Name);
             }
 
             if (memberNode.Expression.NodeType != ExpressionType.Parameter)

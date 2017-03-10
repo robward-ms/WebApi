@@ -66,7 +66,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions
             Contract.Assert(value != null);
 
             Type type = value.GetType();
-            if (type.IsEnum)
+            if (type.GetTypeInfo().IsEnum)
             {
                 value = new ODataEnumValue(value.ToString(), type.EdmFullName());
             }
@@ -217,7 +217,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions
 
             Type elementType;
 
-            return !(type.IsGenericTypeDefinition
+            return !(type.GetTypeInfo().IsGenericTypeDefinition
                      || type.IsPointer
                      || type == typeof(object)
                      || (type.IsCollection(out elementType) && elementType == typeof(object)));
@@ -233,7 +233,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions
             Contract.Assert(value != null);
 
             Type type = value.GetType();
-            if (type.IsEnum)
+            if (type.GetTypeInfo().IsEnum)
             {
                 value = new ODataEnumValue(value.ToString(), type.EdmFullName());
             }

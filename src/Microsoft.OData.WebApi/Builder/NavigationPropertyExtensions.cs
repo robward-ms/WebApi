@@ -47,7 +47,7 @@ namespace Microsoft.OData.WebApi.Builder
             IEnumerable<StructuralTypeConfiguration> derivedTypes = builder.DerivedTypes(configuration);
             foreach (var config in derivedTypes)
             {
-                path.Push(config.ClrType);
+                path.Push(config.ClrType.GetTypeInfo());
 
                 builder.FindNavigationProperties(config, navigations, path);
 

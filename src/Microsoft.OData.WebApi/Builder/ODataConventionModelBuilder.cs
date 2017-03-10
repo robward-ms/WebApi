@@ -227,7 +227,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("type");
             }
 
-            if (!type.IsEnum)
+            if (!type.GetTypeInfo().IsEnum)
             {
                 throw Error.Argument("type", SRResources.TypeCannotBeEnum, type.FullName);
             }
@@ -311,7 +311,7 @@ namespace Microsoft.OData.WebApi.Builder
 
             foreach (EntityTypeConfiguration entity in StructuralTypes.OfType<EntityTypeConfiguration>().Where(e => !e.BaseTypeConfigured))
             {
-                Type baseClrType = entity.ClrType.BaseType;
+                Type baseClrType = entity.ClrType.GetTypeInfo().BaseType;
                 while (baseClrType != null)
                 {
                     // see if we there is an entity that we know mapping to this clr types base type.
@@ -339,7 +339,7 @@ namespace Microsoft.OData.WebApi.Builder
                         break;
                     }
 
-                    baseClrType = baseClrType.BaseType;
+                    baseClrType = baseClrType.GetTypeInfo().BaseType;
                 }
             }
 
@@ -348,7 +348,7 @@ namespace Microsoft.OData.WebApi.Builder
             foreach (ComplexTypeConfiguration complex in
                 StructuralTypes.OfType<ComplexTypeConfiguration>().Where(e => !e.BaseTypeConfigured))
             {
-                Type baseClrType = complex.ClrType.BaseType;
+                Type baseClrType = complex.ClrType.GetTypeInfo().BaseType;
                 while (baseClrType != null)
                 {
                     ComplexTypeConfiguration baseComplexType;
@@ -359,7 +359,7 @@ namespace Microsoft.OData.WebApi.Builder
                         break;
                     }
 
-                    baseClrType = baseClrType.BaseType;
+                    baseClrType = baseClrType.GetTypeInfo().BaseType;
                 }
             }
         }
@@ -661,12 +661,12 @@ namespace Microsoft.OData.WebApi.Builder
                     Contract.Assert(propertyKind != PropertyKind.Complex, "we don't create complex types in query composition mode.");
                 }
 
-                if (property.PropertyType.IsGenericType)
+                if (property.PropertyType.GetTypeInfo().IsGenericType)
                 {
                     Type elementType = property.PropertyType.GetGenericArguments().First();
                     Type elementUnderlyingTypeOrSelf = TypeHelper.GetUnderlyingTypeOrSelf(elementType);
 
-                    if (elementUnderlyingTypeOrSelf.IsEnum)
+                    if (elementUnderlyingTypeOrSelf.GetTypeInfo().IsEnum)
                     {
                         AddEnumType(elementUnderlyingTypeOrSelf);
                     }
@@ -677,7 +677,7 @@ namespace Microsoft.OData.WebApi.Builder
                     if (property.PropertyType.IsCollection(out elementType))
                     {
                         Type elementUnderlyingTypeOrSelf = TypeHelper.GetUnderlyingTypeOrSelf(elementType);
-                        if (elementUnderlyingTypeOrSelf.IsEnum)
+                        if (elementUnderlyingTypeOrSelf.GetTypeInfo().IsEnum)
                         {
                             AddEnumType(elementUnderlyingTypeOrSelf);
                         }
@@ -765,7 +765,7 @@ namespace Microsoft.OData.WebApi.Builder
 
             // If one of the base types is configured as complex type, the type of this property
             // should be configured as complex type too.
-            Type baseType = propertyType.BaseType;
+            Type baseType = propertyType.GetTypeInfo().BaseType;
             while (baseType != null && baseType != typeof(object))
             {
                 IEdmTypeConfiguration baseMappedType = GetStructuralTypeOrNull(baseType);
@@ -778,7 +778,7 @@ namespace Microsoft.OData.WebApi.Builder
                     }
                 }
 
-                baseType = baseType.BaseType;
+                baseType = baseType.GetTypeInfo().BaseType;
             }
 
             // refer the Edm type from the derived types
@@ -1074,13 +1074,13 @@ namespace Microsoft.OData.WebApi.Builder
 
         private static Dictionary<Type, List<Type>> BuildDerivedTypesMapping(IWebApiAssembliesResolver assemblyResolver)
         {
-            IEnumerable<Type> allTypes = TypeHelper.GetLoadedTypes(assemblyResolver).Where(t => t.IsVisible && t.IsClass && t != typeof(object));
+            IEnumerable<Type> allTypes = TypeHelper.GetLoadedTypes(assemblyResolver).Where(t => t.GetTypeInfo().IsVisible && t.GetTypeInfo().IsClass && t != typeof(object));
             Dictionary<Type, List<Type>> allTypeMapping = allTypes.ToDictionary(k => k, k => new List<Type>());
 
             foreach (Type type in allTypes)
             {
                 List<Type> derivedTypes;
-                if (type.BaseType != null && allTypeMapping.TryGetValue(type.BaseType, out derivedTypes))
+                if (type.GetTypeInfo().BaseType != null && allTypeMapping.TryGetValue(type.GetTypeInfo().BaseType, out derivedTypes))
                 {
                     derivedTypes.Add(type);
                 }

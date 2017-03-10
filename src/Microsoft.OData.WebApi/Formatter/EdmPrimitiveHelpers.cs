@@ -3,9 +3,9 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Linq;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
@@ -55,10 +55,6 @@ namespace Microsoft.OData.WebApi.Formatter
 
                 return str.ToCharArray();
             }
-            else if (type == typeof(Binary))
-            {
-                return new Binary((byte[])value);
-            }
             else if (type == typeof(XElement))
             {
                 if (str == null)
@@ -71,7 +67,7 @@ namespace Microsoft.OData.WebApi.Formatter
             else
             {
                 type = Nullable.GetUnderlyingType(type) ?? type;
-                if (type.IsEnum)
+                if (type.GetTypeInfo().IsEnum)
                 {
                     if (str == null)
                     {

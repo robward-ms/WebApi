@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 
@@ -32,7 +33,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 throw Error.ArgumentNull("graph");
             }
 
-            if (graph.GetType().IsEnum)
+            if (graph.GetType().GetTypeInfo().IsEnum)
             {
                 messageWriter.WriteValue(graph.ToString());
             }

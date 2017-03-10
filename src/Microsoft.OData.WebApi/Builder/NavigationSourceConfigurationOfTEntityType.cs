@@ -102,7 +102,7 @@ namespace Microsoft.OData.WebApi.Builder
 
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -201,7 +201,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasMany(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -270,7 +270,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasRequired(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -340,7 +340,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasRequired(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -409,7 +409,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasOptional(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -479,7 +479,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasOptional(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -548,7 +548,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasRequired(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 
@@ -618,7 +618,7 @@ namespace Microsoft.OData.WebApi.Builder
             NavigationPropertyConfiguration navigation = derivedEntityType.HasRequired(navigationExpression);
             IList<MemberInfo> bindingPath = new List<MemberInfo>
             {
-                typeof(TDerivedEntityType),
+                typeof(TDerivedEntityType).GetTypeInfo(),
                 navigation.PropertyInfo
             };
 

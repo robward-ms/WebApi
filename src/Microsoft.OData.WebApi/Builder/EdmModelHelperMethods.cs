@@ -168,12 +168,12 @@ namespace Microsoft.OData.WebApi.Builder
             IList<string> bindings = new List<string>();
             foreach (var bindingInfo in binding.Path)
             {
-                Type typeCast = bindingInfo as Type;
+                TypeInfo typeCast = bindingInfo as TypeInfo;
                 PropertyInfo propertyInfo = bindingInfo as PropertyInfo;
 
                 if (typeCast != null)
                 {
-                    IEdmType edmType = edmMap.EdmTypes[typeCast];
+                    IEdmType edmType = edmMap.EdmTypes[typeCast.BaseType];
                     bindings.Add(edmType.FullTypeName());
                 }
                 else if (propertyInfo != null)
@@ -813,7 +813,7 @@ namespace Microsoft.OData.WebApi.Builder
             {
                 Type configurationClrType = TypeHelper.GetUnderlyingTypeOrSelf(configuration.ClrType);
 
-                if (!configurationClrType.IsEnum)
+                if (!configurationClrType.GetTypeInfo().IsEnum)
                 {
                     configurationClrType = configuration.ClrType;
                 }

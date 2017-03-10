@@ -864,7 +864,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
         {
             Expression sourceValue;
 
-            if (source.Type.IsGenericType && source.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (source.Type.GetTypeInfo().IsGenericType && source.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 if (TypeHelper.IsEnum(source.Type))
                 {

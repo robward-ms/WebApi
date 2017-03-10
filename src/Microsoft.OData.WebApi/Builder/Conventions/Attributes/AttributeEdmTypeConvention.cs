@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Reflection;
 using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Builder.Conventions.Attributes
@@ -49,7 +50,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions.Attributes
                 throw Error.ArgumentNull("edmTypeConfiguration");
             }
 
-            foreach (Attribute attribute in GetAttributes(edmTypeConfiguration.ClrType))
+            foreach (Attribute attribute in GetAttributes(edmTypeConfiguration.ClrType.GetTypeInfo()))
             {
                 Apply(edmTypeConfiguration, model, attribute);
             }

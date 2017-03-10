@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.Linq;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
@@ -90,7 +89,6 @@ namespace Microsoft.OData.WebApi.Formatter
 
                 // Keep the Binary and XElement in the end, since there are not the default mappings for Edm.Binary and Edm.String.
                 new KeyValuePair<Type, IEdmPrimitiveType>(typeof(XElement), GetPrimitiveType(EdmPrimitiveTypeKind.String)),
-                new KeyValuePair<Type, IEdmPrimitiveType>(typeof(Binary), GetPrimitiveType(EdmPrimitiveTypeKind.Binary)),
                 new KeyValuePair<Type, IEdmPrimitiveType>(typeof(ushort), GetPrimitiveType(EdmPrimitiveTypeKind.Int32)),
                 new KeyValuePair<Type, IEdmPrimitiveType>(typeof(ushort?), GetPrimitiveType(EdmPrimitiveTypeKind.Int32)),
                 new KeyValuePair<Type, IEdmPrimitiveType>(typeof(uint), GetPrimitiveType(EdmPrimitiveTypeKind.Int64)),
@@ -161,7 +159,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 }
 
                 Type underlyingType = TypeHelper.GetUnderlyingTypeOrSelf(clrType);
-                if (underlyingType.IsEnum)
+                if (underlyingType.GetTypeInfo().IsEnum)
                 {
                     clrType = underlyingType;
                 }
@@ -179,10 +177,10 @@ namespace Microsoft.OData.WebApi.Formatter
                 // default to the EdmType with the same name as the ClrType name
                 returnType = returnType ?? edmModel.FindType(clrType.EdmFullName());
 
-                if (clrType.BaseType != null)
+                if (clrType.GetTypeInfo().BaseType != null)
                 {
                     // go up the inheritance tree to see if we have a mapping defined for the base type.
-                    returnType = returnType ?? GetEdmType(edmModel, clrType.BaseType, testCollections);
+                    returnType = returnType ?? GetEdmType(edmModel, clrType.GetTypeInfo().BaseType, testCollections);
                 }
                 return returnType;
             }
@@ -282,7 +280,7 @@ namespace Microsoft.OData.WebApi.Formatter
             else
             {
                 Type clrType = GetClrType(edmTypeReference.Definition, edmModel, assembliesResolver);
-                if (clrType != null && clrType.IsEnum && edmTypeReference.IsNullable)
+                if (clrType != null && clrType.GetTypeInfo().IsEnum && edmTypeReference.IsNullable)
                 {
                     return clrType.ToNullable();
                 }
@@ -1056,7 +1054,7 @@ namespace Microsoft.OData.WebApi.Formatter
         /// <returns>True if a given Type is null-able; false otherwise.</returns>
         public static bool IsNullable(Type type)
         {
-            return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
+            return !type.GetTypeInfo().IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>
@@ -1099,7 +1097,7 @@ namespace Microsoft.OData.WebApi.Formatter
 
         private static bool TryGetInnerTypeForDelta(ref Type type)
         {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
+            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
             {
                 type = type.GetGenericArguments()[0];
                 return true;
@@ -1212,24 +1210,24 @@ namespace Microsoft.OData.WebApi.Formatter
                 return false;
             }
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SelectExpandWrapper<>))
+            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(SelectExpandWrapper<>))
             {
                 entityType = type.GetGenericArguments()[0];
                 return true;
             }
 
-            return IsSelectExpandWrapper(type.BaseType, out entityType);
+            return IsSelectExpandWrapper(type.GetTypeInfo().BaseType, out entityType);
         }
 
         private static Type ExtractGenericInterface(Type queryType, Type interfaceType)
         {
-            Func<Type, bool> matchesInterface = t => t.IsGenericType && t.GetGenericTypeDefinition() == interfaceType;
+            Func<Type, bool> matchesInterface = t => t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == interfaceType;
             return matchesInterface(queryType) ? queryType : queryType.GetInterfaces().FirstOrDefault(matchesInterface);
         }
 
         private static IEnumerable<Type> GetMatchingTypes(string edmFullName, IWebApiAssembliesResolver assembliesResolver)
         {
-            return TypeHelper.GetLoadedTypes(assembliesResolver).Where(t => t.IsPublic && t.EdmFullName() == edmFullName);
+            return TypeHelper.GetLoadedTypes(assembliesResolver).Where(t => t.GetTypeInfo().IsPublic && t.EdmFullName() == edmFullName);
         }
 
         // TODO (workitem 336): Support nested types and anonymous types.
@@ -1237,7 +1235,7 @@ namespace Microsoft.OData.WebApi.Formatter
         {
             Contract.Assert(type != null);
 
-            if (!type.IsGenericType)
+            if (!type.GetTypeInfo().IsGenericType)
             {
                 return type.Name;
             }

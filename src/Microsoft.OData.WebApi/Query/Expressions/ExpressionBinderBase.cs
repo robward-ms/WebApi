@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -100,9 +99,9 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             Type rightUnderlyingType = Nullable.GetUnderlyingType(right.Type) ?? right.Type;
 
             // Convert to integers unless Enum type is required
-            if ((leftUnderlyingType.IsEnum || rightUnderlyingType.IsEnum) && binaryOperator != BinaryOperatorKind.Has)
+            if ((leftUnderlyingType.GetTypeInfo().IsEnum || rightUnderlyingType.GetTypeInfo().IsEnum) && binaryOperator != BinaryOperatorKind.Has)
             {
-                Type enumType = leftUnderlyingType.IsEnum ? leftUnderlyingType : rightUnderlyingType;
+                Type enumType = leftUnderlyingType.GetTypeInfo().IsEnum ? leftUnderlyingType : rightUnderlyingType;
                 Type enumUnderlyingType = Enum.GetUnderlyingType(enumType);
                 left = ConvertToEnumUnderlyingType(left, enumType, enumUnderlyingType);
                 right = ConvertToEnumUnderlyingType(right, enumType, enumUnderlyingType);
@@ -272,14 +271,14 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
                 Expression convertedExpression = null;
 
-                if (sourceType.IsEnum)
+                if (sourceType.GetTypeInfo().IsEnum)
                 {
                     // we handle enum conversions ourselves
                     convertedExpression = source;
                 }
                 else
                 {
-                    switch (Type.GetTypeCode(sourceType))
+                    switch (sourceType.GetTypeCode())
                     {
                         case TypeCode.UInt16:
                         case TypeCode.UInt32:
@@ -303,10 +302,6 @@ namespace Microsoft.OData.WebApi.Query.Expressions
                             else if (sourceType == typeof(XElement))
                             {
                                 convertedExpression = Expression.Call(source, "ToString", typeArguments: null, arguments: null);
-                            }
-                            else if (sourceType == typeof(Binary))
-                            {
-                                convertedExpression = Expression.Call(source, "ToArray", typeArguments: null, arguments: null);
                             }
                             break;
 
@@ -694,7 +689,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
         internal static bool IsNullable(Type t)
         {
-            if (!t.IsValueType || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)))
+            if (!t.GetTypeInfo().IsValueType || (t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)))
             {
                 return true;
             }

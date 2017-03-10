@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Routing;
@@ -47,7 +48,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
             {
                 if (!_isDeltaOfT.HasValue)
                 {
-                    _isDeltaOfT = ResourceType != null && ResourceType.IsGenericType && ResourceType.GetGenericTypeDefinition() == typeof(Delta<>);
+                    _isDeltaOfT = ResourceType != null && ResourceType.GetTypeInfo().IsGenericType && ResourceType.GetGenericTypeDefinition() == typeof(Delta<>);
                 }
 
                 return _isDeltaOfT.Value;

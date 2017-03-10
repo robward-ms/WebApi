@@ -65,7 +65,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions.Attributes
                     "member",
                     SRResources.MultipleAttributesFound,
                     member.Name,
-                    member.ReflectedType.Name,
+                    member.DeclaringType.Name,
                     attributes.First().GetType().Name);
             }
 

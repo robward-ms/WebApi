@@ -31,7 +31,7 @@ namespace Microsoft.OData.WebApi.Builder
         {
             Contract.Assert(memberInfo != null);
 
-            Type type = memberInfo as Type;
+            TypeInfo type = memberInfo as TypeInfo;
             return type != null ? (type.Namespace + "." + type.Name) : memberInfo.Name;
         }
     }

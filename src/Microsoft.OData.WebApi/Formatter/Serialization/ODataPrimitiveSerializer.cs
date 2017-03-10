@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
-using System.Data.Linq;
 using System.Diagnostics.Contracts;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
@@ -148,7 +147,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 Type type = value.GetType();
 
                 // Note that type cannot be a nullable type as value is not null and it is boxed.
-                switch (Type.GetTypeCode(type))
+                switch (type.GetTypeCode())
                 {
                     case TypeCode.Char:
                         return new String((char)value, 1);
@@ -220,10 +219,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                         {
                             return ((XElement)value).ToString();
                         }
-                        else if (type == typeof(Binary))
-                        {
-                            return ((Binary)value).ToArray();
-                        }
                         break;
                 }
             }
@@ -235,7 +230,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         {
             Contract.Assert(value != null);
 
-            TypeCode typeCode = Type.GetTypeCode(value.GetType());
+            TypeCode typeCode = value.GetType().GetTypeCode();
 
             switch (typeCode)
             {

@@ -86,7 +86,7 @@ namespace Microsoft.OData.WebApi
                 = type.GetInterfaces()
                     .Union(new[] { type })
                     .FirstOrDefault(
-                        t => t.IsGenericType
+                        t => t.GetTypeInfo().IsGenericType
                              && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 
             if (collectionInterface != null)
@@ -116,7 +116,7 @@ namespace Microsoft.OData.WebApi
         public static bool IsEnum(Type type)
         {
             Type underlyingTypeOrSelf = GetUnderlyingTypeOrSelf(type);
-            return underlyingTypeOrSelf.IsEnum;
+            return underlyingTypeOrSelf.GetTypeInfo().IsEnum;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Microsoft.OData.WebApi
         public static bool IsDateTime(Type type)
         {
             Type underlyingTypeOrSelf = GetUnderlyingTypeOrSelf(type);
-            return Type.GetTypeCode(underlyingTypeOrSelf) == TypeCode.DateTime;
+            return underlyingTypeOrSelf.GetTypeCode() == TypeCode.DateTime;
         }
 
         /// <summary>
@@ -154,8 +154,8 @@ namespace Microsoft.OData.WebApi
 
             type = GetInnerMostElementType(type);
 
-            return type.IsEnum ||
-                   type.IsPrimitive ||
+            return type.GetTypeInfo().IsEnum ||
+                   type.GetTypeInfo().IsPrimitive ||
                    type == typeof(Uri) ||
                    (EdmLibHelpers.GetEdmPrimitiveTypeOrNull(type) != null);
         }
@@ -196,12 +196,12 @@ namespace Microsoft.OData.WebApi
         public static Type GetImplementedIEnumerableType(Type type)
         {
             // get inner type from Task<T>
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
+            if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
             {
                 type = type.GetGenericArguments().First();
             }
 
-            if (type.IsGenericType && type.IsInterface &&
+            if (type.GetTypeInfo().IsGenericType && type.GetTypeInfo().IsInterface &&
                 (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
                  type.GetGenericTypeDefinition() == typeof(IQueryable<>)))
             {
@@ -214,7 +214,7 @@ namespace Microsoft.OData.WebApi
                 Type[] interfaces = type.GetInterfaces();
                 foreach (Type interfaceType in interfaces)
                 {
-                    if (interfaceType.IsGenericType &&
+                    if (interfaceType.GetTypeInfo().IsGenericType &&
                         (interfaceType.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
                          interfaceType.GetGenericTypeDefinition() == typeof(IQueryable<>)))
                     {
@@ -259,7 +259,7 @@ namespace Microsoft.OData.WebApi
 
                 if (exportedTypes != null)
                 {
-                    result.AddRange(exportedTypes.Where(t => t != null && t.IsVisible));
+                    result.AddRange(exportedTypes.Where(t => t != null && t.GetTypeInfo().IsVisible));
                 }
             }
 

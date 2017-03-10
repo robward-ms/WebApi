@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Properties;

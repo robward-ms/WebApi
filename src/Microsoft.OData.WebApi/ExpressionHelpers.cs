@@ -250,7 +250,7 @@ namespace Microsoft.OData.WebApi
         // Entity Framework does not understand default(T) expression. Hence, generate a constant expression with the default value.
         public static Expression Default(Type type)
         {
-            if (type.IsValueType)
+            if (type.GetTypeInfo().IsValueType)
             {
                 return Expression.Constant(Activator.CreateInstance(type), type);
             }

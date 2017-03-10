@@ -230,7 +230,7 @@ namespace Microsoft.OData.WebApi.Builder
             IEdmTypeReference elementTypeReference = null;
             Type clrType = TypeHelper.GetUnderlyingTypeOrSelf(collectionProperty.ElementType);
 
-            if (clrType.IsEnum)
+            if (clrType.GetTypeInfo().IsEnum)
             {
                 IEdmType edmType = GetEdmType(clrType);
 
@@ -368,8 +368,8 @@ namespace Microsoft.OData.WebApi.Builder
                 }
                 else
                 {
-                    Contract.Assert(propInfo.ReflectedType != null);
-                    Type baseType = propInfo.ReflectedType.BaseType;
+                    Contract.Assert(propInfo.DeclaringType != null);
+                    Type baseType = propInfo.DeclaringType.GetTypeInfo().BaseType;
                     while (baseType != null)
                     {
                         PropertyInfo basePropInfo = baseType.GetProperty(propInfo.Name);
@@ -379,7 +379,7 @@ namespace Microsoft.OData.WebApi.Builder
                             break;
                         }
 
-                        baseType = baseType.BaseType;
+                        baseType = baseType.GetTypeInfo().BaseType;
                     }
 
                     Contract.Assert(baseType != null);

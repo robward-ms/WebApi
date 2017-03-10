@@ -3,6 +3,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Properties;
 
@@ -36,7 +37,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
                 throw new ValidationException(Error.Format(SRResources.PropertyMustBeEnum, value.GetType().Name, "ODataEnumValue"));
             }
 
-            if (!enumType.IsEnum)
+            if (!enumType.GetTypeInfo().IsEnum)
             {
                 throw Error.InvalidOperation(Error.Format(SRResources.TypeMustBeEnumOrNullableEnum, type.Name));
             }

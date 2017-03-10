@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Properties;
 

@@ -248,7 +248,7 @@ namespace Microsoft.OData.WebApi.Builder
             IList<MemberInfo> bindingPath = new List<MemberInfo> { navigationConfiguration.PropertyInfo };
             if (navigationConfiguration.DeclaringType != EntityType)
             {
-                bindingPath.Insert(0, navigationConfiguration.DeclaringType.ClrType);
+                bindingPath.Insert(0, navigationConfiguration.DeclaringType.ClrType.GetTypeInfo());
             }
 
             return AddBinding(navigationConfiguration, targetNavigationSource, bindingPath);
@@ -541,22 +541,22 @@ namespace Microsoft.OData.WebApi.Builder
             Contract.Assert(current != null);
             Contract.Assert(info != null);
 
-            Type derivedType = info as Type;
+            TypeInfo derivedType = info as TypeInfo;
             if (derivedType != null)
             {
-                if (!(derivedType.IsAssignableFrom(current) || current.IsAssignableFrom(derivedType)))
+                if (!(derivedType.IsAssignableFrom(current) || current.IsAssignableFrom(derivedType.BaseType)))
                 {
                     throw Error.InvalidOperation(SRResources.NavigationPropertyBindingPathNotInHierarchy,
-                        derivedType.FullName, info.Name, current.FullName);
+                        derivedType.FullName, info.GetType().Name, current.FullName);
                 }
 
-                return derivedType;
+                return derivedType.BaseType;
             }
 
             PropertyInfo propertyInfo = info as PropertyInfo;
             if (propertyInfo == null)
             {
-                throw Error.NotSupported(SRResources.NavigationPropertyBindingPathNotSupported, info.Name, info.MemberType);
+                throw Error.NotSupported(SRResources.NavigationPropertyBindingPathNotSupported, info.GetType().Name);
             }
 
             Type declaringType = propertyInfo.DeclaringType;
@@ -564,7 +564,7 @@ namespace Microsoft.OData.WebApi.Builder
                 !(declaringType.IsAssignableFrom(current) || current.IsAssignableFrom(declaringType)))
             {
                 throw Error.InvalidOperation(SRResources.NavigationPropertyBindingPathNotInHierarchy,
-                    declaringType == null ? "Unknown Type" : declaringType.FullName, info.Name, current.FullName);
+                    declaringType == null ? "Unknown Type" : declaringType.FullName, info.GetType().Name, current.FullName);
             }
 
             Type elementType;

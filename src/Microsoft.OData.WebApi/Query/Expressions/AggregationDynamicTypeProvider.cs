@@ -76,7 +76,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
                 }
             }
 
-            return tb.CreateType();
+            return tb.CreateTypeInfo().AsType();
         }
 
         private static TypeBuilder GetTypeBuilder<T>(string typeSignature) where T : DynamicTypeWrapper
@@ -84,7 +84,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             var an = new AssemblyName(typeSignature);
 
             // Create GC collectable assembly. It will be collected after usage and we don't need to worry about memory usage
-            AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(an,
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(an,
                 AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(ModuleName);
             TypeBuilder tb = moduleBuilder.DefineType(typeSignature,
@@ -117,7 +117,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             getIl.Emit(OpCodes.Ldstr, propertyName);
             getIl.Emit(OpCodes.Callvirt, getPropertyValueMethod);
 
-            if (propertyType.IsValueType)
+            if (propertyType.GetTypeInfo().IsValueType)
             {
                 // for value type (type) means unboxing
                 getIl.Emit(OpCodes.Unbox_Any, propertyType);
@@ -141,7 +141,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             setIl.Emit(OpCodes.Ldarg_0);
             setIl.Emit(OpCodes.Ldstr, propertyName);
             setIl.Emit(OpCodes.Ldarg_1);
-            if (propertyType.IsValueType)
+            if (propertyType.GetTypeInfo().IsValueType)
             {
                 // Boxing value types to store as an object
                 setIl.Emit(OpCodes.Box, propertyType);

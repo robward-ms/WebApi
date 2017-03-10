@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Properties;
@@ -77,7 +78,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             }
 
             string value = null;
-            if (graph.GetType().IsEnum)
+            if (graph.GetType().GetTypeInfo().IsEnum)
             {
                 value = graph.ToString();
             }

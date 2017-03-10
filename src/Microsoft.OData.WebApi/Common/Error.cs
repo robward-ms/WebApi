@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Web.Http.Properties;
+using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Common
 {
@@ -226,11 +226,7 @@ namespace Microsoft.OData.WebApi.Common
         /// <returns>The logged <see cref="Exception"/>.</returns>
         public static ArgumentException InvalidEnumArgument(string parameterName, int invalidValue, Type enumClass)
         {
-#if NETFX_CORE
             return new ArgumentException(Error.Format(CommonWebApiResources.InvalidEnumArgument, parameterName, invalidValue, enumClass.Name), parameterName);
-#else
-            return new InvalidEnumArgumentException(parameterName, invalidValue, enumClass);
-#endif
         }
 
         /// <summary>

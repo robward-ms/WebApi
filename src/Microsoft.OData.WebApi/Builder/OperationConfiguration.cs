@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 
@@ -328,7 +329,7 @@ namespace Microsoft.OData.WebApi.Builder
             Type type = TypeHelper.GetUnderlyingTypeOrSelf(clrType);
             IEdmTypeConfiguration edmTypeConfiguration;
 
-            if (type.IsEnum)
+            if (type.GetTypeInfo().IsEnum)
             {
                 edmTypeConfiguration = ModelBuilder.GetTypeConfigurationOrNull(type);
 
@@ -344,7 +345,7 @@ namespace Microsoft.OData.WebApi.Builder
 
             if (edmTypeConfiguration == null)
             {
-                if (type.IsEnum)
+                if (type.GetTypeInfo().IsEnum)
                 {
                     EnumTypeConfiguration enumTypeConfiguration = ModelBuilder.AddEnumType(type);
 

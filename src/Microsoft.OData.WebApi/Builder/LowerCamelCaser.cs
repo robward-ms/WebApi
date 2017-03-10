@@ -86,7 +86,7 @@ namespace Microsoft.OData.WebApi.Builder
                 }
                 else
                 {
-                    stringBuilder.Append(Char.ToLower(name[index], CultureInfo.InvariantCulture));
+                    stringBuilder.Append(Char.ToLowerInvariant(name[index]));
                 }
             }
 

@@ -10,6 +10,7 @@
 
 namespace Microsoft.OData.WebApi.Properties {
     using System;
+    using System.Reflection;
     
     
     /// <summary>
@@ -39,7 +40,7 @@ namespace Microsoft.OData.WebApi.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OData.WebApi.Properties.SRResources", typeof(SRResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OData.WebApi.Properties.SRResources", typeof(SRResources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -1249,7 +1250,7 @@ namespace Microsoft.OData.WebApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The navigation property binding path segment &apos;{0}&apos; of member type &apos;{1}&apos; is not supported..
+        ///   Looks up a localized string similar to The navigation property binding path segment &apos;{0}&apos; is not supported..
         /// </summary>
         internal static string NavigationPropertyBindingPathNotSupported {
             get {

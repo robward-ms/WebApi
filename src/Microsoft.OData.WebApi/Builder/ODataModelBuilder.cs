@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
@@ -300,7 +301,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("type");
             }
 
-            if (!type.IsEnum)
+            if (!type.GetTypeInfo().IsEnum)
             {
                 throw Error.Argument("type", SRResources.TypeCannotBeEnum, type.FullName);
             }

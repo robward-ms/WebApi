@@ -120,7 +120,7 @@ namespace Microsoft.OData.WebApi.Builder
             }
 
             // Add the enum key if the property type is enum
-            if (keyProperty.PropertyType.IsEnum)
+            if (keyProperty.PropertyType.GetTypeInfo().IsEnum)
             {
                 ModelBuilder.AddEnumType(keyProperty.PropertyType);
                 EnumPropertyConfiguration enumConfig = AddEnumProperty(keyProperty);

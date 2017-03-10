@@ -277,7 +277,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("propertyInfo");
             }
 
-            if (!propertyInfo.ReflectedType.IsAssignableFrom(ClrType))
+            if (!propertyInfo.DeclaringType.IsAssignableFrom(ClrType))
             {
                 throw Error.Argument("propertyInfo", SRResources.PropertyDoesNotBelongToType, propertyInfo.Name, ClrType.FullName);
             }
@@ -315,7 +315,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("propertyInfo");
             }
 
-            if (!propertyInfo.ReflectedType.IsAssignableFrom(ClrType))
+            if (!propertyInfo.DeclaringType.IsAssignableFrom(ClrType))
             {
                 throw Error.Argument("propertyInfo", SRResources.PropertyDoesNotBelongToType, propertyInfo.Name, ClrType.FullName);
             }
@@ -359,7 +359,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("propertyInfo");
             }
 
-            if (!propertyInfo.ReflectedType.IsAssignableFrom(ClrType))
+            if (!propertyInfo.DeclaringType.IsAssignableFrom(ClrType))
             {
                 throw Error.Argument("propertyInfo", SRResources.PropertyDoesNotBelongToType, propertyInfo.Name, ClrType.FullName);
             }
@@ -498,7 +498,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("propertyInfo");
             }
 
-            if (!propertyInfo.ReflectedType.IsAssignableFrom(ClrType))
+            if (!propertyInfo.DeclaringType.IsAssignableFrom(ClrType))
             {
                 throw Error.Argument("propertyInfo", SRResources.PropertyDoesNotBelongToType, propertyInfo.Name, ClrType.FullName);
             }
@@ -548,7 +548,7 @@ namespace Microsoft.OData.WebApi.Builder
                 throw Error.ArgumentNull("navigationProperty");
             }
 
-            if (!navigationProperty.ReflectedType.IsAssignableFrom(ClrType))
+            if (!navigationProperty.DeclaringType.IsAssignableFrom(ClrType))
             {
                 throw Error.Argument("navigationProperty", SRResources.PropertyDoesNotBelongToType, navigationProperty.Name, ClrType.FullName);
             }
@@ -614,7 +614,7 @@ namespace Microsoft.OData.WebApi.Builder
             if (baseProperty != null)
             {
                 throw Error.Argument("propertyInfo", SRResources.CannotRedefineBaseTypeProperty,
-                    propertyInfo.Name, baseProperty.PropertyInfo.ReflectedType.FullName);
+                    propertyInfo.Name, baseProperty.PropertyInfo.DeclaringType.FullName);
             }
         }
 

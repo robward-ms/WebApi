@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
@@ -39,7 +40,7 @@ namespace Microsoft.OData.WebApi.Builder.Conventions.Attributes
                 throw Error.ArgumentNull("model");
             }
 
-            bool isTypeDataContract = structuralTypeConfiguration.ClrType.GetCustomAttributes(typeof(DataContractAttribute), inherit: true).Any();
+            bool isTypeDataContract = structuralTypeConfiguration.ClrType.GetTypeInfo().GetCustomAttributes(typeof(DataContractAttribute), inherit: true).Any();
             DataMemberAttribute dataMember = attribute as DataMemberAttribute;
 
             if (isTypeDataContract && dataMember != null && !edmProperty.AddedExplicitly)
