@@ -1,0 +1,33 @@
+{
+  "title": "Microsoft.AspNetCore.OData",
+  "version": "6.0.0-alpha1-rtm",
+  "description": "Microsoft.AspNetCore.OData",
+
+    "dependencies": {
+        "Microsoft.OData.Core": "7.0.0",
+        "Microsoft.OData.Edm": "7.0.0",
+        "Microsoft.Spatial": "7.0.0",
+        "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
+        "Microsoft.Extensions.DependencyInjection": "1.0.0",
+        "System.Linq": "4.3.0",
+        "Microsoft.AspNetCore.WebUtilities": "1.1.1"
+    },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8+wpa81"
+      ],
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+            "type": "platform",
+            "version": "1.0.0"
+        },
+        "Microsoft.OData.WebApi": {
+            "target": "project"
+        }
+      }
+    }
+  }
+}
