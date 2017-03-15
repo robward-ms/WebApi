@@ -23,7 +23,7 @@ namespace Microsoft.OData.WebApi.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SRResources {
+    public class SRResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -37,7 +37,7 @@ namespace Microsoft.OData.WebApi.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OData.WebApi.Properties.SRResources", typeof(SRResources).GetTypeInfo().Assembly);
@@ -52,7 +52,7 @@ namespace Microsoft.OData.WebApi.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -64,7 +64,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The HttpActionContext.ActionDescriptor is null..
         /// </summary>
-        internal static string ActionContextMustHaveDescriptor {
+        public static string ActionContextMustHaveDescriptor {
             get {
                 return ResourceManager.GetString("ActionContextMustHaveDescriptor", resourceCulture);
             }
@@ -73,7 +73,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The HttpActionContext.Request is null..
         /// </summary>
-        internal static string ActionContextMustHaveRequest {
+        public static string ActionContextMustHaveRequest {
             get {
                 return ResourceManager.GetString("ActionContextMustHaveRequest", resourceCulture);
             }
@@ -82,7 +82,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The HttpActionExecutedContext.ActionContext is null..
         /// </summary>
-        internal static string ActionExecutedContextMustHaveActionContext {
+        public static string ActionExecutedContextMustHaveActionContext {
             get {
                 return ResourceManager.GetString("ActionExecutedContextMustHaveActionContext", resourceCulture);
             }
@@ -91,7 +91,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The HttpExecutedActionContext.Request is null..
         /// </summary>
-        internal static string ActionExecutedContextMustHaveRequest {
+        public static string ActionExecutedContextMustHaveRequest {
             get {
                 return ResourceManager.GetString("ActionExecutedContextMustHaveRequest", resourceCulture);
             }
@@ -100,7 +100,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The action &apos;{0}&apos; is not bound to the collection of entity. Only actions that are bound to entities can have action links..
         /// </summary>
-        internal static string ActionNotBoundToCollectionOfEntity {
+        public static string ActionNotBoundToCollectionOfEntity {
             get {
                 return ResourceManager.GetString("ActionNotBoundToCollectionOfEntity", resourceCulture);
             }
@@ -109,7 +109,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The action &apos;{0}&apos; is not bound to an entity. Only actions that are bound to entities can have action links..
         /// </summary>
-        internal static string ActionNotBoundToEntity {
+        public static string ActionNotBoundToEntity {
             get {
                 return ResourceManager.GetString("ActionNotBoundToEntity", resourceCulture);
             }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Aggregation method &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string AggregationMethodNotSupported {
+        public static string AggregationMethodNotSupported {
             get {
                 return ResourceManager.GetString("AggregationMethodNotSupported", resourceCulture);
             }
@@ -127,7 +127,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Aggregation &apos;{0}&apos; not supported for property &apos;{1}&apos; of type &apos;{2}&apos;..
         /// </summary>
-        internal static string AggregationNotSupportedForType {
+        public static string AggregationNotSupportedForType {
             get {
                 return ResourceManager.GetString("AggregationNotSupportedForType", resourceCulture);
             }
@@ -136,7 +136,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The query option is not bound to any CLR type. &apos;{0}&apos; is only supported with a query option bound to a CLR type..
         /// </summary>
-        internal static string ApplyToOnUntypedQueryOption {
+        public static string ApplyToOnUntypedQueryOption {
             get {
                 return ResourceManager.GetString("ApplyToOnUntypedQueryOption", resourceCulture);
             }
@@ -145,7 +145,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The argument must be of type &apos;{0}&apos;..
         /// </summary>
-        internal static string ArgumentMustBeOfType {
+        public static string ArgumentMustBeOfType {
             get {
                 return ResourceManager.GetString("ArgumentMustBeOfType", resourceCulture);
             }
@@ -154,7 +154,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The batch request must have &apos;{0}&apos; as the media type..
         /// </summary>
-        internal static string BatchRequestInvalidMediaType {
+        public static string BatchRequestInvalidMediaType {
             get {
                 return ResourceManager.GetString("BatchRequestInvalidMediaType", resourceCulture);
             }
@@ -163,7 +163,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The batch request must have a boundary specification in the &quot;Content-Type&quot; header..
         /// </summary>
-        internal static string BatchRequestMissingBoundary {
+        public static string BatchRequestMissingBoundary {
             get {
                 return ResourceManager.GetString("BatchRequestMissingBoundary", resourceCulture);
             }
@@ -172,7 +172,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;Content&apos; property on the batch request cannot be null..
         /// </summary>
-        internal static string BatchRequestMissingContent {
+        public static string BatchRequestMissingContent {
             get {
                 return ResourceManager.GetString("BatchRequestMissingContent", resourceCulture);
             }
@@ -181,7 +181,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The batch request must have a &quot;Content-Type&quot; header..
         /// </summary>
-        internal static string BatchRequestMissingContentType {
+        public static string BatchRequestMissingContentType {
             get {
                 return ResourceManager.GetString("BatchRequestMissingContentType", resourceCulture);
             }
@@ -190,7 +190,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A binary operator with incompatible types was detected. Found operand types &apos;{0}&apos; and &apos;{1}&apos; for operator kind &apos;{2}&apos;..
         /// </summary>
-        internal static string BinaryOperatorNotSupported {
+        public static string BinaryOperatorNotSupported {
             get {
                 return ResourceManager.GetString("BinaryOperatorNotSupported", resourceCulture);
             }
@@ -199,7 +199,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on type &apos;{1}&apos; returned a null value. The input stream contains collection items which cannot be added if the instance is null..
         /// </summary>
-        internal static string CannotAddToNullCollection {
+        public static string CannotAddToNullCollection {
             get {
                 return ResourceManager.GetString("CannotAddToNullCollection", resourceCulture);
             }
@@ -208,7 +208,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot apply {0} of &apos;{1}&apos; to {2} of &apos;{3}&apos;..
         /// </summary>
-        internal static string CannotApplyETagOfT {
+        public static string CannotApplyETagOfT {
             get {
                 return ResourceManager.GetString("CannotApplyETagOfT", resourceCulture);
             }
@@ -217,7 +217,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot apply {0} of &apos;{1}&apos; to {2} of &apos;{3}&apos;..
         /// </summary>
-        internal static string CannotApplyODataQueryOptionsOfT {
+        public static string CannotApplyODataQueryOptionsOfT {
             get {
                 return ResourceManager.GetString("CannotApplyODataQueryOptionsOfT", resourceCulture);
             }
@@ -226,7 +226,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot automatically bind the navigation property &apos;{0}&apos; on type &apos;{1}&apos; for the entity set or singleton &apos;{2}&apos; because there are two or more matching target entity sets or singletons. The matching entity sets or singletons are: {3}..
         /// </summary>
-        internal static string CannotAutoCreateMultipleCandidates {
+        public static string CannotAutoCreateMultipleCandidates {
             get {
                 return ResourceManager.GetString("CannotAutoCreateMultipleCandidates", resourceCulture);
             }
@@ -235,7 +235,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot cast $filter of type &apos;{0}&apos; to type &apos;{1}&apos;..
         /// </summary>
-        internal static string CannotCastFilter {
+        public static string CannotCastFilter {
             get {
                 return ResourceManager.GetString("CannotCastFilter", resourceCulture);
             }
@@ -244,7 +244,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot define keys on type &apos;{0}&apos; deriving from &apos;{1}&apos;. The base type in the entity inheritance hierarchy already contains keys..
         /// </summary>
-        internal static string CannotDefineKeysOnDerivedTypes {
+        public static string CannotDefineKeysOnDerivedTypes {
             get {
                 return ResourceManager.GetString("CannotDefineKeysOnDerivedTypes", resourceCulture);
             }
@@ -253,7 +253,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot determine the Edm type for the CLR type &apos;{0}&apos; because the derived type &apos;{1}&apos; is configured as entity type and another derived type &apos;{2}&apos; is configured as complex type..
         /// </summary>
-        internal static string CannotInferEdmType {
+        public static string CannotInferEdmType {
             get {
                 return ResourceManager.GetString("CannotInferEdmType", resourceCulture);
             }
@@ -262,7 +262,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An instance of the abstract resource type &apos;{0}&apos; was found. Abstract resource types cannot be instantiated..
         /// </summary>
-        internal static string CannotInstantiateAbstractResourceType {
+        public static string CannotInstantiateAbstractResourceType {
             get {
                 return ResourceManager.GetString("CannotInstantiateAbstractResourceType", resourceCulture);
             }
@@ -271,7 +271,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot apply PATCH to navigation property &apos;{0}&apos; on entity type &apos;{1}&apos;..
         /// </summary>
-        internal static string CannotPatchNavigationProperties {
+        public static string CannotPatchNavigationProperties {
             get {
                 return ResourceManager.GetString("CannotPatchNavigationProperties", resourceCulture);
             }
@@ -280,7 +280,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; does not recognize the node with type &apos;{1}&apos;..
         /// </summary>
-        internal static string CannotRecognizeNodeType {
+        public static string CannotRecognizeNodeType {
             get {
                 return ResourceManager.GetString("CannotRecognizeNodeType", resourceCulture);
             }
@@ -289,7 +289,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity type &apos;{0}&apos; cannot be configured as a complex type because the derived type &apos;{1}&apos; is already configured as an entity type..
         /// </summary>
-        internal static string CannotReconfigEntityTypeAsComplexType {
+        public static string CannotReconfigEntityTypeAsComplexType {
             get {
                 return ResourceManager.GetString("CannotReconfigEntityTypeAsComplexType", resourceCulture);
             }
@@ -298,7 +298,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot redefine property &apos;{0}&apos; already defined on the base type &apos;{1}&apos;..
         /// </summary>
-        internal static string CannotRedefineBaseTypeProperty {
+        public static string CannotRedefineBaseTypeProperty {
             get {
                 return ResourceManager.GetString("CannotRedefineBaseTypeProperty", resourceCulture);
             }
@@ -307,7 +307,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot re-enable dependency injection for HTTP routes..
         /// </summary>
-        internal static string CannotReEnableDependencyInjection {
+        public static string CannotReEnableDependencyInjection {
             get {
                 return ResourceManager.GetString("CannotReEnableDependencyInjection", resourceCulture);
             }
@@ -316,7 +316,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot serialize a null &apos;{0}&apos;..
         /// </summary>
-        internal static string CannotSerializerNull {
+        public static string CannotSerializerNull {
             get {
                 return ResourceManager.GetString("CannotSerializerNull", resourceCulture);
             }
@@ -325,7 +325,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The dynamic dictionary property &apos;{0}&apos; of type &apos;{1}&apos; cannot be set. The dynamic property dictionary must have a setter..
         /// </summary>
-        internal static string CannotSetDynamicPropertyDictionary {
+        public static string CannotSetDynamicPropertyDictionary {
             get {
                 return ResourceManager.GetString("CannotSetDynamicPropertyDictionary", resourceCulture);
             }
@@ -334,7 +334,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} cannot write an object of type &apos;{1}&apos;..
         /// </summary>
-        internal static string CannotWriteType {
+        public static string CannotWriteType {
             get {
                 return ResourceManager.GetString("CannotWriteType", resourceCulture);
             }
@@ -343,7 +343,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The given model does not contain the type &apos;{0}&apos;..
         /// </summary>
-        internal static string ClrTypeNotInModel {
+        public static string ClrTypeNotInModel {
             get {
                 return ResourceManager.GetString("ClrTypeNotInModel", resourceCulture);
             }
@@ -352,7 +352,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the parameter &apos;{1}&apos; does not have an Add method. Consider using a collection type that does have an Add method - for example IList&lt;T&gt; or ICollection&lt;T&gt;..
         /// </summary>
-        internal static string CollectionParameterShouldHaveAddMethod {
+        public static string CollectionParameterShouldHaveAddMethod {
             get {
                 return ResourceManager.GetString("CollectionParameterShouldHaveAddMethod", resourceCulture);
             }
@@ -361,7 +361,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to CollectionProperties must implement IEnumerable&lt;&gt;. The property &apos;{0}&apos; declared on &apos;{1}&apos; does not implement IEnumerable&lt;&gt;..
         /// </summary>
-        internal static string CollectionPropertiesMustReturnIEnumerable {
+        public static string CollectionPropertiesMustReturnIEnumerable {
             get {
                 return ResourceManager.GetString("CollectionPropertiesMustReturnIEnumerable", resourceCulture);
             }
@@ -370,7 +370,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the property &apos;{1}&apos; on type &apos;{2}&apos; does not have an Add method. Consider using a collection type that does have an Add method - for example IList&lt;T&gt; or ICollection&lt;T&gt;..
         /// </summary>
-        internal static string CollectionShouldHaveAddMethod {
+        public static string CollectionShouldHaveAddMethod {
             get {
                 return ResourceManager.GetString("CollectionShouldHaveAddMethod", resourceCulture);
             }
@@ -379,7 +379,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the property &apos;{1}&apos; on type &apos;{2}&apos; does not have a Clear method. Consider using a collection type that does have a Clear method, such as IList&lt;T&gt; or ICollection&lt;T&gt;..
         /// </summary>
-        internal static string CollectionShouldHaveClearMethod {
+        public static string CollectionShouldHaveClearMethod {
             get {
                 return ResourceManager.GetString("CollectionShouldHaveClearMethod", resourceCulture);
             }
@@ -388,7 +388,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot compare an enum of type &apos;{0}&apos; to an expression of type &apos;{1}&apos;..
         /// </summary>
-        internal static string ConvertToEnumFailed {
+        public static string ConvertToEnumFailed {
             get {
                 return ResourceManager.GetString("ConvertToEnumFailed", resourceCulture);
             }
@@ -397,7 +397,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} does not support CreateODataValue..
         /// </summary>
-        internal static string CreateODataValueNotSupported {
+        public static string CreateODataValueNotSupported {
             get {
                 return ResourceManager.GetString("CreateODataValueNotSupported", resourceCulture);
             }
@@ -406,7 +406,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The actual entity type &apos;{0}&apos; is not assignable to the expected type &apos;{1}&apos;..
         /// </summary>
-        internal static string DeltaEntityTypeNotAssignable {
+        public static string DeltaEntityTypeNotAssignable {
             get {
                 return ResourceManager.GetString("DeltaEntityTypeNotAssignable", resourceCulture);
             }
@@ -415,7 +415,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot use Delta of type &apos;{0}&apos; on an entity of type &apos;{1}&apos;..
         /// </summary>
-        internal static string DeltaTypeMismatch {
+        public static string DeltaTypeMismatch {
             get {
                 return ResourceManager.GetString("DeltaTypeMismatch", resourceCulture);
             }
@@ -424,7 +424,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The dependent property type &apos;{0}&apos; is not same as the principal property type &apos;{1}. The dependent and principal properties must have must have same types in the same order..
         /// </summary>
-        internal static string DependentAndPrincipalTypeNotMatch {
+        public static string DependentAndPrincipalTypeNotMatch {
             get {
                 return ResourceManager.GetString("DependentAndPrincipalTypeNotMatch", resourceCulture);
             }
@@ -433,7 +433,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; does not support Read..
         /// </summary>
-        internal static string DeserializerDoesNotSupportRead {
+        public static string DeserializerDoesNotSupportRead {
             get {
                 return ResourceManager.GetString("DeserializerDoesNotSupportRead", resourceCulture);
             }
@@ -442,7 +442,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type &apos;{0}&apos; does not support ReadInline..
         /// </summary>
-        internal static string DoesNotSupportReadInLine {
+        public static string DoesNotSupportReadInLine {
             get {
                 return ResourceManager.GetString("DoesNotSupportReadInLine", resourceCulture);
             }
@@ -451,7 +451,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate dynamic property name &apos;{0}&apos; found in open type &apos;{1}&apos;. Each dynamic property name must be unique..
         /// </summary>
-        internal static string DuplicateDynamicPropertyNameFound {
+        public static string DuplicateDynamicPropertyNameFound {
             get {
                 return ResourceManager.GetString("DuplicateDynamicPropertyNameFound", resourceCulture);
             }
@@ -460,7 +460,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate key &apos;{0}&apos; found in segment &apos;{1}&apos;..
         /// </summary>
-        internal static string DuplicateKeyInSegment {
+        public static string DuplicateKeyInSegment {
             get {
                 return ResourceManager.GetString("DuplicateKeyInSegment", resourceCulture);
             }
@@ -469,7 +469,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The dynamic property &apos;{0}&apos; with Edm type &apos;{1}&apos; cannot be serialized..
         /// </summary>
-        internal static string DynamicPropertyCannotBeSerialized {
+        public static string DynamicPropertyCannotBeSerialized {
             get {
                 return ResourceManager.GetString("DynamicPropertyCannotBeSerialized", resourceCulture);
             }
@@ -478,7 +478,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The name of dynamic property &apos;{0}&apos; was already used as the declared property name of open type &apos;{1}&apos;..
         /// </summary>
-        internal static string DynamicPropertyNameAlreadyUsedAsDeclaredPropertyName {
+        public static string DynamicPropertyNameAlreadyUsedAsDeclaredPropertyName {
             get {
                 return ResourceManager.GetString("DynamicPropertyNameAlreadyUsedAsDeclaredPropertyName", resourceCulture);
             }
@@ -487,7 +487,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type name of the dynamic resource set &apos;{0}&apos; is required and cannot be empty. Consider using a OData type annotation explicitly..
         /// </summary>
-        internal static string DynamicResourceSetTypeNameIsRequired {
+        public static string DynamicResourceSetTypeNameIsRequired {
             get {
                 return ResourceManager.GetString("DynamicResourceSetTypeNameIsRequired", resourceCulture);
             }
@@ -496,7 +496,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The edit link builder for the entity set &apos;{0}&apos; returned null. An edit link is required for the location header..
         /// </summary>
-        internal static string EditLinkNullForLocationHeader {
+        public static string EditLinkNullForLocationHeader {
             get {
                 return ResourceManager.GetString("EditLinkNullForLocationHeader", resourceCulture);
             }
@@ -505,7 +505,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot get property &apos;{0}&apos; of a null EDM object of type &apos;{1}&apos;..
         /// </summary>
-        internal static string EdmComplexObjectNullRef {
+        public static string EdmComplexObjectNullRef {
             get {
                 return ResourceManager.GetString("EdmComplexObjectNullRef", resourceCulture);
             }
@@ -514,7 +514,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;EdmObject&apos; of {0} cannot be null..
         /// </summary>
-        internal static string EdmObjectNull {
+        public static string EdmObjectNull {
             get {
                 return ResourceManager.GetString("EdmObjectNull", resourceCulture);
             }
@@ -523,7 +523,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM type of the object of type &apos;{0}&apos; is null. The EDM type of an {1} cannot be null..
         /// </summary>
-        internal static string EdmTypeCannotBeNull {
+        public static string EdmTypeCannotBeNull {
             get {
                 return ResourceManager.GetString("EdmTypeCannotBeNull", resourceCulture);
             }
@@ -532,7 +532,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a supported EDM type..
         /// </summary>
-        internal static string EdmTypeNotSupported {
+        public static string EdmTypeNotSupported {
             get {
                 return ResourceManager.GetString("EdmTypeNotSupported", resourceCulture);
             }
@@ -541,7 +541,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;ElementClrType&apos; of {0} cannot be null..
         /// </summary>
-        internal static string ElementClrTypeNull {
+        public static string ElementClrTypeNull {
             get {
                 return ResourceManager.GetString("ElementClrTypeNull", resourceCulture);
             }
@@ -550,7 +550,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Key template value &apos;{0}&apos; for key segment &apos;{1}&apos; is empty..
         /// </summary>
-        internal static string EmptyKeyTemplate {
+        public static string EmptyKeyTemplate {
             get {
                 return ResourceManager.GetString("EmptyKeyTemplate", resourceCulture);
             }
@@ -559,7 +559,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter alias &apos;{0}&apos; in segment &apos;{1}&apos; is empty..
         /// </summary>
-        internal static string EmptyParameterAlias {
+        public static string EmptyParameterAlias {
             get {
                 return ResourceManager.GetString("EmptyParameterAlias", resourceCulture);
             }
@@ -568,7 +568,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The Uri &apos;{0}&apos; in the parameter is invalid..
         /// </summary>
-        internal static string EntityReferenceMustHasKeySegment {
+        public static string EntityReferenceMustHasKeySegment {
             get {
                 return ResourceManager.GetString("EntityReferenceMustHasKeySegment", resourceCulture);
             }
@@ -577,7 +577,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity set &apos;{0}&apos; was already configured with a different EntityType (&apos;{1}&apos;)..
         /// </summary>
-        internal static string EntitySetAlreadyConfiguredDifferentEntityType {
+        public static string EntitySetAlreadyConfiguredDifferentEntityType {
             get {
                 return ResourceManager.GetString("EntitySetAlreadyConfiguredDifferentEntityType", resourceCulture);
             }
@@ -586,7 +586,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The related entity set could not be found from the OData path. The related entity set is required to serialize the payload..
         /// </summary>
-        internal static string EntitySetMissingDuringSerialization {
+        public static string EntitySetMissingDuringSerialization {
             get {
                 return ResourceManager.GetString("EntitySetMissingDuringSerialization", resourceCulture);
             }
@@ -595,7 +595,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity set name &apos;{0}&apos; was already configured as a singleton..
         /// </summary>
-        internal static string EntitySetNameAlreadyConfiguredAsSingleton {
+        public static string EntitySetNameAlreadyConfiguredAsSingleton {
             get {
                 return ResourceManager.GetString("EntitySetNameAlreadyConfiguredAsSingleton", resourceCulture);
             }
@@ -604,7 +604,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No EntitySet exists in the EdmModel with entitySetName &apos;{0}&apos;..
         /// </summary>
-        internal static string EntitySetNotFoundForName {
+        public static string EntitySetNotFoundForName {
             get {
                 return ResourceManager.GetString("EntitySetNotFoundForName", resourceCulture);
             }
@@ -613,7 +613,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity &apos;{0}&apos; does not have a key defined..
         /// </summary>
-        internal static string EntityTypeDoesntHaveKeyDefined {
+        public static string EntityTypeDoesntHaveKeyDefined {
             get {
                 return ResourceManager.GetString("EntityTypeDoesntHaveKeyDefined", resourceCulture);
             }
@@ -622,7 +622,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity type &apos;{0}&apos; does not match the expected entity type &apos;{1}&apos; as set on the query context..
         /// </summary>
-        internal static string EntityTypeMismatch {
+        public static string EntityTypeMismatch {
             get {
                 return ResourceManager.GetString("EntityTypeMismatch", resourceCulture);
             }
@@ -631,7 +631,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The enum type &apos;{0}&apos; does not exist..
         /// </summary>
-        internal static string EnumTypeDoesNotExist {
+        public static string EnumTypeDoesNotExist {
             get {
                 return ResourceManager.GetString("EnumTypeDoesNotExist", resourceCulture);
             }
@@ -640,7 +640,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value of enum member &apos;{0}&apos; cannot be converted to a long type..
         /// </summary>
-        internal static string EnumValueCannotBeLong {
+        public static string EnumValueCannotBeLong {
             get {
                 return ResourceManager.GetString("EnumValueCannotBeLong", resourceCulture);
             }
@@ -649,7 +649,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type of left property &apos;{0}.{1}&apos; is &apos;{2}&apos; while the type of right property &apos;{3}.{4}&apos; is &apos;{5}&apos;. The left and right type of the equal expression must be same..
         /// </summary>
-        internal static string EqualExpressionsMustHaveSameTypes {
+        public static string EqualExpressionsMustHaveSameTypes {
             get {
                 return ResourceManager.GetString("EqualExpressionsMustHaveSameTypes", resourceCulture);
             }
@@ -658,7 +658,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; is not supported by the ODataErrorSerializer. The type must be ODataError or HttpError..
         /// </summary>
-        internal static string ErrorTypeMustBeODataErrorOrHttpError {
+        public static string ErrorTypeMustBeODataErrorOrHttpError {
             get {
                 return ResourceManager.GetString("ErrorTypeMustBeODataErrorOrHttpError", resourceCulture);
             }
@@ -667,7 +667,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ETag is not well-formed..
         /// </summary>
-        internal static string ETagNotWellFormed {
+        public static string ETagNotWellFormed {
             get {
                 return ResourceManager.GetString("ETagNotWellFormed", resourceCulture);
             }
@@ -676,7 +676,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot create an EDM model as the action &apos;{0}&apos; on controller &apos;{1}&apos; has a void return type..
         /// </summary>
-        internal static string FailedToBuildEdmModelBecauseReturnTypeIsNull {
+        public static string FailedToBuildEdmModelBecauseReturnTypeIsNull {
             get {
                 return ResourceManager.GetString("FailedToBuildEdmModelBecauseReturnTypeIsNull", resourceCulture);
             }
@@ -685,7 +685,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot create an EDM model as the action &apos;{0}&apos; on controller &apos;{1}&apos; has a return type &apos;{2}&apos; that does not implement IEnumerable&lt;T&gt;..
         /// </summary>
-        internal static string FailedToRetrieveTypeToBuildEdmModel {
+        public static string FailedToRetrieveTypeToBuildEdmModel {
             get {
                 return ResourceManager.GetString("FailedToRetrieveTypeToBuildEdmModel", resourceCulture);
             }
@@ -694,7 +694,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Reading type &apos;{0}&apos; is not supported by &apos;{1}&apos;..
         /// </summary>
-        internal static string FormatterReadIsNotSupportedForType {
+        public static string FormatterReadIsNotSupportedForType {
             get {
                 return ResourceManager.GetString("FormatterReadIsNotSupportedForType", resourceCulture);
             }
@@ -703,7 +703,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The function &apos;{0}&apos; is not bound to the collection of entity. Only functions that are bound to entities can have function links..
         /// </summary>
-        internal static string FunctionNotBoundToCollectionOfEntity {
+        public static string FunctionNotBoundToCollectionOfEntity {
             get {
                 return ResourceManager.GetString("FunctionNotBoundToCollectionOfEntity", resourceCulture);
             }
@@ -712,7 +712,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The function &apos;{0}&apos; is not bound to an entity. Only functions that are bound to entities can have function links..
         /// </summary>
-        internal static string FunctionNotBoundToEntity {
+        public static string FunctionNotBoundToEntity {
             get {
                 return ResourceManager.GetString("FunctionNotBoundToEntity", resourceCulture);
             }
@@ -721,7 +721,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; function cannot be applied to an enumeration-typed argument..
         /// </summary>
-        internal static string FunctionNotSupportedOnEnum {
+        public static string FunctionNotSupportedOnEnum {
             get {
                 return ResourceManager.GetString("FunctionNotSupportedOnEnum", resourceCulture);
             }
@@ -730,7 +730,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The function parameter &apos;{0}&apos; cannot be found..
         /// </summary>
-        internal static string FunctionParameterNotFound {
+        public static string FunctionParameterNotFound {
             get {
                 return ResourceManager.GetString("FunctionParameterNotFound", resourceCulture);
             }
@@ -739,7 +739,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to GetEdmModel cannot be called more than once. Consider using a different instance of the model builder or reusing the model you have built earlier..
         /// </summary>
-        internal static string GetEdmModelCalledMoreThanOnce {
+        public static string GetEdmModelCalledMoreThanOnce {
             get {
                 return ResourceManager.GetString("GetEdmModelCalledMoreThanOnce", resourceCulture);
             }
@@ -748,7 +748,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value of the property &apos;{0}&apos; on type &apos;{1}&apos; is an array. Consider adding a setter for the property..
         /// </summary>
-        internal static string GetOnlyCollectionCannotBeArray {
+        public static string GetOnlyCollectionCannotBeArray {
             get {
                 return ResourceManager.GetString("GetOnlyCollectionCannotBeArray", resourceCulture);
             }
@@ -757,7 +757,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to To register an action link factory, actions must be bindable to the collection of entity. Action &apos;{0}&apos; does not meet this requirement..
         /// </summary>
-        internal static string HasActionLinkRequiresBindToCollectionOfEntity {
+        public static string HasActionLinkRequiresBindToCollectionOfEntity {
             get {
                 return ResourceManager.GetString("HasActionLinkRequiresBindToCollectionOfEntity", resourceCulture);
             }
@@ -766,7 +766,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to To register an action link factory, actions must be bindable to a single entity. Action &apos;{0}&apos; does not meet this requirement..
         /// </summary>
-        internal static string HasActionLinkRequiresBindToEntity {
+        public static string HasActionLinkRequiresBindToEntity {
             get {
                 return ResourceManager.GetString("HasActionLinkRequiresBindToEntity", resourceCulture);
             }
@@ -775,7 +775,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to To register a function link factory, functions must be bindable to the collection of entity. Function &apos;{0}&apos; does not meet this requirement..
         /// </summary>
-        internal static string HasFunctionLinkRequiresBindToCollectionOfEntity {
+        public static string HasFunctionLinkRequiresBindToCollectionOfEntity {
             get {
                 return ResourceManager.GetString("HasFunctionLinkRequiresBindToCollectionOfEntity", resourceCulture);
             }
@@ -784,7 +784,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to To register a function link factory, functions must be bindable to a single entity. Function &apos;{0}&apos; does not meet this requirement..
         /// </summary>
-        internal static string HasFunctionLinkRequiresBindToEntity {
+        public static string HasFunctionLinkRequiresBindToEntity {
             get {
                 return ResourceManager.GetString("HasFunctionLinkRequiresBindToEntity", resourceCulture);
             }
@@ -793,7 +793,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The Id link builder for the entity set &apos;{0}&apos; returned null. An Id link is required for the OData-EntityId header..
         /// </summary>
-        internal static string IdLinkNullForEntityIdHeader {
+        public static string IdLinkNullForEntityIdHeader {
             get {
                 return ResourceManager.GetString("IdLinkNullForEntityIdHeader", resourceCulture);
             }
@@ -802,7 +802,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The attribute routing template contains invalid segment &apos;{0}&apos;..
         /// </summary>
-        internal static string InvalidAttributeRoutingTemplateSegment {
+        public static string InvalidAttributeRoutingTemplateSegment {
             get {
                 return ResourceManager.GetString("InvalidAttributeRoutingTemplateSegment", resourceCulture);
             }
@@ -811,7 +811,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The current batch reader state &apos;{0}&apos; is invalid. The expected state is &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidBatchReaderState {
+        public static string InvalidBatchReaderState {
             get {
                 return ResourceManager.GetString("InvalidBatchReaderState", resourceCulture);
             }
@@ -820,7 +820,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid bindingParameter type &apos;{0}&apos;. A bindingParameter must be either an EntityType or a Collection of EntityTypes..
         /// </summary>
-        internal static string InvalidBindingParameterType {
+        public static string InvalidBindingParameterType {
             get {
                 return ResourceManager.GetString("InvalidBindingParameterType", resourceCulture);
             }
@@ -829,7 +829,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value of $id &apos;{0}&apos; is invalid..
         /// </summary>
-        internal static string InvalidDollarId {
+        public static string InvalidDollarId {
             get {
                 return ResourceManager.GetString("InvalidDollarId", resourceCulture);
             }
@@ -838,7 +838,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid entity set name..
         /// </summary>
-        internal static string InvalidEntitySetName {
+        public static string InvalidEntitySetName {
             get {
                 return ResourceManager.GetString("InvalidEntitySetName", resourceCulture);
             }
@@ -847,7 +847,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ETag handler set in the configuration property is of type &apos;{0}&apos;, which does not implement IETagHandler..
         /// </summary>
-        internal static string InvalidETagHandler {
+        public static string InvalidETagHandler {
             get {
                 return ResourceManager.GetString("InvalidETagHandler", resourceCulture);
             }
@@ -856,7 +856,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; should be less than or equal to &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidExpansionDepthValue {
+        public static string InvalidExpansionDepthValue {
             get {
                 return ResourceManager.GetString("InvalidExpansionDepthValue", resourceCulture);
             }
@@ -865,7 +865,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The given OData path template &apos;{0}&apos; is invalid..
         /// </summary>
-        internal static string InvalidODataPathTemplate {
+        public static string InvalidODataPathTemplate {
             get {
                 return ResourceManager.GetString("InvalidODataPathTemplate", resourceCulture);
             }
@@ -874,7 +874,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The path template &apos;{0}&apos; on the action &apos;{1}&apos; in controller &apos;{2}&apos; is not a valid OData path template. {3}.
         /// </summary>
-        internal static string InvalidODataRouteOnAction {
+        public static string InvalidODataRouteOnAction {
             get {
                 return ResourceManager.GetString("InvalidODataRouteOnAction", resourceCulture);
             }
@@ -883,7 +883,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The given untyped value &apos;{0}&apos; in payload is invalid. Consider using a OData type annotation explicitly..
         /// </summary>
-        internal static string InvalidODataUntypedValue {
+        public static string InvalidODataUntypedValue {
             get {
                 return ResourceManager.GetString("InvalidODataUntypedValue", resourceCulture);
             }
@@ -892,7 +892,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The URI segment &apos;{0}&apos; is invalid after the segment &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidPathSegment {
+        public static string InvalidPathSegment {
             get {
                 return ResourceManager.GetString("InvalidPathSegment", resourceCulture);
             }
@@ -901,7 +901,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type &apos;{0}&apos; is not supported as dynamic property annotation. Referenced property must be of type &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidPropertyInfoForDynamicPropertyAnnotation {
+        public static string InvalidPropertyInfoForDynamicPropertyAnnotation {
             get {
                 return ResourceManager.GetString("InvalidPropertyInfoForDynamicPropertyAnnotation", resourceCulture);
             }
@@ -910,7 +910,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The mapper provider must return a valid &apos;{0}&apos; instance for the given &apos;{1}&apos; IEdmType..
         /// </summary>
-        internal static string InvalidPropertyMapper {
+        public static string InvalidPropertyMapper {
             get {
                 return ResourceManager.GetString("InvalidPropertyMapper", resourceCulture);
             }
@@ -919,7 +919,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The key mapping for the property &apos;{0}&apos; can&apos;t be null or empty..
         /// </summary>
-        internal static string InvalidPropertyMapping {
+        public static string InvalidPropertyMapping {
             get {
                 return ResourceManager.GetString("InvalidPropertyMapping", resourceCulture);
             }
@@ -928,7 +928,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The count of single quotes in non-string literal &apos;{0}&apos; must be 0 or 2 in segment &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidSingleQuoteCountForNonStringLiteral {
+        public static string InvalidSingleQuoteCountForNonStringLiteral {
             get {
                 return ResourceManager.GetString("InvalidSingleQuoteCountForNonStringLiteral", resourceCulture);
             }
@@ -937,7 +937,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid singleton name. The singleton name cannot contain &apos;.&apos;..
         /// </summary>
-        internal static string InvalidSingletonName {
+        public static string InvalidSingletonName {
             get {
                 return ResourceManager.GetString("InvalidSingletonName", resourceCulture);
             }
@@ -946,7 +946,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time zone info set in the configuration property is of type &apos;{0}&apos;. The time zone info type must be type &apos;{1}&apos;..
         /// </summary>
-        internal static string InvalidTimeZoneInfo {
+        public static string InvalidTimeZoneInfo {
             get {
                 return ResourceManager.GetString("InvalidTimeZoneInfo", resourceCulture);
             }
@@ -955,7 +955,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Key template value &apos;{0}&apos; for key segment &apos;{1}&apos; does not start with &apos;{{&apos; or ends with &apos;}}&apos;..
         /// </summary>
-        internal static string KeyTemplateMustBeInCurlyBraces {
+        public static string KeyTemplateMustBeInCurlyBraces {
             get {
                 return ResourceManager.GetString("KeyTemplateMustBeInCurlyBraces", resourceCulture);
             }
@@ -964,7 +964,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Key property &apos;{0}&apos; of type &apos;{1}&apos; is null. Key properties cannot have null values..
         /// </summary>
-        internal static string KeyValueCannotBeNull {
+        public static string KeyValueCannotBeNull {
             get {
                 return ResourceManager.GetString("KeyValueCannotBeNull", resourceCulture);
             }
@@ -973,7 +973,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The LambdaExpression must have exactly one parameter..
         /// </summary>
-        internal static string LambdaExpressionMustHaveExactlyOneParameter {
+        public static string LambdaExpressionMustHaveExactlyOneParameter {
             get {
                 return ResourceManager.GetString("LambdaExpressionMustHaveExactlyOneParameter", resourceCulture);
             }
@@ -982,7 +982,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The LambdaExpression must have exactly two parameters..
         /// </summary>
-        internal static string LambdaExpressionMustHaveExactlyTwoParameters {
+        public static string LambdaExpressionMustHaveExactlyTwoParameters {
             get {
                 return ResourceManager.GetString("LambdaExpressionMustHaveExactlyTwoParameters", resourceCulture);
             }
@@ -991,7 +991,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The literal &apos;{0}&apos; has a bad format in segment &apos;{1}&apos;..
         /// </summary>
-        internal static string LiteralHasABadFormat {
+        public static string LiteralHasABadFormat {
             get {
                 return ResourceManager.GetString("LiteralHasABadFormat", resourceCulture);
             }
@@ -1000,7 +1000,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot change multiplicity of the collection navigation property &apos;{0}&apos;..
         /// </summary>
-        internal static string ManyNavigationPropertiesCannotBeChanged {
+        public static string ManyNavigationPropertiesCannotBeChanged {
             get {
                 return ResourceManager.GetString("ManyNavigationPropertiesCannotBeChanged", resourceCulture);
             }
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on the type &apos;{1}&apos; is being configured as a Many-to-Many navigation property. Many to Many navigation properties must be collections..
         /// </summary>
-        internal static string ManyToManyNavigationPropertyMustReturnCollection {
+        public static string ManyToManyNavigationPropertyMustReturnCollection {
             get {
                 return ResourceManager.GetString("ManyToManyNavigationPropertyMustReturnCollection", resourceCulture);
             }
@@ -1018,7 +1018,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The provided mapping does not contain a resource for the resource type &apos;{0}&apos;..
         /// </summary>
-        internal static string MappingDoesNotContainResourceType {
+        public static string MappingDoesNotContainResourceType {
             get {
                 return ResourceManager.GetString("MappingDoesNotContainResourceType", resourceCulture);
             }
@@ -1027,7 +1027,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The Any/All nesting limit of &apos;{0}&apos; has been exceeded. &apos;{1}&apos; can be configured on ODataQuerySettings or EnableQueryAttribute..
         /// </summary>
-        internal static string MaxAnyAllExpressionLimitExceeded {
+        public static string MaxAnyAllExpressionLimitExceeded {
             get {
                 return ResourceManager.GetString("MaxAnyAllExpressionLimitExceeded", resourceCulture);
             }
@@ -1036,7 +1036,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The request includes a $expand path which is too deep. The maximum depth allowed is {0}. To increase the limit, set the &apos;{1}&apos; property on EnableQueryAttribute or ODataValidationSettings, or set the &apos;MaxDepth&apos; property in ExpandAttribute..
         /// </summary>
-        internal static string MaxExpandDepthExceeded {
+        public static string MaxExpandDepthExceeded {
             get {
                 return ResourceManager.GetString("MaxExpandDepthExceeded", resourceCulture);
             }
@@ -1045,7 +1045,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The node count limit of &apos;{0}&apos; has been exceeded. To increase the limit, set the &apos;{1}&apos; property on EnableQueryAttribute or ODataValidationSettings..
         /// </summary>
-        internal static string MaxNodeLimitExceeded {
+        public static string MaxNodeLimitExceeded {
             get {
                 return ResourceManager.GetString("MaxNodeLimitExceeded", resourceCulture);
             }
@@ -1054,7 +1054,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MemberExpressions must be bound to the LambdaExpression parameter..
         /// </summary>
-        internal static string MemberExpressionsMustBeBoundToLambdaParameter {
+        public static string MemberExpressionsMustBeBoundToLambdaParameter {
             get {
                 return ResourceManager.GetString("MemberExpressionsMustBeBoundToLambdaParameter", resourceCulture);
             }
@@ -1063,7 +1063,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Member &apos;{0}.{1}&apos; is not a property..
         /// </summary>
-        internal static string MemberExpressionsMustBeProperties {
+        public static string MemberExpressionsMustBeProperties {
             get {
                 return ResourceManager.GetString("MemberExpressionsMustBeProperties", resourceCulture);
             }
@@ -1072,7 +1072,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The binding context cannot have a null ModelMetadata..
         /// </summary>
-        internal static string ModelBinderUtil_ModelMetadataCannotBeNull {
+        public static string ModelBinderUtil_ModelMetadataCannotBeNull {
             get {
                 return ResourceManager.GetString("ModelBinderUtil_ModelMetadataCannotBeNull", resourceCulture);
             }
@@ -1081,7 +1081,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The binding value &apos;{0}&apos; cannot be bound to the enum type &apos;{1}&apos;..
         /// </summary>
-        internal static string ModelBinderUtil_ValueCannotBeEnum {
+        public static string ModelBinderUtil_ValueCannotBeEnum {
             get {
                 return ResourceManager.GetString("ModelBinderUtil_ValueCannotBeEnum", resourceCulture);
             }
@@ -1090,7 +1090,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM model is missing on the read context. The model is required on the read context to deserialize the payload..
         /// </summary>
-        internal static string ModelMissingFromReadContext {
+        public static string ModelMissingFromReadContext {
             get {
                 return ResourceManager.GetString("ModelMissingFromReadContext", resourceCulture);
             }
@@ -1099,7 +1099,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Found more than one dynamic property container in type &apos;{0}&apos;. Each open type must have at most one dynamic property container..
         /// </summary>
-        internal static string MoreThanOneDynamicPropertyContainerFound {
+        public static string MoreThanOneDynamicPropertyContainerFound {
             get {
                 return ResourceManager.GetString("MoreThanOneDynamicPropertyContainerFound", resourceCulture);
             }
@@ -1108,7 +1108,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to More than one Operation called &apos;{0}&apos; was found. Try using the other RemoveOperation override..
         /// </summary>
-        internal static string MoreThanOneOperationFound {
+        public static string MoreThanOneOperationFound {
             get {
                 return ResourceManager.GetString("MoreThanOneOperationFound", resourceCulture);
             }
@@ -1117,7 +1117,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Found more than one action with name &apos;{0}&apos; bound to the same type &apos;{1}&apos;. Each bound action must have a different binding type or name..
         /// </summary>
-        internal static string MoreThanOneOverloadActionBoundToSameTypeFound {
+        public static string MoreThanOneOverloadActionBoundToSameTypeFound {
             get {
                 return ResourceManager.GetString("MoreThanOneOverloadActionBoundToSameTypeFound", resourceCulture);
             }
@@ -1126,7 +1126,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Found more than one unbound action with name &apos;{0}&apos;. Each unbound action must have an unique action name..
         /// </summary>
-        internal static string MoreThanOneUnboundActionFound {
+        public static string MoreThanOneUnboundActionFound {
             get {
                 return ResourceManager.GetString("MoreThanOneUnboundActionFound", resourceCulture);
             }
@@ -1135,7 +1135,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The member &apos;{0}&apos; on type &apos;{1}&apos; contains multiple instances of the attribute &apos;{2}&apos;..
         /// </summary>
-        internal static string MultipleAttributesFound {
+        public static string MultipleAttributesFound {
             get {
                 return ResourceManager.GetString("MultipleAttributesFound", resourceCulture);
             }
@@ -1144,7 +1144,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to More than one matching CLR type found for the EDM type {0}.\nThe matching CLR types are {1}..
         /// </summary>
-        internal static string MultipleMatchingClrTypesForEdmType {
+        public static string MultipleMatchingClrTypesForEdmType {
             get {
                 return ResourceManager.GetString("MultipleMatchingClrTypesForEdmType", resourceCulture);
             }
@@ -1153,7 +1153,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; property on &apos;{1}&apos; must be a Collection property..
         /// </summary>
-        internal static string MustBeCollectionProperty {
+        public static string MustBeCollectionProperty {
             get {
                 return ResourceManager.GetString("MustBeCollectionProperty", resourceCulture);
             }
@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on type &apos;{1}&apos; must be a Complex property..
         /// </summary>
-        internal static string MustBeComplexProperty {
+        public static string MustBeComplexProperty {
             get {
                 return ResourceManager.GetString("MustBeComplexProperty", resourceCulture);
             }
@@ -1171,7 +1171,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on type &apos;{1}&apos; must be a System.DateTime property..
         /// </summary>
-        internal static string MustBeDateTimeProperty {
+        public static string MustBeDateTimeProperty {
             get {
                 return ResourceManager.GetString("MustBeDateTimeProperty", resourceCulture);
             }
@@ -1180,7 +1180,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on type &apos;{1}&apos; must be an Enum property..
         /// </summary>
-        internal static string MustBeEnumProperty {
+        public static string MustBeEnumProperty {
             get {
                 return ResourceManager.GetString("MustBeEnumProperty", resourceCulture);
             }
@@ -1189,7 +1189,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property  &apos;{0}&apos; on type &apos;{1}&apos; must be a Navigation property..
         /// </summary>
-        internal static string MustBeNavigationProperty {
+        public static string MustBeNavigationProperty {
             get {
                 return ResourceManager.GetString("MustBeNavigationProperty", resourceCulture);
             }
@@ -1198,7 +1198,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos;  on type &apos;{1}&apos; must be a Primitive property..
         /// </summary>
-        internal static string MustBePrimitiveProperty {
+        public static string MustBePrimitiveProperty {
             get {
                 return ResourceManager.GetString("MustBePrimitiveProperty", resourceCulture);
             }
@@ -1207,7 +1207,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; must be a primitive type..
         /// </summary>
-        internal static string MustBePrimitiveType {
+        public static string MustBePrimitiveType {
             get {
                 return ResourceManager.GetString("MustBePrimitiveType", resourceCulture);
             }
@@ -1216,7 +1216,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; on type &apos;{1}&apos; must be a System.TimeSpan property..
         /// </summary>
-        internal static string MustBeTimeSpanProperty {
+        public static string MustBeTimeSpanProperty {
             get {
                 return ResourceManager.GetString("MustBeTimeSpanProperty", resourceCulture);
             }
@@ -1225,7 +1225,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The multiplicity of the &apos;{0}&apos; property must be &apos;{1}&apos;..
         /// </summary>
-        internal static string MustHaveMatchingMultiplicity {
+        public static string MustHaveMatchingMultiplicity {
             get {
                 return ResourceManager.GetString("MustHaveMatchingMultiplicity", resourceCulture);
             }
@@ -1234,7 +1234,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The navigation property binding path &apos;{0}&apos; is not valid. The last segment must be the navigation property &apos;{1}&apos;..
         /// </summary>
-        internal static string NavigationPropertyBindingPathIsNotValid {
+        public static string NavigationPropertyBindingPathIsNotValid {
             get {
                 return ResourceManager.GetString("NavigationPropertyBindingPathIsNotValid", resourceCulture);
             }
@@ -1243,7 +1243,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the binding type cast segment &apos;{1}&apos; is not a part of the type &apos;{2}&apos; hierarchy..
         /// </summary>
-        internal static string NavigationPropertyBindingPathNotInHierarchy {
+        public static string NavigationPropertyBindingPathNotInHierarchy {
             get {
                 return ResourceManager.GetString("NavigationPropertyBindingPathNotInHierarchy", resourceCulture);
             }
@@ -1252,7 +1252,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The navigation property binding path segment &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string NavigationPropertyBindingPathNotSupported {
+        public static string NavigationPropertyBindingPathNotSupported {
             get {
                 return ResourceManager.GetString("NavigationPropertyBindingPathNotSupported", resourceCulture);
             }
@@ -1261,7 +1261,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The declaring entity type &apos;{0}&apos; of the given navigation property is not a part of the entity type &apos;{1}&apos; hierarchy of the entity set or singleton &apos;{2}&apos;..
         /// </summary>
-        internal static string NavigationPropertyNotInHierarchy {
+        public static string NavigationPropertyNotInHierarchy {
             get {
                 return ResourceManager.GetString("NavigationPropertyNotInHierarchy", resourceCulture);
             }
@@ -1270,7 +1270,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The related entity set or singleton cannot be found from the OData path. The related entity set or singleton is required to deserialize the payload..
         /// </summary>
-        internal static string NavigationSourceMissingDuringDeserialization {
+        public static string NavigationSourceMissingDuringDeserialization {
             get {
                 return ResourceManager.GetString("NavigationSourceMissingDuringDeserialization", resourceCulture);
             }
@@ -1279,7 +1279,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The related entity set or singleton cannot be found from the OData path. The related entity set or singleton is required to serialize the payload..
         /// </summary>
-        internal static string NavigationSourceMissingDuringSerialization {
+        public static string NavigationSourceMissingDuringSerialization {
             get {
                 return ResourceManager.GetString("NavigationSourceMissingDuringSerialization", resourceCulture);
             }
@@ -1288,7 +1288,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity set or singleton &apos;{0}&apos; is based on type &apos;{1}&apos; that has no keys defined..
         /// </summary>
-        internal static string NavigationSourceTypeHasNoKeys {
+        public static string NavigationSourceTypeHasNoKeys {
             get {
                 return ResourceManager.GetString("NavigationSourceTypeHasNoKeys", resourceCulture);
             }
@@ -1297,7 +1297,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; is a nested collection type. Nested collection types are not allowed..
         /// </summary>
-        internal static string NestedCollectionsNotSupported {
+        public static string NestedCollectionsNotSupported {
             get {
                 return ResourceManager.GetString("NestedCollectionsNotSupported", resourceCulture);
             }
@@ -1306,7 +1306,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find nested property &apos;{0}&apos; on the resource type &apos;{1}&apos;..
         /// </summary>
-        internal static string NestedPropertyNotfound {
+        public static string NestedPropertyNotfound {
             get {
                 return ResourceManager.GetString("NestedPropertyNotfound", resourceCulture);
             }
@@ -1315,7 +1315,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No key name was found at {0} in segment &apos;{1}&apos;..
         /// </summary>
-        internal static string NoKeyNameFoundInSegment {
+        public static string NoKeyNameFoundInSegment {
             get {
                 return ResourceManager.GetString("NoKeyNameFoundInSegment", resourceCulture);
             }
@@ -1324,7 +1324,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No IEdmType could be found for &apos;{0}&apos;..
         /// </summary>
-        internal static string NoMatchingIEdmTypeFound {
+        public static string NoMatchingIEdmTypeFound {
             get {
                 return ResourceManager.GetString("NoMatchingIEdmTypeFound", resourceCulture);
             }
@@ -1333,7 +1333,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No HTTP resource was found that matches the request URI &apos;{0}&apos;..
         /// </summary>
-        internal static string NoMatchingResource {
+        public static string NoMatchingResource {
             get {
                 return ResourceManager.GetString("NoMatchingResource", resourceCulture);
             }
@@ -1342,7 +1342,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A non-null request URI must be provided to determine if a &apos;{0}&apos; matches a given request or response message..
         /// </summary>
-        internal static string NonNullUriRequiredForMediaTypeMapping {
+        public static string NonNullUriRequiredForMediaTypeMapping {
             get {
                 return ResourceManager.GetString("NonNullUriRequiredForMediaTypeMapping", resourceCulture);
             }
@@ -1351,7 +1351,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No non-OData HTTP route registered..
         /// </summary>
-        internal static string NoNonODataHttpRouteRegistered {
+        public static string NoNonODataHttpRouteRegistered {
             get {
                 return ResourceManager.GetString("NoNonODataHttpRouteRegistered", resourceCulture);
             }
@@ -1360,7 +1360,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The requested resource is not a collection. Query options $filter, $orderby, $count, $skip, and $top can be applied only on collections..
         /// </summary>
-        internal static string NonSelectExpandOnSingleEntity {
+        public static string NonSelectExpandOnSingleEntity {
             get {
                 return ResourceManager.GetString("NonSelectExpandOnSingleEntity", resourceCulture);
             }
@@ -1369,7 +1369,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No routing convention was found to select an action for the OData path with template &apos;{0}&apos;..
         /// </summary>
-        internal static string NoRoutingHandlerToSelectAction {
+        public static string NoRoutingHandlerToSelectAction {
             get {
                 return ResourceManager.GetString("NoRoutingHandlerToSelectAction", resourceCulture);
             }
@@ -1378,7 +1378,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Arithmetic operator &apos;{0}&apos; is not allowed. To allow it, set the &apos;{1}&apos; property on EnableQueryAttribute or QueryValidationSettings..
         /// </summary>
-        internal static string NotAllowedArithmeticOperator {
+        public static string NotAllowedArithmeticOperator {
             get {
                 return ResourceManager.GetString("NotAllowedArithmeticOperator", resourceCulture);
             }
@@ -1387,7 +1387,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Function &apos;{0}&apos; is not allowed. To allow it, set the &apos;{1}&apos; property on EnableQueryAttribute or QueryValidationSettings..
         /// </summary>
-        internal static string NotAllowedFunction {
+        public static string NotAllowedFunction {
             get {
                 return ResourceManager.GetString("NotAllowedFunction", resourceCulture);
             }
@@ -1396,7 +1396,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Logical operator &apos;{0}&apos; is not allowed. To allow it, set the &apos;{1}&apos; property on EnableQueryAttribute or QueryValidationSettings..
         /// </summary>
-        internal static string NotAllowedLogicalOperator {
+        public static string NotAllowedLogicalOperator {
             get {
                 return ResourceManager.GetString("NotAllowedLogicalOperator", resourceCulture);
             }
@@ -1405,7 +1405,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Order by &apos;{0}&apos; is not allowed. To allow it, set the &apos;{1}&apos; property on EnableQueryAttribute or QueryValidationSettings..
         /// </summary>
-        internal static string NotAllowedOrderByProperty {
+        public static string NotAllowedOrderByProperty {
             get {
                 return ResourceManager.GetString("NotAllowedOrderByProperty", resourceCulture);
             }
@@ -1414,7 +1414,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Query option &apos;{0}&apos; is not allowed. To allow it, set the &apos;{1}&apos; property on EnableQueryAttribute or QueryValidationSettings..
         /// </summary>
-        internal static string NotAllowedQueryOption {
+        public static string NotAllowedQueryOption {
             get {
                 return ResourceManager.GetString("NotAllowedQueryOption", resourceCulture);
             }
@@ -1423,7 +1423,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The entity set &apos;{0}&apos; cannot be used for $count..
         /// </summary>
-        internal static string NotCountableEntitySetUsedForCount {
+        public static string NotCountableEntitySetUsedForCount {
             get {
                 return ResourceManager.GetString("NotCountableEntitySetUsedForCount", resourceCulture);
             }
@@ -1432,7 +1432,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used for $count..
         /// </summary>
-        internal static string NotCountablePropertyUsedForCount {
+        public static string NotCountablePropertyUsedForCount {
             get {
                 return ResourceManager.GetString("NotCountablePropertyUsedForCount", resourceCulture);
             }
@@ -1441,7 +1441,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used in the $expand query option..
         /// </summary>
-        internal static string NotExpandablePropertyUsedInExpand {
+        public static string NotExpandablePropertyUsedInExpand {
             get {
                 return ResourceManager.GetString("NotExpandablePropertyUsedInExpand", resourceCulture);
             }
@@ -1450,7 +1450,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used in the $filter query option..
         /// </summary>
-        internal static string NotFilterablePropertyUsedInFilter {
+        public static string NotFilterablePropertyUsedInFilter {
             get {
                 return ResourceManager.GetString("NotFilterablePropertyUsedInFilter", resourceCulture);
             }
@@ -1459,7 +1459,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used for navigation..
         /// </summary>
-        internal static string NotNavigablePropertyUsedInNavigation {
+        public static string NotNavigablePropertyUsedInNavigation {
             get {
                 return ResourceManager.GetString("NotNavigablePropertyUsedInNavigation", resourceCulture);
             }
@@ -1468,7 +1468,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used in the $select query option..
         /// </summary>
-        internal static string NotSelectablePropertyUsedInSelect {
+        public static string NotSelectablePropertyUsedInSelect {
             get {
                 return ResourceManager.GetString("NotSelectablePropertyUsedInSelect", resourceCulture);
             }
@@ -1477,7 +1477,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; cannot be used in the $orderby query option..
         /// </summary>
-        internal static string NotSortablePropertyUsedInOrderBy {
+        public static string NotSortablePropertyUsedInOrderBy {
             get {
                 return ResourceManager.GetString("NotSortablePropertyUsedInOrderBy", resourceCulture);
             }
@@ -1486,7 +1486,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Transformation kind {0} is not supported..
         /// </summary>
-        internal static string NotSupportedTransformationKind {
+        public static string NotSupportedTransformationKind {
             get {
                 return ResourceManager.GetString("NotSupportedTransformationKind", resourceCulture);
             }
@@ -1495,7 +1495,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to No value for key &apos;{0}&apos; was found at {1} in segment &apos;{2}&apos;..
         /// </summary>
-        internal static string NoValueLiteralFoundInSegment {
+        public static string NoValueLiteralFoundInSegment {
             get {
                 return ResourceManager.GetString("NoValueLiteralFoundInSegment", resourceCulture);
             }
@@ -1504,7 +1504,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The container built by the container builder must not be null..
         /// </summary>
-        internal static string NullContainer {
+        public static string NullContainer {
             get {
                 return ResourceManager.GetString("NullContainer", resourceCulture);
             }
@@ -1513,7 +1513,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The container builder created by the container builder factory must not be null..
         /// </summary>
-        internal static string NullContainerBuilder {
+        public static string NullContainerBuilder {
             get {
                 return ResourceManager.GetString("NullContainerBuilder", resourceCulture);
             }
@@ -1522,7 +1522,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Collections cannot contain null elements..
         /// </summary>
-        internal static string NullElementInCollection {
+        public static string NullElementInCollection {
             get {
                 return ResourceManager.GetString("NullElementInCollection", resourceCulture);
             }
@@ -1531,7 +1531,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ETag handler set in the configuration property must not be null..
         /// </summary>
-        internal static string NullETagHandler {
+        public static string NullETagHandler {
             get {
                 return ResourceManager.GetString("NullETagHandler", resourceCulture);
             }
@@ -1540,7 +1540,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Type verification failed. Expected non-nullable type &apos;{0}&apos; but received a null value..
         /// </summary>
-        internal static string NullOnNonNullableFunctionParameter {
+        public static string NullOnNonNullableFunctionParameter {
             get {
                 return ResourceManager.GetString("NullOnNonNullableFunctionParameter", resourceCulture);
             }
@@ -1549,7 +1549,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The object has not yet been initialized. Ensure that HttpConfiguration.EnsureInitialized() is called in the application&apos;s startup code after all other initialization code..
         /// </summary>
-        internal static string Object_NotYetInitialized {
+        public static string Object_NotYetInitialized {
             get {
                 return ResourceManager.GetString("Object_NotYetInitialized", resourceCulture);
             }
@@ -1558,7 +1558,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unknown function &apos;{0}&apos;..
         /// </summary>
-        internal static string ODataFunctionNotSupported {
+        public static string ODataFunctionNotSupported {
             get {
                 return ResourceManager.GetString("ODataFunctionNotSupported", resourceCulture);
             }
@@ -1567,7 +1567,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The operation cannot be completed because no ODataPath is available for the request..
         /// </summary>
-        internal static string ODataPathMissing {
+        public static string ODataPathMissing {
             get {
                 return ResourceManager.GetString("ODataPathMissing", resourceCulture);
             }
@@ -1576,7 +1576,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Request URI &apos;{0}&apos; does not contain OData path &apos;{1}&apos;..
         /// </summary>
-        internal static string ODataPathNotFound {
+        public static string ODataPathNotFound {
             get {
                 return ResourceManager.GetString("ODataPathNotFound", resourceCulture);
             }
@@ -1585,7 +1585,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Invalid EntitySetPath detected. &apos;{0}&apos; is not a valid entity set path for operation &apos;{1}&apos;..
         /// </summary>
-        internal static string OperationHasInvalidEntitySetPath {
+        public static string OperationHasInvalidEntitySetPath {
             get {
                 return ResourceManager.GetString("OperationHasInvalidEntitySetPath", resourceCulture);
             }
@@ -1594,7 +1594,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The operation import segment must be a function import segment..
         /// </summary>
-        internal static string OperationImportSegmentMustBeFunction {
+        public static string OperationImportSegmentMustBeFunction {
             get {
                 return ResourceManager.GetString("OperationImportSegmentMustBeFunction", resourceCulture);
             }
@@ -1603,7 +1603,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The operation segment must be a function segment..
         /// </summary>
-        internal static string OperationSegmentMustBeFunction {
+        public static string OperationSegmentMustBeFunction {
             get {
                 return ResourceManager.GetString("OperationSegmentMustBeFunction", resourceCulture);
             }
@@ -1612,7 +1612,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Only ordering by properties is supported for non-primitive collections. Expressions are not supported..
         /// </summary>
-        internal static string OrderByClauseNotSupported {
+        public static string OrderByClauseNotSupported {
             get {
                 return ResourceManager.GetString("OrderByClauseNotSupported", resourceCulture);
             }
@@ -1621,7 +1621,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Multiple &apos;$it&apos; nodes are not supported in &apos;$orderby&apos;..
         /// </summary>
-        internal static string OrderByDuplicateIt {
+        public static string OrderByDuplicateIt {
             get {
                 return ResourceManager.GetString("OrderByDuplicateIt", resourceCulture);
             }
@@ -1630,7 +1630,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Duplicate property named &apos;{0}&apos; is not supported in &apos;$orderby&apos;..
         /// </summary>
-        internal static string OrderByDuplicateProperty {
+        public static string OrderByDuplicateProperty {
             get {
                 return ResourceManager.GetString("OrderByDuplicateProperty", resourceCulture);
             }
@@ -1639,7 +1639,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The number of clauses in $orderby query option exceeded the maximum number allowed. The maximum number of $orderby clauses allowed is {0}..
         /// </summary>
-        internal static string OrderByNodeCountExceeded {
+        public static string OrderByNodeCountExceeded {
             get {
                 return ResourceManager.GetString("OrderByNodeCountExceeded", resourceCulture);
             }
@@ -1648,7 +1648,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter alias &apos;{0}&apos; in segment &apos;{1}&apos; does not start with &apos;{{&apos; or ends with &apos;}}&apos;..
         /// </summary>
-        internal static string ParameterAliasMustBeInCurlyBraces {
+        public static string ParameterAliasMustBeInCurlyBraces {
             get {
                 return ResourceManager.GetString("ParameterAliasMustBeInCurlyBraces", resourceCulture);
             }
@@ -1657,7 +1657,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the parameter &apos;{1}&apos; must be a collection..
         /// </summary>
-        internal static string ParameterTypeIsNotCollection {
+        public static string ParameterTypeIsNotCollection {
             get {
                 return ResourceManager.GetString("ParameterTypeIsNotCollection", resourceCulture);
             }
@@ -1666,7 +1666,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot define property &apos;{0}&apos; in the base type &apos;{1}&apos; as the derived type &apos;{2}&apos; already defines it..
         /// </summary>
-        internal static string PropertyAlreadyDefinedInDerivedType {
+        public static string PropertyAlreadyDefinedInDerivedType {
             get {
                 return ResourceManager.GetString("PropertyAlreadyDefinedInDerivedType", resourceCulture);
             }
@@ -1675,7 +1675,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;{0}&apos; does not belong to the type &apos;{1}&apos;..
         /// </summary>
-        internal static string PropertyDoesNotBelongToType {
+        public static string PropertyDoesNotBelongToType {
             get {
                 return ResourceManager.GetString("PropertyDoesNotBelongToType", resourceCulture);
             }
@@ -1684,7 +1684,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of the property &apos;{1}&apos; on type &apos;{2}&apos; must be a collection..
         /// </summary>
-        internal static string PropertyIsNotCollection {
+        public static string PropertyIsNotCollection {
             get {
                 return ResourceManager.GetString("PropertyIsNotCollection", resourceCulture);
             }
@@ -1693,7 +1693,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value must be a DateTimeOffset or Date..
         /// </summary>
-        internal static string PropertyMustBeDateTimeOffsetOrDate {
+        public static string PropertyMustBeDateTimeOffsetOrDate {
             get {
                 return ResourceManager.GetString("PropertyMustBeDateTimeOffsetOrDate", resourceCulture);
             }
@@ -1702,7 +1702,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value with type &apos;{0}&apos; must have type &apos;{1}&apos;..
         /// </summary>
-        internal static string PropertyMustBeEnum {
+        public static string PropertyMustBeEnum {
             get {
                 return ResourceManager.GetString("PropertyMustBeEnum", resourceCulture);
             }
@@ -1711,7 +1711,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value must be a string..
         /// </summary>
-        internal static string PropertyMustBeString {
+        public static string PropertyMustBeString {
             get {
                 return ResourceManager.GetString("PropertyMustBeString", resourceCulture);
             }
@@ -1720,7 +1720,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value must be a string with a length of 1..
         /// </summary>
-        internal static string PropertyMustBeStringLengthOne {
+        public static string PropertyMustBeStringLengthOne {
             get {
                 return ResourceManager.GetString("PropertyMustBeStringLengthOne", resourceCulture);
             }
@@ -1729,7 +1729,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value must be a string with a maximum length of 1..
         /// </summary>
-        internal static string PropertyMustBeStringMaxLengthOne {
+        public static string PropertyMustBeStringMaxLengthOne {
             get {
                 return ResourceManager.GetString("PropertyMustBeStringMaxLengthOne", resourceCulture);
             }
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value must be a Edm.TimeOfDay..
         /// </summary>
-        internal static string PropertyMustBeTimeOfDay {
+        public static string PropertyMustBeTimeOfDay {
             get {
                 return ResourceManager.GetString("PropertyMustBeTimeOfDay", resourceCulture);
             }
@@ -1747,7 +1747,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The PropertyInfo provided must have public &apos;get&apos; and &apos;set&apos; accessor methods..
         /// </summary>
-        internal static string PropertyMustHavePublicGetterAndSetter {
+        public static string PropertyMustHavePublicGetterAndSetter {
             get {
                 return ResourceManager.GetString("PropertyMustHavePublicGetterAndSetter", resourceCulture);
             }
@@ -1756,7 +1756,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM instance of type &apos;{0}&apos; is missing the property &apos;{1}&apos;..
         /// </summary>
-        internal static string PropertyNotFound {
+        public static string PropertyNotFound {
             get {
                 return ResourceManager.GetString("PropertyNotFound", resourceCulture);
             }
@@ -1765,7 +1765,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value for OData query &apos;{0}&apos; cannot be empty..
         /// </summary>
-        internal static string QueryCannotBeEmpty {
+        public static string QueryCannotBeEmpty {
             get {
                 return ResourceManager.GetString("QueryCannotBeEmpty", resourceCulture);
             }
@@ -1774,7 +1774,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A model is required for querying. Consider implementing the EnableQueryAttribute.GetModel method never to return a null value..
         /// </summary>
-        internal static string QueryGetModelMustNotReturnNull {
+        public static string QueryGetModelMustNotReturnNull {
             get {
                 return ResourceManager.GetString("QueryGetModelMustNotReturnNull", resourceCulture);
             }
@@ -1783,7 +1783,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Queries can not be applied to a response content of type &apos;{0}&apos;. The response content must be an ObjectContent..
         /// </summary>
-        internal static string QueryingRequiresObjectContent {
+        public static string QueryingRequiresObjectContent {
             get {
                 return ResourceManager.GetString("QueryingRequiresObjectContent", resourceCulture);
             }
@@ -1792,7 +1792,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Binding OData QueryNode of kind {0} is not supported by {1}..
         /// </summary>
-        internal static string QueryNodeBindingNotSupported {
+        public static string QueryNodeBindingNotSupported {
             get {
                 return ResourceManager.GetString("QueryNodeBindingNotSupported", resourceCulture);
             }
@@ -1801,7 +1801,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Validating OData QueryNode of kind {0} is not supported by {1}..
         /// </summary>
-        internal static string QueryNodeValidationNotSupported {
+        public static string QueryNodeValidationNotSupported {
             get {
                 return ResourceManager.GetString("QueryNodeValidationNotSupported", resourceCulture);
             }
@@ -1810,7 +1810,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The query parameter &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string QueryParameterNotSupported {
+        public static string QueryParameterNotSupported {
             get {
                 return ResourceManager.GetString("QueryParameterNotSupported", resourceCulture);
             }
@@ -1819,7 +1819,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The OData formatter requires an attached request in order to deserialize. Controller classes must derive from ODataController or be marked with ODataFormattingAttribute. Custom parameter bindings must call GetPerRequestFormatterInstance on each formatter and use these per-request instances..
         /// </summary>
-        internal static string ReadFromStreamAsyncMustHaveRequest {
+        public static string ReadFromStreamAsyncMustHaveRequest {
             get {
                 return ResourceManager.GetString("ReadFromStreamAsyncMustHaveRequest", resourceCulture);
             }
@@ -1828,7 +1828,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Rebinding is not supported..
         /// </summary>
-        internal static string RebindingNotSupported {
+        public static string RebindingNotSupported {
             get {
                 return ResourceManager.GetString("RebindingNotSupported", resourceCulture);
             }
@@ -1837,7 +1837,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The complex type &apos;{0}&apos; has a reference to itself through the property &apos;{1}&apos;. A recursive loop of complex types is not allowed..
         /// </summary>
-        internal static string RecursiveComplexTypesNotAllowed {
+        public static string RecursiveComplexTypesNotAllowed {
             get {
                 return ResourceManager.GetString("RecursiveComplexTypesNotAllowed", resourceCulture);
             }
@@ -1846,7 +1846,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; property &apos;{1}&apos; is already configured to have a relationship with &apos;{2}&apos; property &apos;{3}&apos; in the referential constraint..
         /// </summary>
-        internal static string ReferentialConstraintAlreadyConfigured {
+        public static string ReferentialConstraintAlreadyConfigured {
             get {
                 return ResourceManager.GetString("ReferentialConstraintAlreadyConfigured", resourceCulture);
             }
@@ -1855,7 +1855,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Referential constraint for navigation property &apos;{0}&apos; on type &apos;{1}&apos; is not supported. Only required or optional navigation properties support referential constraint..
         /// </summary>
-        internal static string ReferentialConstraintOnManyNavigationPropertyNotSupported {
+        public static string ReferentialConstraintOnManyNavigationPropertyNotSupported {
             get {
                 return ResourceManager.GetString("ReferentialConstraintOnManyNavigationPropertyNotSupported", resourceCulture);
             }
@@ -1864,7 +1864,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property type &apos;{0}&apos; of the referential constraint is not valid. The referential constraint property type must be primitive type..
         /// </summary>
-        internal static string ReferentialConstraintPropertyTypeNotValid {
+        public static string ReferentialConstraintPropertyTypeNotValid {
             get {
                 return ResourceManager.GetString("ReferentialConstraintPropertyTypeNotValid", resourceCulture);
             }
@@ -1873,7 +1873,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A request container already exists on the request..
         /// </summary>
-        internal static string RequestContainerAlreadyExists {
+        public static string RequestContainerAlreadyExists {
             get {
                 return ResourceManager.GetString("RequestContainerAlreadyExists", resourceCulture);
             }
@@ -1882,7 +1882,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Request message does not contain an HttpConfiguration object..
         /// </summary>
-        internal static string RequestMustContainConfiguration {
+        public static string RequestMustContainConfiguration {
             get {
                 return ResourceManager.GetString("RequestMustContainConfiguration", resourceCulture);
             }
@@ -1891,7 +1891,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The request must have an associated EDM model. Consider using the extension method HttpConfiguration.MapODataServiceRoute to register a route that parses the OData URI and attaches the model information..
         /// </summary>
-        internal static string RequestMustHaveModel {
+        public static string RequestMustHaveModel {
             get {
                 return ResourceManager.GetString("RequestMustHaveModel", resourceCulture);
             }
@@ -1900,7 +1900,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The request must have an associated OData route name. Consider using the extension request.ODataProperties().RouteName to set a route name..
         /// </summary>
-        internal static string RequestMustHaveODataRouteName {
+        public static string RequestMustHaveODataRouteName {
             get {
                 return ResourceManager.GetString("RequestMustHaveODataRouteName", resourceCulture);
             }
@@ -1909,7 +1909,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The last segment of the request URI &apos;{0}&apos; was not recognized as an OData action..
         /// </summary>
-        internal static string RequestNotActionInvocation {
+        public static string RequestNotActionInvocation {
             get {
                 return ResourceManager.GetString("RequestNotActionInvocation", resourceCulture);
             }
@@ -1918,7 +1918,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Request URI &apos;{0}&apos; too short to contain OData path &apos;{1}&apos;..
         /// </summary>
-        internal static string RequestUriTooShortForODataPath {
+        public static string RequestUriTooShortForODataPath {
             get {
                 return ResourceManager.GetString("RequestUriTooShortForODataPath", resourceCulture);
             }
@@ -1927,7 +1927,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot find the resource type &apos;{0}&apos; in the model..
         /// </summary>
-        internal static string ResourceTypeNotInModel {
+        public static string ResourceTypeNotInModel {
             get {
                 return ResourceManager.GetString("ResourceTypeNotInModel", resourceCulture);
             }
@@ -1936,7 +1936,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM type &apos;{0}&apos; is already declared as an entity type. Use the method &apos;ReturnsCollectionFromEntitySet&apos; if the return type is an entity collection..
         /// </summary>
-        internal static string ReturnEntityCollectionWithoutEntitySet {
+        public static string ReturnEntityCollectionWithoutEntitySet {
             get {
                 return ResourceManager.GetString("ReturnEntityCollectionWithoutEntitySet", resourceCulture);
             }
@@ -1945,7 +1945,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM type &apos;{0}&apos; is already declared as an entity type. Use the method &apos;ReturnsFromEntitySet&apos; if the return type is an entity..
         /// </summary>
-        internal static string ReturnEntityWithoutEntitySet {
+        public static string ReturnEntityWithoutEntitySet {
             get {
                 return ResourceManager.GetString("ReturnEntityWithoutEntitySet", resourceCulture);
             }
@@ -1954,7 +1954,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;RootElementName&apos; property is required on &apos;{0}&apos;..
         /// </summary>
-        internal static string RootElementNameMissing {
+        public static string RootElementNameMissing {
             get {
                 return ResourceManager.GetString("RootElementNameMissing", resourceCulture);
             }
@@ -1963,7 +1963,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The OData route prefix &apos;{0}&apos; on the controller &apos;{1}&apos; starts with a &apos;/&apos;. Route prefixes cannot start with a &apos;/&apos;..
         /// </summary>
-        internal static string RoutePrefixStartsWithSlash {
+        public static string RoutePrefixStartsWithSlash {
             get {
                 return ResourceManager.GetString("RoutePrefixStartsWithSlash", resourceCulture);
             }
@@ -1972,7 +1972,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;select&apos; and &apos;expand&apos; cannot be both null or empty..
         /// </summary>
-        internal static string SelectExpandEmptyOrNull {
+        public static string SelectExpandEmptyOrNull {
             get {
                 return ResourceManager.GetString("SelectExpandEmptyOrNull", resourceCulture);
             }
@@ -1981,7 +1981,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to $select does not support selections of type &apos;{0}&apos;..
         /// </summary>
-        internal static string SelectionTypeNotSupported {
+        public static string SelectionTypeNotSupported {
             get {
                 return ResourceManager.GetString("SelectionTypeNotSupported", resourceCulture);
             }
@@ -1990,7 +1990,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; is not an entity type. Only entity types support $select and $expand..
         /// </summary>
-        internal static string SelectNonEntity {
+        public static string SelectNonEntity {
             get {
                 return ResourceManager.GetString("SelectNonEntity", resourceCulture);
             }
@@ -1999,7 +1999,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The action &apos;{0}&apos; on controller &apos;{1}&apos; returned a {2} containing more than one element. {2} must have zero or one elements..
         /// </summary>
-        internal static string SingleResultHasMoreThanOneEntity {
+        public static string SingleResultHasMoreThanOneEntity {
             get {
                 return ResourceManager.GetString("SingleResultHasMoreThanOneEntity", resourceCulture);
             }
@@ -2008,7 +2008,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The singleton &apos;{0}&apos; was already configured with a different EntityType (&apos;{1}&apos;)..
         /// </summary>
-        internal static string SingletonAlreadyConfiguredDifferentEntityType {
+        public static string SingletonAlreadyConfiguredDifferentEntityType {
             get {
                 return ResourceManager.GetString("SingletonAlreadyConfiguredDifferentEntityType", resourceCulture);
             }
@@ -2017,7 +2017,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The singleton name &apos;{0}&apos; was already configured as an entity set..
         /// </summary>
-        internal static string SingletonNameAlreadyConfiguredAsEntitySet {
+        public static string SingletonNameAlreadyConfiguredAsEntitySet {
             get {
                 return ResourceManager.GetString("SingletonNameAlreadyConfiguredAsEntitySet", resourceCulture);
             }
@@ -2026,7 +2026,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The limit of &apos;{0}&apos; for {1} query has been exceeded. The value from the incoming request is &apos;{2}&apos;..
         /// </summary>
-        internal static string SkipTopLimitExceeded {
+        public static string SkipTopLimitExceeded {
             get {
                 return ResourceManager.GetString("SkipTopLimitExceeded", resourceCulture);
             }
@@ -2035,7 +2035,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not find the target entity type for the navigation property &apos;{0}&apos; on entity type &apos;{1}&apos;..
         /// </summary>
-        internal static string TargetEntityTypeMissing {
+        public static string TargetEntityTypeMissing {
             get {
                 return ResourceManager.GetString("TargetEntityTypeMissing", resourceCulture);
             }
@@ -2044,7 +2044,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; of kind &apos;{1}&apos; is not implemented..
         /// </summary>
-        internal static string TargetKindNotImplemented {
+        public static string TargetKindNotImplemented {
             get {
                 return ResourceManager.GetString("TargetKindNotImplemented", resourceCulture);
             }
@@ -2053,7 +2053,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; cannot be configured as a ComplexType. It was previously configured as an EntityType..
         /// </summary>
-        internal static string TypeCannotBeComplexWasEntity {
+        public static string TypeCannotBeComplexWasEntity {
             get {
                 return ResourceManager.GetString("TypeCannotBeComplexWasEntity", resourceCulture);
             }
@@ -2062,7 +2062,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; cannot be deserialized using the ODataMediaTypeFormatter..
         /// </summary>
-        internal static string TypeCannotBeDeserialized {
+        public static string TypeCannotBeDeserialized {
             get {
                 return ResourceManager.GetString("TypeCannotBeDeserialized", resourceCulture);
             }
@@ -2071,7 +2071,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; cannot be configured as an EntityType. It was previously configured as a ComplexType..
         /// </summary>
-        internal static string TypeCannotBeEntityWasComplex {
+        public static string TypeCannotBeEntityWasComplex {
             get {
                 return ResourceManager.GetString("TypeCannotBeEntityWasComplex", resourceCulture);
             }
@@ -2080,7 +2080,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; cannot be configured as an enum type..
         /// </summary>
-        internal static string TypeCannotBeEnum {
+        public static string TypeCannotBeEnum {
             get {
                 return ResourceManager.GetString("TypeCannotBeEnum", resourceCulture);
             }
@@ -2089,7 +2089,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; cannot be serialized using the ODataMediaTypeFormatter..
         /// </summary>
-        internal static string TypeCannotBeSerialized {
+        public static string TypeCannotBeSerialized {
             get {
                 return ResourceManager.GetString("TypeCannotBeSerialized", resourceCulture);
             }
@@ -2098,7 +2098,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; does not inherit from &apos;{1}&apos;..
         /// </summary>
-        internal static string TypeDoesNotInheritFromBaseType {
+        public static string TypeDoesNotInheritFromBaseType {
             get {
                 return ResourceManager.GetString("TypeDoesNotInheritFromBaseType", resourceCulture);
             }
@@ -2107,7 +2107,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not an entity type. Only entity types are supported..
         /// </summary>
-        internal static string TypeMustBeEntity {
+        public static string TypeMustBeEntity {
             get {
                 return ResourceManager.GetString("TypeMustBeEntity", resourceCulture);
             }
@@ -2116,7 +2116,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; must be an enum or Nullable&lt;T&gt; where T is an enum type..
         /// </summary>
-        internal static string TypeMustBeEnumOrNullableEnum {
+        public static string TypeMustBeEnumOrNullableEnum {
             get {
                 return ResourceManager.GetString("TypeMustBeEnumOrNullableEnum", resourceCulture);
             }
@@ -2125,7 +2125,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a resource set type. Only resource set are supported..
         /// </summary>
-        internal static string TypeMustBeResourceSet {
+        public static string TypeMustBeResourceSet {
             get {
                 return ResourceManager.GetString("TypeMustBeResourceSet", resourceCulture);
             }
@@ -2134,7 +2134,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; of dynamic property &apos;{1}&apos; is not supported..
         /// </summary>
-        internal static string TypeOfDynamicPropertyNotSupported {
+        public static string TypeOfDynamicPropertyNotSupported {
             get {
                 return ResourceManager.GetString("TypeOfDynamicPropertyNotSupported", resourceCulture);
             }
@@ -2143,7 +2143,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ODataMediaTypeFormatter was unable to determine the base URI for the request. The request must be processed by an OData route for the OData formatter to serialize the response..
         /// </summary>
-        internal static string UnableToDetermineBaseUrl {
+        public static string UnableToDetermineBaseUrl {
             get {
                 return ResourceManager.GetString("UnableToDetermineBaseUrl", resourceCulture);
             }
@@ -2152,7 +2152,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The ODataMediaTypeFormatter must be able to determine the metadata URL for a request in order to serialize the response..
         /// </summary>
-        internal static string UnableToDetermineMetadataUrl {
+        public static string UnableToDetermineMetadataUrl {
             get {
                 return ResourceManager.GetString("UnableToDetermineMetadataUrl", resourceCulture);
             }
@@ -2161,7 +2161,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Validating OData UnaryOperatorNode of kind {0} is not supported by {1}..
         /// </summary>
-        internal static string UnaryNodeValidationNotSupported {
+        public static string UnaryNodeValidationNotSupported {
             get {
                 return ResourceManager.GetString("UnaryNodeValidationNotSupported", resourceCulture);
             }
@@ -2170,7 +2170,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The element type &apos;{0}&apos; of the given collection type &apos;{1}&apos; is not of the type &apos;{2}&apos;..
         /// </summary>
-        internal static string UnexpectedElementType {
+        public static string UnexpectedElementType {
             get {
                 return ResourceManager.GetString("UnexpectedElementType", resourceCulture);
             }
@@ -2179,7 +2179,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Found an unresolved path segment &apos;{0}&apos; in the OData path template &apos;{1}&apos;..
         /// </summary>
-        internal static string UnresolvedPathSegmentInTemplate {
+        public static string UnresolvedPathSegmentInTemplate {
             get {
                 return ResourceManager.GetString("UnresolvedPathSegmentInTemplate", resourceCulture);
             }
@@ -2188,7 +2188,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The EDM type &apos;{0}&apos; of kind &apos;{1}&apos; is not supported..
         /// </summary>
-        internal static string UnsupportedEdmType {
+        public static string UnsupportedEdmType {
             get {
                 return ResourceManager.GetString("UnsupportedEdmType", resourceCulture);
             }
@@ -2197,7 +2197,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Found unsupported EdmTypeKind &apos;{0}&apos; in list of available types..
         /// </summary>
-        internal static string UnsupportedEdmTypeKind {
+        public static string UnsupportedEdmTypeKind {
             get {
                 return ResourceManager.GetString("UnsupportedEdmTypeKind", resourceCulture);
             }
@@ -2206,7 +2206,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unsupported Expression NodeType..
         /// </summary>
-        internal static string UnsupportedExpressionNodeType {
+        public static string UnsupportedExpressionNodeType {
             get {
                 return ResourceManager.GetString("UnsupportedExpressionNodeType", resourceCulture);
             }
@@ -2215,7 +2215,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unsupported Expression NodeType &apos;{0}&apos;..
         /// </summary>
-        internal static string UnsupportedExpressionNodeTypeWithName {
+        public static string UnsupportedExpressionNodeTypeWithName {
             get {
                 return ResourceManager.GetString("UnsupportedExpressionNodeTypeWithName", resourceCulture);
             }
@@ -2224,7 +2224,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A path within the select or expand query option is not supported..
         /// </summary>
-        internal static string UnsupportedSelectExpandPath {
+        public static string UnsupportedSelectExpandPath {
             get {
                 return ResourceManager.GetString("UnsupportedSelectExpandPath", resourceCulture);
             }
@@ -2233,7 +2233,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unterminated string literal at {0} in segment &apos;{1}&apos;..
         /// </summary>
-        internal static string UnterminatedStringLiteral {
+        public static string UnterminatedStringLiteral {
             get {
                 return ResourceManager.GetString("UnterminatedStringLiteral", resourceCulture);
             }
@@ -2242,7 +2242,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The function &apos;{0}&apos; is already bound to another method..
         /// </summary>
-        internal static string UriFunctionClrBinderAlreadyBound {
+        public static string UriFunctionClrBinderAlreadyBound {
             get {
                 return ResourceManager.GetString("UriFunctionClrBinderAlreadyBound", resourceCulture);
             }
@@ -2251,7 +2251,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The query specified in the URI is not valid. {0}.
         /// </summary>
-        internal static string UriQueryStringInvalid {
+        public static string UriQueryStringInvalid {
             get {
                 return ResourceManager.GetString("UriQueryStringInvalid", resourceCulture);
             }
@@ -2260,7 +2260,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The property &apos;Url&apos; of {0} cannot be null..
         /// </summary>
-        internal static string UrlHelperNull {
+        public static string UrlHelperNull {
             get {
                 return ResourceManager.GetString("UrlHelperNull", resourceCulture);
             }
@@ -2269,7 +2269,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is invalid. {1}.
         /// </summary>
-        internal static string ValueIsInvalid {
+        public static string ValueIsInvalid {
             get {
                 return ResourceManager.GetString("ValueIsInvalid", resourceCulture);
             }
@@ -2278,7 +2278,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} does not support WriteObjectInline..
         /// </summary>
-        internal static string WriteObjectInlineNotSupported {
+        public static string WriteObjectInlineNotSupported {
             get {
                 return ResourceManager.GetString("WriteObjectInlineNotSupported", resourceCulture);
             }
@@ -2287,7 +2287,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} does not support WriteObject..
         /// </summary>
-        internal static string WriteObjectNotSupported {
+        public static string WriteObjectNotSupported {
             get {
                 return ResourceManager.GetString("WriteObjectNotSupported", resourceCulture);
             }
@@ -2296,7 +2296,7 @@ namespace Microsoft.OData.WebApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The OData formatter does not support writing client requests. This formatter instance must have an associated request..
         /// </summary>
-        internal static string WriteToStreamAsyncMustHaveRequest {
+        public static string WriteToStreamAsyncMustHaveRequest {
             get {
                 return ResourceManager.GetString("WriteToStreamAsyncMustHaveRequest", resourceCulture);
             }

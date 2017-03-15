@@ -6,20 +6,18 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.OData.Adapters;
-using Microsoft.OData.WebApi.Builder;
-using Microsoft.OData.WebApi.Builder.Conventions;
 using System.Web.OData.Extensions;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Formatter.Serialization;
-using System.Web.OData.Properties;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Results

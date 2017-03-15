@@ -11,11 +11,10 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using Microsoft.OData.WebApi.Routing.Conventions;
-using Microsoft.OData.WebApi.Routing;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Routing

@@ -14,15 +14,13 @@ using System.Web.Http.Filters;
 using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
-using System.Web.OData.Query;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData
 {
