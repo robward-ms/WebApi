@@ -19,7 +19,6 @@ using System.Web.OData.Adapters;
 using System.Web.OData.Batch;
 using System.Web.OData.Extensions;
 using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Properties;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -28,6 +27,7 @@ using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
@@ -46,7 +46,7 @@ namespace System.Web.OData.Formatter
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
 
         private readonly ODataDeserializerProvider _deserializerProvider;
-        private readonly ODataSerializerProvider _serializerProvider;
+        private readonly IODataSerializerProvider _serializerProvider;
 
         private HttpRequestMessage _request;
 
@@ -55,7 +55,7 @@ namespace System.Web.OData.Formatter
         /// </summary>
         /// <param name="payloadKinds">The kind of payloads this formatter supports.</param>
         public ODataMediaTypeFormatter(IEnumerable<ODataPayloadKind> payloadKinds)
-            : this(ODataDeserializerProviderProxy.Instance, ODataSerializerProviderProxy.Instance, payloadKinds)
+            : this(ODataDeserializerProviderProxy.Instance, IoDataSerializerProviderProxy.Instance, payloadKinds)
         {
         }
 
@@ -63,9 +63,9 @@ namespace System.Web.OData.Formatter
         /// Initializes a new instance of the <see cref="ODataMediaTypeFormatter"/> class.
         /// </summary>
         /// <param name="deserializerProvider">The <see cref="ODataDeserializerProvider"/> to use.</param>
-        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use.</param>
+        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use.</param>
         /// <param name="payloadKinds">The kind of payloads this formatter supports.</param>
-        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, ODataSerializerProvider serializerProvider,
+        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, IODataSerializerProvider serializerProvider,
             IEnumerable<ODataPayloadKind> payloadKinds)
         {
             if (deserializerProvider == null)
@@ -123,9 +123,9 @@ namespace System.Web.OData.Formatter
             // Parameter 3: request
             Request = request;
 
-            if (_serializerProvider.GetType() == typeof(ODataSerializerProviderProxy))
+            if (_serializerProvider.GetType() == typeof(IoDataSerializerProviderProxy))
             {
-                _serializerProvider = new ODataSerializerProviderProxy
+                _serializerProvider = new IoDataSerializerProviderProxy
                 {
                     RequestContainer = request.GetRequestContainer()
                 };
@@ -141,9 +141,9 @@ namespace System.Web.OData.Formatter
         }
 
         /// <summary>
-        /// Gets the <see cref="ODataSerializerProvider"/> that will be used by this formatter instance.
+        /// Gets the <see cref="IODataSerializerProvider"/> that will be used by this formatter instance.
         /// </summary>
-        public ODataSerializerProvider SerializerProvider
+        public IODataSerializerProvider SerializerProvider
         {
             get
             {
@@ -586,7 +586,7 @@ namespace System.Web.OData.Formatter
             return deserializer;
         }
 
-        private ODataSerializer GetSerializer(Type type, object value, ODataSerializerProvider serializerProvider)
+        private ODataSerializer GetSerializer(Type type, object value, IODataSerializerProvider serializerProvider)
         {
             ODataSerializer serializer;
 
@@ -736,7 +736,7 @@ namespace System.Web.OData.Formatter
 
         private void EnsureRequestContainer(HttpRequestMessage request)
         {
-            ODataSerializerProviderProxy serializerProviderProxy = _serializerProvider as ODataSerializerProviderProxy;
+            IoDataSerializerProviderProxy serializerProviderProxy = _serializerProvider as IoDataSerializerProviderProxy;
             if (serializerProviderProxy != null && serializerProviderProxy.RequestContainer == null)
             {
                 serializerProviderProxy.RequestContainer = request.GetRequestContainer();

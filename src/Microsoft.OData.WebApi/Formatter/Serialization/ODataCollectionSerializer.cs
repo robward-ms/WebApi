@@ -21,7 +21,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// Initializes a new instance of the <see cref="ODataCollectionSerializer"/> class.
         /// </summary>
         /// <param name="serializerProvider">The serializer provider to use to serialize nested objects.</param>
-        public ODataCollectionSerializer(ODataSerializerProvider serializerProvider)
+        public ODataCollectionSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Collection, serializerProvider)
         {
         }

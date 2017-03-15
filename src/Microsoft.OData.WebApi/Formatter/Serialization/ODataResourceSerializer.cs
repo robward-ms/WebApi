@@ -28,7 +28,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         private const string Resource = "Resource";
 
         /// <inheritdoc />
-        public ODataResourceSerializer(ODataSerializerProvider serializerProvider)
+        public ODataResourceSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Resource, serializerProvider)
         {
         }

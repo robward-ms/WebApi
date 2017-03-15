@@ -26,13 +26,13 @@ namespace System.Web.OData.Formatter
 
         /// <summary>
         /// Creates a list of media type formatters to handle OData.
-        /// The default serializer provider is <see cref="ODataSerializerProviderProxy"/> and the default deserializer provider is
+        /// The default serializer provider is <see cref="IoDataSerializerProviderProxy"/> and the default deserializer provider is
         /// <see cref="ODataDeserializerProviderProxy"/>.
         /// </summary>
         /// <returns>A list of media type formatters to handle OData.</returns>
         public static IList<ODataMediaTypeFormatter> Create()
         {
-            return Create(ODataSerializerProviderProxy.Instance, ODataDeserializerProviderProxy.Instance);
+            return Create(IoDataSerializerProviderProxy.Instance, ODataDeserializerProviderProxy.Instance);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace System.Web.OData.Formatter
         /// <param name="serializerProvider">The serializer provider to use.</param>
         /// <param name="deserializerProvider">The deserializer provider to use.</param>
         /// <returns>A list of media type formatters to handle OData.</returns>
-        public static IList<ODataMediaTypeFormatter> Create(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        public static IList<ODataMediaTypeFormatter> Create(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             return new List<ODataMediaTypeFormatter>()
             {
@@ -61,7 +61,7 @@ namespace System.Web.OData.Formatter
                 throwOnInvalidBytes: true));
         }
 
-        private static ODataMediaTypeFormatter CreateRawValue(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateRawValue(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(serializerProvider, deserializerProvider, ODataPayloadKind.Value);
             formatter.MediaTypeMappings.Add(new ODataPrimitiveValueMediaTypeMapping());
@@ -71,7 +71,7 @@ namespace System.Web.OData.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateApplicationJson(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateApplicationJson(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(
                 serializerProvider,
@@ -108,7 +108,7 @@ namespace System.Web.OData.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateApplicationXml(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateApplicationXml(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(
                 serializerProvider,
@@ -122,7 +122,7 @@ namespace System.Web.OData.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateFormatterWithoutMediaTypes(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider, params ODataPayloadKind[] payloadKinds)
+        private static ODataMediaTypeFormatter CreateFormatterWithoutMediaTypes(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider, params ODataPayloadKind[] payloadKinds)
         {
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(deserializerProvider, serializerProvider, payloadKinds);
             AddSupportedEncodings(formatter);

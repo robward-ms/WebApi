@@ -8,7 +8,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     internal static class ODataSerializerProviderExtensions
     {
-        public static ODataEdmTypeSerializer GetEdmTypeSerializer(this ODataSerializerProvider serializerProvider,
+        public static ODataEdmTypeSerializer GetEdmTypeSerializer(this IODataSerializerProvider serializerProvider,
             object instance, IWebApiRequestMessage request)
         {
             Contract.Assert(serializerProvider != null);

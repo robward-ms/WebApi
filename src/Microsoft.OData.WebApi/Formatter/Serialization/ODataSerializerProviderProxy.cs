@@ -10,18 +10,18 @@ using Microsoft.OData.WebApi.Interfaces;
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
-    /// The default <see cref="ODataSerializerProvider"/>.
+    /// The default <see cref="IODataSerializerProvider"/>.
     /// </summary>
-    public class ODataSerializerProviderProxy : ODataSerializerProvider
+    public class IoDataSerializerProviderProxy : IODataSerializerProvider
     {
-        private static readonly ODataSerializerProviderProxy _instance = new ODataSerializerProviderProxy();
+        private static readonly IoDataSerializerProviderProxy _instance = new IoDataSerializerProviderProxy();
 
         private IServiceProvider _requestContainer;
 
         /// <summary>
-        /// Gets the default instance of the <see cref="ODataSerializerProviderProxy"/>.
+        /// Gets the default instance of the <see cref="IoDataSerializerProviderProxy"/>.
         /// </summary>
-        public static ODataSerializerProviderProxy Instance
+        public static IoDataSerializerProviderProxy Instance
         {
             get
             {
@@ -44,15 +44,15 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public override ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
-            return RequestContainer.GetRequiredService<ODataSerializerProvider>().GetEdmTypeSerializer(edmType);
+            return RequestContainer.GetRequiredService<IODataSerializerProvider>().GetEdmTypeSerializer(edmType);
         }
 
         /// <inheritdoc />
-        public override ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
+        public ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
         {
-            return RequestContainer.GetRequiredService<ODataSerializerProvider>()
+            return RequestContainer.GetRequiredService<IODataSerializerProvider>()
                 .GetODataPayloadSerializer(type, request);
         }
     }

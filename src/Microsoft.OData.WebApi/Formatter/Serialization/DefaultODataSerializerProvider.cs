@@ -12,17 +12,17 @@ using Microsoft.OData.WebApi.Interfaces;
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
-    /// The default <see cref="ODataSerializerProvider"/>.
+    /// The default <see cref="IODataSerializerProvider"/>.
     /// </summary>
-    public class DefaultODataSerializerProvider : ODataSerializerProvider
+    public class DefaultIoDataSerializerProvider : IODataSerializerProvider
     {
         private readonly IServiceProvider _rootContainer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultODataSerializerProvider"/> class.
+        /// Initializes a new instance of the <see cref="DefaultIoDataSerializerProvider"/> class.
         /// </summary>
         /// <param name="rootContainer">The root container.</param>
-        public DefaultODataSerializerProvider(IServiceProvider rootContainer)
+        public DefaultIoDataSerializerProvider(IServiceProvider rootContainer)
         {
             if (rootContainer == null)
             {
@@ -33,7 +33,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public override ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
             if (edmType == null)
             {
@@ -73,7 +73,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public override ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
+        public ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
         {
             if (type == null)
             {

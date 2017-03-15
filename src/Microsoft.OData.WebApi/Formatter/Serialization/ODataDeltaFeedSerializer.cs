@@ -24,8 +24,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataDeltaFeedSerializer"/>.
         /// </summary>
-        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use to write nested entries.</param>
-        public ODataDeltaFeedSerializer(ODataSerializerProvider serializerProvider)
+        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use to write nested entries.</param>
+        public ODataDeltaFeedSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Delta, serializerProvider)
         {
         }
