@@ -39,17 +39,16 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
                 switch (controllerContext.Request.Method.ToUpperInvariant())
                 {
-                    case "GET":
+                    case HttpMethodHelper.HttpGet:
                         httpMethodName = "Get";
                         break;
-                    case "PUT":
+                    case HttpMethodHelper.HttpPut:
                         httpMethodName = "Put";
                         break;
-                    case "PATCH":
-                    case "MERGE":
+                    case HttpMethodHelper.HttpPatch:
                         httpMethodName = "Patch";
                         break;
-                    case "DELETE":
+                    case HttpMethodHelper.HttpDelete:
                         httpMethodName = "Delete";
                         break;
                     default:

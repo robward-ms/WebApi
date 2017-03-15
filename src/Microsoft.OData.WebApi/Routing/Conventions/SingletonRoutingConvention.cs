@@ -68,14 +68,13 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             string actionNamePrefix;
             switch (method.ToUpperInvariant())
             {
-                case "GET":
+                case HttpMethodHelper.HttpGet:
                     actionNamePrefix = "Get";
                     break;
-                case "PUT":
+                case HttpMethodHelper.HttpPut:
                     actionNamePrefix = "Put";
                     break;
-                case "PATCH":
-                case "MERGE":
+                case HttpMethodHelper.HttpPatch:
                     actionNamePrefix = "Patch";
                     break;
                 default:

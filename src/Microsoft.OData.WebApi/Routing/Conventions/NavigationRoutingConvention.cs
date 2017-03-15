@@ -64,7 +64,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
                 // It is not valid to *Put/Patch" to any collection-valued navigation property.
                 if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.Many &&
-                    (HttpMethodHelper.IsPost(method) || HttpMethodHelper.IsPatch(method)))
+                    (HttpMethodHelper.IsPut(method) || HttpMethodHelper.IsPatch(method)))
                 {
                     return null;
                 }
@@ -102,13 +102,13 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         {
             switch (method.ToUpperInvariant())
             {
-                case "GET":
+                case HttpMethodHelper.HttpGet:
                     return "Get";
-                case "POST":
+                case HttpMethodHelper.HttpPost:
                     return "PostTo";
-                case "PUT":
+                case HttpMethodHelper.HttpPut:
                     return "PutTo";
-                case "PATCH":
+                case HttpMethodHelper.HttpPatch:
                     return "PatchTo";
                 default:
                     return null;
