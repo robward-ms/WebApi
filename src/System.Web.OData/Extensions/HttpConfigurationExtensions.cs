@@ -8,24 +8,22 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.OData.Adapters;
 using System.Web.OData.Batch;
-using Microsoft.OData.WebApi.Formatter;
-using System.Web.OData.Properties;
 using System.Web.OData.Query;
 using System.Web.OData.Routing;
-using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Routing;
-using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace System.Web.OData.Extensions
@@ -589,14 +587,12 @@ namespace System.Web.OData.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model)
         {
-            WebApiOptions options = new WebApiOptions(configuration);
-            IEnumerable<IWebApiControllerDescriptor> controllers =
-                configuration.Services.GetHttpControllerSelector().GetControllerMapping().Values.Select(a => new WebApiControllerDescriptor(a));
+            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
 
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, controllers, options)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
         }
 
         /// <summary>
@@ -612,15 +608,13 @@ namespace System.Web.OData.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model, ODataBatchHandler batchHandler)
         {
-            WebApiOptions options = new WebApiOptions(configuration);
-            IEnumerable<IWebApiControllerDescriptor> controllers =
-                configuration.Services.GetHttpControllerSelector().GetControllerMapping().Values.Select(a => new WebApiControllerDescriptor(a));
+            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
 
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService(ServiceLifetime.Singleton, sp => batchHandler)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, controllers, options)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
         }
 
         /// <summary>
@@ -636,15 +630,13 @@ namespace System.Web.OData.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model, HttpMessageHandler defaultHandler)
         {
-            WebApiOptions options = new WebApiOptions(configuration);
-            IEnumerable<IWebApiControllerDescriptor> controllers =
-                configuration.Services.GetHttpControllerSelector().GetControllerMapping().Values.Select(a => new WebApiControllerDescriptor(a));
+            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
 
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService(ServiceLifetime.Singleton, sp => defaultHandler)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, controllers, options)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
         }
 
         /// <summary>

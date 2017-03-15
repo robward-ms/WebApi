@@ -19,108 +19,14 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// </summary>
     public class AttributeRoutingConvention : IODataRoutingConvention
     {
-        private static readonly DefaultODataPathHandler _defaultPathHandler = new DefaultODataPathHandler();
-
-        private readonly string _routeName;
-
-        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> _attributeMappings;
+        private IAttributeMappingProvider _mappingProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
         /// </summary>
-        /// <param name="routeName">The name of the route.</param>
-        /// <param name="controllers">The controllers in which to look for a match.</param>
-        /// <param name="options">The configuration options.</param>
-        public AttributeRoutingConvention(string routeName, IEnumerable<IWebApiControllerDescriptor> controllers, IWebApiOptions options)
-            : this(routeName, controllers, _defaultPathHandler, options)
+        public AttributeRoutingConvention(IAttributeMappingProvider mappingProvider)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
-        /// </summary>
-        /// <param name="routeName">The name of the route.</param>
-        /// <param name="controllers">The controllers in which to look for a match.</param>
-        /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
-        /// <param name="options">The configuration options.</param>
-        public AttributeRoutingConvention(string routeName, IEnumerable<IWebApiControllerDescriptor> controllers,
-            IODataPathTemplateHandler pathTemplateHandler, IWebApiOptions options)
-            : this(routeName, pathTemplateHandler)
-        {
-            if (controllers == null)
-            {
-                throw Error.ArgumentNull("controllers");
-            }
-
-            // if settings is not on local, use the global configuration settings.
-            IODataPathHandler pathHandler = pathTemplateHandler as IODataPathHandler;
-            if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
-            {
-                ODataUrlKeyDelimiter urlKeyDelimiter = options.UrlKeyDelimiter;
-                pathHandler.UrlKeyDelimiter = urlKeyDelimiter;
-            }
-
-            ////Action<HttpConfiguration> oldInitializer = configuration.Initializer;
-            ////bool initialized = false;
-            ////configuration.Initializer = (config) =>
-            ////{
-            ////    if (!initialized)
-            ////    {
-            ////        initialized = true;
-            ////        oldInitializer(config);
-            ////        IHttpControllerSelector controllerSelector = config.Services.GetHttpControllerSelector();
-            _attributeMappings = BuildAttributeMappings(controllers);
-                ////}
-            ////};
-        }
-
-        private AttributeRoutingConvention(string routeName, IODataPathTemplateHandler pathTemplateHandler)
-        {
-            if (routeName == null)
-            {
-                throw Error.ArgumentNull("routeName");
-            }
-
-            if (pathTemplateHandler == null)
-            {
-                throw Error.ArgumentNull("pathTemplateHandler");
-            }
-
-            _routeName = routeName;
-            ODataPathTemplateHandler = pathTemplateHandler;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="IODataPathTemplateHandler"/> to be used for parsing the route templates.
-        /// </summary>
-        public IODataPathTemplateHandler ODataPathTemplateHandler { get; private set; }
-
-        internal IDictionary<ODataPathTemplate, IWebApiActionDescriptor> AttributeMappings
-        {
-            get
-            {
-                if (_attributeMappings == null)
-                {
-                    // Will throw an InvalidOperationException if this class is constructed with an HttpConfiguration
-                    // but EnsureInitialized() hasn't been called yet.
-                    throw Error.InvalidOperation(SRResources.Object_NotYetInitialized);
-                }
-
-                return _attributeMappings;
-            }
-        }
-
-        /// <summary>
-        /// Specifies whether OData route attributes on this controller should be mapped.
-        /// This method will execute before the derived type's instance constructor executes. Derived types must
-        /// be aware of this and should plan accordingly. For example, the logic in ShouldMapController() should be simple
-        /// enough so as not to depend on the "this" pointer referencing a fully constructed object.
-        /// </summary>
-        /// <param name="controller">The controller.</param>
-        /// <returns><c>true</c> if this controller should be included in the map; <c>false</c> otherwise.</returns>
-        public virtual bool ShouldMapController(IWebApiControllerDescriptor controller)
-        {
-            return true;
+            this._mappingProvider = mappingProvider;
         }
 
         /// <inheritdoc />
@@ -128,7 +34,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         {
             Dictionary<string, object> values = new Dictionary<string, object>();
 
-            foreach (KeyValuePair<ODataPathTemplate, IWebApiActionDescriptor> attributeMapping in AttributeMappings)
+            foreach (KeyValuePair<ODataPathTemplate, IWebApiActionDescriptor> attributeMapping in _mappingProvider.AttributeMappings)
             {
                 ODataPathTemplate template = attributeMapping.Key;
                 IWebApiActionDescriptor action = attributeMapping.Value;
@@ -174,122 +80,6 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             }
 
             return null;
-        }
-
-        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> BuildAttributeMappings(IEnumerable<IWebApiControllerDescriptor> controllers)
-        {
-            Dictionary<ODataPathTemplate, IWebApiActionDescriptor> attributeMappings =
-                new Dictionary<ODataPathTemplate, IWebApiActionDescriptor>();
-
-            foreach (IWebApiControllerDescriptor controller in controllers)
-            {
-                if (IsODataController(controller) && ShouldMapController(controller))
-                {
-                    IWebApiActionDescriptor[] actions = controller.GetActions();
-
-                    foreach (string prefix in GetODataRoutePrefixes(controller))
-                    {
-                        foreach (IWebApiActionDescriptor action in actions)
-                        {
-                            IEnumerable<ODataPathTemplate> pathTemplates = GetODataPathTemplates(prefix, action);
-                            foreach (ODataPathTemplate pathTemplate in pathTemplates)
-                            {
-                                attributeMappings.Add(pathTemplate, action);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return attributeMappings;
-        }
-
-        private static bool IsODataController(IWebApiControllerDescriptor controller)
-        {
-            return typeof(ODataControllerBase).IsAssignableFrom(controller.ControllerType);
-        }
-
-        private static IEnumerable<string> GetODataRoutePrefixes(IWebApiControllerDescriptor controllerDescriptor)
-        {
-            Contract.Assert(controllerDescriptor != null);
-
-            var prefixAttributes = controllerDescriptor.GetCustomAttributes<ODataRoutePrefixAttribute>(inherit: false);
-            if (prefixAttributes.Count == 0)
-            {
-                yield return null;
-            }
-            else
-            {
-                foreach (ODataRoutePrefixAttribute prefixAttribute in prefixAttributes)
-                {
-                    string prefix = prefixAttribute.Prefix;
-
-                    if (prefix != null && prefix.StartsWith("/", StringComparison.Ordinal))
-                    {
-                        throw Error.InvalidOperation(SRResources.RoutePrefixStartsWithSlash, prefix, controllerDescriptor.ControllerType.FullName);
-                    }
-
-                    if (prefix != null && prefix.EndsWith("/", StringComparison.Ordinal))
-                    {
-                        prefix = prefix.TrimEnd('/');
-                    }
-
-                    yield return prefix;
-                }
-            }
-        }
-
-        private IEnumerable<ODataPathTemplate> GetODataPathTemplates(string prefix, IWebApiActionDescriptor action)
-        {
-            Contract.Assert(action != null);
-
-            IEnumerable<ODataRouteAttribute> routeAttributes = action.GetCustomAttributes<ODataRouteAttribute>(inherit: false);
-            return
-                routeAttributes
-                .Select(route => GetODataPathTemplate(prefix, route.PathTemplate, action))
-                .Where(template => template != null);
-        }
-
-        private ODataPathTemplate GetODataPathTemplate(string prefix, string pathTemplate, IWebApiActionDescriptor action)
-        {
-            if (prefix != null && !pathTemplate.StartsWith("/", StringComparison.Ordinal))
-            {
-                if (String.IsNullOrEmpty(pathTemplate))
-                {
-                    pathTemplate = prefix;
-                }
-                else if (pathTemplate.StartsWith("(", StringComparison.Ordinal))
-                {
-                    // We don't need '/' when the pathTemplate starts with a key segment.
-                    pathTemplate = prefix + pathTemplate;
-                }
-                else
-                {
-                    pathTemplate = prefix + "/" + pathTemplate;
-                }
-            }
-
-            if (pathTemplate.StartsWith("/", StringComparison.Ordinal))
-            {
-                pathTemplate = pathTemplate.Substring(1);
-            }
-
-            ODataPathTemplate odataPathTemplate;
-
-            try
-            {
-                // We are NOT in a request but establishing the attribute routing convention.
-                // So use the root container rather than the request container.
-                odataPathTemplate = ODataPathTemplateHandler.ParseTemplate(pathTemplate,
-                    action.GetODataRootContainer(_routeName));
-            }
-            catch (ODataException e)
-            {
-                throw Error.InvalidOperation(SRResources.InvalidODataRouteOnAction, pathTemplate, action.ActionName,
-                    action.ControllerDescriptor.ControllerName, e.Message);
-            }
-
-            return odataPathTemplate;
         }
     }
 }

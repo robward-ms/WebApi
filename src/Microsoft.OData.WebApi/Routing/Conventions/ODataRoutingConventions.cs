@@ -16,17 +16,15 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// Creates a mutable list of the default OData routing conventions with attribute routing enabled.
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
-        /// <param name="controllers">The controllers collection.</param>
-        /// <param name="options">The configuration options.</param>
+        /// <param name="mappingProvider">The mapping provider.</param>
         /// <returns>A mutable list of the default OData routing conventions.</returns>
         public static IList<IODataRoutingConvention> CreateDefaultWithAttributeRouting(
             string routeName,
-            IEnumerable<IWebApiControllerDescriptor> controllers,
-            IWebApiOptions options)
+            IAttributeMappingProvider mappingProvider)
         {
-            if (controllers == null)
+            if (mappingProvider == null)
             {
-                throw Error.ArgumentNull("controllers");
+                throw Error.ArgumentNull("mappingProvider");
             }
 
             if (routeName == null)
@@ -35,7 +33,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             }
 
             IList<IODataRoutingConvention> routingConventions = CreateDefault();
-            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(routeName, controllers, options);
+            AttributeRoutingConvention routingConvention = new AttributeRoutingConvention(mappingProvider);
             routingConventions.Insert(0, routingConvention);
             return routingConventions;
         }

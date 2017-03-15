@@ -22,17 +22,11 @@ namespace Microsoft.OData.WebApi.Interfaces
         Type ControllerType { get; }
 
         /// <summary>
-        /// Returns a collection of actions associated with the controller.
-        /// </summary>
-        /// <returns>A collection of actions associated with the controller</returns>
-        IWebApiActionDescriptor[] GetActions();
-
-        /// <summary>
         /// Returns a collection of attributes that can be assigned to <typeparamref name="T" /> for this descriptor's controller. 
         /// </summary>
         /// <typeparam name="T">The type of attribute to search for.</typeparam>
         /// <param name="inherit">true to search this action's inheritance chain to find the attributes; otherwise, false.</param>
         /// <returns>A list of attributes of type T.</returns>
-        IList<T> GetCustomAttributes<T>(bool inherit)  where T : class;
+        IEnumerable<T> GetCustomAttributes<T>(bool inherit)  where T : Attribute;
     }
 }
