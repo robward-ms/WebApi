@@ -83,14 +83,6 @@ namespace System.Web.OData.Adapters
         public IWebApiOptions Options { get; private set; }
 
         /// <summary>
-        /// Gets a set of properties for the HTTP request.
-        /// </summary>
-        public IDictionary<string, object> Properties
-        {
-            get { return this.InnerRequest.Properties; }
-        }
-
-        /// <summary>
         /// The request container associated with the request.
         /// </summary>
         public IServiceProvider RequestContainer

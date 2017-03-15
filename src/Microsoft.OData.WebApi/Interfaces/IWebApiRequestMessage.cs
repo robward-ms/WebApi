@@ -49,11 +49,6 @@ namespace Microsoft.OData.WebApi.Interfaces
         IWebApiOptions Options { get; }
 
         /// <summary>
-        /// Gets a set of properties for the HTTP request.
-        /// </summary>
-        IDictionary<string, object> Properties { get; }
-
-        /// <summary>
         /// The request container associated with the request.
         /// </summary>
         IServiceProvider RequestContainer { get; }

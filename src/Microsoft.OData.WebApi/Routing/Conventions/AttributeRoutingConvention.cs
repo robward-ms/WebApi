@@ -124,7 +124,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         }
 
         /// <inheritdoc />
-        public string SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        public SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
         {
             Dictionary<string, object> values = new Dictionary<string, object>();
 
@@ -133,12 +133,14 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 ODataPathTemplate template = attributeMapping.Key;
                 IWebApiActionDescriptor action = attributeMapping.Value;
 
-                if (action.SupportedHttpMethods.Contains(request.Method) && template.TryMatch(odataPath, values))
+                if (action.IsHttpMethodMatch(request.Method) && template.TryMatch(odataPath, values))
                 {
-                    values["action"] = action.ActionName;
-                    request.Properties["AttributeRouteData"] = values;
+                    SelectControllerResult result = new SelectControllerResult(action.ControllerDescriptor.ControllerName);
 
-                    return action.ControllerDescriptor.ControllerName;
+                    values["action"] = action.ActionName;
+                    result.Values = values;
+
+                    return result;
                 }
             }
 
@@ -152,27 +154,23 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             var routeData = controllerContext.Request.GetRouteData();
             var routingConventionsStore = controllerContext.Request.Context.RoutingConventionsStore;
 
-            object value;
-            if (controllerContext.Request.Properties.TryGetValue("AttributeRouteData", out value))
+            IDictionary<string, object> attributeRouteData = controllerContext.ControllerResult.Values;
+            if (attributeRouteData != null)
             {
-                IDictionary<string, object> attributeRouteData = value as IDictionary<string, object>;
-                if (attributeRouteData != null)
+                foreach (var item in attributeRouteData)
                 {
-                    foreach (var item in attributeRouteData)
+                    if (item.Key.StartsWith(ODataParameterValue.ParameterValuePrefix, StringComparison.Ordinal) &&
+                        item.Value is ODataParameterValue)
                     {
-                        if (item.Key.StartsWith(ODataParameterValue.ParameterValuePrefix, StringComparison.Ordinal) &&
-                            item.Value is ODataParameterValue)
-                        {
-                            routingConventionsStore.Add(item);
-                        }
-                        else
-                        {
-                            routeData.Add(item);
-                        }
+                        routingConventionsStore.Add(item);
                     }
-
-                    return attributeRouteData["action"] as string;
+                    else
+                    {
+                        routeData.Add(item);
+                    }
                 }
+
+                return attributeRouteData["action"] as string;
             }
 
             return null;

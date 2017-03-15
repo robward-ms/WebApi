@@ -15,19 +15,25 @@ namespace System.Web.OData.Adapters
     public class WebApiActionDescriptor : IWebApiActionDescriptor
     {
         /// <summary>
+        /// Gets the collection of supported HTTP methods for the descriptor.
+        /// </summary>
+        private IList<string> supportedHttpMethods;
+
+        /// <summary>
         /// Initializes a new instance of the WebApiActionDescriptor class.
         /// </summary>
         /// <param name="actionDescriptor">The inner descriptor.</param>
         /// <param name="controllerDescriptor">The parent controller descriptor.</param>
-        public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor, WebApiControllerDescriptor controllerDescriptor)
+        public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor,
+            WebApiControllerDescriptor controllerDescriptor)
         {
             this.InnerDescriptor = actionDescriptor;
             this.ControllerDescriptor = controllerDescriptor;
 
-            this.SupportedHttpMethods = new List<string>();
+            this.supportedHttpMethods = new List<string>();
             foreach (HttpMethod method in actionDescriptor.SupportedHttpMethods)
             {
-                this.SupportedHttpMethods.Add(method.Method);
+                this.supportedHttpMethods.Add(method.Method);
             }
         }
 
@@ -50,29 +56,22 @@ namespace System.Web.OData.Adapters
         public IWebApiControllerDescriptor ControllerDescriptor { get; private set; }
 
         /// <summary>
-        /// Gets the collection of supported HTTP methods for the descriptor.
-        /// </summary>
-        public IList<string> SupportedHttpMethods { get; private set; }
-
-        /// <summary>
         /// Returns the custom attributes associated with the action descriptor.
         /// </summary>
         /// <typeparam name="T">The type of attribute to search for.</typeparam>
         /// <param name="inherit">true to search this action's inheritance chain to find the attributes; otherwise, false.</param>
         /// <returns>A list of attributes of type T.</returns>
-        public IList<T> GetCustomAttributes<T>(bool inherit) where T : class
+        public IEnumerable<T> GetCustomAttributes<T>(bool inherit) where T : Attribute
         {
             return this.InnerDescriptor.GetCustomAttributes<T>(inherit);
         }
 
         /// <summary>
-        /// Get the service provider for OData for a given route.
+        /// Determine if the Http method is a match.
         /// </summary>
-        /// <param name="routeName">The route name for which toi get a service provider.</param>
-        /// <returns>A service provider for OData for a given route</returns>
-        public IServiceProvider GetODataRootContainer(string routeName)
+        public bool IsHttpMethodMatch(string method)
         {
-            return this.InnerDescriptor.Configuration.GetODataRootContainer(routeName);
+            return this.supportedHttpMethods.Contains(method);
         }
     }
 }

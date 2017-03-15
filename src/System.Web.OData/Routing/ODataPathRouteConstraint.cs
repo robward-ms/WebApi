@@ -4,17 +4,15 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
-using Microsoft.OData.WebApi.Routing;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
 namespace System.Web.OData.Routing
 {
@@ -140,10 +138,11 @@ namespace System.Web.OData.Routing
                         if (!values.ContainsKey(ODataRouteConstants.Controller))
                         {
                             // Select controller name using the routing conventions
-                            string controllerName = SelectControllerName(path, request);
-                            if (controllerName != null)
+                            SelectControllerResult controllerResult = SelectControllerName(path, request);
+                            if (controllerResult != null)
                             {
-                                values[ODataRouteConstants.Controller] = controllerName;
+                                values[ODataRouteConstants.Controller] = controllerResult.ControllerName;
+                                request.Properties["AttributeRouteData"] = controllerResult.Values;
                             }
                         }
 
@@ -168,14 +167,14 @@ namespace System.Web.OData.Routing
         /// <param name="path">The OData path of the request.</param>
         /// <param name="request">The request.</param>
         /// <returns>The name of the controller to dispatch to, or <c>null</c> if one cannot be resolved.</returns>
-        protected virtual string SelectControllerName(ODataPath path, HttpRequestMessage request)
+        protected virtual SelectControllerResult SelectControllerName(ODataPath path, HttpRequestMessage request)
         {
             foreach (IODataRoutingConvention routingConvention in request.GetRoutingConventions())
             {
-                string controllerName = routingConvention.SelectController(path, new WebApiRequestMessage(request));
-                if (controllerName != null)
+                SelectControllerResult controllerResult = routingConvention.SelectController(path, new WebApiRequestMessage(request));
+                if (controllerResult != null)
                 {
-                    return controllerName;
+                    return controllerResult;
                 }
             }
 

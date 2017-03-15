@@ -22,7 +22,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller
         /// </returns>
-        public virtual string SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        public virtual SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
         {
             if (odataPath == null)
             {
@@ -38,14 +38,14 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             EntitySetSegment entitySetSegment = odataPath.Segments.FirstOrDefault() as EntitySetSegment;
             if (entitySetSegment != null)
             {
-                return entitySetSegment.EntitySet.Name;
+                return new SelectControllerResult(entitySetSegment.EntitySet.Name);
             }
 
             // singleton
             SingletonSegment singletonSegment = odataPath.Segments.FirstOrDefault() as SingletonSegment;
             if (singletonSegment != null)
             {
-                return singletonSegment.Singleton.Name;
+                return new SelectControllerResult(singletonSegment.Singleton.Name);
             }
 
             return null;

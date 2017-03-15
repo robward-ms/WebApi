@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
 namespace Microsoft.OData.WebApi.Interfaces
 {
@@ -11,6 +12,11 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// </summary>
     public interface IWebApiControllerContext
     {
+        /// <summary>
+        /// The selected controller result.
+        /// </summary>
+        SelectControllerResult ControllerResult { get; }
+
         /// <summary>
         /// Gets the request.
         /// </summary>
