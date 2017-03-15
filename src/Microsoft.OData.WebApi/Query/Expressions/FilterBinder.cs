@@ -109,6 +109,10 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             {
                 throw Error.ArgumentNull("model");
             }
+            if (assembliesResolver == null)
+            {
+                throw Error.ArgumentNull("assembliesResolver");
+            }
 
             FilterBinder binder = new FilterBinder(model, assembliesResolver, querySettings, filterType);
 

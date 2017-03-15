@@ -233,8 +233,13 @@ namespace Microsoft.OData.WebApi
         {
             List<Type> result = new List<Type>();
 
+            if (assembliesResolver == null)
+            {
+                return result;
+            }
+
             // Go through all assemblies referenced by the application and search for types matching a predicate
-            ICollection<Assembly> assemblies = assembliesResolver.GetAssemblies();
+            IEnumerable<Assembly> assemblies = assembliesResolver.GetAssemblies();
             foreach (Assembly assembly in assemblies)
             {
                 Type[] exportedTypes = null;
