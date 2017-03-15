@@ -259,6 +259,37 @@ namespace Microsoft.OData.WebApi.Builder
         }
 
         /// <summary>
+        /// Registers an entity type as part of the model and returns an object that can be used to configure the entity.
+        /// This method can be called multiple times for the same entity to perform multiple lines of configuration.
+        /// </summary>
+        /// <param name="type">The type to be registered or configured.</param>
+        /// <returns>The configuration object for the specified entity type.</returns>
+        public virtual PrimitiveTypeConfiguration AddPrimitiveType(Type type)
+        {
+            if (type == null)
+            {
+                throw Error.ArgumentNull("type");
+            }
+
+            if (!_primitiveTypes.ContainsKey(type))
+            {
+                PrimitiveTypeConfiguration entityTypeConfig = new PrimitiveTypeConfiguration(this, EdmLibHelpers.GetEdmPrimitiveTypeOrNull(type), type);
+                _primitiveTypes.Add(type, entityTypeConfig);
+                return entityTypeConfig;
+            }
+            else
+            {
+                PrimitiveTypeConfiguration config = _primitiveTypes[type];
+                if (config == null || config.ClrType != type)
+                {
+                    throw Error.Argument("type", SRResources.TypeMustBeEntity, type.FullName);
+                }
+
+                return config;
+            }
+        }
+
+        /// <summary>
         /// Registers an complex type as part of the model and returns an object that can be used to configure the entity.
         /// This method can be called multiple times for the same entity to perform multiple lines of configuration.
         /// </summary>

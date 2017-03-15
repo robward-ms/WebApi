@@ -65,7 +65,7 @@ namespace Microsoft.OData.WebApi.Builder
         /// a request that invokes the operation and does something else with the results
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Copies existing spelling used in EdmLib.")]
-        public virtual bool IsComposable { get; internal set; }
+        public virtual bool IsComposable { get; set; }
 
         /// <summary>
         /// Does the operation have side-effects.
@@ -236,7 +236,7 @@ namespace Microsoft.OData.WebApi.Builder
         /// <summary>
         /// Specifies the bindingParameter name, type and whether it is alwaysBindable, use only if the operation "isBindable".
         /// </summary>
-        internal void SetBindingParameterImplementation(string name, IEdmTypeConfiguration bindingParameterType)
+        public void SetBindingParameterImplementation(string name, IEdmTypeConfiguration bindingParameterType)
         {
             _bindingParameter = new BindingParameterConfiguration(name, bindingParameterType);
         }

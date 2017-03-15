@@ -3,13 +3,23 @@
 
 namespace Microsoft.OData.WebApi.Builder
 {
-    internal class OperationTitleAnnotation
+    /// <summary>
+    /// An annotation for title.
+    /// </summary>
+    public class OperationTitleAnnotation
     {
+        /// <summary>
+        /// Initializes a new instance of the OperationTitleAnnotation class.
+        /// </summary>
+        /// <param name="title">The title associated with the annotation.</param>
         public OperationTitleAnnotation(string title)
         {
             Title = title;
         }
 
+        /// <summary>
+        /// Gets the title associated with the annotation.
+        /// </summary>
         public string Title { get; private set; }
     }
 }

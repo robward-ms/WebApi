@@ -24,6 +24,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Interfaces\IAttributeMappingProvider.cs" />
     <Compile Include="Properties\CommonWebApiResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -113,6 +114,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SRResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Routing\Conventions\SelectControllerResult.cs" />
     <Compile Include="WebApiDefaultAssembliesResolver.cs" />
     <Compile Include="WebApiEntityTagHeaderValue.cs" />
     <Compile Include="Placeholder\ODataPathParameterBindingAttribute.cs" />
@@ -419,7 +421,7 @@
     <Compile Include="Formatter\Serialization\ODataResourceSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataResourceSetSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataPrimitiveSerializer.cs" />
-    <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
+    <Compile Include="Formatter\Serialization\IODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataServiceDocumentSerializer.cs" />
     <Compile Include="TypeHelper.cs" />
@@ -436,7 +438,7 @@
       <LastGenOutput>CommonWebApiResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\SRResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

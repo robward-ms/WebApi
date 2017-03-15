@@ -331,46 +331,6 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
             return parameterMappings;
         }
-        /*
-        public static object TranslateNode(object node)
-        {
-            Contract.Assert(node != null);
-
-            ConstantNode constantNode = node as ConstantNode;
-            if (constantNode != null)
-            {
-                UriTemplateExpression uriTemplateExpression = constantNode.Value as UriTemplateExpression;
-                if (uriTemplateExpression != null)
-                {
-                    return uriTemplateExpression.LiteralText;
-                }
-
-                // Make the enum prefix free to work.
-                ODataEnumValue enumValue = constantNode.Value as ODataEnumValue;
-                if (enumValue != null)
-                {
-                    return ODataUriUtils.ConvertToUriLiteral(enumValue, ODataVersion.V4);
-                }
-
-                return constantNode.LiteralText;
-            }
-
-            ConvertNode convertNode = node as ConvertNode;
-            if (convertNode != null)
-            {
-                return TranslateNode(convertNode.Source);
-            }
-
-            ParameterAliasNode parameterAliasNode = node as ParameterAliasNode;
-            if (parameterAliasNode != null)
-            {
-                return parameterAliasNode.Alias;
-            }
-
-            //return node.ToString();
-            throw Error.NotSupported(SRResources.CannotRecognizeNodeType, typeof(ODataPathSegmentHandler),
-                node.GetType().FullName);
-        }*/
 
         public static bool IsRouteParameter(string parameterName)
         {

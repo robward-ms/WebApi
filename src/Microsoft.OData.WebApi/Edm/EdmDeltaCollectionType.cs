@@ -9,7 +9,7 @@ namespace Microsoft.OData.WebApi
     /// <summary>
     /// Implementing IEdmCollectionType to identify collection of DeltaFeed.
     /// </summary>
-    internal class EdmDeltaCollectionType : IEdmCollectionType
+    public class EdmDeltaCollectionType : IEdmCollectionType
     {
         private IEdmTypeReference _entityTypeReference;
 

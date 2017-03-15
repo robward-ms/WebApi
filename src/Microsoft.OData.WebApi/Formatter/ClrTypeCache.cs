@@ -7,11 +7,20 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.WebApi.Formatter
 {
-    internal class ClrTypeCache
+    /// <summary>
+    /// A cache of Clr to Edm type mappings.
+    /// </summary>
+    public class ClrTypeCache
     {
         private ConcurrentDictionary<Type, IEdmTypeReference> _cache =
             new ConcurrentDictionary<Type, IEdmTypeReference>();
 
+        /// <summary>
+        /// Get the Edm type matching a corresponding Clr type.
+        /// </summary>
+        /// <param name="clrType">The Clr type.</param>
+        /// <param name="model">The model to use.</param>
+        /// <returns>The Edm type matching a corresponding Clr type.</returns>
         public IEdmTypeReference GetEdmType(Type clrType, IEdmModel model)
         {
             IEdmTypeReference edmType;
