@@ -35,23 +35,5 @@ namespace System.Web.OData.Adapters
         {
             return this.InnerMap.Contains(name);
         }
-
-        /// <summary>
-        /// Find an action matching a key.
-        /// </summary>
-        /// <param name="keys">The keys.</param>
-        /// <returns>An action associated with key.</returns>
-        public string FindMatchingAction(params string[] keys)
-        {
-            foreach (string key in keys)
-            {
-                if (this.InnerMap.Contains(key))
-                {
-                    return key;
-                }
-            }
-
-            return null;
-        }
     }
 }
