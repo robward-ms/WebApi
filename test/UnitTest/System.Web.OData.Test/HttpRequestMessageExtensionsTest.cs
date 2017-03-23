@@ -16,7 +16,11 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using ODataConventionModelBuilder = System.Web.OData.Builder.ODataConventionModelBuilder;
 
 namespace System.Net.Http
 {
@@ -214,7 +218,8 @@ namespace System.Net.Http
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -238,7 +243,8 @@ namespace System.Net.Http
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -315,7 +321,8 @@ namespace System.Net.Http
         {
             // Arrange
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Version", value } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagCustomer>("Customers");
@@ -368,7 +375,8 @@ namespace System.Net.Http
                 { "LongVal", longValue },
                 { "ShortVal", shortValue }
             };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagOrder>("Orders");

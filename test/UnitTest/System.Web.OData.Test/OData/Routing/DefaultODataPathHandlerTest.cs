@@ -14,6 +14,13 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Formatter;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing.Template;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
@@ -1099,7 +1106,7 @@ namespace System.Web.OData.Routing
         public void CanParseUndefinedEnumValue(Type enumerationType, string enumerationExpression)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             EnumTypeConfiguration enumTypeConfiguration = builder.AddEnumType(enumerationType);
             FunctionConfiguration functionConfiguration = builder.Function("FunctionWithEnumParam");
             functionConfiguration.AddParameter("Enum", enumTypeConfiguration);
@@ -1119,7 +1126,7 @@ namespace System.Web.OData.Routing
         public void CannotParseInvalidEnumValue(Type enumerationType, string enumerationExpression)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             EnumTypeConfiguration enumTypeConfiguration = builder.AddEnumType(enumerationType);
             FunctionConfiguration functionConfiguration = builder.Function("FunctionWithEnumParam");
             functionConfiguration.AddParameter("Enum", enumTypeConfiguration);
@@ -1369,7 +1376,7 @@ namespace System.Web.OData.Routing
         public void CanParse_FunctionParametersAlias_WithUnresolvedPathSegment()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ConventionCustomer>("Customers");
             FunctionConfiguration function = builder.Function("UnboundFunction");
             function.Parameter<int>("P1");
@@ -1397,7 +1404,7 @@ namespace System.Web.OData.Routing
         public void CanParse_UntouchedFunctionParametersAlias_WithUnresolvedPathSegment()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ConventionCustomer>("Customers");
             FunctionConfiguration function = builder.Function("UnboundFunction");
             function.Parameter<int>("P1");
@@ -2078,7 +2085,7 @@ namespace System.Web.OData.Routing
         public void DefaultODataPathHandler_Throws_NotNavigablePropertyInPath(string path)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             var customer = builder.EntitySet<ODataRoutingModel.RoutingCustomer>("Customers").EntityType;
             customer.HasMany(c => c.Products).IsNotNavigable();
             builder.EntitySet<ODataRoutingModel.Product>("Products");

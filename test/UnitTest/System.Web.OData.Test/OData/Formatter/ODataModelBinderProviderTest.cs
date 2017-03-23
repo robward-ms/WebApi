@@ -21,6 +21,11 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -384,7 +389,7 @@ namespace System.Web.OData.Formatter
 
         private IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntityType<Customer>().Namespace = "NS";
             builder.ComplexType<Address>().Namespace = "NS";
 

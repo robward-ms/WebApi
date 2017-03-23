@@ -15,6 +15,14 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -678,9 +686,10 @@ namespace System.Web.OData.Formatter.Deserialization
 
         private static IEdmModel GetModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(Customer));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Customer)));
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.ContainerName = "C";
             builder.Namespace = "A.B";
             EntityTypeConfiguration<Customer> customer = builder.EntitySet<Customer>("Customers").EntityType;

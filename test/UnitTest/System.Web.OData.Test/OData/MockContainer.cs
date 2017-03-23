@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
 namespace System.Web.OData
 {

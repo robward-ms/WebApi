@@ -13,6 +13,9 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -190,7 +193,7 @@ namespace System.Web.OData.Formatter
 
         private IEdmModel GetModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.ContainerName = "Container";
             builder.Namespace = "org.odata";
             EntityTypeConfiguration<Customer> customer = builder.EntitySet<Customer>("Customers").EntityType;

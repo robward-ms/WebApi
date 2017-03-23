@@ -4,6 +4,7 @@
 using System.Reflection;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData
 {

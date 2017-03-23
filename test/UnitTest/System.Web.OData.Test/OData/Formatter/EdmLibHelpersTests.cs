@@ -11,6 +11,9 @@ using System.Web.OData.TestCommon;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter
 {

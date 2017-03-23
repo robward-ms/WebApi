@@ -9,6 +9,9 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Routing.Conventions
 {
@@ -25,7 +28,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new PropertyRoutingConvention().SelectAction(null, controllerContext.Object, emptyMap),
+                () => new PropertyRoutingConvention().SelectAction(null, new WebApiControllerContext(controllerContext.Object, null), new WebApiActionMatch(emptyMap)),
                 "odataPath");
         }
 
@@ -38,7 +41,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new PropertyRoutingConvention().SelectAction(odataPath, null, emptyMap),
+                () => new PropertyRoutingConvention().SelectAction(odataPath, null, new WebApiActionMatch(emptyMap)),
                 "controllerContext");
         }
 
@@ -51,7 +54,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new PropertyRoutingConvention().SelectAction(odataPath, controllerContext.Object, null),
+                () => new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext.Object, null), null),
                 "actionMap");
         }
 
@@ -76,7 +79,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -105,7 +108,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -133,7 +136,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -163,7 +166,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -191,7 +194,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -216,7 +219,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(emptyActionMap));
 
             // Assert
             Assert.Null(selectedAction);
@@ -240,7 +243,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRequestContext(requestContext);
 
             // Act
-            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new PropertyRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(emptyActionMap));
 
             // Assert
             Assert.Null(selectedAction);

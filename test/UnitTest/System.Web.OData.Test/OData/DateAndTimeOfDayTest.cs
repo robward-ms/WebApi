@@ -13,6 +13,7 @@ using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData
 {

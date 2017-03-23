@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Net.Http.Formatting
 {

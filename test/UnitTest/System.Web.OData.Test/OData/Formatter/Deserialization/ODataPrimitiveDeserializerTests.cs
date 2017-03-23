@@ -13,6 +13,12 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -212,8 +218,8 @@ namespace System.Web.OData.Formatter.Deserialization
 
             ODataMessageWriter messageWriter = new ODataMessageWriter(message as IODataResponseMessage, settings, model);
             ODataMessageReader messageReader = new ODataMessageReader(message as IODataResponseMessage, new ODataMessageReaderSettings(), model);
-            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = request };
-            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = request };
+            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = new WebApiRequestMessage(request) };
+            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = new WebApiRequestMessage(request) };
 
             serializer.WriteObject(value, typeof(DateTimeOffset), messageWriter, writeContext);
             stream.Seek(0, SeekOrigin.Begin);
@@ -224,7 +230,7 @@ namespace System.Web.OData.Formatter.Deserialization
 
         private static IEdmModel CreateModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             return builder.GetEdmModel();
         }

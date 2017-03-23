@@ -9,6 +9,8 @@ using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
@@ -46,7 +48,7 @@ namespace System.Web.OData.Routing
             MockAssembly assembly = new MockAssembly(typeof(TestController));
             server.Configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
 
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<TestClass>("Test");
             server.Configuration.MapODataServiceRoute("odata", "", builder.GetEdmModel());
             HttpClient client = new HttpClient(server);

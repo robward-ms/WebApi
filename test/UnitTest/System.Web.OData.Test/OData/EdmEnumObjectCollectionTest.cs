@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 using Moq;
 

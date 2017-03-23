@@ -15,7 +15,12 @@ using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
 using Customer = System.Web.OData.Formatter.Serialization.Models.Customer;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -169,9 +174,10 @@ namespace System.Web.OData.Query
         public void SelectExpandClause_CanParse_ModelBuiltForQueryable(string select, string expand)
         {
             // Arrange
+            IAssembliesResolver resolver = new TestAssemblyResolver();
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver());
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new HttpConfiguration(), isQueryCompositionMode: true);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver), isQueryCompositionMode: true);
             builder.EntityType<Customer>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -633,7 +639,7 @@ namespace System.Web.OData.Query
                 model.FindDeclaredType("System.Web.OData.TestCommon.Models.AutoExpandCustomer"));
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.EnableHttpDependencyInjectionSupport();
-            var queryOption = new ODataQueryOptions(context, request);
+            var queryOption = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             queryOption.AddAutoSelectExpandProperties();
             var selectExpand = queryOption.SelectExpand;
 
@@ -704,7 +710,7 @@ namespace System.Web.OData.Query
 
         private IEdmModel GetAutoExpandEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<AutoExpandCustomer>("AutoExpandCustomers");
             builder.EntitySet<AutoExpandOrder>("AutoExpandOrders");
             builder.EntitySet<AutoExpandChoiceOrder>("AutoExpandChoiceOrders");

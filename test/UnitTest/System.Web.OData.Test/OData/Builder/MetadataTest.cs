@@ -9,6 +9,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

@@ -11,6 +11,11 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query.Expressions;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query.Expressions
 {
@@ -143,7 +148,7 @@ namespace System.Web.OData.Query.Expressions
 
             var binder = new AggregationBinder(
                 customizeSettings(new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False }),
-                assembliesResolver,
+                new WebApiAssembliesResolver(assembliesResolver),
                 typeof(T),
                 model,
                 clause.Transformations.First());
@@ -196,7 +201,7 @@ namespace System.Web.OData.Query.Expressions
 
             if (!_modelCache.TryGetValue(key, out value))
             {
-                ODataModelBuilder model = new ODataConventionModelBuilder();
+                ODataModelBuilder model = new System.Web.OData.Builder.ODataConventionModelBuilder();
                 model.EntitySet<T>("Products");
                 if (key == typeof(Product))
                 {

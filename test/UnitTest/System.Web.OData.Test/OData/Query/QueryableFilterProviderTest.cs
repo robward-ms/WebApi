@@ -9,6 +9,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData.Query
 {

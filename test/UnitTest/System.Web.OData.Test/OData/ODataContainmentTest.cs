@@ -15,6 +15,10 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -377,7 +381,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder { Namespace = "ns" };
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder { Namespace = "ns" };
             builder.EntitySet<Client>("Clients");
             builder.EntitySet<MyOrder>("MyOrders");
             var orderLine = builder.EntityType<OrderLine>();

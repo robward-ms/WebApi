@@ -7,12 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData
 {
@@ -357,7 +358,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<DateTimeModel>("DateTimeModels");
 
             FunctionConfiguration function = builder.EntityType<DateTimeModel>().Function("CalcBirthday");

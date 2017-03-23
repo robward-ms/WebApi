@@ -37,8 +37,11 @@ namespace System.Web.OData
             Setup(t => t.IsAssignableFrom(It.IsAny<Type>())).Returns(true);
             Setup(t => t.FullName).Returns(@namespace + "." + typeName);
 
-            TypeAttributes(System.Reflection.TypeAttributes.Class | System.Reflection.TypeAttributes.Public);
+            // For .Net, we need to allow casting to IReflectableType.
+            ////Setup(t => t.GetInterfaces().Returns(true);
 
+
+            TypeAttributes(System.Reflection.TypeAttributes.Class | System.Reflection.TypeAttributes.Public);
 
             if (hasDefaultCtor)
             {

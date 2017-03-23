@@ -12,6 +12,10 @@ using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -41,7 +45,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             EntitySetConfiguration<QueryLimitCustomer> customers = builder.EntitySet<QueryLimitCustomer>("QueryLimitCustomers");
             EntitySetConfiguration<QueryLimitOrder> orders = builder.EntitySet<QueryLimitOrder>("QueryLimitOrders");
 

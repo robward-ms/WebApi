@@ -12,14 +12,17 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using HttpRouteCollectionExtensions = System.Web.OData.Formatter.HttpRouteCollectionExtensions;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 
 namespace System.Web.OData
 {
     public static class DependencyInjectionHelper
     {
-        public static ODataSerializerProvider GetDefaultODataSerializerProvider()
+        public static IODataSerializerProvider GetDefaultODataSerializerProvider()
         {
-            return new MockContainer().GetRequiredService<ODataSerializerProvider>();
+            return new MockContainer().GetRequiredService<IODataSerializerProvider>();
         }
 
         public static ODataDeserializerProvider GetDefaultODataDeserializerProvider()

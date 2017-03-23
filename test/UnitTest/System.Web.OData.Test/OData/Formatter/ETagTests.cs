@@ -14,7 +14,11 @@ using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -214,11 +218,12 @@ namespace System.Web.OData.Formatter
 
             IETagHandler handerl = new DefaultODataETagHandler();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "DoubleETag", value } };
-            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             HttpRequestMessage request = new HttpRequestMessage();
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<MyETagCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntityType customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(e => e.Name == "MyEtagCustomer");
@@ -304,11 +309,12 @@ namespace System.Web.OData.Formatter
                 { "ByteVal", byteVal },
                 { "ShortVal", shortVal }
             };
-            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             HttpRequestMessage request = new HttpRequestMessage();
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<MyETagOrder>("Orders");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet orders = model.FindDeclaredEntitySet("Orders");

@@ -16,6 +16,9 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Builder
 {
@@ -43,8 +46,9 @@ namespace System.Web.OData.Builder
             IEdmModel model = new EdmModel();
 
             MetadataController controller = new MetadataController();
-            controller.Request = new HttpRequestMessage();
-            controller.Request.EnableHttpDependencyInjectionSupport(model);
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.EnableHttpDependencyInjectionSupport(model);
+            controller.Request = new WebApiRequestMessage(request);
 
             IEdmModel responseModel = controller.GetMetadata();
             Assert.Equal(model, responseModel);

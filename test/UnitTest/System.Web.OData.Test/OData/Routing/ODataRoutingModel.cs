@@ -11,6 +11,9 @@ using System.Web.OData.Builder.TestModels;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
@@ -18,9 +21,10 @@ namespace System.Web.OData.Routing
     {
         public static IEdmModel GetModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver();
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver());
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.EntitySet<RoutingCustomer>("RoutingCustomers");
             builder.EntitySet<Product>("Products");
             builder.EntitySet<SalesPerson>("SalesPeople");

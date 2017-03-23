@@ -12,6 +12,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -231,7 +235,7 @@ namespace System.Web.OData.Query
         public void ApplyToEnums_ReturnsCorrectQueryable()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumModel>("EnumModels");
             var model = builder.GetEdmModel();
 
@@ -256,7 +260,7 @@ namespace System.Web.OData.Query
         public void ApplyTo_PropertyAliased_IfEnabled(bool modelAliasing, string propertyName)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder { ModelAliasingEnabled = modelAliasing };
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder { ModelAliasingEnabled = modelAliasing };
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             var model = builder.GetEdmModel();
 

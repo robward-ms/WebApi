@@ -4,6 +4,7 @@
 using Microsoft.OData;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 
 namespace System.Web.OData.Formatter.Serialization
 {

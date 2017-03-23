@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter
 {

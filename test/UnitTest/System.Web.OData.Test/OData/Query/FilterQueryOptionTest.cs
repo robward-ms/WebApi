@@ -17,6 +17,11 @@ using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
 using Address = System.Web.OData.Builder.TestModels.Address;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -899,36 +904,41 @@ namespace System.Web.OData.Query
 
         private static IEdmModel GetEnumModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(EnumModel));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(EnumModel)));
-            var builder = new ODataConventionModelBuilder(config);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.EntitySet<EnumModel>("EnumModels");
             return builder.GetEdmModel();
         }
 
         private static IEdmModel GetCastModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(DataTypes));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
-            var builder = new ODataConventionModelBuilder(config);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.EntitySet<DataTypes>("CastModels");
             return builder.GetEdmModel();
         }
 
         private static IEdmModel GetParameterAliasModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(DataTypes));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
-            var builder = new ODataConventionModelBuilder(config);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
+
             builder.EntitySet<DataTypes>("ParameterAliasModels");
             return builder.GetEdmModel();
         }
 
         private static IEdmModel GetPropertyAliasModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(PropertyAlias));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(PropertyAlias)));
-            var builder = new ODataConventionModelBuilder(config) { ModelAliasingEnabled = true };
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver)) { ModelAliasingEnabled = true };
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             return builder.GetEdmModel();
         }

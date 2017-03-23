@@ -9,6 +9,10 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using System.Web.OData.Adapters;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Routing.Conventions
 {
@@ -25,7 +29,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(null, controllerContext.Object, emptyMap),
+                () => new SingletonRoutingConvention().SelectAction(null, new WebApiControllerContext(controllerContext.Object, null), new WebApiActionMatch(emptyMap)),
                 "odataPath");
         }
 
@@ -39,7 +43,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(odataPath, null, emptyMap),
+                () => new SingletonRoutingConvention().SelectAction(odataPath, null, new WebApiActionMatch(emptyMap)),
                 "controllerContext");
         }
 
@@ -53,7 +57,7 @@ namespace System.Web.OData.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(odataPath, controllerContext.Object, null),
+                () => new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext.Object, null), null),
                 "actionMap");
         }
 
@@ -68,14 +72,14 @@ namespace System.Web.OData.Routing.Conventions
             const string SingletonName = "VipCustomer";
             string actionName = httpMethodNamePrefix + SingletonName;
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, _serviceRoot, SingletonName);
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, _serviceRoot, SingletonName);
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => actionName);
             HttpControllerContext controllerContext = new HttpControllerContext();
             controllerContext.Request = new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/");
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string selectedAction = new SingletonRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -97,7 +101,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string actionName = new SingletonRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Act & Assert
             Assert.Null(actionName);
@@ -119,7 +123,7 @@ namespace System.Web.OData.Routing.Conventions
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(emptyActionMap));
 
             // Assert
             Assert.Null(selectedAction);

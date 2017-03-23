@@ -3,6 +3,7 @@
 
 using System.Linq;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 
 namespace System.Web.OData.Builder.Conventions.Attributes
 {

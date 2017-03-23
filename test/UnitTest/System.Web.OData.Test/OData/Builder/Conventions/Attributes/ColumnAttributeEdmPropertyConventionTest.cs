@@ -6,6 +6,9 @@ using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
+using System.Collections.Generic;
 
 namespace System.Web.OData.Builder.Conventions.Attributes
 {
@@ -26,13 +29,16 @@ namespace System.Web.OData.Builder.Conventions.Attributes
         public void Apply_SetsDateTimeProperty_AsEdmDate(string typeName, bool expect)
         {
             // Arrange
+            ColumnAttribute colAttrib = new ColumnAttribute { TypeName = typeName };
+            Attribute genAttrib = colAttrib as Attribute;
             MockType type = new MockType("Customer")
-                .Property(typeof(DateTime), "Birthday", new[] {new ColumnAttribute {TypeName = typeName}});
+                .Property(typeof(DateTime), "Birthday", new[] { colAttrib });
 
             Mock<StructuralTypeConfiguration> structuralType = new Mock<StructuralTypeConfiguration>();
             structuralType.Setup(t => t.ClrType).Returns(type);
 
             PropertyInfo property = type.GetProperty("Birthday");
+            IEnumerable<Attribute> foundAttribs = type.Object.GetCustomAttributes();
             Mock<PrimitivePropertyConfiguration> primitiveProperty = new Mock<PrimitivePropertyConfiguration>(property,
                 structuralType.Object);
             primitiveProperty.Setup(p => p.RelatedClrType).Returns(typeof(DateTime));

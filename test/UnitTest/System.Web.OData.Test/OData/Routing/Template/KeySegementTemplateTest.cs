@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing.Template;
 
 namespace System.Web.OData.Routing.Template
 {

@@ -13,6 +13,9 @@ using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {

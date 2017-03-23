@@ -3,6 +3,8 @@
 
 using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 
 namespace System.Web.OData.Formatter.Deserialization
 {

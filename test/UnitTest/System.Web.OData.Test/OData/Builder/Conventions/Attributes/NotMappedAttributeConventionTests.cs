@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 
 namespace System.Web.OData.Builder.Conventions.Attributes
 {

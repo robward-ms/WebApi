@@ -21,6 +21,10 @@ using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData
 {

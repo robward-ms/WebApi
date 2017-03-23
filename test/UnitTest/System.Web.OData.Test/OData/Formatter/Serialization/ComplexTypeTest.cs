@@ -8,6 +8,10 @@ using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using System.Net.Http.Headers;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -18,8 +22,8 @@ namespace System.Web.OData.Formatter.Serialization
         public ComplexTypeTest()
         {
             _formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.Resource }) { Request = GetSampleRequest() };
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
         }
 
         [Fact]
@@ -43,7 +47,7 @@ namespace System.Web.OData.Formatter.Serialization
 
         private static IEdmModel GetSampleModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.ComplexType<Person>();
 
             // Employee is derived from Person. Employee has a property named manager it's Employee type.

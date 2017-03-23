@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Web.OData.Query;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData.Builder
 {

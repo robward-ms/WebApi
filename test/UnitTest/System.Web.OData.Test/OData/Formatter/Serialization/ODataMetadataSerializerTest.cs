@@ -8,6 +8,10 @@ using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -45,7 +49,7 @@ namespace System.Web.OData.Formatter.Serialization
         public void ODataMetadataSerializer_Works_ForSingleton()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.Singleton<Customer>("Me");
             builder.EntitySet<Order>("MyOrders");
             IEdmModel model = builder.GetEdmModel();

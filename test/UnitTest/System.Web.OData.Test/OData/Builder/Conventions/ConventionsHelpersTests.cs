@@ -7,6 +7,10 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Builder.Conventions
 {

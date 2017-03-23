@@ -14,6 +14,10 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
@@ -583,7 +587,7 @@ namespace System.Web.OData.Routing
 
         public static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<LevelsBaseEntity>("LevelsBaseEntities");
             builder.EntitySet<LevelsEntity>("LevelsEntities");
             builder.EntitySet<LevelsDerivedEntity>("LevelsDerivedEntities");

@@ -14,6 +14,11 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Query.Expressions
 {

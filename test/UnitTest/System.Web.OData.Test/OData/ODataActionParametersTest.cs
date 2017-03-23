@@ -10,6 +10,10 @@ using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -119,7 +123,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.ContainerName = "Container";
             builder.Namespace = "org.odata";
             // Action with no overloads

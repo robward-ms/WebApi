@@ -8,6 +8,9 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query.Validators;
 
 namespace System.Web.OData.Query.Validators
 {

@@ -8,6 +8,8 @@ using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -52,7 +54,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Account>("Accounts");
             builder.EntitySet<PaymentInstrument>("Payments");
 

@@ -10,6 +10,9 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Query
 {

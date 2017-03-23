@@ -7,6 +7,9 @@ using System.Web.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -19,7 +22,7 @@ namespace System.Web.OData.Query
 
         public ParameterAliasNodeTranslatorTest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ParameterAliasCustomer>("Customers");
             builder.EntitySet<ParameterAliasOrder>("Orders");
 

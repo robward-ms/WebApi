@@ -4,6 +4,7 @@
 using System.IO;
 using System.Net.Http.Formatting;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData
 {

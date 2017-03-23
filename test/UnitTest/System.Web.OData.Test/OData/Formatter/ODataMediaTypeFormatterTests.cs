@@ -14,10 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
 using System.Web.OData.TestCommon;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,13 +24,21 @@ using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using Microsoft.OData.WebApi.Common;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
     public class ODataMediaTypeFormatterTests : MediaTypeFormatterTestBase<ODataMediaTypeFormatter>
     {
-        private readonly ODataSerializerProvider _serializerProvider =
+        private readonly IODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
         private readonly ODataDeserializerProvider _deserializerProvider =
             DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
@@ -49,7 +54,7 @@ namespace System.Web.OData.Formatter
         [Fact]
         public void Ctor_ThrowsArgumentNull_DeserializerProvider()
         {
-            ODataSerializerProvider serializerProvider = _serializerProvider;
+            IODataSerializerProvider serializerProvider = _serializerProvider;
             ODataPayloadKind[] payloadKinds = new ODataPayloadKind[0];
 
             Assert.ThrowsArgumentNull(
@@ -88,7 +93,7 @@ namespace System.Web.OData.Formatter
         public void WriteToStreamAsyncReturnsODataRepresentation()
         {
             // Arrange
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 
@@ -118,7 +123,7 @@ namespace System.Web.OData.Formatter
         [InlineData("{a}/{b}", "http://localhost/prefix/prefix2")]
         public void WriteToStreamAsync_ReturnsCorrectBaseUri(string routePrefix, string baseUri)
         {
-            IEdmModel model = new ODataConventionModelBuilder().GetEdmModel();
+            IEdmModel model = new System.Web.OData.Builder.ODataConventionModelBuilder().GetEdmModel();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, baseUri);
             HttpConfiguration configuration = new HttpConfiguration();
             string routeName = "Route";
@@ -142,7 +147,7 @@ namespace System.Web.OData.Formatter
         [Fact]
         public void WriteToStreamAsync_Throws_WhenBaseUriCannotBeGenerated()
         {
-            IEdmModel model = new ODataConventionModelBuilder().GetEdmModel();
+            IEdmModel model = new System.Web.OData.Builder.ODataConventionModelBuilder().GetEdmModel();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
             request.EnableODataDependencyInjectionSupport();
             request.GetConfiguration().Routes.MapHttpRoute(HttpRouteCollectionExtensions.RouteName, "{param}");
@@ -328,7 +333,7 @@ namespace System.Web.OData.Formatter
         {
             Type type = typeof(Delta<Customer>);
 
-            bool success = ODataMediaTypeFormatter.TryGetInnerTypeForDelta(ref type);
+            bool success = EdmLibHelpers.TryGetInnerTypeForDelta(ref type);
 
             Assert.Same(typeof(Customer), type);
             Assert.True(success);
@@ -341,7 +346,7 @@ namespace System.Web.OData.Formatter
         {
             Type type = originalType;
 
-            bool success = ODataMediaTypeFormatter.TryGetInnerTypeForDelta(ref type);
+            bool success = EdmLibHelpers.TryGetInnerTypeForDelta(ref type);
 
             Assert.Same(originalType, type);
             Assert.False(success);
@@ -404,7 +409,7 @@ namespace System.Web.OData.Formatter
         [Fact]
         public void ReadFromStreamAsync_ThrowsInvalidOperation_WithoutRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 
@@ -416,7 +421,7 @@ namespace System.Web.OData.Formatter
         [Fact]
         public void WriteToStreamAsync_ThrowsInvalidOperation_WithoutRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 
@@ -432,9 +437,9 @@ namespace System.Web.OData.Formatter
             var model = CreateModel();
             var request = CreateFakeODataRequest(model);
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), request)).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), new WebApiRequestMessage(request))).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.MetadataLevel == ODataMetadataLevel.FullMetadata)))
@@ -463,9 +468,9 @@ namespace System.Web.OData.Formatter
             request.ODataProperties().SelectExpandClause = selectExpandClause;
 
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), request)).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), new WebApiRequestMessage(request))).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.SelectExpandClause == selectExpandClause)))
@@ -721,7 +726,7 @@ namespace System.Web.OData.Formatter
                 .Setup(s => s.WriteObject(instance.Object, instance.GetType(), It.IsAny<ODataMessageWriter>(), It.IsAny<ODataSerializerContext>()))
                 .Verifiable();
 
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(edmType)).Returns(serializer.Object);
 
             var formatter = new ODataMediaTypeFormatter(_deserializerProvider, serializerProvider.Object, new ODataPayloadKind[0]);
@@ -798,7 +803,7 @@ namespace System.Web.OData.Formatter
                 .Verifiable();
 
             Mock<ODataDeserializerProvider> provider = new Mock<ODataDeserializerProvider>();
-            provider.Setup(p => p.GetODataDeserializer(typeof(int), request)).Returns(deserializer.Object);
+            provider.Setup(p => p.GetODataDeserializer(typeof(int), new WebApiRequestMessage(request))).Returns(deserializer.Object);
 
             // Act
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(provider.Object,
@@ -874,7 +879,7 @@ namespace System.Web.OData.Formatter
             params ODataPayloadKind[] payloadKinds)
         {
             ODataMediaTypeFormatter formatter = CreateFormatter(model, request, payloadKinds);
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
             return formatter;
         }
 

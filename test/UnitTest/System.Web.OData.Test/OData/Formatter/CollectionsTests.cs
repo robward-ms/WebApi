@@ -14,6 +14,8 @@ using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -23,7 +25,7 @@ namespace System.Web.OData.Formatter
 
         public CollectionsTests()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<CollectionsTestsModel>("CollectionsTests");
             builder.EntitySet<Vehicle>("vehicles");
             IEdmModel model = builder.GetEdmModel();

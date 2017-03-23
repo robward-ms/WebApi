@@ -16,6 +16,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Formatter
 {
@@ -167,9 +169,9 @@ namespace System.Web.OData.Formatter
             return new ODataMessageReader(requestMessage);
         }
 
-        public static ODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
+        public static IODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
         {
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             serializerProvider.Setup(sp => sp.GetEdmTypeSerializer(It.IsAny<IEdmTypeReference>())).Returns(serializer);
             return serializerProvider.Object;
         }

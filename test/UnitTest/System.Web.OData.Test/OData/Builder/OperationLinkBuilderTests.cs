@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Builder

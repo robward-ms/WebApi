@@ -3,10 +3,12 @@
 
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
 using System.Web.OData.Query.Expressions;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Query.Validators
 {
@@ -45,9 +47,10 @@ namespace System.Web.OData.Query.Validators
 
         private static IEdmModel GetCustomersModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(QueryCompositionCustomer));
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(QueryCompositionCustomer)));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.EntitySet<QueryCompositionCustomer>("Customer");
             builder.EntityType<QueryCompositionCustomerBase>();
             return builder.GetEdmModel();
@@ -70,9 +73,10 @@ namespace System.Web.OData.Query.Validators
 
         private static ODataConventionModelBuilder GetProductsBuilder()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(Product));
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Product)));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.EntitySet<Product>("Product");
             return builder;
         }

@@ -15,7 +15,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Routing;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Test
 {
@@ -273,7 +276,7 @@ namespace System.Web.OData.Test
 
         private static IEdmModel BuildModel()
         {
-            var mb = new ODataConventionModelBuilder();
+            var mb = new System.Web.OData.Builder.ODataConventionModelBuilder();
             mb.EntitySet<Customer>("Customers");
             mb.EntitySet<Navigation>("Navigations");
             mb.Singleton<Navigation>("BestNavigation");

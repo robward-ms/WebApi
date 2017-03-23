@@ -7,6 +7,11 @@ using System.Web.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Query.Validators;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Query.Validators
 {

@@ -7,6 +7,7 @@ using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

@@ -15,6 +15,9 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -377,7 +380,7 @@ namespace System.Web.OData
 
         private IEdmModel GetModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             builder.Ignore<SelectExpandTestSpecialCustomer>();
@@ -387,7 +390,7 @@ namespace System.Web.OData
 
         private IEdmModel GetModelWithInheritance()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             return builder.GetEdmModel();
@@ -395,7 +398,7 @@ namespace System.Web.OData
 
         private IEdmModel GetModelWithCustomerAlias()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder { ModelAliasingEnabled = true };
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder { ModelAliasingEnabled = true };
             builder.EntitySet<SelectExpandTestCustomerWithAlias>("SelectExpandTestCustomersAlias");
             builder.EntitySet<SelectExpandTestOrderWithAlias>("SelectExpandTestOrdersAlias");
             builder.Ignore<SelectExpandTestSpecialCustomerWithAlias>();
@@ -405,7 +408,7 @@ namespace System.Web.OData
 
         private IEdmModel GetModelWithCustomerAliasAndInheritance()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder { ModelAliasingEnabled = true };
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder { ModelAliasingEnabled = true };
             builder.EntitySet<SelectExpandTestCustomerWithAlias>("SelectExpandTestCustomersAlias");
             builder.EntitySet<SelectExpandTestOrderWithAlias>("SelectExpandTestOrdersAlias");
             return builder.GetEdmModel();
@@ -413,7 +416,7 @@ namespace System.Web.OData
 
         private IEdmModel GetModelWithOperations()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Player>("Players");
 
             // Actions

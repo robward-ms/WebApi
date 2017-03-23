@@ -10,6 +10,7 @@ using System.Web.OData.Batch;
 using System.Web.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Test
 {

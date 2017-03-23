@@ -3,6 +3,9 @@
 
 using System.Net.Http.Headers;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace System.Web.OData.Formatter
 {
@@ -197,9 +200,13 @@ namespace System.Web.OData.Formatter
         [InlineData("application/random", ODataMetadataLevel.MinimalMetadata)]
         public void GetMetadataLevel_Returns_Correct_MetadataLevel(string contentType, object metadataLevel)
         {
+            MediaTypeHeaderValue contentTypeHeaderValue = MediaTypeHeaderValue.Parse(contentType);
+            IEnumerable<KeyValuePair<string, string>> parameters =
+                contentTypeHeaderValue.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
+
             Assert.Equal(
                 metadataLevel,
-                ODataMediaTypes.GetMetadataLevel(MediaTypeHeaderValue.Parse(contentType)));
+                ODataMediaTypes.GetMetadataLevel(contentTypeHeaderValue.MediaType, parameters));
         }
     }
 }

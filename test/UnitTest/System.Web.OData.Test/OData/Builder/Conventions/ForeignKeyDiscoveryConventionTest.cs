@@ -4,6 +4,8 @@
 using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
 
 namespace System.Web.OData.Builder.Conventions.Attributes
 {

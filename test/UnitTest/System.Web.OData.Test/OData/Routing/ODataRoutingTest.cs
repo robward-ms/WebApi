@@ -14,6 +14,8 @@ using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Routing
 {

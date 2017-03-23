@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Builder
 {

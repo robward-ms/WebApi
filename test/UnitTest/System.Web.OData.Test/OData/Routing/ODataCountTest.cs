@@ -14,6 +14,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
@@ -136,7 +140,7 @@ namespace System.Web.OData.Routing
 
         public static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             var entityCollection = builder.EntitySet<DollarCountEntity>("DollarCountEntities").EntityType.Collection;
 
             // Add unbound functions that return collection.

@@ -8,6 +8,9 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter.Deserialization
 {

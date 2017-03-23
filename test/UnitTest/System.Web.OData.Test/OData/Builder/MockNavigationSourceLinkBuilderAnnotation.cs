@@ -3,6 +3,9 @@
 
 using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

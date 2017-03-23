@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData.Query
 {

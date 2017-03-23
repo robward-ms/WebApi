@@ -3,6 +3,8 @@
 
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Formatter.Serialization

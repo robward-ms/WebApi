@@ -13,12 +13,18 @@ using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using System.Net.Http.Headers;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
     public class EnumSerializerTest
     {
-        private readonly ODataSerializerProvider _serializerProvider =
+        private readonly IODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
 
         [Fact]
@@ -176,8 +182,8 @@ namespace System.Web.OData
             {
                 Request = GetSampleRequest()
             };
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
             return formatter;
         }
 
@@ -191,7 +197,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetSampleModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.ComplexType<EnumComplex>();
 
             FunctionConfiguration function = builder.Function("NullableEnumFunction").Returns<bool>();

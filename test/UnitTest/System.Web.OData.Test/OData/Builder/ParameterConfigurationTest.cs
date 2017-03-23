@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Web.OData.Builder.TestModels;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Builder
 {

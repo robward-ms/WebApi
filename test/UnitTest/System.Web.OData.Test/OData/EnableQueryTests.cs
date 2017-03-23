@@ -13,6 +13,9 @@ using System.Web.OData.Query;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Test
 {
@@ -450,7 +453,7 @@ namespace System.Web.OData.Test
             string url = "http://localhost/odata/AutoExpandedCustomers";
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AutoExpandedCustomersController)));
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<AutoExpandedCustomer>("AutoExpandedCustomers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -645,7 +648,7 @@ namespace System.Web.OData.Test
                     typeof(EverythingAllowedCustomersController),
                     typeof(OtherLimitationsCustomersController)));
 
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
 
             builder.EntitySet<EnableQueryCustomer>(customersEntitySet);
             builder.EntityType<PremiumEnableQueryCustomer>();

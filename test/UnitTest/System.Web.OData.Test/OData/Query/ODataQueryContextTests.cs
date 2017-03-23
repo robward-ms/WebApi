@@ -9,7 +9,10 @@ using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Query
 {

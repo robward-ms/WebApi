@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData
 {

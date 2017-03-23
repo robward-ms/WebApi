@@ -10,6 +10,9 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Builder
 {
@@ -291,7 +294,7 @@ namespace System.Web.OData.Builder
             var navProperty = manufacturer.AddNavigationProperty(typeof(Manufacturer).GetProperty("Address"), EdmMultiplicity.One);
 
             var addresses = builder.AddEntitySet("Addresses", address);
-            myMotor.AddBinding(navProperty, addresses, new List<MemberInfo>
+            myMotor.AddBinding(navProperty, addresses, new List<object>
             {
                 typeof(Motorcycle).GetProperty("Manufacturer"),
                 typeof(Manufacturer).GetProperty("Address")

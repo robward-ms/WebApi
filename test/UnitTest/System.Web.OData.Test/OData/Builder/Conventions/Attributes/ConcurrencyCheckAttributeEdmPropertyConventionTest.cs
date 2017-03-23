@@ -9,6 +9,9 @@ using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Builder.Conventions.Attributes
 {

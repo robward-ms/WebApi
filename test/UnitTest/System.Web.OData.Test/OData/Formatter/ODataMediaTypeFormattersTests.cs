@@ -15,6 +15,10 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -654,7 +658,7 @@ namespace System.Web.OData.Formatter
         {
             var formatters = ODataMediaTypeFormatters.Create();
 
-            Assert.Same(formatters.First().SerializerProvider, ODataSerializerProviderProxy.Instance);
+            Assert.Same(formatters.First().SerializerProvider, IoDataSerializerProviderProxy.Instance);
         }
 
         [Fact]

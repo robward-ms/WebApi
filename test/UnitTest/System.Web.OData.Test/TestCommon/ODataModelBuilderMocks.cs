@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.OData.Builder;
 using Microsoft.OData.Edm;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.TestCommon
 {

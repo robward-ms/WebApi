@@ -17,6 +17,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -123,9 +129,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
@@ -219,9 +225,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("query", "query",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel())
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
@@ -246,9 +252,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act
@@ -295,9 +301,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act
@@ -341,7 +347,7 @@ namespace System.Web.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ParserExtenstionCustomer>("ParserExtenstionCustomers");
             builder.EntitySet<ParserExtenstionCustomer>("ParserExtenstionCustomers2");
             builder.EntitySet<ParserExtenstionOrder>("ParserExtenstionOrders");

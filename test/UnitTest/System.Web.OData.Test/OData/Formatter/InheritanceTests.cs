@@ -17,7 +17,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Formatter
 {
@@ -238,7 +243,7 @@ namespace System.Web.OData.Formatter
             // Arrange
             StringContent content = new StringContent("{ '@odata.type' : '#System.Web.OData.Builder.TestModels.Motorcycle' }");
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            IODataRequestMessage oDataRequest = new ODataMessageWrapper(content.ReadAsStreamAsync().Result, content.Headers);
+            IODataRequestMessage oDataRequest = new ODataMessageWrapper(content.ReadAsStreamAsync().Result, content.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(";", kvp.Value)));
             ODataMessageReader reader = new ODataMessageReader(oDataRequest, new ODataMessageReaderSettings(), _model);
 
             ODataDeserializerProvider deserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();

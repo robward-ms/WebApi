@@ -14,6 +14,11 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using System.Web.OData.Adapters;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Builder
 {
@@ -554,7 +559,7 @@ namespace System.Web.OData.Builder
             IEdmEntityContainer container = model.SchemaElements.OfType<IEdmEntityContainer>().SingleOrDefault();
             IEdmAction watchAction = Assert.Single(model.SchemaElements.OfType<IEdmAction>()); // Guard
             IEdmEntitySet entitySet = container.EntitySets().SingleOrDefault();
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = urlHelper };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = new WebApiUrlHelper(urlHelper) };
 
             ResourceContext context = new ResourceContext(serializerContext, movieType.AsReference(), new Movie { ID = 1, Name = "Avatar" });
             OperationLinkBuilder actionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchAction);
@@ -591,8 +596,8 @@ namespace System.Web.OData.Builder
             ResourceSetContext context = new ResourceSetContext
             {
                 EntitySetBase = entitySet,
-                Url = urlHelper,
-                Request = request
+                Url = new WebApiUrlHelper(urlHelper),
+                Request = new WebApiRequestMessage(request)
             };
 
             OperationLinkBuilder actionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchAction);

@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Web.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Formatter.Serialization
 {

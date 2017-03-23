@@ -11,6 +11,11 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -18,7 +23,7 @@ namespace System.Web.OData.Formatter.Deserialization
     {
         private static readonly IEdmModel Model = GetEdmModel();
 
-        private static readonly ODataSerializerProvider SerializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+        private static readonly IODataSerializerProvider SerializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
 
         private static readonly ODataDeserializerProvider DeserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
 
@@ -217,7 +222,7 @@ namespace System.Web.OData.Formatter.Deserialization
 
         private static IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EnumType<Color>().Namespace = "NS";
             return builder.GetEdmModel();
         }

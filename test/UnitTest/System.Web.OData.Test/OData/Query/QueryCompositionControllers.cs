@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.OData.Builder.TestModels;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData.Query
 {

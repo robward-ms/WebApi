@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Xml.Linq;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Formatter
 {

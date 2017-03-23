@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter
 {
@@ -33,7 +34,7 @@ namespace System.Web.OData.Formatter
         public void ResolveUrl_ReturnsOriginalUri_IfContentIdCannotBeResolved()
         {
             StringContent content = new StringContent(String.Empty);
-            var message = new ODataMessageWrapper(new MemoryStream(), content.Headers);
+            var message = ODataMessageWrapperHelper.Create(new MemoryStream(), content.Headers);
 
             Uri uri = message.ConvertPayloadUri(new Uri("http://localhost"), new Uri("$1", UriKind.Relative));
 
@@ -49,7 +50,7 @@ namespace System.Web.OData.Formatter
                 {"1", "http://localhost/values(1)"},
                 {"11", "http://localhost/values(11)"},
             };
-            var message = new ODataMessageWrapper(new MemoryStream(), content.Headers, contentIdMapping);
+            var message = ODataMessageWrapperHelper.Create(new MemoryStream(), content.Headers, contentIdMapping);
 
             Uri uri = message.ConvertPayloadUri(new Uri("http://localhost"), new Uri("$1", UriKind.Relative));
 

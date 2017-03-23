@@ -7,6 +7,8 @@ using System.Web.Http;
 using Microsoft.OData;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter.Serialization
 {

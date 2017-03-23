@@ -7,6 +7,8 @@ using System.Web.OData.Builder.TestModels;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
 
 namespace System.Web.OData.Builder.Conventions
 {
@@ -39,12 +41,12 @@ namespace System.Web.OData.Builder.Conventions
             entitySet.Setup(
                 v =>
                     v.AddBinding(motorcycleNavigationProperty, manufacturers,
-                        new List<MemberInfo> { typeof(Motorcycle), typeof(Motorcycle).GetProperty("Manufacturer") }))
+                        new List<object> { typeof(Motorcycle), typeof(Motorcycle).GetProperty("Manufacturer") }))
                 .Returns<NavigationPropertyConfiguration>(null);
             entitySet.Setup(
                 v =>
                     v.AddBinding(carNavigationProperty, manufacturers,
-                        new List<MemberInfo> { typeof(Car), typeof(Car).GetProperty("Manufacturer") }))
+                        new List<object> { typeof(Car), typeof(Car).GetProperty("Manufacturer") }))
                 .Returns<NavigationPropertyConfiguration>(null);
 
             // Act

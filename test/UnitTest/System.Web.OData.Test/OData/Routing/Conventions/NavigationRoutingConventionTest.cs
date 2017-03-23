@@ -13,6 +13,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing.Conventions
 {
@@ -42,7 +48,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -80,7 +86,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -113,7 +119,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -153,7 +159,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -167,7 +173,7 @@ namespace System.Web.OData.Routing.Conventions
         public void SelectAction_ReturnsNull_IfPostToNavigationPropertyBindingToNonCollectionValuedNavigationProperty(string path)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Company>("Companies");
             builder.Singleton<Company>("MyCompany");
             builder.EntitySet<Employee>("Employees");
@@ -179,7 +185,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap();
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Null(selectedAction);
@@ -202,7 +208,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap();
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Null(selectedAction);
@@ -226,7 +232,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -250,7 +256,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -280,7 +286,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -308,7 +314,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new NavigationRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Null(selectedAction);

@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.OData.Properties;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

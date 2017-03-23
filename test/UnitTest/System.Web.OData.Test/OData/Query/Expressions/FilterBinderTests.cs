@@ -14,6 +14,12 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query.Expressions
 {
@@ -2005,7 +2011,7 @@ namespace System.Web.OData.Query.Expressions
         public void SingleQuotesOnTypeNameOfCast_WorksForNow(string filter)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<DataTypes>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet entitySet = model.FindDeclaredEntitySet("Customers");
@@ -2022,7 +2028,7 @@ namespace System.Web.OData.Query.Expressions
         public void SingleQuotesOnEnumTypeNameOfCast_WorksForNow()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<DataTypes>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet entitySet = model.FindDeclaredEntitySet("Customers");
@@ -2624,7 +2630,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2656,7 +2662,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2686,7 +2692,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2853,7 +2859,7 @@ namespace System.Web.OData.Query.Expressions
 
         private static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterNode, IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
-            return FilterBinder.Bind<TEntityType>(filterNode, model, assembliesResolver, querySettings);
+            return FilterBinder.Bind<TEntityType>(filterNode, model, new WebApiAssembliesResolver(assembliesResolver), querySettings);
         }
 
         private IAssembliesResolver CreateFakeAssembliesResolver()
@@ -2979,7 +2985,7 @@ namespace System.Web.OData.Query.Expressions
 
             if (!_modelCache.TryGetValue(key, out value))
             {
-                ODataModelBuilder model = new ODataConventionModelBuilder();
+                ODataModelBuilder model = new System.Web.OData.Builder.ODataConventionModelBuilder();
                 model.EntitySet<T>("Products");
                 if (key == typeof(Product))
                 {

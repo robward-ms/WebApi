@@ -3,6 +3,7 @@
 
 using Microsoft.OData;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter
 {

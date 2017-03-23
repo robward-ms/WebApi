@@ -12,13 +12,16 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Formatter;
-using System.Web.OData.Query;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Formatter;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Builder.Conventions
 {
@@ -30,7 +33,7 @@ namespace System.Web.OData.Builder.Conventions
         public void Ctor_ThrowsForNullConfiguration()
         {
             Assert.ThrowsArgumentNull(
-                () => new ODataConventionModelBuilder(configuration: null),
+                () => new ODataConventionModelBuilder(resolver: null),
                 "configuration");
         }
 
@@ -70,9 +73,10 @@ namespace System.Web.OData.Builder.Conventions
             var mockType2 = new MockType("Bar").BaseType(mockType1);
             var mockAssembly = new MockAssembly(mockType1, mockType2);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             var entity1 = builder.AddEntityType(mockType1);
             var entity2 = builder.AddEntityType(mockType2);
@@ -91,9 +95,10 @@ namespace System.Web.OData.Builder.Conventions
 
             var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             var entity1 = builder.AddEntityType(mockType1);
             var entity3 = builder.AddEntityType(mockType3);
@@ -112,9 +117,10 @@ namespace System.Web.OData.Builder.Conventions
 
             var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             var entity1 = builder.AddEntityType(mockType1);
             entity1.AddProperty(mockType1.GetProperty("P1"));
@@ -141,9 +147,10 @@ namespace System.Web.OData.Builder.Conventions
 
             var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3, mockType4);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             var entity1 = builder.AddEntityType(mockType1);
             builder.MapDerivedTypes(entity1);
@@ -1830,9 +1837,10 @@ namespace System.Web.OData.Builder.Conventions
 
             MockAssembly assembly = new MockAssembly(baseType, derivedType);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(assembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
 
@@ -1934,9 +1942,10 @@ namespace System.Web.OData.Builder.Conventions
 
             MockAssembly assembly = new MockAssembly(baseType, derivedType);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(assembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
-            var builder = new ODataConventionModelBuilder(configuration, isQueryCompositionMode: true);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
 
@@ -1964,9 +1973,10 @@ namespace System.Web.OData.Builder.Conventions
 
             MockAssembly assembly = new MockAssembly(baseType, derivedType);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(assembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
-            var builder = new ODataConventionModelBuilder(configuration, isQueryCompositionMode: true);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
 
@@ -2006,9 +2016,10 @@ namespace System.Web.OData.Builder.Conventions
 
             MockAssembly assembly = new MockAssembly(baseComplexType, derivedComplexType, entityType);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(assembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             builder.AddEntitySet("entities", builder.AddEntityType(entityType));
 
@@ -2036,9 +2047,10 @@ namespace System.Web.OData.Builder.Conventions
 
             MockAssembly assembly = new MockAssembly(baseComplexType, derivedComplexType, entityType);
 
+            IAssembliesResolver resolver = new TestAssemblyResolver(assembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
-            var builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            var builder = new ODataConventionModelBuilder(resolver);
 
             builder.AddEntitySet("entities", builder.AddEntityType(entityType));
             builder.AddComplexType(baseComplexType);
@@ -2322,7 +2334,7 @@ namespace System.Web.OData.Builder.Conventions
                 }
             }.GetType();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new HttpConfiguration(), isQueryCompositionMode: true);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new DefaultAssembliesResolver(), isQueryCompositionMode: true);
             builder.AddEntitySet("entityset", builder.AddEntityType(entityType));
 
             IEdmModel model = builder.GetEdmModel();
@@ -2417,9 +2429,10 @@ namespace System.Web.OData.Builder.Conventions
             MockType complexDerived = new MockType("ComplexBase").BaseType(complexBase).Property<int>("DerivedProperty");
 
             MockAssembly mockAssembly = new MockAssembly(complexBase, complexDerived);
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(resolver);
             builder.AddComplexType(complexBase);
 
             // Act
@@ -2503,9 +2516,10 @@ namespace System.Web.OData.Builder.Conventions
             MockType derivedType = new MockType("DerivedType").BaseType(baseType).Property<int>("DerivedProperty");
 
             MockAssembly mockAssembly = new MockAssembly(baseType, derivedType);
+            IAssembliesResolver resolver = new TestAssemblyResolver(mockAssembly);
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(mockAssembly));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(resolver);
 
             // Act
             ComplexTypeConfiguration baseComplex = builder.AddComplexType(baseType);

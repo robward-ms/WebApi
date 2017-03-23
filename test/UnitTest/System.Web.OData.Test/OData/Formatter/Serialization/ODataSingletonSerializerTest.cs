@@ -15,7 +15,13 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using System.Web.OData.Adapters;
+using System.Linq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -34,13 +40,13 @@ namespace System.Web.OData.Formatter.Deserialization
             HttpRequestMessage request = GetRequest(model, singleton);
             ODataSerializerContext readContext = new ODataSerializerContext()
             {
-                Url = new UrlHelper(request),
+                Url = new WebApiUrlHelper(new UrlHelper(request)),
                 Path = request.ODataProperties().Path,
                 Model = model,
                 NavigationSource = singleton
             };
 
-            ODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            IODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
             EmployeeModel boss = new EmployeeModel {EmployeeId = 987, EmployeeName = "John Mountain"};
             MemoryStream bufferedStream = new MemoryStream();
 
@@ -55,7 +61,7 @@ namespace System.Web.OData.Formatter.Deserialization
 
         private IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.Singleton<EmployeeModel>("Boss");
             return builder.GetEdmModel();
         }
@@ -84,7 +90,7 @@ namespace System.Web.OData.Formatter.Deserialization
                 ODataUri = new ODataUri { ServiceRoot = new Uri("http://localhost/odata") }
             };
 
-            IODataResponseMessage responseMessage = new ODataMessageWrapper(bufferedStream, content.Headers);
+            IODataResponseMessage responseMessage = new ODataMessageWrapper(bufferedStream, content.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(";", kvp.Value)));
             return new ODataMessageWriter(responseMessage, writerSettings, model);
         }
 

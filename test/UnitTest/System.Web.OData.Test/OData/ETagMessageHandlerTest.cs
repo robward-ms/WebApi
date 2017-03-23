@@ -17,6 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Test
 {
@@ -239,7 +243,7 @@ namespace System.Web.OData.Test
 
         private static IEdmModel SetupModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             // Different types of navigation sources and navigation properties.
             builder.EntitySet<ETagCustomer>("Customers");
             builder.EntitySet<ETagOrder>("Orders");

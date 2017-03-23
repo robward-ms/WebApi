@@ -11,12 +11,16 @@ using System.Web.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Routing
 {
     public class ODataPathRouteConstraintTest
     {
-        IEdmModel _model = new ODataConventionModelBuilder().GetEdmModel();
+        IEdmModel _model = new System.Web.OData.Builder.ODataConventionModelBuilder().GetEdmModel();
         string _routeName = "name";
         IEnumerable<IODataRoutingConvention> _conventions = ODataRoutingConventions.CreateDefault();
         HttpRequestMessage _request = new HttpRequestMessage();

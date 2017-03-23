@@ -14,6 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Formatter
 {
@@ -56,9 +62,10 @@ namespace System.Web.OData.Formatter
             configuration.MapODataServiceRoute("odata1", "odata", model, pathHandler, ODataRoutingConventions.CreateDefault());
 
             // only with attribute routing
+            AttributeMappingProvider mappingProvider = new AttributeMappingProvider("odata2", configuration);
             IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
             {
-                new AttributeRoutingConvention("odata2", configuration)
+                new AttributeRoutingConvention(mappingProvider)
             };
             configuration.MapODataServiceRoute("odata2", "attribute", model, pathHandler, routingConventions);
 

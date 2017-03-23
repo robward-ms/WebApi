@@ -14,6 +14,8 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Builder
 {

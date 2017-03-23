@@ -13,7 +13,13 @@ using System.Web.OData.TestCommon.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -25,13 +31,13 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage();
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
             Assert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, message),
+                () => new ODataQueryOptions<int>(context, new WebApiRequestMessage(message)),
                 "context", "The entity type 'System.Web.OData.TestCommon.Models.Customer' does not match the expected entity type 'System.Int32' as set on the query context.");
         }
 
@@ -46,7 +52,7 @@ namespace System.Web.OData.Query
             ODataQueryContext context = new ODataQueryContext(model, elementType);
 
             Assert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, message),
+                () => new ODataQueryOptions<int>(context, new WebApiRequestMessage(message)),
                 "context", "The property 'ElementClrType' of ODataQueryContext cannot be null.");
         }
 
@@ -56,12 +62,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
             Assert.Equal("10", query.Top.RawValue);
         }
 
@@ -73,7 +79,8 @@ namespace System.Web.OData.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
             if (header.Equals("IfMatch"))
             {
                 request.Headers.IfMatch.Add(etagHeaderValue);
@@ -101,7 +108,7 @@ namespace System.Web.OData.Query
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 
             // Act
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(request));
             ETag result = header.Equals("IfMatch") ? query.IfMatch : query.IfNoneMatch;
             dynamic dynamicResult = result;
 
@@ -126,7 +133,7 @@ namespace System.Web.OData.Query
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 
             // Act
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
             ETag result = header.Equals("IfMatch") ? query.IfMatch : query.IfNoneMatch;
 
             // Assert
@@ -139,12 +146,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable()),
@@ -158,12 +165,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable()));
@@ -175,12 +182,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable()));
@@ -192,12 +199,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable(), new ODataQuerySettings()),
@@ -211,12 +218,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable(), new ODataQuerySettings()));
@@ -228,12 +235,12 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable(), new ODataQuerySettings()));

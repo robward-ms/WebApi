@@ -4,6 +4,7 @@
 using System.Web.OData.Builder.TestModels;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

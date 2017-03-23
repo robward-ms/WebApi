@@ -23,6 +23,14 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -169,7 +177,7 @@ namespace System.Web.OData.Formatter
                 foreach (ODataMediaTypeFormatter odataFormatter in
                     configuration.Formatters.OfType<ODataMediaTypeFormatter>())
                 {
-                    odataFormatter.SupportedMediaTypes.Remove(ODataMediaTypes.ApplicationJson);
+                    odataFormatter.SupportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
                 }
 
                 using (HttpServer host = new HttpServer(configuration))
@@ -375,7 +383,7 @@ namespace System.Web.OData.Formatter
         public void EnumKeySimpleSerializerTest(string entitySet)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>(entitySet);
             builder.EntityType<EnumCustomer>().HasKey(c => c.Color);
             IEdmModel model = builder.GetEdmModel();
@@ -406,7 +414,7 @@ namespace System.Web.OData.Formatter
         public void EnumTypeRoundTripTest()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -474,7 +482,7 @@ namespace System.Web.OData.Formatter
 
         private HttpResponseMessage GetEnumResponse(string acceptHeader)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -498,7 +506,7 @@ namespace System.Web.OData.Formatter
         public void EnumSerializer_HasMetadataType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -534,7 +542,7 @@ namespace System.Web.OData.Formatter
         public void RequestProperty_HasCorrectContextUrl()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -560,7 +568,7 @@ namespace System.Web.OData.Formatter
         public void ODataCollectionSerializer_SerializeIQueryableOfIEdmEntityObject()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<CollectionSerializerCustomer>("CollectionSerializerCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(CollectionSerializerCustomersController) };
@@ -595,7 +603,7 @@ namespace System.Web.OData.Formatter
     ""Green""
   ]
 }";
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -757,7 +765,7 @@ namespace System.Web.OData.Formatter
 
         private static IEdmModel GetKeyCustomerOrderModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
 
             builder.EntityType<KeyCustomer>().HasKey(c => c.Id);
             builder.EntityType<KeyOrder>().HasKey(c =>new { c.StringKey, c.DateKey, c.GuidKey});
@@ -1065,7 +1073,7 @@ namespace System.Web.OData.Formatter
 
         private class CustomFeedSerializer : ODataResourceSetSerializer
         {
-            public CustomFeedSerializer(ODataSerializerProvider serializerProvider)
+            public CustomFeedSerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }
@@ -1086,7 +1094,7 @@ namespace System.Web.OData.Formatter
             }
         }
 
-        private class CustomSerializerProvider : DefaultODataSerializerProvider
+        private class CustomSerializerProvider : DefaultIoDataSerializerProvider
         {
             public CustomSerializerProvider()
                 : base(new MockContainer())
@@ -1110,7 +1118,7 @@ namespace System.Web.OData.Formatter
 
         private class CustomEntrySerializer : ODataResourceSerializer
         {
-            public CustomEntrySerializer(ODataSerializerProvider serializerProvider)
+            public CustomEntrySerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }

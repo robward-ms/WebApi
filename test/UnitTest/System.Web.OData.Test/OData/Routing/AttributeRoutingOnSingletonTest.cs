@@ -8,6 +8,7 @@ using System.Web.Http.Dispatcher;
 using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
 
 namespace System.Web.OData.Routing
 {

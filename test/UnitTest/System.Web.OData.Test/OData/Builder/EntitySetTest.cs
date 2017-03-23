@@ -8,6 +8,10 @@ using System.Web.OData.Formatter.Serialization;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 
 namespace System.Web.OData.Builder
 {

@@ -15,7 +15,12 @@ using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -204,7 +209,7 @@ namespace System.Web.OData.Formatter.Deserialization
         public void ReadResource_ThrowsODataException_CannotInstantiateAbstractResourceType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntityType<BaseType>().Abstract();
             IEdmModel model = builder.GetEdmModel();
             var deserializer = new ODataResourceDeserializer(_deserializerProvider);
@@ -337,7 +342,7 @@ namespace System.Web.OData.Formatter.Deserialization
         public void ReadResource_CanReadDynamicPropertiesForOpenEntityType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntityType<SimpleOpenCustomer>();
             builder.EnumType<SimpleEnum>();
             IEdmModel model = builder.GetEdmModel();
@@ -455,7 +460,7 @@ namespace System.Web.OData.Formatter.Deserialization
         public void ReadSource_CanReadDynamicPropertiesForInheritanceOpenEntityType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntityType<SimpleOpenCustomer>();
             builder.EnumType<SimpleEnum>();
             IEdmModel model = builder.GetEdmModel();
@@ -519,7 +524,7 @@ namespace System.Web.OData.Formatter.Deserialization
         public void ReadResource_CanReadDatTimeRelatedProperties()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntityType<MyCustomer>().Namespace = "NS";
             IEdmModel model = builder.GetEdmModel();
 

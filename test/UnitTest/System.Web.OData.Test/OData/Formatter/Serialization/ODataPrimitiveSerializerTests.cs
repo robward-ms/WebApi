@@ -13,6 +13,10 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -235,7 +239,7 @@ namespace System.Web.OData.Formatter.Serialization
             HttpRequestMessage request = new HttpRequestMessage();
             request.SetConfiguration(configuration);
 
-            ODataSerializerContext context = new ODataSerializerContext{ Request = request };
+            ODataSerializerContext context = new ODataSerializerContext{ Request = new WebApiRequestMessage(request) };
 
             // Act
             ODataValue odataValue = serializer.CreateODataValue(value, edmPrimitiveType, context);

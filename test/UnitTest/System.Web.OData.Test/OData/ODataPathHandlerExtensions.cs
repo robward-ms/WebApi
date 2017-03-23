@@ -7,7 +7,9 @@ using System.Web.OData.Routing.Template;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Template;
 
 namespace System.Web.OData
 {

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder
 {

@@ -11,6 +11,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using System.Web.OData.Adapters;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Routing.Conventions
 {
@@ -47,7 +51,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -97,7 +101,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -133,7 +137,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap("DeleteRef");
 
             // Act
-            new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert
@@ -149,12 +153,12 @@ namespace System.Web.OData.Routing.Conventions
         {
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", uri);
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", uri);
             HttpControllerContext controllerContext = CreateControllerContext("DELETE");
             var actionMap = GetMockActionMap("DeleteRef");
 
             // Act
-            var actionName = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            var actionName = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert
@@ -182,7 +186,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = GetMockActionMap("DeleteRef", "CreateRef", "GetRef", "PutRef", "PostRef");
 
             // Act
-            string actionName = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
 
             // Assert
             Assert.Null(actionName);
@@ -207,7 +211,7 @@ namespace System.Web.OData.Routing.Conventions
             var actionMap = new[] { GetMockActionDescriptor(actionName) }.ToLookup(a => a.ActionName);
 
             // Act
-            new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMatch(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert

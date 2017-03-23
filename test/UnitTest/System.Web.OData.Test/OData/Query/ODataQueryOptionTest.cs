@@ -22,6 +22,11 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Newtonsoft.Json.Linq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -176,7 +181,7 @@ namespace System.Web.OData.Query
         public void ConstructorNullContextThrows()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new ODataQueryOptions(null, new HttpRequestMessage())
+                () => new ODataQueryOptions(null, new WebApiRequestMessage(new HttpRequestMessage()))
             );
         }
 
@@ -206,7 +211,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message),
+            Assert.Throws<ODataException>(() => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message)),
                 "The value for OData query '" + queryName + "' cannot be empty.");
         }
 
@@ -221,7 +226,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Equal("Filter", queryOptions.RawValues.Filter);
             Assert.NotNull(queryOptions.Filter);
             Assert.Equal("OrderBy", queryOptions.RawValues.OrderBy);
@@ -250,7 +255,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
 
             // Act & Assert
             Assert.ThrowsArgumentNull(() => queryOptions.ApplyTo(null), "query");
@@ -268,7 +273,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
 
             // Act & Assert
             Assert.ThrowsArgumentNull(() => queryOptions.ApplyTo(null, new ODataQuerySettings()), "query");
@@ -286,7 +291,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
 
             // Act & Assert
             Assert.ThrowsArgumentNull(() => queryOptions.ApplyTo(new Customer[0].AsQueryable(), null), "querySettings");
@@ -306,7 +311,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             ODataQuerySettings querySettings = new ODataQuerySettings
             {
                 EnsureStableOrdering = ensureStableOrdering,
@@ -336,7 +341,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             ODataQuerySettings querySettings = new ODataQuerySettings
             {
                 EnsureStableOrdering = ensureStableOrdering
@@ -366,7 +371,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             // Act
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             OrderByQueryOption originalOption = queryOptions.OrderBy;
             ODataQuerySettings querySettings = new ODataQuerySettings();
 
@@ -383,7 +388,7 @@ namespace System.Web.OData.Query
             var model = new ODataModelBuilder().Add_Customers_EntitySet().GetEdmModel();
             var request = new HttpRequestMessage(HttpMethod.Get, new Uri("http://server/service/Customers?$select=Name"));
             request.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(request));
 
             // Act
             queryOptions.ApplyTo(Enumerable.Empty<Customer>().AsQueryable());
@@ -403,7 +408,7 @@ namespace System.Web.OData.Query
                 new Uri("http://server/service/Customers")
             );
             message.EnableHttpDependencyInjectionSupport();
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             var entityType = queryOptions.Context.ElementClrType;
             Assert.NotNull(entityType);
             Assert.Equal(typeof(Customer).FullName, entityType.Namespace + "." + entityType.Name);
@@ -438,11 +443,11 @@ namespace System.Web.OData.Query
             if (String.IsNullOrWhiteSpace(queryValue))
             {
                 Assert.Throws<ODataException>(() =>
-                    new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message));
+                    new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message)));
             }
             else
             {
-                var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+                var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
 
                 if (queryName == "$filter")
                 {
@@ -482,7 +487,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             // Act
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
 
             // Assert: everything is null
             Assert.Null(queryOptions.RawValues.OrderBy);
@@ -502,7 +507,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var option = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var option = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Throws<ODataException>(() =>
             {
                 option.ApplyTo(new List<Customer>().AsQueryable());
@@ -520,7 +525,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Throws<ODataException>(() =>
                  options.ApplyTo(Customers),
                  "Invalid value 'NotANumber' for $top query option found. " +
@@ -532,7 +537,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Throws<ODataException>(() =>
                  options.ApplyTo(Customers),
                  "Invalid value '''' for $top query option found. " +
@@ -550,7 +555,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Throws<ODataException>(() =>
                  options.ApplyTo(Customers),
                  "Invalid value 'NotANumber' for $skip query option found. " +
@@ -562,7 +567,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             Assert.Throws<ODataException>(() =>
                  options.ApplyTo(Customers),
                  "Invalid value '''' for $skip query option found. " +
@@ -592,7 +597,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, elementType), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, elementType), new WebApiRequestMessage(message));
             IQueryable finalQuery = options.ApplyTo(query);
 
             string queryExpression = ExpressionStringBuilder.ToString(finalQuery.Expression);
@@ -614,7 +619,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             IQueryable finalQuery = options.ApplyTo(Customers);
             string queryExpression = finalQuery.Expression.ToString();
 
@@ -636,7 +641,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             IQueryable finalQuery = options.ApplyTo(Customers);
 
             string queryExpression = ExpressionStringBuilder.ToString(finalQuery.Expression);
@@ -660,7 +665,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             ODataQuerySettings querySettings = new ODataQuerySettings
             {
                 EnsureStableOrdering = ensureStableOrdering
@@ -689,7 +694,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             ODataQuerySettings querySettings = new ODataQuerySettings
             {
                 EnsureStableOrdering = ensureStableOrdering
@@ -714,7 +719,7 @@ namespace System.Web.OData.Query
             );
             message.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(message));
             ODataValidationSettings validationSettings = new ODataValidationSettings { MaxOrderByNodeCount = 1 };
 
             // Act & Assert
@@ -771,7 +776,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             ODataQueryContext context = ValidationTestHelper.CreateCustomerContext(false);
-            ODataQueryOptions option = new ODataQueryOptions(context, message);
+            ODataQueryOptions option = new ODataQueryOptions(context, new WebApiRequestMessage(message));
             ODataValidationSettings settings = new ODataValidationSettings()
             {
                 AllowedQueryOptions = AllowedQueryOptions.OrderBy
@@ -838,7 +843,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, queryable.ElementType);
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             queryable = options.ApplyTo(queryable);
 
@@ -857,7 +862,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(model, queryable.ElementType);
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             // Act
             queryable = options.ApplyTo(queryable);
@@ -874,7 +879,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$filter=$it eq 6&$unknown=value");
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             var queryable = options.ApplyTo(Enumerable.Range(0, 10).AsQueryable());
 
@@ -890,7 +895,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, message);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(message));
 
             Assert.ThrowsArgumentNull(
                 () => queryOptions.ApplyTo(entity: null, querySettings: new ODataQuerySettings()),
@@ -905,7 +910,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$count=true");
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             request.ODataProperties().TotalCount = count;
 
             // Act
@@ -922,7 +927,7 @@ namespace System.Web.OData.Query
             message.EnableHttpDependencyInjectionSupport();
 
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, message);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(message));
 
             Assert.ThrowsArgumentNull(
                 () => queryOptions.ApplyTo(entity: 42, querySettings: null),
@@ -942,7 +947,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?" + parameter);
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(model.Model, typeof(Customer));
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             Assert.Throws<InvalidOperationException>(
                 () => queryOptions.ApplyTo(42, new ODataQuerySettings()),
@@ -957,10 +962,10 @@ namespace System.Web.OData.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost" + queryOption);
             request.EnableHttpDependencyInjectionSupport();
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             Customer customer = new Customer
             {
                 CustomerId = 1,
@@ -990,10 +995,10 @@ namespace System.Web.OData.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost" + queryOption);
             request.EnableHttpDependencyInjectionSupport();
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             IQueryable<Customer> customers =
                 Enumerable.Range(1, 10).Select(
                     i => new Customer
@@ -1021,7 +1026,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            ODataQueryOptions options = new ODataQueryOptions(context, request);
+            ODataQueryOptions options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             request.ODataProperties().NextLink = nextPageLink;
 
             // Act
@@ -1043,7 +1048,7 @@ namespace System.Web.OData.Query
             request.EnableHttpDependencyInjectionSupport();
 
             // Act
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(queryOptions.Filter);
@@ -1143,7 +1148,7 @@ namespace System.Web.OData.Query
             request.EnableHttpDependencyInjectionSupport();
 
             // Act
-            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), request);
+            var queryOptions = new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), new WebApiRequestMessage(request));
 
             // Assert
             Assert.Equal(queryOptions.RawValues.Top, "10");
@@ -1176,7 +1181,7 @@ namespace System.Web.OData.Query
                     typeof(EntityModelsController),
                     typeof(ProductsController)));
 
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataQueryOptionTest_EntityModel>("EntityModels");
             builder.EntitySet<MyProduct>("Products");
             builder.EntitySet<ODataQueryOptionTest_EntityModelMultipleKeys>("ODataQueryOptionTest_EntityModelMultipleKeys");

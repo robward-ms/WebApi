@@ -1,21 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.TestCommon;
+using Moq;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon.Models;
-using Microsoft.OData;
-using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
-using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {
@@ -25,8 +26,8 @@ namespace System.Web.OData.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {
@@ -60,7 +61,7 @@ namespace System.Web.OData.Formatter
             string expectedEntity = Resources.GetString(resourceName);
             Assert.NotNull(expectedEntity);
 
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 
@@ -100,7 +101,7 @@ namespace System.Web.OData.Formatter
 
             object expectedValue = value;
 
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 
@@ -135,8 +136,8 @@ namespace System.Web.OData.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {
@@ -151,7 +152,7 @@ namespace System.Web.OData.Formatter
         [PropertyData("NullPrimitiveValueToTest")]
         public void NullPrimitiveValueSerializeAsODataThrows(Type valueType, object value, MediaTypeHeaderValue mediaType, string notUsed)
         {
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 
@@ -189,7 +190,7 @@ namespace System.Web.OData.Formatter
 
             object expectedValue = value;
 
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 

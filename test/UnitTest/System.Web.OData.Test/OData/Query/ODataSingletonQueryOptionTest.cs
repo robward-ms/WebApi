@@ -10,6 +10,8 @@ using System.Web.OData.Extensions;
 using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -31,7 +33,7 @@ namespace System.Web.OData.Query
 
         private static IEdmModel GetEdmModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.Singleton<Customer>("Me");
             builder.EntitySet<Order>("Orders");
             builder.EntitySet<Customer>("Customers");

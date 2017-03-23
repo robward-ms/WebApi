@@ -6,6 +6,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData.Query.Expressions
 {

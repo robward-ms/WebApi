@@ -11,6 +11,10 @@ using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Formatter.Deserialization
 {

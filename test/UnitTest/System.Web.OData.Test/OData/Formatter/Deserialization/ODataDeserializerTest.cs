@@ -4,6 +4,7 @@
 using Microsoft.OData;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 
 namespace System.Web.OData.Formatter.Deserialization
 {

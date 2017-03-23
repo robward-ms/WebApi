@@ -10,6 +10,9 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using Moq;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -120,7 +123,7 @@ namespace System.Web.OData.Query
         public void CreateCollection_PropertyAliased_IfEnabled(bool modelAliasing, string typeName, string propertyName)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder { ModelAliasingEnabled = modelAliasing };
+            ODataConventionModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder { ModelAliasingEnabled = modelAliasing };
             builder.EntitySet<PropertyAlias>("entityset");
 
             IEdmModel model = builder.GetEdmModel();

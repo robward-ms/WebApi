@@ -19,6 +19,11 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using System.Web.OData.Adapters;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -207,7 +212,7 @@ namespace System.Web.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), message);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), new WebApiRequestMessage(message));
             var results = queryOptions.ApplyTo(Enumerable.Range(0, 100).AsQueryable()) as IQueryable<int>;
 
             // Assert
@@ -240,7 +245,7 @@ namespace System.Web.OData.Query
             {
                 if (_queryCompositionCustomerModel == null)
                 {
-                    ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+                    ODataModelBuilder modelBuilder = new System.Web.OData.Builder.ODataConventionModelBuilder();
                     modelBuilder.EntitySet<QueryCompositionCustomer>(typeof(QueryCompositionCustomer).Name);
                     _queryCompositionCustomerModel = modelBuilder.GetEdmModel();
                 }

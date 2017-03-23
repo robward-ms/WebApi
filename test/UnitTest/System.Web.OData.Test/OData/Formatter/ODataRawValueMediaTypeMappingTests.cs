@@ -10,7 +10,9 @@ using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using Microsoft.OData.WebApi.Builder;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -246,7 +248,7 @@ namespace System.Web.OData.Formatter
 
         private static IEdmModel GetBinaryModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<RawValueEntity>("RawValue");
             builder.Singleton<RawValueEntity>("RawSingletonValue");
             return builder.GetEdmModel();
@@ -260,7 +262,7 @@ namespace System.Web.OData.Formatter
 
         private static IEdmModel GetEnumModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<EnumEntity>("EnumEntity");
             return builder.GetEdmModel();
         }

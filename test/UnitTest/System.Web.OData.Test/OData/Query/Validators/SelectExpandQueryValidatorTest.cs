@@ -10,6 +10,11 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query.Validators;
+using Microsoft.OData.WebApi.Query;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query.Validators
 {
@@ -95,7 +100,7 @@ namespace System.Web.OData.Query.Validators
         {
             // Arrange
             var validator = new SelectExpandQueryValidator(new DefaultQuerySettings {EnableExpand = true});
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));
@@ -125,7 +130,7 @@ namespace System.Web.OData.Query.Validators
             // Arrange
             string expand = "Parent($expand=Parent($expand=Parent($levels=10)))";
             var validator = new SelectExpandQueryValidator(new DefaultQuerySettings { EnableExpand = true });
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));
@@ -145,7 +150,7 @@ namespace System.Web.OData.Query.Validators
             // Arrange
             string expand = "Parent($levels=2)";
             var validator = new SelectExpandQueryValidator(new DefaultQuerySettings { EnableExpand = true });
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));
@@ -170,7 +175,7 @@ namespace System.Web.OData.Query.Validators
             // Arrange
             string expand = "Parent($levels=1)";
             var validator = new SelectExpandQueryValidator(new DefaultQuerySettings { EnableExpand = true });
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));
@@ -190,7 +195,7 @@ namespace System.Web.OData.Query.Validators
             int maxExpansionDepth = -1;
             // Arrange
             string expand = "Parent($levels=1)";
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));
@@ -217,7 +222,7 @@ namespace System.Web.OData.Query.Validators
             // Arrange
             string expand = "Parent($levels=2)";
             var validator = new SelectExpandQueryValidator(new DefaultQuerySettings { EnableExpand = true });
-            var builder = new ODataConventionModelBuilder();
+            var builder = new System.Web.OData.Builder.ODataConventionModelBuilder();
             builder.EntitySet<ODataLevelsTest.LevelsEntity>("Entities");
             IEdmModel model = builder.GetEdmModel();
             var context = new ODataQueryContext(model, typeof(ODataLevelsTest.LevelsEntity));

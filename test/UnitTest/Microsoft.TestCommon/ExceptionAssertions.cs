@@ -383,12 +383,22 @@ namespace Microsoft.TestCommon
         /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        public static InvalidEnumArgumentException ThrowsInvalidEnumArgument(Action testCode, string paramName, int invalidValue, Type enumType, bool allowDerivedExceptions = false)
+        public static Exception ThrowsInvalidEnumArgument(Action testCode, string paramName, int invalidValue, Type enumType, bool allowDerivedExceptions = false)
         {
             string message = String.Format(CultureReplacer.DefaultCulture,
                                            "The value of argument '{0}' ({1}) is invalid for Enum type '{2}'.{3}Parameter name: {0}",
                                            paramName, invalidValue, enumType.Name, Environment.NewLine);
-            return Throws<InvalidEnumArgumentException>(testCode, message, allowDerivedExceptions);
+
+            // InvalidEnumArgumentException is not supported in .NetCore.
+            try
+            {
+                return Throws<InvalidEnumArgumentException>(testCode, message, allowDerivedExceptions);
+            }
+            catch (ThrowsException)
+            {
+            }
+
+            return Throws<ArgumentException>(testCode, message, allowDerivedExceptions);
         }
 
         /// <summary>
