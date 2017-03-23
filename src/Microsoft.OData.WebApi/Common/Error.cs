@@ -226,6 +226,8 @@ namespace Microsoft.OData.WebApi.Common
         /// <returns>The logged <see cref="Exception"/>.</returns>
         public static ArgumentException InvalidEnumArgument(string parameterName, int invalidValue, Type enumClass)
         {
+            // InvalidEnumArgumentException is not supported in .NetCore.
+            ////return new InvalidEnumArgumentException(parameterName, invalidValue, enumClass);
             return new ArgumentException(Error.Format(CommonWebApiResources.InvalidEnumArgument, parameterName, invalidValue, enumClass.Name), parameterName);
         }
 

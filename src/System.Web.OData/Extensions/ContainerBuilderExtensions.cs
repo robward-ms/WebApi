@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.WebApi.Common;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+using Microsoft.OData.WebApi.Interfaces;
+using System.Web.OData.Adapters;
 
 namespace System.Web.OData.Extensions
 {
@@ -80,6 +82,7 @@ namespace System.Web.OData.Extensions
 
             // AssembliesResolver.
             builder.AddService(ServiceLifetime.Singleton, GetAssembliesResolver);
+            builder.AddService(ServiceLifetime.Singleton, GetWebApiAssembliesResolver);
 
             // Binders.
             builder.AddService<ODataQuerySettings>(ServiceLifetime.Scoped);
@@ -87,11 +90,18 @@ namespace System.Web.OData.Extensions
 
             return builder;
         }
-
+        
         private static IAssembliesResolver GetAssembliesResolver(IServiceProvider rootContainer)
         {
             HttpConfiguration configuration = rootContainer.GetRequiredService<HttpConfiguration>();
             return configuration.Services.GetAssembliesResolver() ?? new DefaultAssembliesResolver();
+        }
+
+        private static IWebApiAssembliesResolver GetWebApiAssembliesResolver(IServiceProvider rootContainer)
+        {
+            HttpConfiguration configuration = rootContainer.GetRequiredService<HttpConfiguration>();
+            IAssembliesResolver resolver =  configuration.Services.GetAssembliesResolver() ?? new DefaultAssembliesResolver();
+            return new WebApiAssembliesResolver(resolver);
         }
     }
 }

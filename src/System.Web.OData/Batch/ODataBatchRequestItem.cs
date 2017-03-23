@@ -56,7 +56,7 @@ namespace System.Web.OData.Batch
             return response;
         }
 
-        private static void AddLocationHeaderToMapping(
+        internal static void AddLocationHeaderToMapping(
             HttpResponseMessage response,
             IDictionary<string, string> contentIdToLocationMapping,
             string contentId)

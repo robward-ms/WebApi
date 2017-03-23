@@ -4,7 +4,7 @@
     "Microsoft.Extensions.DependencyInjection": "1.0.0",
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "Microsoft.OData.Core": "7.0.0",
-    "NETStandard.Library": "1.6.0",
+    "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "9.0.1",
     "System.Collections": "4.3.0",
     "System.Collections.NonGeneric": "4.3.0",

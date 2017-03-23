@@ -33,7 +33,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public virtual ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
             if (edmType == null)
             {

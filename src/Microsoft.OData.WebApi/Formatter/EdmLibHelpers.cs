@@ -1095,7 +1095,12 @@ namespace Microsoft.OData.WebApi.Formatter
             return expectedPayloadType;
         }
 
-        private static bool TryGetInnerTypeForDelta(ref Type type)
+        /// <summary>
+        /// TryGetInnerTypeForDelta
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The inner type for delta.</returns>
+        public static bool TryGetInnerTypeForDelta(ref Type type)
         {
             if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
             {
