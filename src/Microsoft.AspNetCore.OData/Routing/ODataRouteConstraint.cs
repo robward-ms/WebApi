@@ -22,7 +22,7 @@ namespace Microsoft.AspNetCore.OData.Routing
     public class ODataRouteConstraint : IRouteConstraint
     {
         // "%2F"
-        private static readonly string _escapedSlash = Uri.EscapeUriString("/"); // .HexEscape('/');
+        private static readonly string _escapedSlash = Uri.EscapeDataString("/"); // .HexEscape('/');
 
         private readonly string _routePrefix;
         private readonly IEdmModel _model;
@@ -121,7 +121,7 @@ namespace Microsoft.AspNetCore.OData.Routing
                     // in response links and potentially lead to later 404s.
                     if (serviceRoot.EndsWith(_escapedSlash, StringComparison.OrdinalIgnoreCase))
                     {
-                        serviceRoot = serviceRoot.Substring(0, serviceRoot.Length - 3);
+                        serviceRoot = serviceRoot.Substring(0, serviceRoot.Length - _escapedSlash.Length);
                     }
 
                     IODataPathHandler pathHandler = httpContext.RequestServices.GetRequiredService<IODataPathHandler>();
