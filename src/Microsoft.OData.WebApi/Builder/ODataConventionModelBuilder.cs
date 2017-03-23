@@ -87,14 +87,6 @@ namespace Microsoft.OData.WebApi.Builder
         private Lazy<IDictionary<Type, List<Type>>> _allTypesWithDerivedTypeMapping;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ODataConventionModelBuilder"/> class.
-        /// </summary>
-        public ODataConventionModelBuilder()
-        {
-            Initialize(new WebApiDefaultAssembliesResolver(), isQueryCompositionMode: false);
-        }
-
-        /// <summary>
         /// Initializes a new <see cref="ODataConventionModelBuilder"/>.
         /// </summary>
         /// <param name="resolver">The <see cref="IWebApiAssembliesResolver"/> to use.</param>

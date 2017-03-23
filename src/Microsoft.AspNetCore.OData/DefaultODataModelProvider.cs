@@ -8,14 +8,17 @@ using Microsoft.AspNetCore.OData.Placeholder;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.OData.Adapters;
 
 namespace Microsoft.AspNetCore.OData
 {
     internal class DefaultODataModelProvider
     {
-        public static IEdmModel BuildEdmModel(Type ApiContextType)
+        public static IEdmModel BuildEdmModel(IServiceCollection serviceCollection, Type ApiContextType)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            IAssemblyProvider resolver = serviceCollection.BuildServiceProvider().GetRequiredService<IAssemblyProvider>();
+            ODataModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.Namespace = ApiContextType.Namespace;
 
             var publicProperties = ApiContextType.GetProperties(BindingFlags.Public | BindingFlags.Instance);

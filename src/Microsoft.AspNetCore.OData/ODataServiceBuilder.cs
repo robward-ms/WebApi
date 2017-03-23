@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.OData
             }
 
             this._serviceCollection = serviceCollection;
-            this._provider = new ODataContextProvider();
+            this._provider = new ODataContextProvider(serviceCollection);
             _serviceCollection.AddSingleton(_=>this._provider);
         }
 
@@ -42,11 +42,26 @@ namespace Microsoft.AspNetCore.OData
 
     public class ODataContextProvider
     {
+        private readonly IServiceCollection _serviceCollection;
         internal IDictionary<string, ODataContext> ContextMap { get; } = new Dictionary<string, ODataContext>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataCoreBuilder"/> class.
+        /// </summary>
+        /// <param name="serviceCollection">The service collection.</param>
+        public ODataContextProvider(IServiceCollection serviceCollection)
+        {
+            if (serviceCollection == null)
+            {
+                throw Error.ArgumentNull("serviceCollection");
+            }
+
+            this._serviceCollection = serviceCollection;
+        }
 
         internal void Register<T>(string prefix) where T : class
         {
-            ContextMap[prefix] = new ODataContext(typeof(T));
+            ContextMap[prefix] = new ODataContext(this._serviceCollection, typeof(T));
         }
 
         internal ODataContext Lookup(string prefix)

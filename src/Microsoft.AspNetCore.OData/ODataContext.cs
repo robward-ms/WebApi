@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.OData.Edm;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.OData
 {
@@ -10,9 +11,9 @@ namespace Microsoft.AspNetCore.OData
     {
         public IEdmModel Model { get; }
 
-        public ODataContext(Type t)
+        public ODataContext(IServiceCollection serviceCollection, Type t)
         {
-            Model = DefaultODataModelProvider.BuildEdmModel(t);
+            Model = DefaultODataModelProvider.BuildEdmModel(serviceCollection, t);
         }
     }
 }
