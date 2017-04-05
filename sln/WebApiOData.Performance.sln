@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0C3B5E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiPerformance.Test", "..\test\PerfTest\WebApiPerformance.Test\WebApiPerformance.Test.csproj", "{5C4C506B-9BFE-429D-A48C-77CEC613877A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.WebApi", "..\src\Microsoft.OData.WebApi\Microsoft.OData.WebApi.csproj", "{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeAnalysis|Any CPU = CodeAnalysis|Any CPU
@@ -39,6 +41,12 @@ Global
 		{5C4C506B-9BFE-429D-A48C-77CEC613877A}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{5C4C506B-9BFE-429D-A48C-77CEC613877A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C4C506B-9BFE-429D-A48C-77CEC613877A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Any CPU.ActiveCfg = CodeAnalysis|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Any CPU.Build.0 = CodeAnalysis|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

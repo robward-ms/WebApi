@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace System.Web.Http.Properties {
+namespace Microsoft.OData.WebApi.Properties {
     using System;
     using System.Linq;
     using System.Reflection;
