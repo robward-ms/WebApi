@@ -5,6 +5,8 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.OData.Extensions;
 using System.Web.OData.Results;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData
 {

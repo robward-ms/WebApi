@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using System.Web.Http.Internal;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// Represents an <see cref="IEdmStructuredObject"/> backed by a CLR object with a one-to-one mapping.

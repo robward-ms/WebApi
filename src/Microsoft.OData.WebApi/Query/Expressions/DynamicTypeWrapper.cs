@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// Represents a container class that contains properties that are grouped by using $apply.

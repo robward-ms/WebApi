@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Implementing IEdmType to identify objects which are part of DeltaFeed Payload.

@@ -3,7 +3,7 @@
 
 using Microsoft.OData.Edm;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// This class is used in internal as a helper class to build the Edm model.
