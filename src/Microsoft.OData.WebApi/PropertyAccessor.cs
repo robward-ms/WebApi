@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using Microsoft.OData.WebApi.Common;
-using WebApiResources = Microsoft.OData.WebApi.Properties.SRResources;
 
 namespace Microsoft.OData.WebApi
 {
@@ -23,7 +22,7 @@ namespace Microsoft.OData.WebApi
             if (Property.GetGetMethod() == null ||
                 (!Property.PropertyType.IsCollection() && Property.GetSetMethod() == null))
             {
-                throw Error.Argument("property", WebApiResources.PropertyMustHavePublicGetterAndSetter);
+                throw Error.Argument("property", SRResources.PropertyMustHavePublicGetterAndSetter);
             }
         }
 

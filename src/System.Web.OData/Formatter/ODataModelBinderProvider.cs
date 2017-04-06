@@ -15,7 +15,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 

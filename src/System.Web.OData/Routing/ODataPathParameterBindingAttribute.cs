@@ -10,7 +10,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
 using System.Web.OData.Extensions;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 
 namespace System.Web.OData.Routing

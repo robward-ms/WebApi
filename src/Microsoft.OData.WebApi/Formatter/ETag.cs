@@ -7,7 +7,6 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Expressions;
 
 namespace Microsoft.OData.WebApi.Formatter

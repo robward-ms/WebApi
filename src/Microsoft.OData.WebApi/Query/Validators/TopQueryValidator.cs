@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Query.Validators
 {

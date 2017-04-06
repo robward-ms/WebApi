@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace System.Web.OData.Formatter
 {

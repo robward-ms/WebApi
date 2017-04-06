@@ -9,9 +9,9 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
-using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.OData.WebApi.Builder
@@ -535,7 +535,7 @@ namespace Microsoft.OData.WebApi.Builder
             this ResourceSetContext feedContext,
             IList<ODataPathSegment> odataPath)
         {
-            GenerateBaseODataPathSegmentsForNonSingletons(feedContext.Request.ODataProperties().Path,
+            GenerateBaseODataPathSegmentsForNonSingletons(feedContext.Request.Context.Path,
                 feedContext.EntitySetBase,
                 odataPath);
         }

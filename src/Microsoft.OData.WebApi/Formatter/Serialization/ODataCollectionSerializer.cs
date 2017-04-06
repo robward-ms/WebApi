@@ -6,9 +6,8 @@ using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
@@ -21,7 +20,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// Initializes a new instance of the <see cref="ODataCollectionSerializer"/> class.
         /// </summary>
         /// <param name="serializerProvider">The serializer provider to use to serialize nested objects.</param>
-        public ODataCollectionSerializer(ODataSerializerProvider serializerProvider)
+        public ODataCollectionSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Collection, serializerProvider)
         {
         }
@@ -86,14 +85,14 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (writeContext.Request != null)
             {
-                if (writeContext.Request.ODataProperties().NextLink != null)
+                if (writeContext.Request.Context.NextLink != null)
                 {
-                    collectionStart.NextPageLink = writeContext.Request.ODataProperties().NextLink;
+                    collectionStart.NextPageLink = writeContext.Request.Context.NextLink;
                 }
 
-                if (writeContext.Request.ODataProperties().TotalCount != null)
+                if (writeContext.Request.Context.TotalCount != null)
                 {
-                    collectionStart.Count = writeContext.Request.ODataProperties().TotalCount;
+                    collectionStart.Count = writeContext.Request.Context.TotalCount;
                 }
             }
 
@@ -157,8 +156,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                     if (itemSerializer == null)
                     {
                         throw new SerializationException(
-                            Error.Format(SRResources.TypeCannotBeSerialized, actualType.FullName(),
-                            typeof(ODataMediaTypeFormatter).Name));
+                            Error.Format(SRResources.TypeCannotBeSerialized, actualType.FullName()));
                     }
 
                     // ODataCollectionWriter expects the individual elements in the collection to be the underlying

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Builder.Conventions
 {

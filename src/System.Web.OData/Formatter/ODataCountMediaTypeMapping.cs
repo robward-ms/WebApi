@@ -4,12 +4,10 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Web.Http;
 using System.Web.OData.Extensions;
 using Microsoft.OData.UriParser;
-using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {

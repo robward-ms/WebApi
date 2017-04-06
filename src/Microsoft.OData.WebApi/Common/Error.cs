@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Common
 {
@@ -227,6 +226,8 @@ namespace Microsoft.OData.WebApi.Common
         internal static ArgumentException InvalidEnumArgument(string parameterName, int invalidValue, Type enumClass)
         {
 #if NETFX_CORE
+            // InvalidEnumArgumentException is not supported in .NetCore.
+            ////return new InvalidEnumArgumentException(parameterName, invalidValue, enumClass);
             return new ArgumentException(Error.Format(CommonWebApiResources.InvalidEnumArgument, parameterName, invalidValue, enumClass.Name), parameterName);
 #else
             return new InvalidEnumArgumentException(parameterName, invalidValue, enumClass);

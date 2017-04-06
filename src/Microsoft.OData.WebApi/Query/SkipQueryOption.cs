@@ -8,7 +8,6 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Validators;
 
 namespace Microsoft.OData.WebApi.Query
@@ -97,7 +96,6 @@ namespace Microsoft.OData.WebApi.Query
                     
                     if (skipValue.HasValue && skipValue > Int32.MaxValue)
                     {
-                        Contract.Assert(skipValue.Value <= Int32.MaxValue);
                         throw new ODataException(Error.Format(
                             SRResources.SkipTopLimitExceeded,
                             Int32.MaxValue,

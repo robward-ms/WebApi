@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics.Contracts;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
@@ -17,7 +16,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataEnumSerializer"/>.
         /// </summary>
-        public ODataEnumSerializer(ODataSerializerProvider serializerProvider)
+        public ODataEnumSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Property, serializerProvider)
         {
         }

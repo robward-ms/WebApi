@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -18,7 +18,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <param name="request">The request.</param>
         /// <returns><c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "odata", Justification = "odata is spelled correctly")]
-        string SelectController(ODataPath odataPath, HttpRequestMessage request);
+        SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request);
 
         /// <summary>
         /// Selects the action for OData requests.
@@ -28,6 +28,6 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <param name="actionMap">The action map.</param>
         /// <returns><c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "odata", Justification = "odata is spelled correctly")]
-        string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap);
+        string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap);
     }
 }

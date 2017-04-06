@@ -9,7 +9,6 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Routing
 {

@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
@@ -121,7 +120,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
             if (deserializer == null)
             {
                 throw new SerializationException(
-                    Error.Format(SRResources.TypeCannotBeDeserialized, elementType.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                    Error.Format(SRResources.TypeCannotBeDeserialized, elementType.FullName()));
             }
 
             foreach (ODataResourceWrapper resourceWrapper in resourceSet.Resources)
