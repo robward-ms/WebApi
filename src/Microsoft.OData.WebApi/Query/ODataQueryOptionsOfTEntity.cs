@@ -2,9 +2,11 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Query
 {
@@ -21,7 +23,7 @@ namespace Microsoft.OData.WebApi.Query
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information</param>
         /// <param name="request">The incoming request message</param>
-        public ODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        public ODataQueryOptions(ODataQueryContext context, IWebApiRequestMessage request)
             : base(context, request)
         {
             if (Context.ElementClrType == null)
@@ -80,7 +82,7 @@ namespace Microsoft.OData.WebApi.Query
             return base.ApplyTo(query, querySettings);
         }
 
-        internal override ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        internal override ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
         {
             return Request.GetETag<TEntity>(etagHeaderValue);
         }

@@ -2,9 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Diagnostics.Contracts;
-using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -14,7 +15,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     public class EntityRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -34,22 +35,20 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             if (odataPath.PathTemplate == "~/entityset/key" ||
                 odataPath.PathTemplate == "~/entityset/key/cast")
             {
-                HttpMethod httpMethod = controllerContext.Request.Method;
                 string httpMethodName;
 
-                switch (httpMethod.ToString().ToUpperInvariant())
+                switch (controllerContext.Request.Method.ToUpperInvariant())
                 {
-                    case "GET":
+                    case HttpMethodHelper.HttpGet:
                         httpMethodName = "Get";
                         break;
-                    case "PUT":
+                    case HttpMethodHelper.HttpPut:
                         httpMethodName = "Put";
                         break;
-                    case "PATCH":
-                    case "MERGE":
+                    case HttpMethodHelper.HttpPatch:
                         httpMethodName = "Patch";
                         break;
-                    case "DELETE":
+                    case HttpMethodHelper.HttpDelete:
                         httpMethodName = "Delete";
                         break;
                     default:

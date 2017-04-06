@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi
 {
@@ -185,7 +186,7 @@ namespace Microsoft.OData.WebApi
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching all exceptions in this case is the right to do.")]
         // This code is copied from DefaultHttpControllerTypeResolver.GetControllerTypes.
-        internal static IEnumerable<Type> GetLoadedTypes(IAssembliesResolver assembliesResolver)
+        internal static IEnumerable<Type> GetLoadedTypes(IWebApiAssembliesResolver assembliesResolver)
         {
             List<Type> result = new List<Type>();
 

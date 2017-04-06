@@ -3,15 +3,16 @@
 
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi
 {
     internal static class ODataQueryContextExtensions
     {
-        public static IAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
+        public static IWebApiAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
         {
-            return context.RequestContainer.GetRequiredService<IAssembliesResolver>();
+            return context.RequestContainer.GetRequiredService<IWebApiAssembliesResolver>();
         }
 
         public static ODataQuerySettings UpdateQuerySettings(this ODataQueryContext context, ODataQuerySettings querySettings, IQueryable query)

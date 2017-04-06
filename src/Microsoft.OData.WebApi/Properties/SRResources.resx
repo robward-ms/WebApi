@@ -121,7 +121,7 @@
     <value>Cannot serialize a null '{0}'.</value>
   </data>
   <data name="TypeCannotBeSerialized" xml:space="preserve">
-    <value>'{0}' cannot be serialized using the {1}.</value>
+    <value>'{0}' cannot be serialized using the ODataMediaTypeFormatter.</value>
   </data>
   <data name="WriteObjectInlineNotSupported" xml:space="preserve">
     <value>{0} does not support WriteObjectInline.</value>
@@ -517,7 +517,7 @@
     <value>The 'RootElementName' property is required on '{0}'.</value>
   </data>
   <data name="TypeCannotBeDeserialized" xml:space="preserve">
-    <value>'{0}' cannot be deserialized using the {1}.</value>
+    <value>'{0}' cannot be deserialized using the ODataMediaTypeFormatter.</value>
   </data>
   <data name="ResourceTypeNotInModel" xml:space="preserve">
     <value>Cannot find the resource type '{0}' in the model.</value>

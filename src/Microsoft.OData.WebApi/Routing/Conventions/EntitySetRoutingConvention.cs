@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -21,7 +22,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action
         /// </returns>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -42,16 +43,15 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             {
                 EntitySetSegment entitySetSegment = (EntitySetSegment)odataPath.Segments[0];
                 IEdmEntitySetBase entitySet = entitySetSegment.EntitySet;
-                HttpMethod httpMethod = controllerContext.Request.Method;
 
-                if (httpMethod == HttpMethod.Get)
+                if (HttpMethodHelper.IsGet(controllerContext.Request.Method))
                 {
                     // e.g. Try GetCustomers first, then fall back to Get action name
                     return actionMap.FindMatchingAction(
                         "Get" + entitySet.Name,
                         "Get");
                 }
-                else if (httpMethod == HttpMethod.Post)
+                else if (HttpMethodHelper.IsPost(controllerContext.Request.Method))
                 {
                     // e.g. Try PostCustomer first, then fall back to Post action name
                     return actionMap.FindMatchingAction(
@@ -60,7 +60,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 }
             }
             else if (odataPath.PathTemplate == "~/entityset/$count" &&
-                controllerContext.Request.Method == HttpMethod.Get)
+                HttpMethodHelper.IsGet(controllerContext.Request.Method))
             {
                 EntitySetSegment entitySetSegment = (EntitySetSegment)odataPath.Segments[0];
                 IEdmEntitySetBase entitySet = entitySetSegment.EntitySet;
@@ -76,16 +76,15 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 IEdmEntitySetBase entitySet = entitySetSegment.EntitySet;
                 IEdmCollectionType collectionType = (IEdmCollectionType)odataPath.EdmType;
                 IEdmEntityType entityType = (IEdmEntityType)collectionType.ElementType.Definition;
-                HttpMethod httpMethod = controllerContext.Request.Method;
 
-                if (httpMethod == HttpMethod.Get)
+                if (HttpMethodHelper.IsGet(controllerContext.Request.Method))
                 {
                     // e.g. Try GetCustomersFromSpecialCustomer first, then fall back to GetFromSpecialCustomer
                     return actionMap.FindMatchingAction(
                         "Get" + entitySet.Name + "From" + entityType.Name,
                         "GetFrom" + entityType.Name);
                 }
-                else if (httpMethod == HttpMethod.Post)
+                else if (HttpMethodHelper.IsPost(controllerContext.Request.Method))
                 {
                     // e.g. Try PostCustomerFromSpecialCustomer first, then fall back to PostFromSpecialCustomer
                     return actionMap.FindMatchingAction(
@@ -94,7 +93,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 }
             }
             else if (odataPath.PathTemplate == "~/entityset/cast/$count" &&
-                controllerContext.Request.Method == HttpMethod.Get)
+                HttpMethodHelper.IsGet(controllerContext.Request.Method))
             {
                 EntitySetSegment entitySetSegment = (EntitySetSegment)odataPath.Segments[0];
                 IEdmEntitySetBase entitySet = entitySetSegment.EntitySet;

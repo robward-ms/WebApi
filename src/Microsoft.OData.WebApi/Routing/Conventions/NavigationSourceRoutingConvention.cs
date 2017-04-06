@@ -3,6 +3,8 @@
 
 using System.Linq;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -20,7 +22,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller
         /// </returns>
-        public virtual string SelectController(ODataPath odataPath, HttpRequestMessage request)
+        public virtual string SelectController(ODataPath odataPath, IWebApiRequestMessage request)
         {
             if (odataPath == null)
             {
@@ -58,7 +60,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action
         /// </returns>
-        public abstract string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-            ILookup<string, HttpActionDescriptor> actionMap);
+        public abstract string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+            IWebApiActionMap actionMap);
     }
 }

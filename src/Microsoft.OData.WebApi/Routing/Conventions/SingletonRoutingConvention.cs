@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -13,8 +14,8 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     public class SingletonRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-            ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+            IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -62,19 +63,18 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             return null;
         }
 
-        private static string GetActionNamePrefix(HttpMethod method)
+        private static string GetActionNamePrefix(string method)
         {
             string actionNamePrefix;
-            switch (method.Method.ToUpperInvariant())
+            switch (method.ToUpperInvariant())
             {
-                case "GET":
+                case HttpMethodHelper.HttpGet:
                     actionNamePrefix = "Get";
                     break;
-                case "PUT":
+                case HttpMethodHelper.HttpPut:
                     actionNamePrefix = "Put";
                     break;
-                case "PATCH":
-                case "MERGE":
+                case HttpMethodHelper.HttpPatch:
                     actionNamePrefix = "Patch";
                     break;
                 default:

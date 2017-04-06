@@ -100,7 +100,6 @@ namespace Microsoft.OData.WebApi.Routing
             ODataUriParser uriParser;
             Uri serviceRootUri = null;
             Uri fullUri = null;
-            NameValueCollection queryString = null;
             IEdmModel model = requestContainer.GetRequiredService<IEdmModel>();
             if (template)
             {
@@ -117,7 +116,6 @@ namespace Microsoft.OData.WebApi.Routing
                         : serviceRoot + "/");
 
                 fullUri = new Uri(serviceRootUri, odataPath);
-                queryString = fullUri.ParseQueryString();
                 uriParser = new ODataUriParser(model, serviceRootUri, fullUri, requestContainer);
             }
 
@@ -201,7 +199,7 @@ namespace Microsoft.OData.WebApi.Routing
                                 !(id.EdmType.IsOrInheritsFrom(lastSegmentEdmType.ElementType.Definition) ||
                                   lastSegmentEdmType.ElementType.Definition.IsOrInheritsFrom(id.EdmType)))))
                     {
-                        throw new ODataException(Error.Format(SRResources.InvalidDollarId, queryString.Get("$id")));
+                        throw new ODataException(Error.Format(SRResources.InvalidDollarId, fullUri.Query));
                     }
                 }
             }

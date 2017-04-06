@@ -9,6 +9,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
@@ -27,7 +28,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         private const string Resource = "Resource";
 
         /// <inheritdoc />
-        public ODataResourceSerializer(ODataSerializerProvider serializerProvider)
+        public ODataResourceSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Resource, serializerProvider)
         {
         }
@@ -379,11 +380,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             bool nullDynamicPropertyEnabled = false;
             if (resourceContext.Request != null)
             {
-                HttpConfiguration configuration = resourceContext.Request.GetConfiguration();
-                if (configuration != null)
-                {
-                    nullDynamicPropertyEnabled = configuration.HasEnabledNullDynamicProperty();
-                }
+                nullDynamicPropertyEnabled = resourceContext.Request.Options.NullDynamicPropertyIsEnabled;
             }
 
             IEdmStructuredType structuredType = resourceContext.StructuredType;
@@ -490,8 +487,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         {
             if (resourceContext.Request != null)
             {
-                HttpConfiguration configuration = resourceContext.Request.GetConfiguration();
-                if (configuration == null)
+                IServiceProvider requestContainer = resourceContext.Request.RequestContainer;
+                if (requestContainer == null)
                 {
                     throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
                 }
@@ -514,7 +511,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 {
                     properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
                 }
-                EntityTagHeaderValue etagHeaderValue = configuration.GetETagHandler().CreateETag(properties);
+                WebApiEntityTagHeaderValue etagHeaderValue = requestContainer.GetRequiredService<IETagHandler>().CreateETag(properties);
                 if (etagHeaderValue != null)
                 {
                     return etagHeaderValue.ToString();
@@ -791,7 +788,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             if (serializer == null)
             {
                 throw new SerializationException(
-                    Error.Format(SRResources.TypeCannotBeSerialized, structuralProperty.Type.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                    Error.Format(SRResources.TypeCannotBeSerialized, structuralProperty.Type.FullName()));
             }
 
             object propertyValue = resourceContext.GetPropertyValue(structuralProperty.Name);

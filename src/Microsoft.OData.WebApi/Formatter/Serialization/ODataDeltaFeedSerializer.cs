@@ -24,8 +24,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataDeltaFeedSerializer"/>.
         /// </summary>
-        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use to write nested entries.</param>
-        public ODataDeltaFeedSerializer(ODataSerializerProvider serializerProvider)
+        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use to write nested entries.</param>
+        public ODataDeltaFeedSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Delta, serializerProvider)
         {
         }
@@ -155,7 +155,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                             if (entrySerializer == null)
                             {
                                 throw new SerializationException(
-                                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName()));
                             }
                             entrySerializer.WriteDeltaObjectInline(entry, elementType, writer, writeContext);
                             break;
@@ -202,9 +202,9 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 }
                 else if (writeContext.Request != null)
                 {
-                    feed.NextPageLink = writeContext.Request.ODataProperties().NextLink;
+                    feed.NextPageLink = writeContext.Request.Context.NextLink;
 
-                    long? countValue = writeContext.Request.ODataProperties().TotalCount;
+                    long? countValue = writeContext.Request.Context.TotalCount;
                     if (countValue.HasValue)
                     {
                         feed.Count = countValue.Value;
@@ -325,7 +325,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (navigationLink != null)
             {
-                return HttpRequestMessageExtensions.GetNextPageLink(navigationLink, pageSize);
+                return writeContext.Request.GetNextPageLink(navigationLink, pageSize);
             }
 
             return null;
