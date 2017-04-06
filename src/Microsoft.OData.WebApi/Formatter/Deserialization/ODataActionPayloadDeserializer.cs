@@ -13,7 +13,6 @@ using System.Runtime.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization

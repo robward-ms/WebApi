@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing.Conventions;
 
 namespace Microsoft.OData.WebApi.Routing.Template

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "base", "base", "{C015197B-27D3-499F-9A31-63E9E7D58F58}"
 EndProject
@@ -26,14 +26,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4C937D2-3BD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.OData", "..\src\System.Web.OData\System.Web.OData.csproj", "{D23E28F1-CCD0-43E0-8C0D-36731EC91318}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.OData.WebApi", "..\src\Microsoft.OData.WebApi\Microsoft.OData.WebApi.shproj", "{C56FBE13-CE70-49E7-8260-2B9EE82E962C}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2EB8D1F9-C505-4FA8-8D1C-F167B5B1AB8E}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.WebApi", "..\src\Microsoft.OData.WebApi\Microsoft.OData.WebApi.csproj", "{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}"
-EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\src\Microsoft.OData.WebApi\Microsoft.OData.WebApi.projitems*{c56fbe13-ce70-49e7-8260-2b9ee82e962c}*SharedItemsImports = 13
+		..\src\Microsoft.OData.WebApi\Microsoft.OData.WebApi.projitems*{d23e28f1-ccd0-43e0-8c0d-36731ec91318}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeAnalysis|Any CPU = CodeAnalysis|Any CPU
 		CodeAnalysis|Mixed Platforms = CodeAnalysis|Mixed Platforms
@@ -189,26 +193,6 @@ Global
 		{D23E28F1-CCD0-43E0-8C0D-36731EC91318}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D23E28F1-CCD0-43E0-8C0D-36731EC91318}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D23E28F1-CCD0-43E0-8C0D-36731EC91318}.Release|x86.ActiveCfg = Release|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Any CPU.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Any CPU.Build.0 = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Mixed Platforms.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|Mixed Platforms.Build.0 = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeAnalysis|x86.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeCoverage|Any CPU.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeCoverage|Any CPU.Build.0 = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeCoverage|Mixed Platforms.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeCoverage|Mixed Platforms.Build.0 = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.CodeCoverage|x86.ActiveCfg = CodeAnalysis|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -221,6 +205,6 @@ Global
 		{FAC5C560-6EE4-441A-B7F4-8B21951C35E0} = {C015197B-27D3-499F-9A31-63E9E7D58F58}
 		{1D7E43C6-399C-4D06-9F5B-00241324B4D1} = {C015197B-27D3-499F-9A31-63E9E7D58F58}
 		{D23E28F1-CCD0-43E0-8C0D-36731EC91318} = {F4C937D2-3BD0-4F6B-B75F-A526A7FD978B}
-		{2262FE32-E0F6-4ADC-BE31-E4E5C0A20E23} = {F4C937D2-3BD0-4F6B-B75F-A526A7FD978B}
+		{C56FBE13-CE70-49E7-8260-2B9EE82E962C} = {A9836F9E-6DB3-4D9F-ADCA-CF42D8C8BA93}
 	EndGlobalSection
 EndGlobal

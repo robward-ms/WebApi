@@ -10,7 +10,6 @@ using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi.Builder

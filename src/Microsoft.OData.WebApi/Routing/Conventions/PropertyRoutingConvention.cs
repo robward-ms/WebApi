@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -14,7 +17,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     public class PropertyRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -80,7 +83,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
             Justification = "These are simple conversion function and cannot be split up.")]
-        private static IEdmProperty GetProperty(ODataPath odataPath, HttpMethod method, out string prefix,
+        private static IEdmProperty GetProperty(ODataPath odataPath, string method, out string prefix,
             out TypeSegment cast)
         {
             prefix = String.Empty;
@@ -95,17 +98,17 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 PropertySegment tempSegment =
                     (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 1];
 
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
-                    case "GET":
+                    case HttpMethodHelper.HttpGet:
                         prefix = "Get";
                         segment = tempSegment;
                         break;
-                    case "PUT":
+                    case HttpMethodHelper.HttpPut:
                         prefix = "PutTo";
                         segment = tempSegment;
                         break;
-                    case "PATCH":
+                    case HttpMethodHelper.HttpPatch:
                         // OData Spec: PATCH is not supported for collection properties.
                         if (!tempSegment.Property.Type.IsCollection())
                         {
@@ -113,7 +116,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                             segment = tempSegment;
                         }
                         break;
-                    case "DELETE":
+                    case HttpMethodHelper.HttpDelete:
                         // OData spec: A successful DELETE request to the edit URL for a structural property, ... sets the property to null.
                         // The request body is ignored and should be empty.
                         // DELETE request to a non-nullable value MUST fail and the service respond with 400 Bad Request or other appropriate error.
@@ -133,19 +136,19 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 PropertySegment tempSegment =
                     (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 2];
                 TypeSegment tempCast = (TypeSegment)odataPath.Segments.Last();
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
-                    case "GET":
+                    case HttpMethodHelper.HttpGet:
                         prefix = "Get";
                         segment = tempSegment;
                         cast = tempCast;
                         break;
-                    case "PUT":
+                    case HttpMethodHelper.HttpPut:
                         prefix = "PutTo";
                         segment = tempSegment;
                         cast = tempCast;
                         break;
-                    case "PATCH":
+                    case HttpMethodHelper.HttpPatch:
                         // PATCH is not supported for collection properties.
                         if (!tempSegment.Property.Type.IsCollection())
                         {
@@ -166,9 +169,9 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                      odataPath.PathTemplate == "~/singleton/cast/property/$count")
             {
                 PropertySegment tempSegment = (PropertySegment)odataPath.Segments[odataPath.Segments.Count - 2];
-                switch (method.Method.ToUpperInvariant())
+                switch (method.ToUpperInvariant())
                 {
-                    case "GET":
+                    case HttpMethodHelper.HttpGet:
                         prefix = "Get";
                         segment = tempSegment;
                         break;

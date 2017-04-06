@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi
 {
@@ -65,7 +67,7 @@ namespace Microsoft.OData.WebApi
         /// <summary>
         /// Gets or sets the HTTP request that caused this instance to be generated.
         /// </summary>
-        public HttpRequestMessage Request
+        public IWebApiRequestMessage Request
         {
             get
             {
@@ -138,10 +140,10 @@ namespace Microsoft.OData.WebApi
         }
 
         /// <summary>
-        /// Gets or sets a <see cref="UrlHelper"/> that may be used to generate links while serializing this resource
+        /// Gets or sets a <see cref="IWebApiUrlHelper"/> that may be used to generate links while serializing this resource
         /// instance.
         /// </summary>
-        public UrlHelper Url
+        public IWebApiUrlHelper Url
         {
             get
             {

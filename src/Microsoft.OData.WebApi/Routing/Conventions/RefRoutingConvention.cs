@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -17,7 +20,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         private const string GetRefActionNamePrefix = "GetRef";
 
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -31,11 +34,10 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
             if (actionMap == null)
             {
-                throw Error.ArgumentNull("actionMap");
+                throw Error.ArgumentNull("controllerContext");
             }
 
-            HttpMethod requestMethod = controllerContext.Request.Method;
-            IHttpRouteData routeData = controllerContext.RouteData;
+            string requestMethod = controllerContext.Request.Method;
 
             if (!IsSupportedRequestMethod(requestMethod))
             {
@@ -59,11 +61,11 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                         controllerContext.AddKeyValueToRouteData((KeySegment)odataPath.Segments[1]);
                     }
 
-                    routeData.Values[ODataRouteConstants.NavigationProperty] = navigationLinkSegment.NavigationProperty.Name;
+                    controllerContext.RouteData.Add(ODataRouteConstants.NavigationProperty, navigationLinkSegment.NavigationProperty.Name);
                     return refActionName;
                 }
             }
-            else if ((requestMethod == HttpMethod.Delete) && (
+            else if ((HttpMethodHelper.IsDelete(requestMethod)) && (
                 odataPath.PathTemplate == "~/entityset/key/navigation/key/$ref" ||
                 odataPath.PathTemplate == "~/entityset/key/cast/navigation/key/$ref" ||
                 odataPath.PathTemplate == "~/singleton/navigation/key/$ref" ||
@@ -83,7 +85,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                         controllerContext.AddKeyValueToRouteData((KeySegment)odataPath.Segments[1]);
                     }
 
-                    routeData.Values[ODataRouteConstants.NavigationProperty] = navigationLinkSegment.NavigationProperty.Name;
+                    controllerContext.RouteData.Add(ODataRouteConstants.NavigationProperty, navigationLinkSegment.NavigationProperty.Name);
                     controllerContext.AddKeyValueToRouteData((KeySegment)odataPath.Segments.Last(e => e is KeySegment), ODataRouteConstants.RelatedKey);
                     return refActionName;
                 }
@@ -92,15 +94,15 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             return null;
         }
 
-        private static string FindRefActionName(ILookup<string, HttpActionDescriptor> actionMap,
-            IEdmNavigationProperty navigationProperty, IEdmEntityType declaringType, HttpMethod method)
+        private static string FindRefActionName(IWebApiActionMap actionMap,
+            IEdmNavigationProperty navigationProperty, IEdmEntityType declaringType, string method)
         {
             string actionNamePrefix;
-            if (method == HttpMethod.Delete)
+            if (HttpMethodHelper.IsDelete(method))
             {
                 actionNamePrefix = DeleteRefActionNamePrefix;
             }
-            else if (method == HttpMethod.Get)
+            else if (HttpMethodHelper.IsGet(method))
             {
                 actionNamePrefix = GetRefActionNamePrefix;
             }
@@ -116,12 +118,12 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                         actionNamePrefix);
         }
 
-        private static bool IsSupportedRequestMethod(HttpMethod method)
+        private static bool IsSupportedRequestMethod(string method)
         {
-            return (method == HttpMethod.Delete ||
-                method == HttpMethod.Put ||
-                method == HttpMethod.Post ||
-                method == HttpMethod.Get);
+            return (HttpMethodHelper.IsDelete(method) ||
+                HttpMethodHelper.IsPut(method) ||
+                HttpMethodHelper.IsPost(method) ||
+                HttpMethodHelper.IsGet(method));
         }
     }
 }

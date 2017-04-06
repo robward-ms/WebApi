@@ -8,7 +8,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.OData.WebApi.Properties;
 using Newtonsoft.Json;
 
 namespace Microsoft.OData.WebApi.Query.Expressions
@@ -40,7 +39,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
         /// <summary>
         /// Gets or sets the EDM type name of the element being selected and expanded. 
         /// </summary>
-        /// <remarks>This is required by the <see cref="ODataMediaTypeFormatter"/> during serialization. If the instance property is not
+        /// <remarks>This is required by the ODataMediaTypeFormatter during serialization. If the instance property is not
         /// null, the type name will not be set as the type name can be figured from the instance runtime type.</remarks>
         public string TypeName { get; set; }
 

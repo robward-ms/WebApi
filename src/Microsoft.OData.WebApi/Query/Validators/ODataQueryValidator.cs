@@ -2,8 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
-using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Query.Validators
 {
@@ -62,7 +61,7 @@ namespace Microsoft.OData.WebApi.Query.Validators
                 options.Filter.Validate(validationSettings);
             }
 
-            if (options.Count != null || ODataCountMediaTypeMapping.IsCountRequest(options.Request))
+            if (options.Count != null || options.Request.IsCountRequest())
             {
                 ValidateQueryOptionAllowed(AllowedQueryOptions.Count, validationSettings.AllowedQueryOptions);
 

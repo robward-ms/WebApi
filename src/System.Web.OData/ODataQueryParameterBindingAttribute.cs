@@ -15,7 +15,6 @@ using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData

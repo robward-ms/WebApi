@@ -6,13 +6,12 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Routing.Conventions;
+using System.Web.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Extensions

@@ -5,8 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Microsoft.OData;
-using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
@@ -54,7 +53,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
                     if (writeContext.Request != null)
                     {
-                        entityReferenceLinks.Count = writeContext.Request.ODataProperties().TotalCount;
+                        entityReferenceLinks.Count = writeContext.Request.Context.TotalCount;
                     }
                 }
 

@@ -3,13 +3,13 @@
 
 using System;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Routing;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
-    /// This class encapsulates the state and settings that get passed to <see cref="ODataDeserializer"/>
-    /// from the <see cref="ODataMediaTypeFormatter"/>.
+    /// This class encapsulates the state and settings that get passed to <see cref="ODataDeserializer"/>.
     /// </summary>
     public class ODataDeserializerContext
     {
@@ -39,10 +39,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
         /// <summary>
         /// Gets or sets the HTTP Request that is being deserialized.
         /// </summary>
-        public HttpRequestMessage Request { get; set; }
-
-        /// <summary>Gets or sets the request context.</summary>
-        public HttpRequestContext RequestContext { get; set; }
+        public IWebApiRequestMessage Request { get; set; }
 
         internal bool IsDeltaOfT
         {
@@ -78,7 +75,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
                 return ResourceEdmType;
             }
 
-            return ODataMediaTypeFormatter.GetExpectedPayloadType(type, Path, Model);
+            return EdmLibHelpers.GetExpectedPayloadType(type, Path, Model);
         }
     }
 }

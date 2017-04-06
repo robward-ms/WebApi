@@ -13,7 +13,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Query.Expressions
 {
@@ -29,7 +29,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
         private Type _groupByClrType;
 
-        internal AggregationBinder(ODataQuerySettings settings, IAssembliesResolver assembliesResolver, Type elementType,
+        internal AggregationBinder(ODataQuerySettings settings, IWebApiAssembliesResolver assembliesResolver, Type elementType,
             IEdmModel model, TransformationNode transformation)
             : base(model, assembliesResolver, settings)
         {

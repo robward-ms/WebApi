@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {

@@ -17,7 +17,6 @@ using System.Web.OData.Formatter;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 
 namespace System.Web.OData.Batch
