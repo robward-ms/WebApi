@@ -16,6 +16,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -221,7 +222,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 return null;
             }
 
-            HttpRequestMessage request = readContext.Request;
+            IWebApiRequestMessage request = readContext.Request;
             ODataMessageReaderSettings oDataReaderSettings = request.GetReaderSettings();
 
             using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(valueString)))
@@ -234,8 +235,6 @@ namespace Microsoft.OData.WebApi.Formatter
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage,
                         oDataReaderSettings, readContext.Model))
                 {
-                    request.RegisterForDispose(oDataMessageReader);
-
                     if (edmTypeReference.IsCollection())
                     {
                         return ConvertResourceSet(oDataMessageReader, edmTypeReference, readContext);
@@ -361,12 +360,12 @@ namespace Microsoft.OData.WebApi.Formatter
                 return source;
             }
 
-            HttpRequestMessage request = readContext.Request;
+            IWebApiRequestMessage request = readContext.Request;
 
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
             string serviceRoot = GetServiceRoot(request);
             IEnumerable<KeyValuePair<string, object>> keyValues = GetKeys(pathHandler, serviceRoot, resource.Id,
-                request.GetRequestContainer());
+                request.RequestContainer);
 
             IList<IEdmStructuralProperty> keys = entityTypeReference.Key().ToList();
 
@@ -394,10 +393,10 @@ namespace Microsoft.OData.WebApi.Formatter
             return source;
         }
 
-        private static string GetServiceRoot(HttpRequestMessage request)
+        private static string GetServiceRoot(IWebApiRequestMessage request)
         {
-            return request.GetUrlHelper().CreateODataLink(
-                request.ODataProperties().RouteName,
+            return request.UrlHelper.CreateODataLink(
+                request.Context.RouteName,
                 request.GetPathHandler(),
                 new List<ODataPathSegment>());
         }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
@@ -50,7 +51,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
                 IDictionary<string, string> contentIDToLocationMapping = readContext.Request.GetODataContentIdMapping();
                 if (contentIDToLocationMapping != null)
                 {
-                    UrlHelper urlHelper = readContext.Request.GetUrlHelper() ?? new UrlHelper(readContext.Request);
+                    IWebApiUrlHelper urlHelper = readContext.Request.UrlHelper;
                     Uri baseAddress = new Uri(urlHelper.CreateODataLink());
                     string relativeUrl = uri.IsAbsoluteUri ? baseAddress.MakeRelativeUri(uri).OriginalString : uri.OriginalString;
                     string resolvedUrl = ContentIdHelpers.ResolveContentId(relativeUrl, contentIDToLocationMapping);

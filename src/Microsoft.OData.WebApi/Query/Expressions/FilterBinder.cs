@@ -10,10 +10,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Query.Expressions
@@ -79,7 +80,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
         private FilterBinder(
             IEdmModel model,
-            IAssembliesResolver assembliesResolver,
+            IWebApiAssembliesResolver assembliesResolver,
             ODataQuerySettings querySettings,
             Type filterType)
             : base(model, assembliesResolver, querySettings)
@@ -88,13 +89,13 @@ namespace Microsoft.OData.WebApi.Query.Expressions
         }
 
         internal static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterClause, IEdmModel model,
-            IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+            IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
             return Bind(filterClause, typeof(TEntityType), model, assembliesResolver, querySettings) as Expression<Func<TEntityType, bool>>;
         }
 
         internal static Expression Bind(FilterClause filterClause, Type filterType, IEdmModel model,
-            IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+            IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
             if (filterClause == null)
             {
@@ -107,6 +108,10 @@ namespace Microsoft.OData.WebApi.Query.Expressions
             if (model == null)
             {
                 throw Error.ArgumentNull("model");
+            }
+            if (assembliesResolver == null)
+            {
+                throw Error.ArgumentNull("assembliesResolver");
             }
 
             FilterBinder binder = new FilterBinder(model, assembliesResolver, querySettings, filterType);
@@ -788,7 +793,7 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
                     throw new NotImplementedException(Error.Format(SRResources.ODataFunctionNotSupported, node.Name));
             }
-            }
+        }
 
         private Expression BindCastSingleValue(SingleValueFunctionCallNode node)
         {

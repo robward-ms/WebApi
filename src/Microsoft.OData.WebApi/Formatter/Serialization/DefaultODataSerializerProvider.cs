@@ -4,15 +4,16 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
-    /// The default <see cref="ODataSerializerProvider"/>.
+    /// The default <see cref="IODataSerializerProvider"/>.
     /// </summary>
-    public class DefaultODataSerializerProvider : ODataSerializerProvider
+    public class DefaultODataSerializerProvider : IODataSerializerProvider
     {
         private readonly IServiceProvider _rootContainer;
 
@@ -31,7 +32,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public override ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public virtual ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
             if (edmType == null)
             {
@@ -71,7 +72,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public override ODataSerializer GetODataPayloadSerializer(Type type, HttpRequestMessage request)
+        public ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
         {
             if (type == null)
             {
@@ -95,7 +96,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             {
                 return _rootContainer.GetRequiredService<ODataEntityReferenceLinksSerializer>();
             }
-            else if (type == typeof(ODataError) || type == typeof(HttpError))
+            else if (type == typeof(ODataError) || type == request.Context.ErrorHelper.HttpErrorType)
             {
                 return _rootContainer.GetRequiredService<ODataErrorSerializer>();
             }
@@ -112,8 +113,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             if (edmType != null)
             {
                 if (((edmType.IsPrimitive() || edmType.IsEnum()) &&
-                    ODataRawValueMediaTypeMapping.IsRawValueRequest(request)) ||
-                    ODataCountMediaTypeMapping.IsCountRequest(request))
+                    request.IsRawValueRequest()) ||
+                    request.IsCountRequest())
                 {
                     return _rootContainer.GetRequiredService<ODataRawValueSerializer>();
                 }

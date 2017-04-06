@@ -26,8 +26,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataResourceSetSerializer"/>.
         /// </summary>
-        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use to write nested entries.</param>
-        public ODataResourceSetSerializer(ODataSerializerProvider serializerProvider)
+        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use to write nested entries.</param>
+        public ODataResourceSetSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.ResourceSet, serializerProvider)
         {
         }
@@ -117,7 +117,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             if (resourceSerializer == null)
             {
                 throw new SerializationException(
-                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                    Error.Format(SRResources.TypeCannotBeSerialized, elementType.FullName()));
             }
 
             // save this for later to support JSON odata.streaming.
@@ -180,7 +180,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 ResourceSetContext resourceSetContext = new ResourceSetContext
                 {
                     Request = writeContext.Request,
-                    RequestContext = writeContext.RequestContext,
                     EntitySetBase = writeContext.NavigationSource as IEdmEntitySetBase,
                     Url = writeContext.Url,
                     ResourceSetInstance = resourceSetInstance
@@ -214,9 +213,9 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 }
                 else if (writeContext.Request != null)
                 {
-                    resourceSet.NextPageLink = writeContext.Request.ODataProperties().NextLink;
+                    resourceSet.NextPageLink = writeContext.Request.Context.NextLink;
 
-                    long? countValue = writeContext.Request.ODataProperties().TotalCount;
+                    long? countValue = writeContext.Request.Context.TotalCount;
                     if (countValue.HasValue)
                     {
                         resourceSet.Count = countValue.Value;
@@ -343,7 +342,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (navigationLink != null)
             {
-                return HttpRequestMessageExtensions.GetNextPageLink(navigationLink, pageSize);
+                return writeContext.Request.GetNextPageLink(navigationLink, pageSize);
             }
 
             return null;

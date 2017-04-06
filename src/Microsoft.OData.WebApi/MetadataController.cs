@@ -14,9 +14,9 @@ using Microsoft.OData.WebApi.Properties;
 namespace Microsoft.OData.WebApi
 {
     /// <summary>
-    /// Represents an <see cref="ApiController"/> for generating OData servicedoc and metadata document ($metadata).
+    /// Represents a controller for generating OData servicedoc and metadata document ($metadata).
     /// </summary>
-    public class MetadataController : ODataController
+    public class MetadataController : ODataControllerBase
     {
         private static readonly Version _defaultEdmxVersion = new Version(4, 0);
 

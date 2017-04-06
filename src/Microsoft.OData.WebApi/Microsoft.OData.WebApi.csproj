@@ -13,34 +13,36 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.OData.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
+      <HintPath>..\..\sln\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.OData.Edm, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.OData.Edm.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
+      <HintPath>..\..\sln\packages\Microsoft.OData.Edm.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Spatial, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Spatial.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
+      <HintPath>..\..\sln\packages\Microsoft.Spatial.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\sln\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.1.0.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <HintPath>..\..\sln\packages\Microsoft.Extensions.DependencyInjection.1.0.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <HintPath>..\..\sln\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -48,7 +50,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Builder\Conventions\AbstractEntityTypeDiscoveryConvention.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\ListWrapperCollection.cs" />
     <Compile Include="Common\PropertyHelper.cs" />
@@ -79,13 +80,31 @@
     <Compile Include="Builder\Conventions\Attributes\DataContractAttributeEnumTypeConvention.cs" />
     <Compile Include="Builder\Conventions\Attributes\MediaTypeAttributeConvention.cs" />
     <Compile Include="Builder\BindingPathHelper.cs" />
-    <Compile Include="CompiledPropertyAccessor.cs" />
     <Compile Include="Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="Formatter\ODataModelBinderConverter.cs" />
+    <Compile Include="Formatter\Serialization\IODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProviderProxy.cs" />
-    <Compile Include="NavigationPropertyQueryableConfiguration.cs" />
-    <Compile Include="NavigationPropertyQueryableConfigurationAnnotation.cs" />
+    <Compile Include="HttpMethodHelper.cs" />
+    <Compile Include="Interfaces\IAttributeMappingProvider.cs" />
+    <Compile Include="Interfaces\IWebApiActionMap.cs" />
+    <Compile Include="Interfaces\IWebApiControllerDescriptor.cs" />
+    <Compile Include="Interfaces\IWebApiActionDescriptor.cs" />
+    <Compile Include="Interfaces\IWebApiErrorHelper.cs" />
+    <Compile Include="Interfaces\IWebApiOptions.cs" />
+    <Compile Include="Interfaces\IWebApiUrlHelper.cs" />
+    <Compile Include="Interfaces\IWebApiAssembliesResolver.cs" />
+    <Compile Include="Interfaces\IWebApiControllerContext.cs" />
+    <Compile Include="Interfaces\IWebApiContext.cs" />
+    <Compile Include="Interfaces\IWebApiHeaderCollection.cs" />
+    <Compile Include="Interfaces\IWebApiRequestMessage.cs" />
+    <Compile Include="ODataControllerBase.cs" />
     <Compile Include="ODataQueryContextExtensions.cs" />
+    <Compile Include="Placeholder\NonValidatingParameterBindingAttribute.cs" />
+    <Compile Include="Routing\Conventions\SelectControllerResult.cs" />
+    <Compile Include="WebApiDefaultAssembliesResolver.cs" />
+    <Compile Include="WebApiEntityTagHeaderValue.cs" />
+    <Compile Include="Placeholder\ODataPathParameterBindingAttribute.cs" />
+    <Compile Include="Placeholder\ODataQueryParameterBindingAttribute.cs" />
     <Compile Include="Query\CountAttribute.cs" />
     <Compile Include="Query\SelectAttribute.cs" />
     <Compile Include="Query\ExpandConfiguration.cs" />
@@ -419,7 +438,6 @@
     <Compile Include="Formatter\Serialization\ODataResourceSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataResourceSetSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataPrimitiveSerializer.cs" />
-    <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataServiceDocumentSerializer.cs" />
     <Compile Include="TypeHelper.cs" />

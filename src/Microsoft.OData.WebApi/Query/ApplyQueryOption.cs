@@ -9,6 +9,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Expressions;
 
@@ -19,7 +20,7 @@ namespace Microsoft.OData.WebApi.Query
     /// </summary>
     public class ApplyQueryOption
     {
-        private readonly IAssembliesResolver _assembliesResolver;
+        private readonly IWebApiAssembliesResolver _assembliesResolver;
 
         private ApplyClause _applyClause;
         private ODataQueryOptionParser _queryOptionParser;
