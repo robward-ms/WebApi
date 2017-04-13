@@ -16,7 +16,7 @@ namespace Microsoft.OData.WebApi
         /// Returns a list of assemblies available for the application. 
         /// </summary>
         /// <returns>A list of assemblies available for the application. </returns>
-        public ICollection<Assembly> GetAssemblies()
+        public IEnumerable<Assembly> GetAssemblies()
         {
             return null;
         }

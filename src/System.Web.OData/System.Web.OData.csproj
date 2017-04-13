@@ -58,8 +58,21 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Adapters\AttributeMappingProvider.cs" />
+    <Compile Include="Adapters\WebApiActionDescriptor.cs" />
+    <Compile Include="Adapters\WebApiActionMap.cs" />
+    <Compile Include="Adapters\WebApiAssembliesResolver.cs" />
+    <Compile Include="Adapters\WebApiContext.cs" />
+    <Compile Include="Adapters\WebApiControllerContext.cs" />
+    <Compile Include="Adapters\WebApiControllerDescriptor.cs" />
+    <Compile Include="Adapters\WebApiErrorHelper.cs" />
+    <Compile Include="Adapters\WebApiOptions.cs" />
+    <Compile Include="Adapters\WebApiRequestHeaders.cs" />
+    <Compile Include="Adapters\WebApiRequestMessage.cs" />
+    <Compile Include="Adapters\WebApiUrlHelper.cs" />
     <Compile Include="EnableQueryAttribute.cs" />
     <Compile Include="ETagMessageHandler.cs" />
+    <Compile Include="Extensions\HttpActionDescriptorExtensions.cs" />
     <Compile Include="Extensions\HttpConfigurationExtensions.cs" />
     <Compile Include="Extensions\HttpErrorExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
@@ -68,7 +81,6 @@
     <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Formatter\ODataCountMediaTypeMapping.cs" />
-
     <Compile Include="Formatter\ODataBinaryValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataMediaTypeFormatter.cs" />
@@ -91,6 +103,7 @@
     <Compile Include="Batch\DefaultODataBatchHandler.cs" />
     <Compile Include="Formatter\QueryStringMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataRawValueMediaTypeMapping.cs" />
+    <Compile Include="ODataMessageWrapperHelper.cs" />
     <Compile Include="ODataNullValueMessageHandler.cs" />
     <Compile Include="ODataRoutingAttribute.cs" />
     <Compile Include="PerRequestContentNegotiator.cs" />
@@ -119,6 +132,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.WebApi\Microsoft.OData.WebApi.csproj">
+      <Project>{ba08ab97-4f92-4dcd-9bfa-0d5b1927430e}</Project>
+      <Name>Microsoft.OData.WebApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

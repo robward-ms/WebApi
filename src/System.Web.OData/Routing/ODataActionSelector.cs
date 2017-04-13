@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Properties;
@@ -78,10 +79,23 @@ namespace System.Web.OData.Routing
                 return _innerSelector.SelectAction(controllerContext);
             }
 
+            SelectControllerResult controllerResult = new SelectControllerResult(controllerContext.ControllerDescriptor.ControllerName);
+
+            object value;
+            if (controllerContext.Request.Properties.TryGetValue("AttributeRouteData", out value))
+            {
+                controllerResult.Values = value as IDictionary<string, object>;
+            }
+
             ILookup<string, HttpActionDescriptor> actionMap = _innerSelector.GetActionMapping(controllerContext.ControllerDescriptor);
+
             foreach (IODataRoutingConvention routingConvention in routingConventions)
             {
-                string actionName = routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+                string actionName = routingConvention.SelectAction(
+                    odataPath,
+                    new WebApiControllerContext(controllerContext, controllerResult),
+                    new WebApiActionMap(actionMap));
+
                 if (actionName != null)
                 {
                     routeData.Values[ODataRouteConstants.Action] = actionName;

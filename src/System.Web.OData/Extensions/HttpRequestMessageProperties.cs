@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.OData.Formatter;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.OData;

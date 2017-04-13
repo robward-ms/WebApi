@@ -18,7 +18,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <param name="request">The request.</param>
         /// <returns><c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "odata", Justification = "odata is spelled correctly")]
-        string SelectController(ODataPath odataPath, IWebApiRequestMessage request);
+        SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request);
 
         /// <summary>
         /// Selects the action for OData requests.

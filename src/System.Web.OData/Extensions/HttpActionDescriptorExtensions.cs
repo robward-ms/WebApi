@@ -5,8 +5,12 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.OData.Builder;
+using System.Web.Http.Dispatcher;
+using System.Web.OData.Adapters;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Extensions
 {
@@ -33,8 +37,9 @@ namespace System.Web.OData.Extensions
             // save the EdmModel to the action descriptor
             return actionDescriptor.Properties.GetOrAdd(ModelKeyPrefix + entityClrType.FullName, _ =>
                 {
+                    IAssembliesResolver resolver = actionDescriptor.Configuration.Services.GetAssembliesResolver();
                     ODataConventionModelBuilder builder =
-                        new ODataConventionModelBuilder(actionDescriptor.Configuration, isQueryCompositionMode: true);
+                        new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver), isQueryCompositionMode: true);
                     EntityTypeConfiguration entityTypeConfiguration = builder.AddEntityType(entityClrType);
                     builder.AddEntitySet(entityClrType.Name, entityTypeConfiguration);
                     IEdmModel edmModel = builder.GetEdmModel();

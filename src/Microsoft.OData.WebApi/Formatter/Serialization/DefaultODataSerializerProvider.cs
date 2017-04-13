@@ -13,15 +13,15 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
     /// <summary>
     /// The default <see cref="IODataSerializerProvider"/>.
     /// </summary>
-    public class DefaultIoDataSerializerProvider : IODataSerializerProvider
+    public class DefaultODataSerializerProvider : IODataSerializerProvider
     {
         private readonly IServiceProvider _rootContainer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultIoDataSerializerProvider"/> class.
+        /// Initializes a new instance of the <see cref="DefaultODataSerializerProvider"/> class.
         /// </summary>
         /// <param name="rootContainer">The root container.</param>
-        public DefaultIoDataSerializerProvider(IServiceProvider rootContainer)
+        public DefaultODataSerializerProvider(IServiceProvider rootContainer)
         {
             if (rootContainer == null)
             {

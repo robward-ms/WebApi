@@ -14,12 +14,5 @@ namespace Microsoft.OData.WebApi.Interfaces
         /// <param name="name">The key.</param>
         /// <returns>True if the key exist; false otherwise.</returns>
         bool Contains(string name);
-
-        /// <summary>
-        /// Find an action matching a key.
-        /// </summary>
-        /// <param name="keys">The keys.</param>
-        /// <returns>An action associated with keys.</returns>
-        string FindMatchingAction(params string[] keys);
     }
 }

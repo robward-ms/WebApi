@@ -19,7 +19,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller
         /// </returns>
-        public string SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        public SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
         {
             if (odataPath == null)
             {
@@ -34,7 +34,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             if (odataPath.PathTemplate == "~" ||
                 odataPath.PathTemplate == "~/$metadata")
             {
-                return "Metadata";
+                return new SelectControllerResult("Metadata");
             }
 
             return null;

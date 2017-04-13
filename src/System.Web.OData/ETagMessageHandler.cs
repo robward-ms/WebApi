@@ -134,8 +134,8 @@ namespace System.Web.OData
             {
                 properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
             }
-            EntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
-            return etagHeaderValue;
+            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
+            return new EntityTagHeaderValue(etagHeaderValue.Tag, etagHeaderValue.IsWeak);
         }
 
         private static object GetSingleEntityObject(HttpResponseMessage response)

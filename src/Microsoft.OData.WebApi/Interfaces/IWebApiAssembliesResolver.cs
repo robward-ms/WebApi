@@ -15,6 +15,6 @@ namespace Microsoft.OData.WebApi.Interfaces
         /// Returns a list of assemblies available for the application. 
         /// </summary>
         /// <returns>A list of assemblies available for the application. </returns>
-        ICollection<Assembly> GetAssemblies();
+        IEnumerable<Assembly> GetAssemblies();
     }
 }
