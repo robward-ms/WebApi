@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
@@ -94,7 +95,7 @@ namespace System.Web.OData
 
             public static ODataQueryOptions<T> CreateODataQueryOptions<T>(ODataQueryContext context, HttpRequestMessage request)
             {
-                return new ODataQueryOptions<T>(context, request);
+                return new ODataQueryOptions<T>(context, new WebApiRequestMessage(request));
             }
 
             internal static Type GetEntityClrTypeFromActionReturnType(HttpActionDescriptor actionDescriptor)
