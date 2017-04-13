@@ -10,6 +10,6 @@ namespace Microsoft.OData.WebApi
         /// <summary>
         /// The Request associated with the controller.
         /// </summary>
-        public IWebApiRequestMessage Request { get; private set; }
+        public IWebApiRequestMessage Request { get; internal set; }
     }
 }
