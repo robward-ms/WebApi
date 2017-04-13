@@ -14,7 +14,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Expressions;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
@@ -487,12 +486,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         {
             if (resourceContext.Request != null)
             {
-                IServiceProvider requestContainer = resourceContext.Request.RequestContainer;
-                if (requestContainer == null)
-                {
-                    throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
-                }
-
                 IEdmModel model = resourceContext.EdmModel;
                 IEdmEntitySet entitySet = resourceContext.NavigationSource as IEdmEntitySet;
 
@@ -511,7 +504,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 {
                     properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
                 }
-                WebApiEntityTagHeaderValue etagHeaderValue = requestContainer.GetRequiredService<IETagHandler>().CreateETag(properties);
+
+                WebApiEntityTagHeaderValue etagHeaderValue = resourceContext.Request.CreateETag(properties);
                 if (etagHeaderValue != null)
                 {
                     return etagHeaderValue.ToString();

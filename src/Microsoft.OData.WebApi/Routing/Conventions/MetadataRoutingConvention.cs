@@ -34,7 +34,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             if (odataPath.PathTemplate == "~" ||
                 odataPath.PathTemplate == "~/$metadata")
             {
-                return new SelectControllerResult("Metadata");
+                return new SelectControllerResult("Metadata", null);
             }
 
             return null;

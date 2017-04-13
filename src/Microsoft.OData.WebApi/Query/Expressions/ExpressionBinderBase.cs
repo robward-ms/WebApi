@@ -17,14 +17,13 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// The base class for all expression binders.
     /// </summary>
-    public abstract class ExpressionBinderBase
+    public abstract partial class ExpressionBinderBase
     {
         internal static readonly MethodInfo StringCompareMethodInfo = typeof(string).GetMethod("Compare", new[] { typeof(string), typeof(string), typeof(StringComparison) });
 
@@ -59,19 +58,6 @@ namespace Microsoft.OData.WebApi.Query.Expressions
         internal ODataQuerySettings QuerySettings { get; set; }
 
         internal IWebApiAssembliesResolver AssembliesResolver { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionBinderBase"/> class.
-        /// </summary>
-        /// <param name="requestContainer">The request container.</param>
-        protected ExpressionBinderBase(IServiceProvider requestContainer)
-        {
-            Contract.Assert(requestContainer != null);
-
-            QuerySettings = requestContainer.GetRequiredService<ODataQuerySettings>();
-            Model = requestContainer.GetRequiredService<IEdmModel>();
-            AssembliesResolver = requestContainer.GetRequiredService<IWebApiAssembliesResolver>();
-        }
 
         internal ExpressionBinderBase(IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
             : this(model, querySettings)

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm;
@@ -20,6 +21,8 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         private readonly string _actionName = "DynamicProperty";
 
         /// <inheritdoc/>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
+            Justification = "These are simple conversion function and cannot be split up.")]
         public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
             IWebApiActionMap actionMap)
         {

@@ -36,10 +36,8 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
                 if (action.IsHttpMethodMatch(request.Method) && template.TryMatch(odataPath, values))
                 {
-                    SelectControllerResult result = new SelectControllerResult(action.ControllerDescriptor.ControllerName);
-
                     values["action"] = action.ActionName;
-                    result.Values = values;
+                    SelectControllerResult result = new SelectControllerResult(action.ControllerDescriptor.ControllerName, values);
 
                     return result;
                 }
@@ -52,7 +50,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         public string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
             IWebApiActionMap actionMap)
         {
-            var routeData = controllerContext.Request.GetRouteData();
+            var routeData = controllerContext.Request.RouteData;
             var routingConventionsStore = controllerContext.Request.Context.RoutingConventionsStore;
 
             IDictionary<string, object> attributeRouteData = controllerContext.ControllerResult.Values;

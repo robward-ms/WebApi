@@ -7,7 +7,6 @@ using System.Diagnostics.Contracts;
 using System.Net.Http;
 using System.Web.Http.Routing;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
 

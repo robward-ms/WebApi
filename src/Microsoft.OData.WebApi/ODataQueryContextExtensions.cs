@@ -8,13 +8,8 @@ using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi
 {
-    internal static class ODataQueryContextExtensions
+    internal static partial class ODataQueryContextExtensions
     {
-        public static IWebApiAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
-        {
-            return context.RequestContainer.GetRequiredService<IWebApiAssembliesResolver>();
-        }
-
         public static ODataQuerySettings UpdateQuerySettings(this ODataQueryContext context, ODataQuerySettings querySettings, IQueryable query)
         {
             ODataQuerySettings updatedSettings = context.RequestContainer.GetRequiredService<ODataQuerySettings>();

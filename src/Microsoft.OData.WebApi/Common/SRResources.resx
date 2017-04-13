@@ -499,7 +499,7 @@
     <value>The request must have an associated EDM model. Consider using the extension method HttpConfiguration.MapODataServiceRoute to register a route that parses the OData URI and attaches the model information.</value>
   </data>
   <data name="QueryGetModelMustNotReturnNull" xml:space="preserve">
-    <value>A model is required for querying. Consider implementing the EnableQueryAttribute.GetModel method never to return a null value.</value>
+    <value>A model is required for querying. Consider implementing the EnableQueryAttribute.Model method never to return a null value.</value>
   </data>
   <data name="RequestMustHaveODataRouteName" xml:space="preserve">
     <value>The request must have an associated OData route name. Consider using the extension request.ODataProperties().RouteName to set a route name.</value>

@@ -38,14 +38,14 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             EntitySetSegment entitySetSegment = odataPath.Segments.FirstOrDefault() as EntitySetSegment;
             if (entitySetSegment != null)
             {
-                return new SelectControllerResult(entitySetSegment.EntitySet.Name);
+                return new SelectControllerResult(entitySetSegment.EntitySet.Name, null);
             }
 
             // singleton
             SingletonSegment singletonSegment = odataPath.Segments.FirstOrDefault() as SingletonSegment;
             if (singletonSegment != null)
             {
-                return new SelectControllerResult(singletonSegment.Singleton.Name);
+                return new SelectControllerResult(singletonSegment.Singleton.Name, null);
             }
 
             return null;

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -11,20 +12,19 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// A <see cref="ParameterBindingAttribute"/> to bind parameters of type <see cref="ODataQueryOptions"/> to the OData query from the incoming request.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed class ODataQueryParameterBindingAttribute : ParameterBindingAttribute
+    public sealed partial class ODataQueryParameterBindingAttribute : ParameterBindingAttribute
     {
         /// <inheritdoc />
         public override HttpParameterBinding GetBinding(HttpParameterDescriptor parameter)
@@ -94,7 +94,7 @@ namespace System.Web.OData
 
             public static ODataQueryOptions<T> CreateODataQueryOptions<T>(ODataQueryContext context, HttpRequestMessage request)
             {
-                return new ODataQueryOptions<T>(context, request);
+                return new ODataQueryOptions<T>(context, new WebApiRequestMessage(request));
             }
 
             internal static Type GetEntityClrTypeFromActionReturnType(HttpActionDescriptor actionDescriptor)

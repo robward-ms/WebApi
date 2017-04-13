@@ -18,7 +18,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.Spatial;
@@ -26,11 +25,9 @@ using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.OData.WebApi.Formatter
 {
-    internal static class EdmLibHelpers
+    internal static partial class EdmLibHelpers
     {
         private static readonly EdmCoreModel _coreModel = EdmCoreModel.Instance;
-
-        private static readonly IWebApiAssembliesResolver _defaultAssemblyResolver = new WebApiDefaultAssembliesResolver();
 
         private static ConcurrentDictionary<IEdmEntitySet, IEnumerable<IEdmStructuralProperty>> _concurrencyProperties;
 
@@ -834,7 +831,7 @@ namespace Microsoft.OData.WebApi.Formatter
         /// <param name="path">The path to use.</param>
         /// <param name="model">The EdmModel to use.</param>
         /// <returns>The expected payload type of an OData path.</returns>
-        public static IEdmTypeReference GetExpectedPayloadType(Type type, ODataPath path, IEdmModel model)
+        internal static IEdmTypeReference GetExpectedPayloadType(Type type, ODataPath path, IEdmModel model)
         {
             IEdmTypeReference expectedPayloadType = null;
 
@@ -865,7 +862,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return expectedPayloadType;
         }
 
-        private static bool TryGetInnerTypeForDelta(ref Type type)
+        internal static bool TryGetInnerTypeForDelta(ref Type type)
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
             {

@@ -10,7 +10,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Expressions;
 
 namespace Microsoft.OData.WebApi.Query

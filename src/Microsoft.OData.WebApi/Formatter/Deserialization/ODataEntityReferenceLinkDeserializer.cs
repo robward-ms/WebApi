@@ -48,7 +48,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
         {
             if (uri != null)
             {
-                IDictionary<string, string> contentIDToLocationMapping = readContext.Request.GetODataContentIdMapping();
+                IDictionary<string, string> contentIDToLocationMapping = readContext.Request.ODataContentIdMapping;
                 if (contentIDToLocationMapping != null)
                 {
                     IWebApiUrlHelper urlHelper = readContext.Request.UrlHelper;

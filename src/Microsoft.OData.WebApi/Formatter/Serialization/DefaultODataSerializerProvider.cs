@@ -96,7 +96,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             {
                 return _rootContainer.GetRequiredService<ODataEntityReferenceLinksSerializer>();
             }
-            else if (type == typeof(ODataError) || type == request.Context.ErrorHelper.HttpErrorType)
+            else if (type == typeof(ODataError) || type == request.Context.HttpErrorType)
             {
                 return _rootContainer.GetRequiredService<ODataErrorSerializer>();
             }
@@ -106,7 +106,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             }
 
             // if it is not a special type, assume it has a corresponding EdmType.
-            IEdmModel model = request.GetModel();
+            IEdmModel model = request.Model;
             ClrTypeCache typeMappingCache = model.GetTypeMappingCache();
             IEdmTypeReference edmType = typeMappingCache.GetEdmType(type, model);
 

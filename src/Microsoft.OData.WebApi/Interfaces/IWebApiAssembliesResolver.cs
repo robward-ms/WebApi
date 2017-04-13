@@ -12,9 +12,9 @@ namespace Microsoft.OData.WebApi.Interfaces
     public interface IWebApiAssembliesResolver
     {
         /// <summary>
-        /// Returns a list of assemblies available for the application. 
+        /// Gets a list of assemblies available for the application. 
         /// </summary>
         /// <returns>A list of assemblies available for the application. </returns>
-        IEnumerable<Assembly> GetAssemblies();
+        IEnumerable<Assembly> Assemblies { get; }
     }
 }

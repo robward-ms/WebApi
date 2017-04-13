@@ -4,15 +4,15 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.OData.WebApi.Query.Validators;
 using Microsoft.OData.WebApi.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
-using Microsoft.OData.WebApi.Common;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace System.Web.OData.Extensions
@@ -52,7 +52,7 @@ namespace System.Web.OData.Extensions
             builder.AddService<TopQueryValidator>(ServiceLifetime.Singleton);
 
             // SerializerProvider and DeserializerProvider.
-            builder.AddService<ODataSerializerProvider, DefaultODataSerializerProvider>(ServiceLifetime.Singleton);
+            builder.AddService<IODataSerializerProvider, DefaultODataSerializerProvider>(ServiceLifetime.Singleton);
             builder.AddService<ODataDeserializerProvider, DefaultODataDeserializerProvider>(ServiceLifetime.Singleton);
 
             // Deserializers.

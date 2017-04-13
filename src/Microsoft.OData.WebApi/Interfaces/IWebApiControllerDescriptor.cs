@@ -27,6 +27,6 @@ namespace Microsoft.OData.WebApi.Interfaces
         /// <typeparam name="T">The type of attribute to search for.</typeparam>
         /// <param name="inherit">true to search this action's inheritance chain to find the attributes; otherwise, false.</param>
         /// <returns>A list of attributes of type T.</returns>
-        IEnumerable<T> GetCustomAttributes<T>(bool inherit)  where T : Attribute;
+        IEnumerable<T> GetCustomAttributes<T>(bool inherit) where T : Attribute;
     }
 }

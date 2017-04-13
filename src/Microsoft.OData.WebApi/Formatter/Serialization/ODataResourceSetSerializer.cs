@@ -11,7 +11,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
@@ -19,7 +18,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
     /// <summary>
     /// OData serializer for serializing a collection of <see cref="IEdmEntityType" /> or <see cref="IEdmComplexType"/>
     /// </summary>
-    public class ODataResourceSetSerializer : ODataEdmTypeSerializer
+    public partial class ODataResourceSetSerializer : ODataEdmTypeSerializer
     {
         private const string ResourceSet = "ResourceSet";
 
@@ -342,7 +341,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (navigationLink != null)
             {
-                return writeContext.Request.GetNextPageLink(navigationLink, pageSize);
+                return ODataResourceSetSerializer.GetNextPageLink(navigationLink, pageSize);
             }
 
             return null;

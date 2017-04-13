@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 using SelectExpandClause = Microsoft.OData.UriParser.SelectExpandClause;
 
@@ -77,11 +76,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// Gets or sets the <see cref="IWebApiUrlHelper"/> to use for generating OData links.
         /// </summary>
         public IWebApiUrlHelper Url { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="IWebApiErrorHelper"/> to use for generating OData errors.
-        /// </summary>
-        public IWebApiErrorHelper ErrorHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the navigation source.

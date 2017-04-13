@@ -5,18 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Represents a controller for generating OData servicedoc and metadata document ($metadata).
     /// </summary>
-    public class MetadataController : ODataControllerBase
+    public class MetadataController : ODataController
     {
         private static readonly Version _defaultEdmxVersion = new Version(4, 0);
 

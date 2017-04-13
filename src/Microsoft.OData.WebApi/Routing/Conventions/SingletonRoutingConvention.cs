@@ -75,6 +75,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                     actionNamePrefix = "Put";
                     break;
                 case HttpMethodHelper.HttpPatch:
+                case HttpMethodHelper.HttpMerge:
                     actionNamePrefix = "Patch";
                     break;
                 default:

@@ -13,7 +13,7 @@ namespace Microsoft.OData.WebApi
         public const string ReturnContentHeaderValue = "return=representation";
         public const string ReturnNoContentHeaderValue = "return=minimal";
 
-        internal static bool RequestPrefersReturnContent(IWebApiHeaderCollection headers)
+        internal static bool RequestPrefersReturnContent(IWebApiHeaders headers)
         {
             IEnumerable<string> preferences = null;
             if (headers.TryGetValues(PreferHeaderName, out preferences))
@@ -23,7 +23,7 @@ namespace Microsoft.OData.WebApi
             return false;
         }
 
-        internal static bool RequestPrefersReturnNoContent(IWebApiHeaderCollection headers)
+        internal static bool RequestPrefersReturnNoContent(IWebApiHeaders headers)
         {
             IEnumerable<string> preferences = null;
             if (headers.TryGetValues(PreferHeaderName, out preferences))
@@ -33,7 +33,7 @@ namespace Microsoft.OData.WebApi
             return false;
         }
 
-        internal static string GetRequestPreferHeader(IWebApiHeaderCollection headers)
+        internal static string GetRequestPreferHeader(IWebApiHeaders headers)
         {
             IEnumerable<string> values;
             if (headers.TryGetValues(PreferHeaderName, out values))

@@ -196,7 +196,7 @@ namespace Microsoft.OData.WebApi
             }
 
             // Go through all assemblies referenced by the application and search for types matching a predicate
-            IEnumerable<Assembly> assemblies = assembliesResolver.GetAssemblies();
+            IEnumerable<Assembly> assemblies = assembliesResolver.Assemblies;
             foreach (Assembly assembly in assemblies)
             {
                 Type[] exportedTypes = null;

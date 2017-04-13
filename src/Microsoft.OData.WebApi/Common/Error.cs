@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Common
 {

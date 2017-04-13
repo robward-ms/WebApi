@@ -46,6 +46,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                         httpMethodName = "Put";
                         break;
                     case HttpMethodHelper.HttpPatch:
+                    case HttpMethodHelper.HttpMerge:
                         httpMethodName = "Patch";
                         break;
                     case HttpMethodHelper.HttpDelete:

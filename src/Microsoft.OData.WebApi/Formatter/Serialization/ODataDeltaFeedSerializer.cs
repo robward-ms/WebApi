@@ -8,7 +8,6 @@ using System.Runtime.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
@@ -17,7 +16,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
     /// OData serializer for serializing a collection of <see cref="IEdmEntityType" />
     /// The Collection is of <see cref="IEdmChangedObject"/> which is the base interface implemented by all objects which are a part of the DeltaFeed payload.
     /// </summary>
-    public class ODataDeltaFeedSerializer : ODataEdmTypeSerializer
+    public partial class ODataDeltaFeedSerializer : ODataEdmTypeSerializer
     {
         private const string DeltaFeed = "deltafeed";
 
@@ -325,7 +324,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (navigationLink != null)
             {
-                return writeContext.Request.GetNextPageLink(navigationLink, pageSize);
+                return ODataDeltaFeedSerializer.GetNextPageLink(navigationLink, pageSize);
             }
 
             return null;

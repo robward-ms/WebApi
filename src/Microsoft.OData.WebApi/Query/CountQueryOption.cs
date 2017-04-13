@@ -7,7 +7,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Validators;
 
 namespace Microsoft.OData.WebApi.Query

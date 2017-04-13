@@ -2,18 +2,20 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using Microsoft.OData.WebApi;
 
 namespace Microsoft.OData.WebApi.Interfaces
 {
     /// <summary>
     /// Represents the collection of Request Headers as defined in RFC 2616.
     /// </summary>
-    public interface IWebApiHeaderCollection
+    public interface IWebApiHeaders
     {
         /// <summary>
         /// Gets the value of the If-None-Match header for an HTTP request.
         /// </summary>
         IEnumerable<WebApiEntityTagHeaderValue> IfNoneMatch { get; }
+        
         /// <summary>
         /// Gets the value of the If-Match header for an HTTP request.
         /// </summary>

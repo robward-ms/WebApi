@@ -14,7 +14,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Validators;
 
 namespace Microsoft.OData.WebApi.Query
@@ -24,7 +23,7 @@ namespace Microsoft.OData.WebApi.Query
     /// Currently this only supports $filter, $orderby, $top, $skip, and $count.
     /// </summary>
     [ODataQueryParameterBinding]
-    public class ODataQueryOptions
+    public partial class ODataQueryOptions
     {
         private static readonly MethodInfo _limitResultsGenericMethod = typeof(ODataQueryOptions).GetMethod("LimitResults");
 
@@ -629,10 +628,7 @@ namespace Microsoft.OData.WebApi.Query
 
         private IDictionary<string, string> GetODataQueryParameters()
         {
-            return Request.GetQueryNameValuePairs()
-                .Where(p => p.Key.StartsWith("$", StringComparison.Ordinal) ||
-                    p.Key.StartsWith("@", StringComparison.Ordinal))
-                .ToDictionary(p => p.Key, p => p.Value);
+            return Request.ODataQueryParameters;
         }
 
         private string GetAutoSelectRawValue()
@@ -720,6 +716,8 @@ namespace Microsoft.OData.WebApi.Query
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase",
             Justification = "Need lower case string here.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
+            Justification = "These are simple conversion function and cannot be split up.")]
         private void BuildQueryOptions(IDictionary<string, string> queryParameters)
         {
             foreach (KeyValuePair<string, string> kvp in queryParameters)

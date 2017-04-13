@@ -9,7 +9,6 @@ using System.Linq.Expressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.OData.WebApi.Query.Validators;
 

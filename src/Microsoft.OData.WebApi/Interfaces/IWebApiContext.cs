@@ -21,9 +21,9 @@ namespace Microsoft.OData.WebApi.Interfaces
         ApplyClause ApplyClause { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="IWebApiErrorHelper"/> to use for generating OData errors.
+        /// Get the type of an Http error.
         /// </summary>
-        IWebApiErrorHelper ErrorHelper { get; }
+        Type HttpErrorType { get; }
 
         /// <summary>
         /// Gets or sets the next link for the OData response.

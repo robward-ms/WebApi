@@ -17,7 +17,6 @@ using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.OData.WebApi.Properties;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData
@@ -134,8 +133,8 @@ namespace System.Web.OData
             {
                 properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
             }
-            EntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
-            return etagHeaderValue;
+            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
+            return etagHeaderValue.AsEntityTagHeaderValue();
         }
 
         private static object GetSingleEntityObject(HttpResponseMessage response)

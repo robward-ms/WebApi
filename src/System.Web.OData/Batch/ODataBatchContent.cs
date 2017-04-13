@@ -9,11 +9,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Batch
 {
@@ -69,10 +68,7 @@ namespace System.Web.OData.Batch
         /// <inheritdoc/>
         protected override async Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
-            IODataResponseMessage responseMessage = new ODataMessageWrapper(stream, Headers)
-            {
-                Container = _requestContainer
-            };
+            IODataResponseMessage responseMessage = ODataMessageWrapperHelper.Create(stream, this.Headers, _requestContainer);
             ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, _writerSettings);
             ODataBatchWriter writer = messageWriter.CreateODataBatchWriter();
 

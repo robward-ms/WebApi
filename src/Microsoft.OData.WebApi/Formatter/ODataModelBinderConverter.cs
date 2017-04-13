@@ -17,7 +17,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.OData.WebApi.Routing;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
@@ -223,14 +222,14 @@ namespace Microsoft.OData.WebApi.Formatter
             }
 
             IWebApiRequestMessage request = readContext.Request;
-            ODataMessageReaderSettings oDataReaderSettings = request.GetReaderSettings();
+            ODataMessageReaderSettings oDataReaderSettings = request.ReaderSettings;
 
             using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(valueString)))
             {
                 stream.Seek(0, SeekOrigin.Begin);
 
                 IODataRequestMessage oDataRequestMessage = new ODataMessageWrapper(stream, null,
-                    request.GetODataContentIdMapping());
+                    request.ODataContentIdMapping);
                 using (
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage,
                         oDataReaderSettings, readContext.Model))
@@ -265,7 +264,7 @@ namespace Microsoft.OData.WebApi.Formatter
             ODataResourceSetWrapper resourceSet =
                 odataReader.ReadResourceOrResourceSet() as ODataResourceSetWrapper;
 
-            ODataDeserializerProvider deserializerProvider = readContext.Request.GetDeserializerProvider();
+            ODataDeserializerProvider deserializerProvider = readContext.Request.DeserializerProvider;
 
             ODataResourceSetDeserializer resourceSetDeserializer =
                 (ODataResourceSetDeserializer)deserializerProvider.GetEdmTypeDeserializer(collectionType);
@@ -320,7 +319,7 @@ namespace Microsoft.OData.WebApi.Formatter
             ODataResourceWrapper topLevelResource = item as ODataResourceWrapper;
             Contract.Assert(topLevelResource != null);
 
-            ODataDeserializerProvider deserializerProvider = readContext.Request.GetDeserializerProvider();
+            ODataDeserializerProvider deserializerProvider = readContext.Request.DeserializerProvider;
 
             ODataResourceDeserializer entityDeserializer =
                 (ODataResourceDeserializer)deserializerProvider.GetEdmTypeDeserializer(edmTypeReference);
@@ -397,7 +396,7 @@ namespace Microsoft.OData.WebApi.Formatter
         {
             return request.UrlHelper.CreateODataLink(
                 request.Context.RouteName,
-                request.GetPathHandler(),
+                request.PathHandler,
                 new List<ODataPathSegment>());
         }
 

@@ -8,7 +8,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
 using Semantic = Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.WebApi.Routing

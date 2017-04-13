@@ -6,7 +6,7 @@ namespace Microsoft.OData.WebApi
     /// <summary>
     /// A helper class for comparing Http methods.
     /// </summary>
-    public class HttpMethodHelper
+    internal class HttpMethodHelper
     {
         /// <summary>
         /// "Get"
@@ -17,6 +17,11 @@ namespace Microsoft.OData.WebApi
         /// "Delete"
         /// </summary>
         public const string HttpDelete = "DELETE";
+
+        /// <summary>
+        /// "Merge"
+        /// </summary>
+        public const string HttpMerge = "MERGE";
 
         /// <summary>
         /// "Patch"

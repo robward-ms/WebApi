@@ -16,7 +16,6 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     {
         /// <inheritdoc/>
         public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
-
         {
             if (odataPath == null)
             {

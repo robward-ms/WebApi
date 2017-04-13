@@ -13,7 +13,6 @@ using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Properties;
 
 namespace Microsoft.OData.WebApi.Builder
 {
@@ -21,7 +20,7 @@ namespace Microsoft.OData.WebApi.Builder
     /// <see cref="ODataConventionModelBuilder"/> is used to automatically map CLR classes to an EDM model based on a set of <see cref="IConvention"/>.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Most of the referenced types are helper types needed for operation.")]
-    public class ODataConventionModelBuilder : ODataModelBuilder
+    public partial class ODataConventionModelBuilder : ODataModelBuilder
     {
         private static readonly List<IConvention> _conventions = new List<IConvention>
         {

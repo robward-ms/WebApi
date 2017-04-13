@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -14,10 +15,11 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// Initializes a new instance of the <see cref="SelectControllerResult"/> class.
         /// </summary>
         /// <param name="controllerName">The controller name selected.</param>
-        public SelectControllerResult(string controllerName)
+        /// <param name="values">The properties associated with the selected controller.4.</param>
+        public SelectControllerResult(string controllerName, IDictionary<string, object> values)
         {
             this.ControllerName = controllerName;
-            this.Values = new Dictionary<string, object>();
+            this.Values = values;
         }
 
         /// <summary>
@@ -26,8 +28,9 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         public string ControllerName { get; private set; }
 
         /// <summary>
-        /// Gets or sets the properties associated with the selected controller.4
+        /// Gets or sets the properties associated with the selected controller.
         /// </summary>
-        public IDictionary<string, object> Values { get; set; }
+        /// <remarks>By default, Values is null.</remarks>
+        public IDictionary<string, object> Values { get; private set; }
     }
 }

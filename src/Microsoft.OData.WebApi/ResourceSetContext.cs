@@ -39,7 +39,7 @@ namespace Microsoft.OData.WebApi
         {
             get
             {
-                return Request.GetModel();
+                return Request.Model;
             }
         }
     }
