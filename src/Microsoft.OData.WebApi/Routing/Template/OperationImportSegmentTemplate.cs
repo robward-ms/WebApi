@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
-using System.Web.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
-namespace System.Web.OData.Routing.Template
+namespace Microsoft.OData.WebApi.Routing.Template
 {
     /// <summary>
     /// Represents a template that can match a <see cref="OperationImportSegment"/>.

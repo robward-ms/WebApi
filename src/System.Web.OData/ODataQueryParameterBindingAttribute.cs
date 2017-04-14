@@ -12,10 +12,10 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
 using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Query;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Query;
 
 namespace System.Web.OData
 {

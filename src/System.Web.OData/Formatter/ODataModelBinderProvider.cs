@@ -10,12 +10,13 @@ using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {

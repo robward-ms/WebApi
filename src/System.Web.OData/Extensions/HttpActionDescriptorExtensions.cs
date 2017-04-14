@@ -5,8 +5,11 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.OData.Builder;
+using System.Web.Http.Dispatcher;
+using System.Web.OData.Adapters;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData.Extensions
 {

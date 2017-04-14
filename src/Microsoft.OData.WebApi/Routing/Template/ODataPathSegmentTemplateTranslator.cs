@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Routing.Template
+namespace Microsoft.OData.WebApi.Routing.Template
 {
     /// <summary>
     /// Translator an OData path to a path segment templates.

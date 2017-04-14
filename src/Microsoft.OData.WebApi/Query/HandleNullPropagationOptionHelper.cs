@@ -3,9 +3,9 @@
 
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     internal static class HandleNullPropagationOptionHelper
     {

@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ValueProviders;
 using System.Web.OData.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
 namespace System.Web.OData
 {

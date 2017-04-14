@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Web.Http;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     internal static class EdmTypeConfigurationExtensions
     {
