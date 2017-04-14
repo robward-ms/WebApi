@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
+using Microsoft.OData.WebApi.Routing;
 
 namespace System.Web.OData.Routing
 {

@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Web.Http;
-using System.Web.OData.Properties;
-using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// This class helps to bind uri functions to CLR.

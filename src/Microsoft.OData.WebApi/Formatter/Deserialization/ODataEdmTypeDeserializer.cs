@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
     /// Base class for all <see cref="ODataDeserializer" />s that deserialize into an object backed by <see cref="IEdmType"/>.

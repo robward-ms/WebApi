@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
-using System.Web.OData.Query.Expressions;
-using System.Web.OData.Query.Validators;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi.Query.Validators;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// Represents the OData $select and $expand query options.

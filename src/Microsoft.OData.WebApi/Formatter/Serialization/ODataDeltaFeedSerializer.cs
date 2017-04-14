@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
-using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Query;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// OData serializer for serializing a collection of <see cref="IEdmEntityType" />

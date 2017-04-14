@@ -5,8 +5,8 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Web.Http;
-using System.Web.OData.Properties;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Properties;
 
 namespace System.Web.OData.Formatter
 {
