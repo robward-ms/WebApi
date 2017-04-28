@@ -1771,7 +1771,7 @@ namespace Microsoft.OData.WebApi.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A model is required for querying. Consider implementing the EnableQueryAttribute.GetModel method never to return a null value..
+        ///   Looks up a localized string similar to A model is required for querying. Consider implementing the EnableQueryAttribute.Model method never to return a null value..
         /// </summary>
         internal static string QueryGetModelMustNotReturnNull {
             get {

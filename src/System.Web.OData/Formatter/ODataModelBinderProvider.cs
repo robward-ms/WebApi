@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -138,10 +139,9 @@ namespace System.Web.OData.Formatter
                 {
                     Path = path,
                     Model = edmModel,
-                    Request = request,
+                    Request = new WebApiRequestMessage(request),
                     ResourceType = bindingContext.ModelType,
                     ResourceEdmType = edmTypeReference,
-                    RequestContext = request.GetRequestContext()
                 };
             }
         }

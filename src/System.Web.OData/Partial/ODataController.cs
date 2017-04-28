@@ -3,12 +3,12 @@
 
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.OData;
 using System.Web.OData.Extensions;
 using System.Web.OData.Results;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Defines a base class for OData controllers that support writing and reading data using the OData formats.
@@ -16,7 +16,7 @@ namespace System.Web.OData
     [ODataFormatting]
     [ODataRouting]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public abstract class ODataController : ApiController
+    public abstract partial class ODataController : ApiController
     {
         /// <summary>
         /// Releases the unmanaged resources that are used by the object and, optionally,
