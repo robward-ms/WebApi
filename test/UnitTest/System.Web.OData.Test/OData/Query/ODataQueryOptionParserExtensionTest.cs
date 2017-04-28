@@ -4,12 +4,15 @@
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.OData.Adapters;
 using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Query
 {
@@ -107,7 +110,7 @@ namespace System.Web.OData.Query
 
             ODataPath path = new ODataPath(new[] { new EntitySetSegment(entityset) });
             ODataQueryContext context = new ODataQueryContext(model, entityType, path);
-            return new ODataQueryOptions(context, request);
+            return new ODataQueryOptions(context, new WebApiRequestMessage(request));
         }
     }
 }

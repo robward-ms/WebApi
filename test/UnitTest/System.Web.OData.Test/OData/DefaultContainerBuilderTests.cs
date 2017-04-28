@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 

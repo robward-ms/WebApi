@@ -5,17 +5,20 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Web.OData.Routing;
 using System.Web.OData.TestCommon;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.TestCommon;
 using Moq;
 using Customer = System.Web.OData.Formatter.Serialization.Models.Customer;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Query
 {
@@ -633,7 +636,7 @@ namespace System.Web.OData.Query
                 model.FindDeclaredType("System.Web.OData.TestCommon.Models.AutoExpandCustomer"));
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.EnableHttpDependencyInjectionSupport();
-            var queryOption = new ODataQueryOptions(context, request);
+            var queryOption = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             queryOption.AddAutoSelectExpandProperties();
             var selectExpand = queryOption.SelectExpand;
 

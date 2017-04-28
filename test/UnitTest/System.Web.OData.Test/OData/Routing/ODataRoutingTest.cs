@@ -12,6 +12,8 @@ using System.Web.Http.Dispatcher;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 

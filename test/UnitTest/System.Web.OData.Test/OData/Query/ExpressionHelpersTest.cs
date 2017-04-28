@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Linq.Expressions;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Query

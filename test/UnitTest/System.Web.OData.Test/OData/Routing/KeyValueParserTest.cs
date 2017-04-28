@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Routing

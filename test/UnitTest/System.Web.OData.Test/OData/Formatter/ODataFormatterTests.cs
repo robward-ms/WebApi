@@ -10,19 +10,23 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
-using System.Web.OData.Query;
 using System.Web.OData.Routing;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter
 {
@@ -169,7 +173,7 @@ namespace System.Web.OData.Formatter
                 foreach (ODataMediaTypeFormatter odataFormatter in
                     configuration.Formatters.OfType<ODataMediaTypeFormatter>())
                 {
-                    odataFormatter.SupportedMediaTypes.Remove(ODataMediaTypes.ApplicationJson);
+                    odataFormatter.SupportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
                 }
 
                 using (HttpServer host = new HttpServer(configuration))
@@ -1065,7 +1069,7 @@ namespace System.Web.OData.Formatter
 
         private class CustomFeedSerializer : ODataResourceSetSerializer
         {
-            public CustomFeedSerializer(ODataSerializerProvider serializerProvider)
+            public CustomFeedSerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }
@@ -1110,7 +1114,7 @@ namespace System.Web.OData.Formatter
 
         private class CustomEntrySerializer : ODataResourceSerializer
         {
-            public CustomEntrySerializer(ODataSerializerProvider serializerProvider)
+            public CustomEntrySerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }

@@ -5,6 +5,8 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Web.Http;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
 

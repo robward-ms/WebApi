@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.OData.Formatter.Serialization.Models;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Formatter
@@ -58,7 +59,7 @@ namespace System.Web.OData.Formatter
             MethodCallExpression methodCall = queryable.Expression as MethodCallExpression;
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
-            Assert.Equal(@"Param_0 => (Param_0.FirstName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)",
+            Assert.Equal(@"Param_0 => (Param_0.FirstName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)",
                 methodCall.Arguments[1].ToString());
         }
 
@@ -83,7 +84,7 @@ namespace System.Web.OData.Formatter
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
             Assert.Equal(
-                @"Param_0 => Not((Param_0.LastName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty))",
+                @"Param_0 => Not((Param_0.LastName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty))",
                 methodCall.Arguments[1].ToString());
         }
 
@@ -109,8 +110,8 @@ namespace System.Web.OData.Formatter
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
             Assert.Equal(
-                @"Param_0 => Not(((Param_0.FirstName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty) "
-                + "AndAlso (Param_0.LastName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)))",
+                @"Param_0 => Not(((Param_0.FirstName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty) "
+                + "AndAlso (Param_0.LastName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)))",
                 methodCall.Arguments[1].ToString());
         }
 

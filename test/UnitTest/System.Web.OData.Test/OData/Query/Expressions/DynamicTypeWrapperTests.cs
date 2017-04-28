@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.OData.Query.Expressions;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Test.OData.Query.Expressions

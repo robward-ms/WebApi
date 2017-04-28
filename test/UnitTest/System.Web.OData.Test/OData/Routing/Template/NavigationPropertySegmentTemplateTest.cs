@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Routing.Template;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Routing.Template

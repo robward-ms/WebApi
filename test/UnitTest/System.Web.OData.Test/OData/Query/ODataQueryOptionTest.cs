@@ -4,14 +4,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
 using System.Web.OData.Query.Expressions;
@@ -19,9 +17,13 @@ using System.Web.OData.Query.Validators;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Newtonsoft.Json.Linq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query
 {
@@ -184,8 +186,9 @@ namespace System.Web.OData.Query
         public void ConstructorNullRequestThrows()
         {
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
+            HttpRequestMessage request = null;
             Assert.Throws<ArgumentNullException>(
-                () => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), null)
+                () => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), request)
             );
         }
 

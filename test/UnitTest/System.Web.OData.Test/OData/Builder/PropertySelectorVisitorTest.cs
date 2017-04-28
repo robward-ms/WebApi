@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web.OData.TestCommon.Models;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Builder

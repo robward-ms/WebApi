@@ -4,12 +4,13 @@
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
-using System.Web.OData.Builder;
 using System.Web.OData.Formatter.Serialization.Models;
-using System.Web.OData.Query.Expressions;
 using System.Web.OData.TestCommon;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Formatter

@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Template;
 using Microsoft.TestCommon;
 using Moq;
 

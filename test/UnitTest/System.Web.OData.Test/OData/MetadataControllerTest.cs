@@ -13,6 +13,8 @@ using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
 using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 using Moq;
@@ -43,8 +45,9 @@ namespace System.Web.OData.Builder
             IEdmModel model = new EdmModel();
 
             MetadataController controller = new MetadataController();
-            controller.Request = new HttpRequestMessage();
-            controller.Request.EnableHttpDependencyInjectionSupport(model);
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.EnableHttpDependencyInjectionSupport(model);
+            controller.Request = request;
 
             IEdmModel responseModel = controller.GetMetadata();
             Assert.Equal(model, responseModel);

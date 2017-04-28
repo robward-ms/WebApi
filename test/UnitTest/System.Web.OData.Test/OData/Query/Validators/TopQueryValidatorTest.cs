@@ -3,6 +3,9 @@
 
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Validators;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Query.Validators

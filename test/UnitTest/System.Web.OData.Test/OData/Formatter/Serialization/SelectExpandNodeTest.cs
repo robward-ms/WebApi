@@ -7,6 +7,7 @@ using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
 

@@ -12,6 +12,8 @@ using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData
 {

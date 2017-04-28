@@ -3,13 +3,15 @@
 
 using System.Linq;
 using System.Net.Http;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -64,7 +66,7 @@ namespace System.Web.OData.Formatter.Deserialization
             ODataMessageReader messageReader = new ODataMessageReader(new MockODataRequestMessage(requestMessage), readSettings, model);
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new HttpRequestMessage(),
+                Request = new WebApiRequestMessage(new HttpRequestMessage()),
                 Path = new ODataPath(new NavigationPropertySegment(GetNavigationProperty(model), navigationSource: null))
             };
 
@@ -94,7 +96,7 @@ namespace System.Web.OData.Formatter.Deserialization
 
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new HttpRequestMessage(),
+                Request = new WebApiRequestMessage(new HttpRequestMessage()),
                 Path = new ODataPath(new NavigationPropertySegment(navigationProperty, navigationSource: null))
             };
 

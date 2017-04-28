@@ -2,9 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Web.OData.Builder;
-using System.Web.OData.Routing;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Validators;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
 

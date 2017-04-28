@@ -3,10 +3,12 @@
 
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.OData.Builder;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.TestCommon;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {

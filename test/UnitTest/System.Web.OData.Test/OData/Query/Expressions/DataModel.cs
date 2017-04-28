@@ -6,6 +6,7 @@ using System.Data.Linq;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.TestCommon.Types;
 
 namespace System.Web.OData.Query.Expressions

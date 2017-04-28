@@ -3,13 +3,16 @@
 
 using System.Globalization;
 using System.Linq;
-using System.Web.OData.Builder;
 using System.Web.OData.Formatter.Serialization.Models;
 using System.Web.OData.Routing;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Validators;
 using Microsoft.TestCommon;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query.Validators
 {

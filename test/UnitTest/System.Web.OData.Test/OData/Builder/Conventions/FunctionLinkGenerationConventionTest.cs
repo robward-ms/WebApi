@@ -4,9 +4,13 @@
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
 
@@ -57,7 +61,7 @@ namespace System.Web.OData.Builder.Conventions
 
             IEdmEntitySet customers = model.EntityContainer.FindEntitySet("Customers");
             var edmType = model.SchemaElements.OfType<IEdmEntityType>().First(e => e.Name == "Customer");
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = customers, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, edmType.AsReference(), new Customer { Id = 109 });
 
             // Assert
@@ -113,7 +117,7 @@ namespace System.Web.OData.Builder.Conventions
             request.EnableODataDependencyInjectionSupport("odata");
 
             IEdmEntitySet customers = model.EntityContainer.FindEntitySet("Customers");
-            var entityContext = new ResourceSetContext { EntitySetBase = customers, Request = request, Url = request.GetUrlHelper() };
+            var entityContext = new ResourceSetContext { EntitySetBase = customers, Request = new WebApiRequestMessage(request), Url = new WebApiUrlHelper(request.GetUrlHelper()) };
 
             // Assert
             var edmFunction = model.SchemaElements.OfType<IEdmFunction>().First(f => f.Name == "MyFunction");
@@ -152,7 +156,7 @@ namespace System.Web.OData.Builder.Conventions
 
             OperationLinkBuilder fuinctionLinkBuilder = model.GetOperationLinkBuilder(edmFunction);
 
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = edmCustomers, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = edmCustomers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, edmType.AsReference(), new Customer { Id = 109 });
 
             // Assert

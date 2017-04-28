@@ -7,8 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.OData.Batch;
-using System.Web.OData.Formatter;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Test

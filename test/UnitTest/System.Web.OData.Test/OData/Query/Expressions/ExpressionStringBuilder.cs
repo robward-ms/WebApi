@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.OData.WebApi.Query.Expressions;
 
 namespace System.Web.OData.Query.Expressions
 {

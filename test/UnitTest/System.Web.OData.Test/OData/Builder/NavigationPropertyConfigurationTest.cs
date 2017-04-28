@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using System.Web.OData.Properties;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.TestCommon;
 using Moq;
 

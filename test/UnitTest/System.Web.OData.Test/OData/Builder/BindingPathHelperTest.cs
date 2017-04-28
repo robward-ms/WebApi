@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Builder
@@ -27,6 +28,7 @@ namespace System.Web.OData.Builder
             MockPropertyInfo propertyInfo = new MockPropertyInfo(typeof(object), "propertyName");
 
             // Act
+            Type type1 = type.Object;
             IList<MemberInfo> path = new List<MemberInfo> { type.Object, propertyInfo.Object };
 
             // Assert

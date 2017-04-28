@@ -3,17 +3,20 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder;
-using System.Web.OData.Formatter;
-using System.Web.OData.Routing.Template;
 using System.Web.OData.Test.TestCommon;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Template;
 using Microsoft.TestCommon;
 using Microsoft.TestCommon.Types;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Routing
 {
@@ -810,6 +813,7 @@ namespace System.Web.OData.Routing
         [InlineData("RoutingCustomers(1)/Products/$ref?$id=" + _serviceRoot + "unknown", "The value of $id '" + _serviceRoot + "unknown' is invalid.")]
         public void CannotParseDollarId_ThrowsODataException_InvalidDollarId(string odataPath, string expectedError)
         {
+            // issue: Now entire query string is provided to get rid of WebApi dependency.
             // Arrange & Act & Assert
             Assert.Throws<ODataException>(() => _parser.Parse(_model, _serviceRoot, odataPath), expectedError);
         }

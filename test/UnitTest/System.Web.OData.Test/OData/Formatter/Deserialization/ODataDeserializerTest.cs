@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.TestCommon;
 using Moq;
 

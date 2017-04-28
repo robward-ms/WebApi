@@ -4,13 +4,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using System.Web.OData.TestCommon;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
 using Moq;
 using BuilderTestModels = System.Web.OData.Builder.TestModels;

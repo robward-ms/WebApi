@@ -3,6 +3,8 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.TestCommon;
 using Moq;
 

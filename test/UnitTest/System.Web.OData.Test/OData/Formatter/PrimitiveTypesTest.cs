@@ -7,15 +7,16 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter
 {
@@ -25,8 +26,8 @@ namespace System.Web.OData.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {
@@ -135,8 +136,8 @@ namespace System.Web.OData.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {

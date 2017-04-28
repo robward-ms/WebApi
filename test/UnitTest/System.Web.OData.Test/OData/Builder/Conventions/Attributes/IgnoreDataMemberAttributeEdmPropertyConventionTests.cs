@@ -3,6 +3,8 @@
 
 using System.Reflection;
 using System.Runtime.Serialization;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.TestCommon;
 using Moq;
 

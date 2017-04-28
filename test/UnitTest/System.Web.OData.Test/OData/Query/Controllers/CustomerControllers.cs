@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web.OData.TestCommon.Models;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Query.Controllers
 {

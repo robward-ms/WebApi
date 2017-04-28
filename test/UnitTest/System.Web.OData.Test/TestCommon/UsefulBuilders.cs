@@ -2,9 +2,9 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq.Expressions;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon.Types;
 
 namespace System.Web.OData

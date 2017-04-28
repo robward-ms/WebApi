@@ -2,12 +2,13 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
+using System.Net.Http.Headers;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -18,8 +19,8 @@ namespace System.Web.OData.Formatter.Serialization
         public ComplexTypeTest()
         {
             _formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.Resource }) { Request = GetSampleRequest() };
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
         }
 
         [Fact]
@@ -27,7 +28,7 @@ namespace System.Web.OData.Formatter.Serialization
         {
             // Arrange
             ObjectContent<Person> content = new ObjectContent<Person>(new Person(0, new ReferenceDepthContext(7)),
-                _formatter, ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                _formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(Resources.PersonComplexType, content.ReadAsStringAsync().Result);

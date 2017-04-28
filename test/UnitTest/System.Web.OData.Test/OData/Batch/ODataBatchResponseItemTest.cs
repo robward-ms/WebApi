@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Web.OData.Batch;
-using System.Web.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.TestCommon;
 
@@ -29,7 +28,7 @@ namespace System.Web.OData.Test
         {
             HttpContent content = new StringContent(String.Empty, Encoding.UTF8, "multipart/mixed");
             content.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("boundary", Guid.NewGuid().ToString()));
-            IODataResponseMessage odataResponse = new ODataMessageWrapper(new MemoryStream(), content.Headers);
+            IODataResponseMessage odataResponse = ODataMessageWrapperHelper.Create(new MemoryStream(), content.Headers);
             ODataMessageWriter messageWriter = new ODataMessageWriter(odataResponse);
 
             Assert.ThrowsArgumentNull(
@@ -44,7 +43,7 @@ namespace System.Web.OData.Test
             MemoryStream ms = new MemoryStream();
             HttpContent content = new StringContent(String.Empty, Encoding.UTF8, "multipart/mixed");
             content.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("boundary", Guid.NewGuid().ToString()));
-            IODataResponseMessage odataResponse = new ODataMessageWrapper(ms, content.Headers);
+            IODataResponseMessage odataResponse = ODataMessageWrapperHelper.Create(ms, content.Headers);
             var batchWriter = new ODataMessageWriter(odataResponse).CreateODataBatchWriter();
             HttpResponseMessage response = new HttpResponseMessage()
             {
@@ -71,7 +70,7 @@ namespace System.Web.OData.Test
             MemoryStream ms = new MemoryStream();
             HttpContent content = new StringContent(String.Empty, Encoding.UTF8, "multipart/mixed");
             content.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("boundary", Guid.NewGuid().ToString()));
-            IODataResponseMessage odataResponse = new ODataMessageWrapper(ms, content.Headers);
+            IODataResponseMessage odataResponse = ODataMessageWrapperHelper.Create(ms, content.Headers);
             var batchWriter = new ODataMessageWriter(odataResponse).CreateODataBatchWriter();
             HttpResponseMessage response = new HttpResponseMessage
             {

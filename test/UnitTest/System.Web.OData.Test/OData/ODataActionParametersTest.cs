@@ -3,13 +3,14 @@
 
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.TestCommon;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {

@@ -4,14 +4,16 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
-using System.Web.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace System.Web.OData
@@ -46,7 +48,7 @@ namespace System.Web.OData
                 builder.AddService(ServiceLifetime.Singleton, sp => instance)
                        .AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             return new HttpClient(new HttpServer(config));
         }
 

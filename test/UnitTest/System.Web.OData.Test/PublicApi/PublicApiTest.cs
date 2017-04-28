@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.IO;
-using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.PublicApi
@@ -43,7 +43,7 @@ namespace System.Web.OData.PublicApi
                 String.Format("Base line file {1} and output file {2} do not match, please check.{0}" +
                 "To update the baseline, please run:{0}{0}" +
                 "copy /y \"{2}\" \"{1}\"", Environment.NewLine,
-                @"OData\test\UnitTest\System.Web.OData.Test\PublicApi\System.Web.OData.PublicApi.bsl",
+                @"test\UnitTest\System.Web.OData.Test\PublicApi\System.Web.OData.PublicApi.bsl",
                 outputFile));
         }
 

@@ -6,17 +6,20 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
 using System.Web.OData.Test.TestCommon;
 using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData
 {
@@ -123,9 +126,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
@@ -219,9 +222,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("query", "query",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel())
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
@@ -246,9 +249,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act
@@ -295,9 +298,9 @@ namespace System.Web.OData
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act

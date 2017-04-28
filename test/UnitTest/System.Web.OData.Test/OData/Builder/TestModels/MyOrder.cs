@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Builder.TestModels
 {

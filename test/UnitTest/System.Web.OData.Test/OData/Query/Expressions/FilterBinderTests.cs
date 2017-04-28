@@ -8,12 +8,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Query.Expressions
 {
@@ -2624,7 +2629,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2656,7 +2661,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2686,7 +2691,7 @@ namespace System.Web.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                CreateFakeAssembliesResolver(),
+                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2853,7 +2858,7 @@ namespace System.Web.OData.Query.Expressions
 
         private static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterNode, IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
-            return FilterBinder.Bind<TEntityType>(filterNode, model, assembliesResolver, querySettings);
+            return FilterBinder.Bind<TEntityType>(filterNode, model, new WebApiAssembliesResolver(assembliesResolver), querySettings);
         }
 
         private IAssembliesResolver CreateFakeAssembliesResolver()

@@ -3,6 +3,7 @@
 
 using System.Net;
 using System.Net.Http;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Formatter
 {

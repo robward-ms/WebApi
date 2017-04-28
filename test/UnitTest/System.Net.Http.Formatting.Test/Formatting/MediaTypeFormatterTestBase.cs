@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.TestCommon;
 using Moq;
 

@@ -5,14 +5,19 @@ using System.Data.Linq;
 using System.IO;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using System.Web.OData.Formatter.Serialization;
 using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
+using ODataConventionModelBuilder = Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder;
 
 namespace System.Web.OData.Formatter.Deserialization
 {
@@ -212,8 +217,8 @@ namespace System.Web.OData.Formatter.Deserialization
 
             ODataMessageWriter messageWriter = new ODataMessageWriter(message as IODataResponseMessage, settings, model);
             ODataMessageReader messageReader = new ODataMessageReader(message as IODataResponseMessage, new ODataMessageReaderSettings(), model);
-            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = request };
-            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = request };
+            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = new WebApiRequestMessage(request) };
+            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = new WebApiRequestMessage(request) };
 
             serializer.WriteObject(value, typeof(DateTimeOffset), messageWriter, writeContext);
             stream.Seek(0, SeekOrigin.Begin);

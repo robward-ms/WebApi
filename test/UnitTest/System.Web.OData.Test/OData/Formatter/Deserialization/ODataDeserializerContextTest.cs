@@ -2,6 +2,8 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Web.OData.Formatter.Serialization.Models;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Formatter.Deserialization

@@ -3,10 +3,10 @@
 
 using System.IO;
 using System.Linq;
-using System.Web.OData.Formatter;
 using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Formatter;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Builder

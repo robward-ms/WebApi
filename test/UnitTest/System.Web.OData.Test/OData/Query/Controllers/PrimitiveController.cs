@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Query.Controllers
 {

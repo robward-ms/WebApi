@@ -3,11 +3,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.TestCommon;
 using Moq;
 

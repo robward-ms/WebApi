@@ -3,6 +3,9 @@
 
 using System.Linq;
 using System.Reflection;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.TestCommon;
 using Moq;
 
@@ -67,7 +70,7 @@ namespace System.Web.OData.Builder.Conventions.Attributes
 
             public Attribute Attribute { get; private set; }
 
-            public override void Apply(TConventionType edmTypeConfiguration, ODataConventionModelBuilder model,
+            public override void Apply(TConventionType edmTypeConfiguration, Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder model,
                 Attribute attribute)
             {
                 ModelBuilder = model;

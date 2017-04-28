@@ -4,8 +4,11 @@
 using System.IO;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.Web.OData.Adapters;
 using System.Web.OData.Extensions;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Formatter.Serialization
@@ -121,8 +124,9 @@ namespace System.Web.OData.Formatter.Serialization
             // Arrange
             ODataEntityReferenceLinksSerializer serializer = new ODataEntityReferenceLinksSerializer();
             ODataSerializerContext writeContext = new ODataSerializerContext();
-            writeContext.Request = new HttpRequestMessage();
-            writeContext.Request.ODataProperties().TotalCount = 1;
+            HttpRequestMessage request = new HttpRequestMessage();
+            request.ODataProperties().TotalCount = 1;
+            writeContext.Request = new WebApiRequestMessage(request);
 
             MemoryStream stream = new MemoryStream();
             IODataResponseMessage message = new ODataMessageWrapper(stream);

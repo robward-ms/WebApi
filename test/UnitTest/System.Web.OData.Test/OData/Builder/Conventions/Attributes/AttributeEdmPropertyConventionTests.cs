@@ -4,6 +4,9 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.TestCommon;
 using Moq;
 
@@ -86,7 +89,7 @@ namespace System.Web.OData.Builder.Conventions.Attributes
             public override void Apply(TPropertyConfiguration edmProperty,
                 StructuralTypeConfiguration structuralTypeConfiguration,
                 Attribute attribute,
-                ODataConventionModelBuilder model)
+                Microsoft.OData.WebApi.Builder.ODataConventionModelBuilder model)
             {
                 Called = true;
             }

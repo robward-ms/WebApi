@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 using Moq;
 

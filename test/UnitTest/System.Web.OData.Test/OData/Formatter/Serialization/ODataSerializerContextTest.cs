@@ -4,12 +4,16 @@
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
+using System.Web.OData.Adapters;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -44,11 +48,11 @@ namespace System.Web.OData.Formatter.Serialization
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
                 Model = model.Model,
                 Path = new ODataPath(),
-                Request = new HttpRequestMessage(),
+                Request = new WebApiRequestMessage(new HttpRequestMessage()),
                 RootElementName = "somename",
                 SelectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true),
                 SkipExpensiveAvailabilityChecks = true,
-                Url = new UrlHelper()
+                Url = new WebApiUrlHelper(new UrlHelper())
             };
             ResourceContext resource = new ResourceContext { SerializerContext = context };
             SelectExpandClause selectExpand = new SelectExpandClause(new SelectItem[0], allSelected: true);

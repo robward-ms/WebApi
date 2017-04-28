@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq.Expressions;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Query.Expressions

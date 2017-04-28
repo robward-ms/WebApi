@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
 using Moq;
 
@@ -262,7 +265,7 @@ namespace System.Web.OData.Query.Expressions
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => 
                 wrapper.ToDictionary(mapperProvider: mapperProvider),
-                "The mapper provider must return a valid 'System.Web.OData.Query.IPropertyMapper' instance for the given 'NS.Name' IEdmType.");
+                "The mapper provider must return a valid 'Microsoft.OData.WebApi.Query.IPropertyMapper' instance for the given 'NS.Name' IEdmType.");
         }
 
         [Theory]

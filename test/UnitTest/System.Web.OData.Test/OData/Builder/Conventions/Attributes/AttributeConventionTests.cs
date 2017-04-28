@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Builder.Conventions.Attributes

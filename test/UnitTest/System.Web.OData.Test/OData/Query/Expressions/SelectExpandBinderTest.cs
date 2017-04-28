@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.OData.Builder;
-using System.Web.OData.Formatter;
 using System.Web.OData.Formatter.Serialization.Models;
 using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData.Query.Expressions
@@ -582,7 +585,7 @@ namespace System.Web.OData.Query.Expressions
                     "IIF((value({0}) == null), null, IIF((value({0}).Orders == null), null, " +
                     "value({0}).Orders.AsQueryable().Where($it => ($it.ID == value({1}).TypedProperty))))",
                     customer.Type,
-                    "System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]"),
+                    "Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]"),
                 filterInExpand.ToString());
             var orders = Expression.Lambda(filterInExpand).Compile().DynamicInvoke() as IEnumerable<Order>;
             Assert.Single(orders);
@@ -616,7 +619,7 @@ namespace System.Web.OData.Query.Expressions
             Assert.Equal(
                 string.Format(
                     "value({0}).Orders.AsQueryable().Where($it => ($it.ID == value(" +
-                    "System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]).TypedProperty))",
+                    "Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]).TypedProperty))",
                     customer.Type),
                 filterInExpand.ToString());
             var orders = Expression.Lambda(filterInExpand).Compile().DynamicInvoke() as IEnumerable<Order>;

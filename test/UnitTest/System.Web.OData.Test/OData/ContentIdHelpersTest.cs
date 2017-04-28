@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 
 namespace System.Web.OData
@@ -115,7 +116,7 @@ namespace System.Web.OData
             var contentId = Guid.NewGuid().ToString();
 
             // Act
-            ContentIdHelpers.AddLocationHeaderToMapping(response, contentIdToLocationMapping, contentId);
+            ContentIdHelpers.AddLocationHeaderToMapping(response.Headers.Location, contentIdToLocationMapping, contentId);
 
             // Assert
             Assert.True(contentIdToLocationMapping.ContainsKey(contentId));
@@ -131,7 +132,7 @@ namespace System.Web.OData
             var contentId = Guid.NewGuid().ToString();
 
             // Act
-            ContentIdHelpers.AddLocationHeaderToMapping(response, contentIdToLocationMapping, contentId);
+            ContentIdHelpers.AddLocationHeaderToMapping(response.Headers.Location, contentIdToLocationMapping, contentId);
 
             // Assert
             Assert.False(contentIdToLocationMapping.ContainsKey(contentId));

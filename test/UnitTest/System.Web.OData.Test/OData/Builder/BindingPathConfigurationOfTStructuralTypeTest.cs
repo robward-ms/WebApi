@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Web.OData.Formatter;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.TestCommon;
 using Moq;
 

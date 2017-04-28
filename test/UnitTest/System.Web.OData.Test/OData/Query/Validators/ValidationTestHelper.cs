@@ -3,10 +3,11 @@
 
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
 using System.Web.OData.Query.Expressions;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 
 namespace System.Web.OData.Query.Validators
 {

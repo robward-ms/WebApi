@@ -9,6 +9,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.Tracing;
 using System.Web.OData.Formatter.Serialization.Models;
 using System.Web.OData.TestCommon;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 using Moq;
 

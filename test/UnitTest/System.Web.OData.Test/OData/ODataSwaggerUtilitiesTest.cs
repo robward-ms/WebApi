@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.TestCommon;
 using Newtonsoft.Json.Linq;
 

@@ -3,13 +3,15 @@
 
 using System.IO;
 using System.Net.Http;
+using System.Web.OData.Adapters;
 using System.Web.OData.Builder.TestModels;
 using System.Web.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace System.Web.OData.Formatter.Serialization
 {
@@ -120,7 +122,7 @@ namespace System.Web.OData.Formatter.Serialization
             var messageWriter = new ODataMessageWriter(mockRequest.Object);
             var request = new HttpRequestMessage();
             request.ODataProperties().Path = new ODataPath(CountSegment.Instance);
-            var context = new ODataSerializerContext { Request = request };
+            var context = new ODataSerializerContext { Request = new WebApiRequestMessage(request) };
 
             // Act
             serializer.WriteObject(5, null, messageWriter, context);

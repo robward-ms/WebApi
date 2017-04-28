@@ -4,7 +4,9 @@
 using System.Linq;
 using System.Web.OData.Builder;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
 
 namespace System.Web.OData.Formatter.Serialization
 {

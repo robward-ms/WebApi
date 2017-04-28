@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.OData.Builder.TestModels;
+using Microsoft.OData.WebApi;
 
 namespace System.Web.OData.Formatter
 {

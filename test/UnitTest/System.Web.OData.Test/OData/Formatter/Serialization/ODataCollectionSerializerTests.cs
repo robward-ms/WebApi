@@ -7,6 +7,9 @@ using System.IO;
 using System.Runtime.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.TestCommon;
 using Moq;
 
@@ -15,7 +18,7 @@ namespace System.Web.OData.Formatter.Serialization
     public class ODataCollectionSerializerTests
     {
         IEdmModel _model;
-        ODataSerializerProvider _serializerProvider;
+        IODataSerializerProvider _serializerProvider;
         ODataCollectionSerializer _serializer;
         IEdmPrimitiveTypeReference _edmIntType;
         IEdmCollectionTypeReference _collectionType;
@@ -99,7 +102,7 @@ namespace System.Web.OData.Formatter.Serialization
         public void CreateODataValue_ThrowsArgument_IfGraphIsNotEnumerable()
         {
             object nonEnumerable = new object();
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             var serializer = new ODataCollectionSerializer(serializerProvider.Object);
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(It.IsAny<IEdmTypeReference>())).Returns<IEdmTypeReference>(null);
 
@@ -113,7 +116,7 @@ namespace System.Web.OData.Formatter.Serialization
         public void CreateODataCollectionValue_ThrowsSerializationException_TypeCannotBeSerialized()
         {
             IEnumerable enumerable = new[] { 0 };
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             var serializer = new ODataCollectionSerializer(serializerProvider.Object);
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(It.IsAny<IEdmTypeReference>())).Returns<IEdmTypeReference>(null);
 
@@ -171,7 +174,7 @@ namespace System.Web.OData.Formatter.Serialization
             IEdmEnumTypeReference elementType = new EdmEnumTypeReference(new EdmEnumType("NS", "EnumType"), isNullable: true);
             edmEnumObject.Setup(s => s.GetEdmType()).Returns(elementType);
 
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             Mock<ODataEnumSerializer> elementSerializer = new Mock<ODataEnumSerializer>(MockBehavior.Strict, serializerProvider.Object);
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(elementType)).Returns(elementSerializer.Object);
             elementSerializer.Setup(s => s.CreateODataEnumValue(collection[0], elementType, serializerContext)).Returns(new ODataEnumValue("1", "NS.EnumType")).Verifiable();
