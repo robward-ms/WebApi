@@ -502,10 +502,6 @@
     <EmbeddedResource Include="PublicApi\System.Web.OData.PublicApi.bsl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
-      <Project>{d23e28f1-ccd0-43e0-8c0d-36731ec91318}</Project>
-      <Name>System.Web.OData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.TestCommon\Microsoft.TestCommon.csproj">
       <Project>{fccc4cb7-baf7-4a57-9f89-e5766fe536c0}</Project>
       <Name>Microsoft.TestCommon</Name>
