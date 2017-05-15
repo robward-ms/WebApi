@@ -12,17 +12,18 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Query.Expressions
 {
     /// <summary>
     /// The base class for all expression binders.
     /// </summary>
-    public abstract class ExpressionBinderBase
+    public abstract partial class ExpressionBinderBase
     {
         internal static readonly MethodInfo StringCompareMethodInfo = typeof(string).GetMethod("Compare", new[] { typeof(string), typeof(string), typeof(StringComparison) });
 
@@ -56,22 +57,9 @@ namespace Microsoft.OData.WebApi.Query.Expressions
 
         internal ODataQuerySettings QuerySettings { get; set; }
 
-        internal IAssembliesResolver AssembliesResolver { get; set; }
+        internal IWebApiAssembliesResolver AssembliesResolver { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionBinderBase"/> class.
-        /// </summary>
-        /// <param name="requestContainer">The request container.</param>
-        protected ExpressionBinderBase(IServiceProvider requestContainer)
-        {
-            Contract.Assert(requestContainer != null);
-
-            QuerySettings = requestContainer.GetRequiredService<ODataQuerySettings>();
-            Model = requestContainer.GetRequiredService<IEdmModel>();
-            AssembliesResolver = requestContainer.GetRequiredService<IAssembliesResolver>();
-        }
-
-        internal ExpressionBinderBase(IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+        internal ExpressionBinderBase(IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
             : this(model, querySettings)
         {
             AssembliesResolver = assembliesResolver;

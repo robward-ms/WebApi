@@ -16,7 +16,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataEnumSerializer"/>.
         /// </summary>
-        public ODataEnumSerializer(ODataSerializerProvider serializerProvider)
+        public ODataEnumSerializer(IODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Property, serializerProvider)
         {
         }

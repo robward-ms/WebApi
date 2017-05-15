@@ -4,6 +4,8 @@
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -13,7 +15,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     public class ActionRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -30,7 +32,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 throw Error.ArgumentNull("actionMap");
             }
 
-            if (controllerContext.Request.Method == HttpMethod.Post)
+            if (HttpMethodHelper.IsPost(controllerContext.Request.Method))
             {
                 switch (odataPath.PathTemplate)
                 {

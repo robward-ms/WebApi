@@ -2059,7 +2059,7 @@ namespace Microsoft.OData.WebApi.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be deserialized using the {1}..
+        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be deserialized using the ODataMediaTypeFormatter..
         /// </summary>
         internal static string TypeCannotBeDeserialized {
             get {
@@ -2086,7 +2086,7 @@ namespace Microsoft.OData.WebApi.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be serialized using the {1}..
+        ///   Looks up a localized string similar to &apos;{0}&apos; cannot be serialized using the ODataMediaTypeFormatter..
         /// </summary>
         internal static string TypeCannotBeSerialized {
             get {

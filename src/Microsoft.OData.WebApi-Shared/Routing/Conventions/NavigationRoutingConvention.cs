@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
@@ -13,7 +16,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     public class NavigationRoutingConvention : NavigationSourceRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {
@@ -30,7 +33,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 throw Error.ArgumentNull("actionMap");
             }
 
-            HttpMethod method = controllerContext.Request.Method;
+            string method = controllerContext.Request.Method;
             string actionNamePrefix = GetActionMethodPrefix(method);
             if (actionNamePrefix == null)
             {
@@ -54,20 +57,20 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
                 // It is not valid to *Post* to any non-collection valued navigation property.
                 if (navigationProperty.TargetMultiplicity() != EdmMultiplicity.Many &&
-                    method == HttpMethod.Post)
+                    HttpMethodHelper.IsPost(method))
                 {
                     return null;
                 }
 
                 // It is not valid to *Put/Patch" to any collection-valued navigation property.
                 if (navigationProperty.TargetMultiplicity() == EdmMultiplicity.Many &&
-                    (method == HttpMethod.Put || "PATCH" == method.Method.ToUpperInvariant()))
+                    (HttpMethodHelper.IsPut(method) || HttpMethodHelper.IsPatch(method)))
                 {
                     return null;
                 }
 
                 // *Get* is the only supported method for $count request.
-                if (odataPath.Segments.Last() is CountSegment && method != HttpMethod.Get)
+                if (odataPath.Segments.Last() is CountSegment && !HttpMethodHelper.IsGet(method))
                 {
                     return null;
                 }
@@ -95,17 +98,17 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
             return null;
         }
 
-        private static string GetActionMethodPrefix(HttpMethod method)
+        private static string GetActionMethodPrefix(string method)
         {
-            switch (method.Method.ToUpperInvariant())
+            switch (method.ToUpperInvariant())
             {
-                case "GET":
+                case HttpMethodHelper.HttpGet:
                     return "Get";
-                case "POST":
+                case HttpMethodHelper.HttpPost:
                     return "PostTo";
-                case "PUT":
+                case HttpMethodHelper.HttpPut:
                     return "PutTo";
-                case "PATCH":
+                case HttpMethodHelper.HttpPatch:
                     return "PatchTo";
                 default:
                     return null;

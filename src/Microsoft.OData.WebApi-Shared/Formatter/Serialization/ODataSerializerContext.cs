@@ -5,7 +5,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Interfaces;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 using SelectExpandClause = Microsoft.OData.UriParser.SelectExpandClause;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
@@ -44,7 +45,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             ODataSerializerContext context = resource.SerializerContext;
 
             Request = context.Request;
-            RequestContext = context.RequestContext;
             Url = context.Url;
             Model = context.Model;
             Path = context.Path;
@@ -70,17 +70,12 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Gets or sets the HTTP Request whose response is being serialized.
         /// </summary>
-        public HttpRequestMessage Request { get; set; }
+        public IWebApiRequestMessage Request { get; set; }
 
         /// <summary>
-        /// Gets or sets the request context.
+        /// Gets or sets the <see cref="IWebApiUrlHelper"/> to use for generating OData links.
         /// </summary>
-        public HttpRequestContext RequestContext { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="UrlHelper"/> to use for generating OData links.
-        /// </summary>
-        public UrlHelper Url { get; set; }
+        public IWebApiUrlHelper Url { get; set; }
 
         /// <summary>
         /// Gets or sets the navigation source.

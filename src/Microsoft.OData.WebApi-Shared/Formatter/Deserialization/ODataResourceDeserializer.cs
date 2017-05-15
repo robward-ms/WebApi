@@ -165,7 +165,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
                 if (deserializer == null)
                 {
                     throw new SerializationException(
-                        Error.Format(SRResources.TypeCannotBeDeserialized, actualEntityType.FullName(), typeof(ODataMediaTypeFormatter).Name));
+                        Error.Format(SRResources.TypeCannotBeDeserialized, actualEntityType.FullName()));
                 }
 
                 object resource = deserializer.ReadInline(resourceWrapper, actualStructuredType, readContext);
@@ -446,8 +446,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
             ODataEdmTypeDeserializer deserializer = DeserializerProvider.GetEdmTypeDeserializer(edmType);
             if (deserializer == null)
             {
-                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized,
-                    edmType.FullName(), typeof(ODataMediaTypeFormatter)));
+                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized, edmType.FullName()));
             }
 
             IEdmStructuredTypeReference structuredType = edmType.AsStructured();
@@ -532,8 +531,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
             ODataEdmTypeDeserializer deserializer = DeserializerProvider.GetEdmTypeDeserializer(collectionType);
             if (deserializer == null)
             {
-                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized,
-                    collectionType.FullName(), typeof(ODataMediaTypeFormatter)));
+                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized, collectionType.FullName()));
             }
 
             IEnumerable value = ReadNestedResourceSetInline(resourceSetWrapper, collectionType, readContext) as IEnumerable;
@@ -560,8 +558,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
             ODataEdmTypeDeserializer deserializer = DeserializerProvider.GetEdmTypeDeserializer(edmType);
             if (deserializer == null)
             {
-                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized,
-                    edmType.FullName(), typeof(ODataMediaTypeFormatter)));
+                throw new SerializationException(Error.Format(SRResources.TypeCannotBeDeserialized, edmType.FullName()));
             }
 
             IEdmStructuredTypeReference structuredType = edmType.AsCollection().ElementType().AsStructured();

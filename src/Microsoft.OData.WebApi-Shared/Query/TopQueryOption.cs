@@ -96,7 +96,6 @@ namespace Microsoft.OData.WebApi.Query
 
                     if (topValue.HasValue && topValue > Int32.MaxValue)
                     {
-                        Contract.Assert(topValue.Value <= Int32.MaxValue);
                         throw new ODataException(Error.Format(
                             SRResources.SkipTopLimitExceeded,
                             Int32.MaxValue,
