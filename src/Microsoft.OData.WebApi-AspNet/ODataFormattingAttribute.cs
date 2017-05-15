@@ -10,7 +10,6 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Services;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 

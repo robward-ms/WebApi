@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Microsoft.OData.WebApi.Adapters;
+using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Results
 {
@@ -142,7 +144,7 @@ namespace Microsoft.OData.WebApi.Results
 
         internal IHttpActionResult GetInnerActionResult()
         {
-            if (RequestPreferenceHelpers.RequestPrefersReturnNoContent(Request))
+            if (RequestPreferenceHelpers.RequestPrefersReturnNoContent(new WebApiRequestHeaders(Request.Headers)))
             {
                 return new StatusCodeResult(HttpStatusCode.NoContent, Request);
             }

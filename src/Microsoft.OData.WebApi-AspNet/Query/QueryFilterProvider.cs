@@ -8,7 +8,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Query;
 
 namespace Microsoft.OData.WebApi.Query
 {

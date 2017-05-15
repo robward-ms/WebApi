@@ -10,11 +10,10 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
-using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Routing;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -139,10 +138,9 @@ namespace Microsoft.OData.WebApi.Formatter
                 {
                     Path = path,
                     Model = edmModel,
-                    Request = request,
+                    Request = new WebApiRequestMessage(request),
                     ResourceType = bindingContext.ModelType,
                     ResourceEdmType = edmTypeReference,
-                    RequestContext = request.GetRequestContext()
                 };
             }
         }

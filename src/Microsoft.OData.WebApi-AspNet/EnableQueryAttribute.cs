@@ -12,12 +12,10 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
-using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Query;
 
@@ -586,7 +584,7 @@ namespace Microsoft.OData.WebApi
                 queryContext = GetODataQueryContext(response, request, actionDescriptor);
             }
 
-            ODataQueryOptions queryOptions = new ODataQueryOptions(queryContext, request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(queryContext, new WebApiRequestMessage(request));
 
             ValidateQuery(request, queryOptions);
 

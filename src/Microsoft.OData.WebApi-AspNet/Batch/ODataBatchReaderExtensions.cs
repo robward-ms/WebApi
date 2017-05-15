@@ -9,7 +9,6 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OData;
 using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Batch

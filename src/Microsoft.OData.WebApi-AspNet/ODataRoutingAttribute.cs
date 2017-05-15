@@ -6,7 +6,6 @@ using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ValueProviders;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Routing;
 

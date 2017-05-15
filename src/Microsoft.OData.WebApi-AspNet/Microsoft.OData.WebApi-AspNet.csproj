@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\tools\WebStack.settings.targets" />
   <PropertyGroup>
     <ProjectGuid>{8424FAA0-BDCC-4F38-B725-99D6204DADED}</ProjectGuid>
@@ -58,6 +58,17 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Adapters\WebApiActionDescriptor.cs" />
+    <Compile Include="Adapters\WebApiActionMap.cs" />
+    <Compile Include="Adapters\WebApiAssembliesResolver.cs" />
+    <Compile Include="Adapters\WebApiContext.cs" />
+    <Compile Include="Adapters\WebApiControllerContext.cs" />
+    <Compile Include="Adapters\WebApiControllerDescriptor.cs" />
+    <Compile Include="Adapters\WebApiOptions.cs" />
+    <Compile Include="Adapters\WebApiRequestHeaders.cs" />
+    <Compile Include="Adapters\WebApiRequestMessage.cs" />
+    <Compile Include="Adapters\WebApiUrlHelper.cs" />
+    <Compile Include="Extensions\EntityTagHeaderValueExtensions.cs" />
     <Compile Include="Extensions\HttpConfigurationExtensions.cs" />
     <Compile Include="Extensions\HttpErrorExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
@@ -68,8 +79,11 @@
     <Compile Include="Batch\ODataBatchHandler.cs" />
     <Compile Include="Batch\ODataBatchHttpRequestMessageExtensions.cs" />
     <Compile Include="ETagMessageHandler.cs" />
+    <Compile Include="Formatter\EdmLibHelpers.cs" />
     <Compile Include="Formatter\ODataCountMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
+    <Compile Include="Query\Expressions\ExpressionBinderBase.cs" />
+    <Compile Include="Adapters\AttributeMappingProvider.cs" />
     <Compile Include="Batch\UnbufferedODataBatchHandler.cs" />
     <Compile Include="Batch\ODataBatchResponseItem.cs" />
     <Compile Include="Batch\ODataBatchRequestItem.cs" />
@@ -86,8 +100,17 @@
     <Compile Include="Formatter\ODataBinaryValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataPrimitiveValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataRawValueMediaTypeMapping.cs" />
+    <Compile Include="ODataMessageWrapperHelper.cs" />
     <Compile Include="ODataNullValueMessageHandler.cs" />
+    <Compile Include="ODataRoute.cs" />
     <Compile Include="ODataRoutingAttribute.cs" />
+    <Compile Include="Builder\ODataConventionModelBuilder.cs" />
+    <Compile Include="Formatter\Serialization\ODataDeltaFeedSerializer.cs" />
+    <Compile Include="Formatter\Serialization\ODataErrorSerializer.cs" />
+    <Compile Include="ODataPathParameterBindingAttribute.cs" />
+    <Compile Include="ODataQueryContextExtensions.cs" />
+    <Compile Include="Query\ODataQueryOptions.cs" />
+    <Compile Include="Formatter\Serialization\ODataResourceSetSerializer.cs" />
     <Compile Include="PerRequestContentNegotiator.cs" />
     <Compile Include="Results\CreatedODataResult.cs" />
     <Compile Include="Results\ResultHelpers.cs" />
@@ -108,31 +131,33 @@
     <Compile Include="Formatter\ODataModelBinderProvider.cs" />
     <Compile Include="Query\QueryFilterProvider.cs" />
     <Compile Include="ODataQueryParameterBindingAttribute.cs" />
-    <Compile Include="Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="Extensions\HttpActionDescriptorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Formatter\ODataMediaTypeFormatter.cs" />
     <Compile Include="EnableQueryAttribute.cs" />
-    <Compile Include="Properties\SRResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SRResources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Common\CommonWebApiResources.resx">
+    <EmbeddedResource Include="..\Microsoft.OData.WebApi-Shared\Common\CommonWebApiResources.resx">
       <Link>Properties\CommonWebApiResources.resx</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\SRResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="..\Common\CommonWebApiResources.Designer.cs">
+    <EmbeddedResource Include="..\Microsoft.OData.WebApi-Shared\Common\SRResources.resx">
+      <Link>Properties\SRResources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="..\Microsoft.OData.WebApi-Shared\Common\CommonWebApiResources.Designer.cs">
       <Link>Properties\CommonWebApiResources.Designer.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CommonWebApiResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\Microsoft.OData.WebApi-Shared\Common\SRResources.Designer.cs">
+      <Link>Properties\SRResources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SRResources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -141,5 +166,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
+  <Import Project="..\Microsoft.OData.WebApi-Shared\Microsoft.OData.WebApi-Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

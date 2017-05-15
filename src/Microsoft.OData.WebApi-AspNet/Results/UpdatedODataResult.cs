@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Microsoft.OData.WebApi.Adapters;
 
 namespace Microsoft.OData.WebApi.Results
 {
@@ -104,7 +105,7 @@ namespace Microsoft.OData.WebApi.Results
 
         internal IHttpActionResult GetInnerActionResult()
         {
-            if (RequestPreferenceHelpers.RequestPrefersReturnContent(_innerResult.Request))
+            if (RequestPreferenceHelpers.RequestPrefersReturnContent(new WebApiRequestHeaders(_innerResult.Request.Headers)))
             {
                 return _innerResult;
             }

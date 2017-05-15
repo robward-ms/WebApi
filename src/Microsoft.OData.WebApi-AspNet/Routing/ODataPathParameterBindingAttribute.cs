@@ -11,7 +11,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
-using Microsoft.OData.WebApi.Routing;
 
 namespace Microsoft.OData.WebApi.Routing
 {

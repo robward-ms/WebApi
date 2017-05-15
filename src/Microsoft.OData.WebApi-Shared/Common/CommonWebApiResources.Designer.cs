@@ -39,7 +39,7 @@ namespace Microsoft.OData.WebApi.Common {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("System.Web.OData.Properties.CommonWebApiResources", typeof(CommonWebApiResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OData.WebApi.AspNet.Properties.CommonWebApiResources", typeof(CommonWebApiResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

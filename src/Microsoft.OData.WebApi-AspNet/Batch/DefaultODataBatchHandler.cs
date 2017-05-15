@@ -11,6 +11,8 @@ using System.Web.Http;
 using System.Web.Http.Batch;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Adapters;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 
 namespace Microsoft.OData.WebApi.Batch
@@ -44,7 +46,7 @@ namespace Microsoft.OData.WebApi.Batch
 
             IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(request, cancellationToken);
 
-            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(request);
+            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(new WebApiRequestHeaders(request.Headers));
             if ((preferHeader != null && preferHeader.Contains(PreferenceContinueOnError)) || (!request.GetConfiguration().HasEnabledContinueOnErrorHeader()))
             {
                 ContinueOnError = true;
