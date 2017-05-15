@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Batch;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Batch
+namespace Microsoft.OData.WebApi.Batch
 {
     /// <summary>
     /// Defines the abstraction for handling OData batch requests.

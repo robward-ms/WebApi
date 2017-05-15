@@ -2,11 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Web.Http.Dispatcher;
-using System.Web.OData.Query;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     internal static class ODataQueryContextExtensions
     {

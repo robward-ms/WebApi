@@ -3,7 +3,7 @@
 
 using Microsoft.OData.Edm;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Represents an instance of an <see cref="IEdmEntityType"/>.

@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Batch;
-using System.Web.OData.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Extensions;
 
-namespace System.Web.OData.Batch
+namespace Microsoft.OData.WebApi.Batch
 {
     /// <summary>
     /// Default implementation of <see cref="ODataBatchHandler"/> for handling OData batch request.

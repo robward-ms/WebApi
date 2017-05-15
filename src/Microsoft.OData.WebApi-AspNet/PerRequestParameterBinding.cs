@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// A special HttpParameterBinding that uses a Per Request formatter instance with access to the Request.

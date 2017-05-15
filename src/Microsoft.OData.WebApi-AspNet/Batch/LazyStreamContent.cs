@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace System.Web.OData.Batch
+namespace Microsoft.OData.WebApi.Batch
 {
     internal class LazyStreamContent : HttpContent
     {

@@ -9,13 +9,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
 
-namespace System.Web.OData.Batch
+namespace Microsoft.OData.WebApi.Batch
 {
     /// <summary>
     /// Encapsulates a collection of OData batch responses.

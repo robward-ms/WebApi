@@ -5,10 +5,13 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.OData.Builder;
+using System.Web.Http.Dispatcher;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Adapters;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Extensions
+namespace Microsoft.OData.WebApi.Extensions
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class HttpActionDescriptorExtensions

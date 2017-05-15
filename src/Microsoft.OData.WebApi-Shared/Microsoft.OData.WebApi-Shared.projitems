@@ -408,7 +408,4 @@
       <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Properties\" />
-  </ItemGroup>
 </Project>

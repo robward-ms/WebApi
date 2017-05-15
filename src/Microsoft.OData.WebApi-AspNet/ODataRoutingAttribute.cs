@@ -5,9 +5,11 @@ using System.Diagnostics.Contracts;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ValueProviders;
-using System.Web.OData.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Routing;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Defines a controller-level attribute that can be used to enable OData action selection based on routing conventions.

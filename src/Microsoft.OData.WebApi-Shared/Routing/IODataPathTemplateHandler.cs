@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Web.OData.Routing.Template;
+using Microsoft.OData.WebApi.Routing.Template;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
     /// Exposes the ability to parse an OData path template as an <see cref="ODataPathTemplate"/>.

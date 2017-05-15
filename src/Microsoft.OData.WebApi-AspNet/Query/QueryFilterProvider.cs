@@ -6,8 +6,10 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Query;
 
-namespace System.Web.OData.Query
+namespace Microsoft.OData.WebApi.Query
 {
     /// <summary>
     /// An implementation of <see cref="IFilterProvider" /> that applies an action filter to
