@@ -3,8 +3,9 @@
 
 using System.IO;
 using System.Web.Http;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     internal static class Resources
     {

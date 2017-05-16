@@ -5,10 +5,12 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Web.Http;
 using Microsoft.OData;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 {
     public class ODataErrorSerializerTest
     {

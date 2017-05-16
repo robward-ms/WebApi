@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     public abstract class EnumHelperTestBase<TEnum> where TEnum : IComparable, IFormattable, IConvertible
     {

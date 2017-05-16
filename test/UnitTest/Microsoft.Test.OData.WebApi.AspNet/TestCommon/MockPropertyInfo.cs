@@ -4,7 +4,7 @@
 using System.Reflection;
 using Moq;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     public sealed class MockPropertyInfo : Mock<PropertyInfo>
     {

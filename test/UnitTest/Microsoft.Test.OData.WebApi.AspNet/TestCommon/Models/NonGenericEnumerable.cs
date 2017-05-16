@@ -3,7 +3,7 @@
 
 using System.Collections;
 
-namespace System.Web.OData.TestCommon.Models
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models
 {
     public class NonGenericEnumerable : IEnumerable
     {

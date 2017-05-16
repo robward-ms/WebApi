@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,17 +13,21 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Routing;
 using System.Web.Http.ValueProviders;
-using System.Web.OData.Builder;
-using System.Web.OData.Builder.Conventions;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
-using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
-using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class ODataModelBinderProviderTest
     {

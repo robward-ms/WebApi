@@ -2,11 +2,11 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Web.Http;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
 using Moq;
 
-namespace System.Web.OData.TestCommon
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     public static class ODataModelBuilderMocks
     {

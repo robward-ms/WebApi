@@ -4,9 +4,10 @@
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing.Template;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Routing.Template
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Template
 {
     public class SingletonSegmentTemplateTest
     {

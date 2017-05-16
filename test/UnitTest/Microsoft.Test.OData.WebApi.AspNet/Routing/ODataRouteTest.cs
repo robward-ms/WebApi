@@ -4,9 +4,10 @@
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing
 {
     public class ODataRouteTest
     {

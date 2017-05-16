@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Diagnostics.Contracts;
-using System.Web.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.WebApi.Builder;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 {
     internal static class EdmDirectValueAnnotationsManagerExtensions
     {

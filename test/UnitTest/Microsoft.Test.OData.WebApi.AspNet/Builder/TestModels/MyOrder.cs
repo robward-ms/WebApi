@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.OData.WebApi.Builder;
 
-namespace System.Web.OData.Builder.TestModels
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels
 {
     public class MyOrder
     {

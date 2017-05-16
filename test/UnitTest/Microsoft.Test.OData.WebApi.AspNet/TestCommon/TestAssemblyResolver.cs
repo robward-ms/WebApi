@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http.Dispatcher;
 
-namespace System.Web.OData.TestCommon
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     internal class TestAssemblyResolver : IAssembliesResolver
     {

@@ -3,12 +3,15 @@
 
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
-using System.Web.OData.Query.Expressions;
-using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.Test.OData.WebApi.AspNet.Query.Expressions;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Query.Validators
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
 {
     internal static class ValidationTestHelper
     {

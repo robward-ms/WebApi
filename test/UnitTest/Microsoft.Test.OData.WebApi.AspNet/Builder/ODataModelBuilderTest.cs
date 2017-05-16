@@ -1,21 +1,26 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
-using System.Web.OData.TestCommon;
-using System.Web.OData.TestCommon.Models;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Properties;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using BuilderTestModels = System.Web.OData.Builder.TestModels;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 {
     public class ODataModelBuilderTest
     {

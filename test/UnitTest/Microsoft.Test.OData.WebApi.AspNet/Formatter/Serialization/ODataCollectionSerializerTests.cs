@@ -7,10 +7,10 @@ using System.IO;
 using System.Runtime.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 {
     public class ODataCollectionSerializerTests
     {

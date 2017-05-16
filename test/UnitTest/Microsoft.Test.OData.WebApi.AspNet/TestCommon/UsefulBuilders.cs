@@ -2,12 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq.Expressions;
-using System.Web.OData.Builder;
-using System.Web.OData.Builder.TestModels;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon.Types;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     public static class UsefulBuilders
     {

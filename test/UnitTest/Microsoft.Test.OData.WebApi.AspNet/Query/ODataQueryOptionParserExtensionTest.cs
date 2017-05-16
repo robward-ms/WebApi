@@ -1,17 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.Test.OData.WebApi.AspNet.Routing;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Query
+namespace Microsoft.Test.OData.WebApi.AspNet.Query
 {
     public class ODataQueryOptionParserExtensionTest
     {

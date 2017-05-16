@@ -7,19 +7,19 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.OData.Builder;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter;
-using System.Web.OData.Routing;
-using System.Web.OData.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Results
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Results
 {
     public class CreatedODataResultTest
     {

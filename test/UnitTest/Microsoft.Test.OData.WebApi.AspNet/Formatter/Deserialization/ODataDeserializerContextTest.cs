@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.OData.Formatter.Serialization.Models;
-using Microsoft.TestCommon;
+using System;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using  Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 {
     public class ODataDeserializerContextTest
     {

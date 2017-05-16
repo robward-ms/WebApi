@@ -1,16 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.OData.Builder.TestModels;
 using Microsoft.OData;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 
-namespace System.Web.OData.Query
+namespace Microsoft.Test.OData.WebApi.AspNet.Query
 {
     public class QueryCompositionPrimitiveController : ApiController
     {

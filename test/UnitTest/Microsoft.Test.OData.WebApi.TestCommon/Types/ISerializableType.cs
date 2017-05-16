@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Microsoft.TestCommon.Types
+namespace Microsoft.Test.OData.WebApi.TestCommon.Types
 {
     [Serializable]
     public class ISerializableType : ISerializable, INameAndIdContainer

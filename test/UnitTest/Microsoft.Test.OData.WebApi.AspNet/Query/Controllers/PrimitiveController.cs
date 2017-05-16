@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.WebApi;
 
-namespace System.Web.OData.Query.Controllers
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Controllers
 {
     public class PrimitiveController : ODataController
     {

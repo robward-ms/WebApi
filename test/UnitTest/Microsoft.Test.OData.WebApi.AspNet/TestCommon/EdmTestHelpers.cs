@@ -6,14 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.OData.Formatter;
-using System.Web.OData.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     internal static class EdmTestHelpers
     {

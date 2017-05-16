@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.TestCommon.Types;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon.DataTypes
 {
     /// <summary>
     /// A base class for test data.  A <see cref="TestData"/> instance is associated with a given type, and the <see cref="TestData"/> instance can

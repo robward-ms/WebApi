@@ -4,7 +4,7 @@
 using System.Web.Http;
 using Microsoft.OData.Edm;
 
-namespace System.Web.OData.Extensions
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     internal static class HttpConfigurationExtensions
     {
