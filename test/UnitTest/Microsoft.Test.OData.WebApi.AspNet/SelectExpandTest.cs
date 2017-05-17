@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,15 +9,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Query;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class SelectExpandTest
     {

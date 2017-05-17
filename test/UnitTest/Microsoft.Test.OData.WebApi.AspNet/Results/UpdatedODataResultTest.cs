@@ -7,10 +7,11 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Results;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Results;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Results
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Results
 {
     public class UpdatedODataResultTest
     {

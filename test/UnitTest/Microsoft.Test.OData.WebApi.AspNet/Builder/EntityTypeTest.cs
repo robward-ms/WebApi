@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 {
     public class EntityTypeTest
     {

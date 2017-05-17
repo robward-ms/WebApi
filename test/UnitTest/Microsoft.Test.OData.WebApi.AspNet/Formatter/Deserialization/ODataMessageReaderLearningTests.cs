@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 {
     public class ODataMessageReaderLearningTests
     {

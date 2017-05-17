@@ -6,10 +6,12 @@ using System.Net.Http.Headers;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 {
     public class ODataSingletonDeserializerTest
     {

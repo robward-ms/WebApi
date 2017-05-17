@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
-using System.Web.OData.Batch;
 using Microsoft.OData;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Batch;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Test
+namespace Microsoft.Test.OData.WebApi.AspNet.Batch
 {
     public class ODataBatchReaderExtensionsTest
     {

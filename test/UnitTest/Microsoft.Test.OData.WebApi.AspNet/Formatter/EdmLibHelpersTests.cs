@@ -1,18 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
-using System.Web.OData.Builder;
-using System.Web.OData.Formatter.Serialization.Models;
-using System.Web.OData.Query.Expressions;
-using System.Web.OData.TestCommon;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class EdmLibHelpersTests
     {

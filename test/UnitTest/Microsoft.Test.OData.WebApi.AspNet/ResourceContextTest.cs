@@ -1,15 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http.Routing;
-using System.Web.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class ResourceContextTest
     {

@@ -1,21 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class ODataFunctionTests
     {
@@ -56,9 +59,10 @@ namespace System.Web.OData.Formatter
             configuration.MapODataServiceRoute("odata1", "odata", model, pathHandler, ODataRoutingConventions.CreateDefault());
 
             // only with attribute routing
+            AttributeMappingProvider mappingProvider = new AttributeMappingProvider("odata2", configuration);
             IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
             {
-                new AttributeRoutingConvention("odata2", configuration)
+                new AttributeRoutingConvention(mappingProvider)
             };
             configuration.MapODataServiceRoute("odata2", "attribute", model, pathHandler, routingConventions);
 

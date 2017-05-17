@@ -7,17 +7,18 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
-using System.Web.OData.Batch;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Batch;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class HttpRouteCollectionExtensionsTest
     {

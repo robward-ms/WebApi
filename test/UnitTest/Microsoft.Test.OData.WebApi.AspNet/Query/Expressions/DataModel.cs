@@ -1,14 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
 {
     public class Product
     {

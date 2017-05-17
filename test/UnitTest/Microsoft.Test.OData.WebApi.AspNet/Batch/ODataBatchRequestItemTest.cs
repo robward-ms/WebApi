@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
-using System.Web.OData.Batch;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Batch;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Test
+namespace Microsoft.Test.OData.WebApi.AspNet.Batch
 {
     public class ODataBatchRequestItemTest
     {

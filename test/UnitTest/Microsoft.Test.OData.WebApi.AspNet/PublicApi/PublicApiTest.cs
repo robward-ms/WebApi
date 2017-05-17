@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.IO;
 using System.Web.Http;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.PublicApi
+namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
 {
     public class PublicApiTest
     {

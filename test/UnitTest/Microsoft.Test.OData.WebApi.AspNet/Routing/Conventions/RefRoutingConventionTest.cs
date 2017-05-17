@@ -6,13 +6,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
-using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 {
     public class RefRoutingConventionTest
     {

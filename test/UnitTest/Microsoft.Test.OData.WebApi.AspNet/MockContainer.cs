@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class MockContainer : IServiceProvider
     {

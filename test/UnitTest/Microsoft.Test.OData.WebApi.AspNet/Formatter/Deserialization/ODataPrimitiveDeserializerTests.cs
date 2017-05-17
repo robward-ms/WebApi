@@ -1,20 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Data.Linq;
 using System.IO;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Serialization;
-using System.Web.OData.Formatter.Serialization.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 {
     public class ODataPrimitiveDeserializerTests
     {

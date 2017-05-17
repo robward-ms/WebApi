@@ -5,7 +5,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     /// <summary>
     /// MSTest assert class to make assertions about tests using <see cref="Task"/>.

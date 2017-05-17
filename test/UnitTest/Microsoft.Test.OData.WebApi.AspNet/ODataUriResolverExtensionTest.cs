@@ -1,24 +1,28 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
-using System.Web.OData.Test.TestCommon;
-using System.Web.OData.TestCommon.Models;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.OData.WebApi.Test.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.Routing;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class ODataUriResolverExtensionTest
     {

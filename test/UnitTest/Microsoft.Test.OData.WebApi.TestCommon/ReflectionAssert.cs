@@ -5,7 +5,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     public class ReflectionAssert
     {

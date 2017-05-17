@@ -1,15 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Extensions;
-using System.Web.OData.TestCommon;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing
 {
     public class ODataSingletonRoutingTest
     {

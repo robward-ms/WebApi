@@ -7,11 +7,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.OData.Batch;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Batch;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Test
+namespace Microsoft.Test.OData.WebApi.AspNet.Batch
 {
     public class OperationRequestItemTest
     {

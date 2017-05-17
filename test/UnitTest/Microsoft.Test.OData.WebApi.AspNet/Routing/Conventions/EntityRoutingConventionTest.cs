@@ -5,9 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using ODataPath = Microsoft.OData.UriParser.ODataPath;
 
-namespace System.Web.OData.Routing.Conventions
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 {
     public class EntityRoutingConventionTest
     {

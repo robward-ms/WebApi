@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using Microsoft.TestCommon.Types;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace System.Web.OData.Builder.TestModels
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels
 {
     public class EnumModel
     {

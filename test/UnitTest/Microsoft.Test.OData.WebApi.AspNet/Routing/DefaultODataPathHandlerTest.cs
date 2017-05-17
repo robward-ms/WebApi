@@ -1,21 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder;
-using System.Web.OData.Formatter;
-using System.Web.OData.Routing.Template;
-using System.Web.OData.Test.TestCommon;
-using System.Web.OData.TestCommon;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
-using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Template;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing
 {
     public class DefaultODataPathHandlerTest
     {

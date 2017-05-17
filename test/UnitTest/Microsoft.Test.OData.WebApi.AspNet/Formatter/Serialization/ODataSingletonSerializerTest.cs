@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net.Http;
@@ -8,16 +9,17 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 {
     public class ODataSingletonSerializerTest
     {
