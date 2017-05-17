@@ -7,9 +7,10 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ValueProviders;
 using System.Web.Http.ValueProviders.Providers;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     internal class ODataValueProviderFactory : ValueProviderFactory, IUriValueProviderFactory
     {

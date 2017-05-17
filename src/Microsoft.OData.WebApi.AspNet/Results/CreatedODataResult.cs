@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 
-namespace System.Web.OData.Results
+namespace Microsoft.OData.WebApi.Results
 {
     /// <summary>
     /// Represents an action result that is a response to a create operation that adds an entity to an entity set.

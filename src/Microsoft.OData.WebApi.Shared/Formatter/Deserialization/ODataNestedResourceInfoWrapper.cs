@@ -2,9 +2,8 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using Microsoft.OData;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
     /// Encapsulates an <see cref="ODataNestedResourceInfo"/> and the list of nested items.

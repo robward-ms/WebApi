@@ -7,12 +7,14 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Represents an <see href="HttpMessageHandler" /> that converts null values in OData responses to

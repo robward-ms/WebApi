@@ -6,10 +6,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Batch
+namespace Microsoft.OData.WebApi.Batch
 {
     /// <summary>
     /// Represents a ChangeSet response.

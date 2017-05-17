@@ -9,12 +9,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using System.Web.OData.Routing.Conventions;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
     /// An implementation of <see cref="IHttpActionSelector"/> that uses the server's OData routing conventions to select an action for OData requests.

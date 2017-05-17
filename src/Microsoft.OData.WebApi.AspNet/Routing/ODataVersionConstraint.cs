@@ -6,10 +6,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using System.Web.OData.Extensions;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
     /// An implementation of <see cref="IHttpRouteConstraint"/> that only matches a specific OData protocol 

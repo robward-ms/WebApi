@@ -2,9 +2,9 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Reflection;
-using System.Web.OData.Formatter;
+using Microsoft.OData.WebApi.Formatter;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// Base class for all structural property configurations.

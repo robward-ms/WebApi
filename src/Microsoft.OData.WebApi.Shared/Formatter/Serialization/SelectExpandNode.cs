@@ -3,16 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Properties;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Formatter.Serialization
+namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
     /// Describes the set of structural properties and navigation properties and actions to select and navigation properties to expand while 

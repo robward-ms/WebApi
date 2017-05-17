@@ -15,18 +15,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using System.Web.OData.Batch;
-using System.Web.OData.Extensions;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
-using System.Web.OData.Properties;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Batch;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Properties;
 using ODataPath = System.Web.OData.Routing.ODataPath;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.OData.WebApi.Formatter
 {
     /// <summary>
     /// <see cref="MediaTypeFormatter"/> class to handle OData.

@@ -6,9 +6,11 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ValueProviders;
-using System.Web.OData.Formatter;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// An implementation of <see cref="ParameterBindingAttribute"/> that can bind URI parameters using OData conventions.

@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.OData.Extensions;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Formatter.Deserialization
+namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
     /// The default <see cref="ODataDeserializerProvider"/>.

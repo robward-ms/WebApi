@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Common;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.OData.WebApi.Routing
 {
     /// <summary>
     /// An <see cref="ODataPathSegment"/> implementation representing a segment that could not be resolved.

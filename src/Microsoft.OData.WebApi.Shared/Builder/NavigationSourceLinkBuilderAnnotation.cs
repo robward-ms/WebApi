@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Serialization;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// <see cref="NavigationSourceLinkBuilderAnnotation" /> is a class used to annotate an <see cref="IEdmNavigationSource" /> inside an <see cref="IEdmModel" />

@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Web.Http;
-using System.Web.OData.Formatter;
-using System.Web.OData.Properties;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter;
 
-namespace System.Web.OData.Builder
+namespace Microsoft.OData.WebApi.Builder
 {
     /// <summary>
     /// <see cref="ODataModelBuilder"/> is used to map CLR classes to an EDM model.

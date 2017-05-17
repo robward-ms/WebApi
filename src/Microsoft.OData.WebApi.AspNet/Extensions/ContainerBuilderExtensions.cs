@@ -4,17 +4,18 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Formatter.Deserialization;
-using System.Web.OData.Formatter.Serialization;
-using System.Web.OData.Query;
-using System.Web.OData.Query.Expressions;
-using System.Web.OData.Query.Validators;
-using System.Web.OData.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.OData.WebApi.Query.Validators;
+using Microsoft.OData.WebApi.Routing;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
-namespace System.Web.OData.Extensions
+namespace Microsoft.OData.WebApi.Extensions
 {
     internal static class ContainerBuilderExtensions
     {

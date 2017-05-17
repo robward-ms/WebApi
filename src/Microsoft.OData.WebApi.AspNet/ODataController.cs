@@ -3,10 +3,12 @@
 
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.OData.Extensions;
-using System.Web.OData.Results;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Results;
 
-namespace System.Web.OData
+namespace Microsoft.OData.WebApi
 {
     /// <summary>
     /// Defines a base class for OData controllers that support writing and reading data using the OData formats.
