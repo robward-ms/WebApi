@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Net.Http.Formatting;
 using System.Web.Http;
@@ -12,7 +13,7 @@ namespace Microsoft.OData.WebApi
     /// An attribute to disable WebApi model validation for a particular type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
-    internal sealed class NonValidatingParameterBindingAttribute : ParameterBindingAttribute
+    internal sealed partial class NonValidatingParameterBindingAttribute : ParameterBindingAttribute
     {
         public override HttpParameterBinding GetBinding(HttpParameterDescriptor parameter)
         {

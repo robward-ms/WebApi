@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
@@ -48,10 +49,8 @@ namespace Microsoft.OData.WebApi.Batch
             cancellationToken.ThrowIfCancellationRequested();
             Stream contentStream = await content.ReadAsStreamAsync();
 
-            IODataRequestMessage oDataRequestMessage = new ODataMessageWrapper(contentStream, content.Headers)
-            {
-                Container = requestContainer
-            };
+            IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(contentStream, content.Headers,
+                requestContainer);
             ODataMessageReaderSettings settings = requestContainer.GetRequiredService<ODataMessageReaderSettings>();
             ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, settings);
             return oDataMessageReader;

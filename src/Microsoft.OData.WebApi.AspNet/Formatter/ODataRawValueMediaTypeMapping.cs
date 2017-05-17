@@ -4,9 +4,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Web.Http;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;

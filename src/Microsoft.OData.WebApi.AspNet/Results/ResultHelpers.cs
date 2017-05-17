@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Net.Http;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions;
 using Microsoft.OData.WebApi.Common;
@@ -85,7 +86,7 @@ namespace Microsoft.OData.WebApi.Results
                 resourceContext.NavigationSource.NavigationSourceKind() == EdmNavigationSourceKind.ContainedEntitySet);
             Contract.Assert(resourceContext.Request != null);
 
-            ODataPath path = resourceContext.Request.ODataProperties().Path;
+            ODataPath path = resourceContext.Request.Context.Path;
             if (path == null)
             {
                 throw Error.InvalidOperation(SRResources.ODataPathMissing);
@@ -144,10 +145,9 @@ namespace Microsoft.OData.WebApi.Results
             {
                 NavigationSource = navigationSource,
                 Model = model,
-                Url = request.GetUrlHelper() ?? new UrlHelper(request),
+                Url = new WebApiUrlHelper(request.GetUrlHelper() ?? new UrlHelper(request)),
                 MetadataLevel = ODataMetadataLevel.FullMetadata, // Used internally to always calculate the links.
-                Request = request,
-                RequestContext = request.GetRequestContext(),
+                Request = new WebApiRequestMessage(request),
                 Path = path
             };
 

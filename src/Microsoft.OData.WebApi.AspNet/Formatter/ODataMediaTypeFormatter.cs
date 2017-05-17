@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -15,16 +16,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Batch;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.OData.WebApi.Properties;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.OData.WebApi.Formatter
 {
@@ -42,7 +42,7 @@ namespace Microsoft.OData.WebApi.Formatter
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
 
         private readonly ODataDeserializerProvider _deserializerProvider;
-        private readonly ODataSerializerProvider _serializerProvider;
+        private readonly IODataSerializerProvider _serializerProvider;
 
         private HttpRequestMessage _request;
 
@@ -59,9 +59,9 @@ namespace Microsoft.OData.WebApi.Formatter
         /// Initializes a new instance of the <see cref="ODataMediaTypeFormatter"/> class.
         /// </summary>
         /// <param name="deserializerProvider">The <see cref="ODataDeserializerProvider"/> to use.</param>
-        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use.</param>
+        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use.</param>
         /// <param name="payloadKinds">The kind of payloads this formatter supports.</param>
-        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, ODataSerializerProvider serializerProvider,
+        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, IODataSerializerProvider serializerProvider,
             IEnumerable<ODataPayloadKind> payloadKinds)
         {
             if (deserializerProvider == null)
@@ -137,9 +137,9 @@ namespace Microsoft.OData.WebApi.Formatter
         }
 
         /// <summary>
-        /// Gets the <see cref="ODataSerializerProvider"/> that will be used by this formatter instance.
+        /// Gets the <see cref="IODataSerializerProvider"/> that will be used by this formatter instance.
         /// </summary>
-        public ODataSerializerProvider SerializerProvider
+        public IODataSerializerProvider SerializerProvider
         {
             get
             {
@@ -338,7 +338,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 type = type.GetGenericArguments()[0];
             }
 
-            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, Request);
+            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;
         }
 
@@ -370,10 +370,7 @@ namespace Microsoft.OData.WebApi.Formatter
                     oDataReaderSettings.BaseUri = GetBaseAddressInternal(Request);
                     oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-                    IODataRequestMessage oDataRequestMessage = new ODataMessageWrapper(readStream, contentHeaders, Request.GetODataContentIdMapping())
-                    {
-                        Container = Request.GetRequestContainer()
-                    };
+                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, contentHeaders, Request.GetODataContentIdMapping(), Request.GetRequestContainer());
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
 
                     Request.RegisterForDispose(oDataMessageReader);
@@ -382,10 +379,9 @@ namespace Microsoft.OData.WebApi.Formatter
                     {
                         Path = path,
                         Model = model,
-                        Request = Request,
+                        Request = new WebApiRequestMessage(Request),
                         ResourceType = type,
                         ResourceEdmType = expectedPayloadType,
-                        RequestContext = Request.GetRequestContext(),
                     };
 
                     result = deserializer.Read(oDataMessageReader, type, readContext);
@@ -462,19 +458,16 @@ namespace Microsoft.OData.WebApi.Formatter
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(Request);
+            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(new WebApiRequestHeaders(Request.Headers));
             string annotationFilter = null;
             if (!String.IsNullOrEmpty(preferHeader))
             {
-                ODataMessageWrapper messageWrapper = new ODataMessageWrapper(writeStream, content.Headers);
+                ODataMessageWrapper messageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers);
                 messageWrapper.SetHeader(RequestPreferenceHelpers.PreferHeaderName, preferHeader);
                 annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
             }
 
-            ODataMessageWrapper responseMessageWrapper = new ODataMessageWrapper(writeStream, content.Headers)
-            {
-                Container = Request.GetRequestContainer()
-            };
+            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers, Request.GetRequestContainer());
             IODataResponseMessage responseMessage = responseMessageWrapper;
             if (annotationFilter != null)
             {
@@ -504,25 +497,27 @@ namespace Microsoft.OData.WebApi.Formatter
                 Path = (path == null || IsOperationPath(path)) ? null : path.ODLPath,
             };
 
-            MediaTypeHeaderValue contentType = null;
+            ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
             if (contentHeaders != null && contentHeaders.ContentType != null)
             {
-                contentType = contentHeaders.ContentType;
+                MediaTypeHeaderValue contentType = contentHeaders.ContentType;
+                IEnumerable<KeyValuePair<string, string>> parameters =
+                    contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
+                metadataLevel = ODataMediaTypes.GetMetadataLevel(contentType.MediaType, parameters);
             }
 
             using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
             {
                 ODataSerializerContext writeContext = new ODataSerializerContext()
                 {
-                    Request = Request,
-                    RequestContext = Request.GetRequestContext(),
-                    Url = urlHelper,
+                    Request = new WebApiRequestMessage(Request),
+                    Url = new WebApiUrlHelper(urlHelper),
                     NavigationSource = targetNavigationSource,
                     Model = model,
                     RootElementName = GetRootElementName(path) ?? "root",
                     SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet,
                     Path = path,
-                    MetadataLevel = ODataMediaTypes.GetMetadataLevel(contentType),
+                    MetadataLevel = metadataLevel,
                     SelectExpandClause = Request.ODataProperties().SelectExpandClause
                 };
 
@@ -574,10 +569,10 @@ namespace Microsoft.OData.WebApi.Formatter
         private ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
             ODataDeserializerProvider deserializerProvider, out IEdmTypeReference expectedPayloadType)
         {
-            expectedPayloadType = GetExpectedPayloadType(type, path, model);
+            expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);
 
             // Get the deserializer using the CLR type first from the deserializer provider.
-            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, Request);
+            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, new WebApiRequestMessage(Request));
             if (deserializer == null && expectedPayloadType != null)
             {
                 // we are in typeless mode, get the deserializer using the edm type from the path.
@@ -587,7 +582,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return deserializer;
         }
 
-        private ODataSerializer GetSerializer(Type type, object value, ODataSerializerProvider serializerProvider)
+        private ODataSerializer GetSerializer(Type type, object value, IODataSerializerProvider serializerProvider)
         {
             ODataSerializer serializer;
 
@@ -617,7 +612,7 @@ namespace Microsoft.OData.WebApi.Formatter
                     type = value == null ? type : value.GetType();
                 }
 
-                serializer = serializerProvider.GetODataPayloadSerializer(type, Request);
+                serializer = serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
                 if (serializer == null)
                 {
                     string message = Error.Format(SRResources.TypeCannotBeSerialized, type.Name, typeof(ODataMediaTypeFormatter).Name);
@@ -653,48 +648,6 @@ namespace Microsoft.OData.WebApi.Formatter
                 }
             }
             return null;
-        }
-
-        internal static bool TryGetInnerTypeForDelta(ref Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
-            {
-                type = type.GetGenericArguments()[0];
-                return true;
-            }
-
-            return false;
-        }
-
-        internal static IEdmTypeReference GetExpectedPayloadType(Type type, ODataPath path, IEdmModel model)
-        {
-            IEdmTypeReference expectedPayloadType = null;
-
-            if (typeof(IEdmObject).IsAssignableFrom(type))
-            {
-                // typeless mode. figure out the expected payload type from the OData Path.
-                IEdmType edmType = path.EdmType;
-                if (edmType != null)
-                {
-                    expectedPayloadType = EdmLibHelpers.ToEdmTypeReference(edmType, isNullable: false);
-                    if (expectedPayloadType.TypeKind() == EdmTypeKind.Collection)
-                    {
-                        IEdmTypeReference elementType = expectedPayloadType.AsCollection().ElementType();
-                        if (elementType.IsEntity())
-                        {
-                            // collection of entities cannot be CREATE/UPDATEd. Instead, the request would contain a single entry.
-                            expectedPayloadType = elementType;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                TryGetInnerTypeForDelta(ref type);
-                expectedPayloadType = model.GetEdmTypeReference(type);
-            }
-
-            return expectedPayloadType;
         }
 
         /// <summary>

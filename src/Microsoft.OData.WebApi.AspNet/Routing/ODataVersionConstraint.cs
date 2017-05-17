@@ -4,9 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Routing;
-using Microsoft.OData;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 

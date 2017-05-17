@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -68,10 +69,7 @@ namespace Microsoft.OData.WebApi.Batch
         /// <inheritdoc/>
         protected override async Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
-            IODataResponseMessage responseMessage = new ODataMessageWrapper(stream, Headers)
-            {
-                Container = _requestContainer
-            };
+            IODataResponseMessage responseMessage = ODataMessageWrapperHelper.Create(stream, this.Headers, _requestContainer);
             ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, _writerSettings);
             ODataBatchWriter writer = messageWriter.CreateODataBatchWriter();
 

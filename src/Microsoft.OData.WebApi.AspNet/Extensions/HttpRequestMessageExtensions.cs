@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -16,7 +17,6 @@ using System.Web.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
@@ -135,12 +135,9 @@ namespace Microsoft.OData.WebApi.Extensions
                 }
 
                 // get the etag handler, and parse the etag
-<<<<<<< HEAD
-=======
                 WebApiEntityTagHeaderValue adaptedValue = entityTagHeaderValue.AsWebApiEntityTagHeaderValue();
->>>>>>> a86e636b... System.Web.OData
                 IDictionary<string, object> properties =
-                    configuration.GetETagHandler().ParseETag(entityTagHeaderValue) ?? new Dictionary<string, object>();
+                    configuration.GetETagHandler().ParseETag(adaptedValue) ?? new Dictionary<string, object>();
                 IList<object> parsedETagValues = properties.Select(property => property.Value).AsList();
 
                 // get property names from request
@@ -365,18 +362,18 @@ namespace Microsoft.OData.WebApi.Extensions
         }
 
         /// <summary>
-        /// Gets the <see cref="ODataSerializerProvider"/> from the request container.
+        /// Gets the <see cref="IODataSerializerProvider"/> from the request container.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns>The <see cref="ODataSerializerProvider"/> from the request container.</returns>
-        public static ODataSerializerProvider GetSerializerProvider(this HttpRequestMessage request)
+        /// <returns>The <see cref="IODataSerializerProvider"/> from the request container.</returns>
+        public static IODataSerializerProvider GetSerializerProvider(this HttpRequestMessage request)
         {
             if (request == null)
             {
                 throw Error.ArgumentNull("request");
             }
 
-            return request.GetRequestContainer().GetRequiredService<ODataSerializerProvider>();
+            return request.GetRequestContainer().GetRequiredService<IODataSerializerProvider>();
         }
 
         /// <summary>

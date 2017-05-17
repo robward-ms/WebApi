@@ -400,4 +400,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Query\Expressions\FilterBinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\PropertySelectorVisitor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebApiEntityTagHeaderValue.cs" />
+  </ItemGroup>
 </Project>

@@ -6,10 +6,8 @@ using System.Diagnostics.Contracts;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Metadata;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi

@@ -3,7 +3,6 @@
 
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Results;
@@ -16,7 +15,7 @@ namespace Microsoft.OData.WebApi
     [ODataFormatting]
     [ODataRouting]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public abstract class ODataController : ApiController
+    public abstract partial class ODataController : ApiController
     {
         /// <summary>
         /// Releases the unmanaged resources that are used by the object and, optionally,

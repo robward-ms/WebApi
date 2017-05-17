@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Web.Http;
@@ -36,8 +37,9 @@ namespace Microsoft.OData.WebApi.Extensions
             // save the EdmModel to the action descriptor
             return actionDescriptor.Properties.GetOrAdd(ModelKeyPrefix + entityClrType.FullName, _ =>
                 {
+                    IAssembliesResolver resolver = actionDescriptor.Configuration.Services.GetAssembliesResolver();
                     ODataConventionModelBuilder builder =
-                        new ODataConventionModelBuilder(actionDescriptor.Configuration, isQueryCompositionMode: true);
+                        new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver), isQueryCompositionMode: true);
                     EntityTypeConfiguration entityTypeConfiguration = builder.AddEntityType(entityClrType);
                     builder.AddEntitySet(entityClrType.Name, entityTypeConfiguration);
                     IEdmModel edmModel = builder.GetEdmModel();

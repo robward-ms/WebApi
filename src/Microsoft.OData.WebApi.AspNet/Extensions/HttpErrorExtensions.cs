@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Web.Http;
-using Microsoft.OData;
-using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Extensions
