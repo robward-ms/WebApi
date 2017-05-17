@@ -9,7 +9,6 @@
     <Import_RootNamespace>Microsoft.OData.WebApi</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Builder\Conventions\AbstractEntityTypeDiscoveryConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\CollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ListWrapperCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\PropertyHelper.cs" />
@@ -40,11 +39,26 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\Conventions\Attributes\DataContractAttributeEnumTypeConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\Conventions\Attributes\MediaTypeAttributeConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\BindingPathHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CompiledPropertyAccessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\ODataModelBinderConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\IODataSerializerProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProviderProxy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NavigationPropertyQueryableConfiguration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NavigationPropertyQueryableConfigurationAnnotation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HttpMethodHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IAttributeMappingProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiActionDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiActionMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiAssembliesResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiControllerContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiControllerDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiHeaders.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiRequestMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiUrlHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NonValidatingParameterBindingAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ODataController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ODataPathParameterBindingAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ODataQueryParameterBindingAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ODataQueryContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\CountAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\SelectAttribute.cs" />
@@ -198,6 +212,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Query\Validators\SelectExpandQueryValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\DynamicPropertyRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\NavigationSourceRoutingConvention.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\SelectControllerResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\SingletonRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\DefaultODataPathHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataParameterValue.cs" />
@@ -378,14 +393,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataResourceSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataResourceSetSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataPrimitiveSerializer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataServiceDocumentSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\Expressions\ClrCanonicalFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\Expressions\FilterBinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\PropertySelectorVisitor.cs" />
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Properties\" />
-  </ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)WebApiEntityTagHeaderValue.cs" />
 </Project>

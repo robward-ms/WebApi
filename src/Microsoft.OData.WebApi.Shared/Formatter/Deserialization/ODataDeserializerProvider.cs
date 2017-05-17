@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
@@ -24,6 +25,6 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
         /// <param name="type">The CLR type.</param>
         /// <param name="request">The request being deserialized.</param>
         /// <returns>An <see cref="ODataDeserializer"/> that can deserialize the given type.</returns>
-        public abstract ODataDeserializer GetODataDeserializer(Type type, HttpRequestMessage request);
+        public abstract ODataDeserializer GetODataDeserializer(Type type, IWebApiRequestMessage request);
     }
 }

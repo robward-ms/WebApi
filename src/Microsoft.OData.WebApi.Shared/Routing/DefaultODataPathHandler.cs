@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -99,7 +98,6 @@ namespace Microsoft.OData.WebApi.Routing
             ODataUriParser uriParser;
             Uri serviceRootUri = null;
             Uri fullUri = null;
-            NameValueCollection queryString = null;
             IEdmModel model = requestContainer.GetRequiredService<IEdmModel>();
             if (template)
             {
@@ -116,7 +114,6 @@ namespace Microsoft.OData.WebApi.Routing
                         : serviceRoot + "/");
 
                 fullUri = new Uri(serviceRootUri, odataPath);
-                queryString = fullUri.ParseQueryString();
                 uriParser = new ODataUriParser(model, serviceRootUri, fullUri, requestContainer);
             }
 
@@ -200,7 +197,25 @@ namespace Microsoft.OData.WebApi.Routing
                                 !(id.EdmType.IsOrInheritsFrom(lastSegmentEdmType.ElementType.Definition) ||
                                   lastSegmentEdmType.ElementType.Definition.IsOrInheritsFrom(id.EdmType)))))
                     {
-                        throw new ODataException(Error.Format(SRResources.InvalidDollarId, queryString.Get("$id")));
+                        // We'd like to supply the Id parameter value but QueryString parsing is not part
+                        // of NetStandard 1.5 (HttpUtility).
+                        string idValue = fullUri.Query;
+                        string idParam = "$id=";
+                        int start = idValue.IndexOf(idParam, StringComparison.OrdinalIgnoreCase);
+                        if (start >= 0)
+                        {
+                            int end = idValue.IndexOf("&", start, StringComparison.OrdinalIgnoreCase);
+                            if (end >= 0)
+                            {
+                                idValue = idValue.Substring(start + idParam.Length, end - 1);
+                            }
+                            else
+                            {
+                                idValue = idValue.Substring(start + idParam.Length);
+                            }
+                        }
+
+                        throw new ODataException(Error.Format(SRResources.InvalidDollarId, idValue));
                     }
                 }
             }

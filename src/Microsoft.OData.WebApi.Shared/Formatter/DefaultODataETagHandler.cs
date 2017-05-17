@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Microsoft.OData;
 using Microsoft.OData.WebApi.Builder.Conventions;
+using Microsoft.OData.WebApi.Common;
 
 namespace Microsoft.OData.WebApi.Formatter
 {
@@ -17,7 +17,7 @@ namespace Microsoft.OData.WebApi.Formatter
 
         private const char Separator = ',';
 
-        public EntityTagHeaderValue CreateETag(IDictionary<string, object> properties)
+        public WebApiEntityTagHeaderValue CreateETag(IDictionary<string, object> properties)
         {
             if (properties == null)
             {
@@ -56,10 +56,10 @@ namespace Microsoft.OData.WebApi.Formatter
 
             builder.Append('\"');
             string tag = builder.ToString();
-            return new EntityTagHeaderValue(tag, isWeak: true);
+            return new WebApiEntityTagHeaderValue(tag, isWeak: true);
         }
 
-        public IDictionary<string, object> ParseETag(EntityTagHeaderValue etagHeaderValue)
+        public IDictionary<string, object> ParseETag(WebApiEntityTagHeaderValue etagHeaderValue)
         {
             if (etagHeaderValue == null)
             {

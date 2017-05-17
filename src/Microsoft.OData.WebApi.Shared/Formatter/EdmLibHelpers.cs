@@ -11,23 +11,23 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.Spatial;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.OData.WebApi.Formatter
 {
-    internal static class EdmLibHelpers
+    internal static partial class EdmLibHelpers
     {
         private static readonly EdmCoreModel _coreModel = EdmCoreModel.Instance;
-
-        private static readonly IAssembliesResolver _defaultAssemblyResolver = new DefaultAssembliesResolver();
 
         private static ConcurrentDictionary<IEdmEntitySet, IEnumerable<IEdmStructuralProperty>> _concurrencyProperties;
 
@@ -221,7 +221,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return GetClrType(edmTypeReference, edmModel, _defaultAssemblyResolver);
         }
 
-        public static Type GetClrType(IEdmTypeReference edmTypeReference, IEdmModel edmModel, IAssembliesResolver assembliesResolver)
+        public static Type GetClrType(IEdmTypeReference edmTypeReference, IEdmModel edmModel, IWebApiAssembliesResolver assembliesResolver)
         {
             if (edmTypeReference == null)
             {
@@ -254,7 +254,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return GetClrType(edmType, edmModel, _defaultAssemblyResolver);
         }
 
-        public static Type GetClrType(IEdmType edmType, IEdmModel edmModel, IAssembliesResolver assembliesResolver)
+        public static Type GetClrType(IEdmType edmType, IEdmModel edmModel, IWebApiAssembliesResolver assembliesResolver)
         {
             IEdmSchemaType edmSchemaType = edmType as IEdmSchemaType;
 
@@ -824,6 +824,55 @@ namespace Microsoft.OData.WebApi.Formatter
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
+        /// <summary>
+        /// Get the expected payload type of an OData path.
+        /// </summary>
+        /// <param name="type">The Type to use.</param>
+        /// <param name="path">The path to use.</param>
+        /// <param name="model">The EdmModel to use.</param>
+        /// <returns>The expected payload type of an OData path.</returns>
+        internal static IEdmTypeReference GetExpectedPayloadType(Type type, ODataPath path, IEdmModel model)
+        {
+            IEdmTypeReference expectedPayloadType = null;
+
+            if (typeof(IEdmObject).IsAssignableFrom(type))
+            {
+                // typeless mode. figure out the expected payload type from the OData Path.
+                IEdmType edmType = path.EdmType;
+                if (edmType != null)
+                {
+                    expectedPayloadType = EdmLibHelpers.ToEdmTypeReference(edmType, isNullable: false);
+                    if (expectedPayloadType.TypeKind() == EdmTypeKind.Collection)
+                    {
+                        IEdmTypeReference elementType = expectedPayloadType.AsCollection().ElementType();
+                        if (elementType.IsEntity())
+                        {
+                            // collection of entities cannot be CREATE/UPDATEd. Instead, the request would contain a single entry.
+                            expectedPayloadType = elementType;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                TryGetInnerTypeForDelta(ref type);
+                expectedPayloadType = model.GetEdmTypeReference(type);
+            }
+
+            return expectedPayloadType;
+        }
+
+        internal static bool TryGetInnerTypeForDelta(ref Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Delta<>))
+            {
+                type = type.GetGenericArguments()[0];
+                return true;
+            }
+
+            return false;
+        }
+
         private static ModelBoundQuerySettings GetMergedPropertyQuerySettings(
             ModelBoundQuerySettings propertyQuerySettings, ModelBoundQuerySettings propertyTypeQuerySettings)
         {
@@ -943,7 +992,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return matchesInterface(queryType) ? queryType : queryType.GetInterfaces().FirstOrDefault(matchesInterface);
         }
 
-        private static IEnumerable<Type> GetMatchingTypes(string edmFullName, IAssembliesResolver assembliesResolver)
+        private static IEnumerable<Type> GetMatchingTypes(string edmFullName, IWebApiAssembliesResolver assembliesResolver)
         {
             return TypeHelper.GetLoadedTypes(assembliesResolver).Where(t => t.IsPublic && t.EdmFullName() == edmFullName);
         }
