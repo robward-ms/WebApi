@@ -150,7 +150,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 {
                     new ODataProperty { Name = "NullableColor", Value = null}
                 },
-                TypeName = "System.Web.OData.EnumComplexWithNullableEnum"
+                TypeName = "Microsoft.Test.OData.WebApi.AspNet.EnumComplexWithNullableEnum"
             };
 
             IEdmModel model = GetEdmModel();
@@ -178,7 +178,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 {
                     new ODataProperty { Name = "RequiredColor", Value = new ODataEnumValue("123") }
                 },
-                TypeName = "System.Web.OData.EnumComplexWithRequiredEnum"
+                TypeName = "Microsoft.Test.OData.WebApi.AspNet.EnumComplexWithRequiredEnum"
             };
 
             IEdmModel model = GetEdmModel();
@@ -214,7 +214,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                         Value = new ODataEnumValue(color.ToString())
                     }
                 },
-                TypeName = "System.Web.OData.EnumComplexWithRequiredEnum"
+                TypeName = "Microsoft.Test.OData.WebApi.AspNet.EnumComplexWithRequiredEnum"
             };
 
             ODataDeserializerContext readContext = new ODataDeserializerContext() { Model = model };

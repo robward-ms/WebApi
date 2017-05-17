@@ -10,7 +10,6 @@ using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
@@ -267,7 +266,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => 
                 wrapper.ToDictionary(mapperProvider: mapperProvider),
-                "The mapper provider must return a valid 'System.Web.OData.Query.IPropertyMapper' instance for the given 'NS.Name' IEdmType.");
+                "The mapper provider must return a valid 'Microsoft.OData.WebApi.Query.IPropertyMapper' instance for the given 'NS.Name' IEdmType.");
         }
 
         [Theory]

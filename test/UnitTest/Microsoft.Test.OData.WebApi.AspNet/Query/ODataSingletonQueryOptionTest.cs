@@ -45,11 +45,11 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
         {
             // Arrange
             const string expectedPayload = "{" +
-                "\"@odata.context\":\"http://localhost/odata/$metadata#Me/System.Web.OData.Formatter.Serialization.Models.SpecialCustomer(Birthday)\"," +
+                "\"@odata.context\":\"http://localhost/odata/$metadata#Me/Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models.SpecialCustomer(Birthday)\"," +
                 "\"Birthday\":\"1991-01-12T09:03:40-00:05\"" +
                 "}";
 
-            string requestUri = "http://localhost/odata/Me/System.Web.OData.Formatter.Serialization.Models.SpecialCustomer?$select=Birthday";
+            string requestUri = "http://localhost/odata/Me/Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models.SpecialCustomer?$select=Birthday";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
             // Act

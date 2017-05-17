@@ -12,7 +12,6 @@ using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon.Types;
-using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 {

@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.Test.OData.WebApi.TestCommon.Types;
-using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels
 {

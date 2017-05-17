@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Web.Http.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
@@ -36,13 +38,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             HttpRequestMessage request = GetRequest(model, singleton);
             ODataSerializerContext readContext = new ODataSerializerContext()
             {
-                Url = new UrlHelper(request),
+                Url = new WebApiUrlHelper(new UrlHelper(request)),
                 Path = request.ODataProperties().Path,
                 Model = model,
                 NavigationSource = singleton
             };
 
-            ODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            IODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
             EmployeeModel boss = new EmployeeModel {EmployeeId = 987, EmployeeName = "John Mountain"};
             MemoryStream bufferedStream = new MemoryStream();
 
@@ -86,7 +88,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
                 ODataUri = new ODataUri { ServiceRoot = new Uri("http://localhost/odata") }
             };
 
-            IODataResponseMessage responseMessage = new ODataMessageWrapper(bufferedStream, content.Headers);
+            IODataResponseMessage responseMessage = new ODataMessageWrapper(bufferedStream, content.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(";", kvp.Value)));
             return new ODataMessageWriter(responseMessage, writerSettings, model);
         }
 

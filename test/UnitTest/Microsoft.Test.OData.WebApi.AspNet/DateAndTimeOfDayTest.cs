@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -27,7 +28,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             const string Expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                                   "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                                   "<edmx:DataServices>" +
-                                  "<Schema Namespace=\"System.Web.OData\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                  "<Schema Namespace=\"Microsoft.Test.OData.WebApi.AspNet\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                                     "<EntityType Name=\"DateAndTimeOfDayModel\">" +
                                           "<Key>" +
                                               "<PropertyRef Name=\"Id\" />" +
@@ -42,7 +43,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                                   "</Schema>" +
                                   "<Schema Namespace=\"Default\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                                   "<EntityContainer Name=\"Container\">" +
-                                      "<EntitySet Name=\"DateAndTimeOfDayModels\" EntityType=\"System.Web.OData.DateAndTimeOfDayModel\" />" +
+                                      "<EntitySet Name=\"DateAndTimeOfDayModels\" EntityType=\"Microsoft.Test.OData.WebApi.AspNet.DateAndTimeOfDayModel\" />" +
                                   "</EntityContainer>" +
                                   "</Schema>" +
                                   "</edmx:DataServices>" +

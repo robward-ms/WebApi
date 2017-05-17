@@ -161,7 +161,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Equal("", binding.BindingPath);
 
             Assert.IsType<BindingPathConfiguration<BindingAddress>>(newBinding);
-            Assert.Equal("System.Web.OData.Formatter.BindingVipCustomer/VipAddresses", newBinding.BindingPath);
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingVipCustomer/VipAddresses", newBinding.BindingPath);
         }
 
         [Theory]
@@ -283,7 +283,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Equal("", binding.BindingPath);
 
             Assert.IsType<BindingPathConfiguration<BindingAddress>>(newBinding);
-            Assert.Equal("System.Web.OData.Formatter.BindingVipCustomer/VipLocation", newBinding.BindingPath);
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingVipCustomer/VipLocation", newBinding.BindingPath);
         }
 
         [Fact]
@@ -349,7 +349,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             var bindings = navigationSource.FindBinding(navigationProperty);
             var binding = Assert.Single(bindings);
             Assert.Equal("Cities_B", binding.TargetNavigationSource.Name);
-            Assert.Equal("System.Web.OData.Formatter.BindingVipCustomer/VipAddresses/System.Web.OData.Formatter.BindingUsAddress/UsCities", binding.BindingPath);
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingVipCustomer/VipAddresses/Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingUsAddress/UsCities", binding.BindingPath);
         }
 
         [Fact]
@@ -415,7 +415,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             var bindings = navigationSource.FindBinding(navigationProperty);
             var binding = Assert.Single(bindings);
             Assert.Equal("Cities_D", binding.TargetNavigationSource.Name);
-            Assert.Equal("System.Web.OData.Formatter.BindingVipCustomer/VipLocation/System.Web.OData.Formatter.BindingUsAddress/UsCity", binding.BindingPath);
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingVipCustomer/VipLocation/Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingUsAddress/UsCity", binding.BindingPath);
         }
 
         [Fact]
@@ -481,7 +481,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             var bindings = navigationSource.FindBinding(navigationProperty);
             var binding = Assert.Single(bindings);
             Assert.Equal("Cities_D", binding.TargetNavigationSource.Name);
-            Assert.Equal("System.Web.OData.Formatter.BindingVipCustomer/VipLocation/System.Web.OData.Formatter.BindingUsAddress/UsCity", binding.BindingPath);
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingVipCustomer/VipLocation/Microsoft.Test.OData.WebApi.AspNet.Formatter.BindingUsAddress/UsCity", binding.BindingPath);
         }
     }
 }

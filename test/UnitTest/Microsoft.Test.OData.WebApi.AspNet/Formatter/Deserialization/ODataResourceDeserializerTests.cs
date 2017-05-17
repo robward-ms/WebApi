@@ -15,10 +15,8 @@ using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon.Types;
 using Microsoft.Test.OData.WebApi.TestCommon.Types;
 using Moq;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -217,13 +215,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             ODataResourceWrapper resourceWrapper =
                 new ODataResourceWrapper(new ODataResource
                 {
-                    TypeName = "System.Web.OData.Formatter.Deserialization.BaseType"
+                    TypeName = "Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization.BaseType"
                 });
 
             // Act & Assert
             Assert.Throws<ODataException>(
                 () => deserializer.ReadResource(resourceWrapper, _productEdmType, new ODataDeserializerContext { Model = model }),
-                "An instance of the abstract resource type 'System.Web.OData.Formatter.Deserialization.BaseType' was found. " +
+                "An instance of the abstract resource type 'Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization.BaseType' was found. " +
                 "Abstract resource types cannot be instantiated.");
         }
 

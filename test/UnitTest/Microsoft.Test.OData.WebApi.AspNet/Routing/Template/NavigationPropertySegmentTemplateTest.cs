@@ -7,7 +7,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Routing.Template;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Template
 {

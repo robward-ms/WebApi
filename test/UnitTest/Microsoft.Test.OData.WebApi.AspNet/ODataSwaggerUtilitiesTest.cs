@@ -6,7 +6,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Test.OData.WebApi.AspNet

@@ -15,7 +15,6 @@ using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -28,8 +27,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {
@@ -138,8 +137,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         {
             get
             {
-                MediaTypeHeaderValue fullMetadata = ODataMediaTypes.ApplicationJsonODataFullMetadata;
-                MediaTypeHeaderValue noMetadata = ODataMediaTypes.ApplicationJsonODataNoMetadata;
+                MediaTypeHeaderValue fullMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataFullMetadata);
+                MediaTypeHeaderValue noMetadata = MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataNoMetadata);
 
                 return new TheoryDataSet<Type, object, MediaTypeHeaderValue, string>
                 {

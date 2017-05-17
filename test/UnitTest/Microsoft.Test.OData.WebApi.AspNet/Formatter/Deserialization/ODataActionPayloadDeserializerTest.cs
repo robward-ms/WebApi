@@ -11,13 +11,13 @@ using System.Web.Http.Dispatcher;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Routing;
-using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
@@ -492,7 +492,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
         private const string EntityPayload =
             "{" +
                 "\"Id\": 1, " +
-                "\"Customer\": {\"@odata.type\":\"#System.Web.OData.TestCommon.Models.Customer\", \"Id\":109,\"Name\":\"Avatar\" } " +
+                "\"Customer\": {\"@odata.type\":\"#Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Customer\", \"Id\":109,\"Name\":\"Avatar\" } " +
                 // null can't work here, see: https://github.com/OData/odata.net/issues/99
                 // ",\"NullableCustomer\" : null " +  //
             "}";
@@ -560,10 +560,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             "{" +
                 "\"Id\": 1, " +
                 "\"Customers\": [" +
-                    "{\"@odata.type\":\"#System.Web.OData.TestCommon.Models.Customer\", \"Id\":109,\"Name\":\"Avatar\" }, " +
+                    "{\"@odata.type\":\"#Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Customer\", \"Id\":109,\"Name\":\"Avatar\" }, " +
                     // null can't work. see: https://github.com/OData/odata.net/issues/100
                     // "null," +
-                    "{\"@odata.type\":\"#System.Web.OData.TestCommon.Models.Customer\", \"Id\":901,\"Name\":\"Robot\" } " +
+                    "{\"@odata.type\":\"#Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Customer\", \"Id\":901,\"Name\":\"Robot\" } " +
                  "]" +
             "}";
 
@@ -683,9 +683,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
         private static IEdmModel GetModel()
         {
+            IAssembliesResolver resolver = new TestAssemblyResolver(typeof(Customer));
             HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Customer)));
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            ODataModelBuilder builder = new ODataConventionModelBuilder(new WebApiAssembliesResolver(resolver));
             builder.ContainerName = "C";
             builder.Namespace = "A.B";
             EntityTypeConfiguration<Customer> customer = builder.EntitySet<Customer>("Customers").EntityType;

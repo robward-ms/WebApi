@@ -11,7 +11,6 @@ using Microsoft.OData.WebApi.Query.Validators;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon.Types;
-using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
 {

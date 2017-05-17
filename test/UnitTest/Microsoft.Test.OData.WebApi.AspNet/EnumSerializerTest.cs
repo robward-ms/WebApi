@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -10,7 +11,6 @@ using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class EnumSerializerTest
     {
-        private readonly ODataSerializerProvider _serializerProvider =
+        private readonly IODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         {
             // Arrange
             string enumComplexPayload = @"{
-  ""@odata.context"":""http://localhost/$metadata#System.Web.OData.EnumComplex"",""RequiredColor"":""Red, Blue"",""NullableColor"":null,""UndefinedColor"":""123""
+  ""@odata.context"":""http://localhost/$metadata#Microsoft.Test.OData.WebApi.AspNet.EnumComplex"",""RequiredColor"":""Red, Blue"",""NullableColor"":null,""UndefinedColor"":""123""
 }";
 
             ODataMediaTypeFormatter formatter = GetFormatter();
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                     UndefinedColor = (Color)123
                 },
                 formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(enumComplexPayload, content.ReadAsStringAsync().Result);
@@ -142,7 +142,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             HttpClient client = new HttpClient(new HttpServer(config));
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
-                "http://localhost/odata/NullableEnumFunction(ColorParameter=System.Web.OData.Builder.TestModels.Color'Red')");
+                "http://localhost/odata/NullableEnumFunction(ColorParameter=Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color'Red')");
 
             // Act
             HttpResponseMessage respone = client.SendAsync(request).Result;
@@ -180,8 +180,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             {
                 Request = GetSampleRequest()
             };
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
             return formatter;
         }
 

@@ -7,10 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A9836F9E-6DB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C40883CD-366D-4534-8B58-3EA0D13136DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.TestCommon", "..\test\UnitTest\Microsoft.TestCommon\Microsoft.TestCommon.csproj", "{FCCC4CB7-BAF7-4A57-9F89-E5766FE536C0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.OData.Test", "..\test\UnitTest\System.Web.OData.Test\System.Web.OData.Test.csproj", "{66EFD03D-95B7-4C7E-83AC-1A8BD6C12612}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.WebApi.AspNet", "..\src\Microsoft.OData.WebApi.AspNet\Microsoft.OData.WebApi.AspNet.csproj", "{8424FAA0-BDCC-4F38-B725-99D6204DADED}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.OData.WebApi.Shared", "..\src\Microsoft.OData.WebApi.Shared\Microsoft.OData.WebApi.Shared.shproj", "{C56FBE13-CE70-49E7-8260-2B9EE82E962C}"

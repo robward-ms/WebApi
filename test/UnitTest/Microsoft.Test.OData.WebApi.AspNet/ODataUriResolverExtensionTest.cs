@@ -11,11 +11,11 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
-using Microsoft.OData.WebApi.Test.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
@@ -34,22 +34,22 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 {
                     { "GET", "$meTadata", null },
                     { "GET", "rouTINGCustomers", "GetRoutingCustomers" },
-                    { "GET", "rouTINGCustomers/System.Web.OData.Routing.VIP", "GetRoutingCustomersFromVIP" },
+                    { "GET", "rouTINGCustomers/Microsoft.Test.OData.WebApi.AspNet.Routing.VIP", "GetRoutingCustomersFromVIP" },
                     { "GET", "proDucts(10)", "Get(10)" },
                     { "PATCH", "rouTINGCustomers(10)", "PatchRoutingCustomer(10)" },
                     { "GET", "rouTINGCustomers(10)/ProDucTs", "GetProducts(10)" },
                     { "GET", "rouTINGCustomers(10)/naMe", "GetName(10)" },
-                    { "GET", "rouTINGCustomers(10)/System.Web.ODATA.Routing.VIP/Name", "GetName(10)" },
+                    { "GET", "rouTINGCustomers(10)/Microsoft.Test.OData.WebApi.AspNet.Routing.VIP/Name", "GetName(10)" },
                     { "PUT", "rouTINGCustomers(1)/Products/$ReF", "CreateRef(1)(Products)" },
                     { "POST", "rouTINGCustomers(1)/Products/$rEf", "CreateRef(1)(Products)" },
                     { "GET", "rouTINGCustomers(10)/Name/$vAlUe", "GetName(10)" },
-                    { "GET", "rouTINGCustomers(10)/System.Web.OData.Routing.VIP/Name/$value", "GetName(10)" },
+                    { "GET", "rouTINGCustomers(10)/Microsoft.Test.OData.WebApi.AspNet.Routing.VIP/Name/$value", "GetName(10)" },
                     { "POST", "rouTINGCustomers(1)/default.getRElatedRoutingCustomers", "GetRelatedRoutingCustomers(1)" },
                     { "POST",
-                        "rouTINGCustomers(1)/System.Web.OData.Routing.VIP/getRelatedrouTingCustomers",
+                        "rouTINGCustomers(1)/Microsoft.Test.OData.WebApi.AspNet.Routing.VIP/getRelatedrouTingCustomers",
                         "GetRelatedRoutingCustomers(1)" },
                     { "POST", "rouTINGCustomers/DefaulT.getProducts", "GetProducts" },
-                    { "POST", "rouTINGCustomers/System.Web.OData.Routing.VIP/getProducts", "GetProducts" },
+                    { "POST", "rouTINGCustomers/Microsoft.Test.OData.WebApi.AspNet.Routing.VIP/getProducts", "GetProducts" },
                     { "GET", "ProDucts(1)/ToppRoDuctId", "TopProductId(1)" },
                     { "GET", "ProDucts(1)/Default.ToppRoductIdByCity(ciTy='any')", "TopProductIdByCity(1, any)" },
                     { "GET", "ProDucts/TopProductofaLl", "TopProductOfAll" },
@@ -127,9 +127,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
@@ -223,19 +223,19 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             config.MapODataServiceRoute("query", "query",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel())
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", new AttributeMappingProvider("odata", config))));
             return config;
         }
 
         [Theory]
         [InlineData("gender='Male'", true, HttpStatusCode.OK)]
         [InlineData("gender='Male'", false, HttpStatusCode.NotFound)]
-        [InlineData("gender=System.Web.OData.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK)]
-        [InlineData("gender=System.Web.OData.TestCommon.Models.Gender'Male'", false, HttpStatusCode.OK)]
+        [InlineData("gender=Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK)]
+        [InlineData("gender=Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Male'", false, HttpStatusCode.OK)]
         [InlineData("gender='SomeUnknowValue'", true, HttpStatusCode.NotFound)]
-        [InlineData("gender=System.Web.OData.TestCommon.Models.Gender'SomeUnknowValue'", true, HttpStatusCode.NotFound)]
+        [InlineData("gender=Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'SomeUnknowValue'", true, HttpStatusCode.NotFound)]
         public void ExtensionResolver_Works_EnumPrefixFree(string parameter, bool enableEnumPrefix, HttpStatusCode statusCode)
         {
             // Arrange
@@ -250,9 +250,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act
@@ -274,16 +274,16 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [InlineData("$filter=Gender eq 'Male'", false, HttpStatusCode.BadRequest, null)]
         [InlineData("$filter=Gender eq 'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
         [InlineData("$filter=Gender eq 'Female'", false, HttpStatusCode.BadRequest, null)]
-        [InlineData("$filter=Gender eq System.Web.OData.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK, "0,2,4,6,8")]
-        [InlineData("$filter=Gender eq System.Web.OData.TestCommon.Models.Gender'Male'", false, HttpStatusCode.OK, "0,2,4,6,8")]
-        [InlineData("$filter=Gender eq System.Web.OData.TestCommon.Models.Gender'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
-        [InlineData("$filter=Gender eq System.Web.OData.TestCommon.Models.Gender'Female'", false, HttpStatusCode.OK, "1,3,5,7,9")]
+        [InlineData("$filter=Gender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK, "0,2,4,6,8")]
+        [InlineData("$filter=Gender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Male'", false, HttpStatusCode.OK, "0,2,4,6,8")]
+        [InlineData("$filter=Gender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
+        [InlineData("$filter=Gender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Female'", false, HttpStatusCode.OK, "1,3,5,7,9")]
         [InlineData("$filter=Gender eq 'SomeUnknowValue'", true, HttpStatusCode.BadRequest, null)]
-        [InlineData("$filter=Gender eq System.Web.OData.TestCommon.Models.Gender'SomeUnknowValue'", true, HttpStatusCode.BadRequest, null)]
+        [InlineData("$filter=Gender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'SomeUnknowValue'", true, HttpStatusCode.BadRequest, null)]
         [InlineData("$filter=NullableGender eq 'Male'", true, HttpStatusCode.OK, "")]
-        [InlineData("$filter=NullableGender eq System.Web.OData.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK, "")]
+        [InlineData("$filter=NullableGender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Male'", true, HttpStatusCode.OK, "")]
         [InlineData("$filter=NullableGender eq 'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
-        [InlineData("$filter=NullableGender eq System.Web.OData.TestCommon.Models.Gender'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
+        [InlineData("$filter=NullableGender eq Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Gender'Female'", true, HttpStatusCode.OK, "1,3,5,7,9")]
         [InlineData("$filter=NullableGender eq null", true, HttpStatusCode.OK, "0,2,4,6,8")]
         public void ExtensionResolver_Works_EnumPrefixFree_QueryOption(string query, bool enableEnumPrefix, HttpStatusCode statusCode, string output)
         {
@@ -299,9 +299,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             config.MapODataServiceRoute("odata", "odata",
                 builder =>
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
+                        .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act

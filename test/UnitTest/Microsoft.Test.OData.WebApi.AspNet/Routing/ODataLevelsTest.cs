@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,7 +10,9 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -267,7 +270,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing
         public void Levels_Works_WithTypeCast()
         {
             // Arrange
-            string uri = "LevelsEntities(6)?$expand=System.Web.OData.Routing.LevelsDerivedEntity/AncestorsInDerivedEntity($levels=2)";
+            string uri = "LevelsEntities(6)?$expand=Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsDerivedEntity/AncestorsInDerivedEntity($levels=2)";
 
             // Act
             HttpResponseMessage response = _client.GetAsync("http://localhost/odata/" + uri).Result;

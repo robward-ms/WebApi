@@ -12,9 +12,6 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.OData.WebApi.Extensions;
-using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization;
@@ -170,9 +167,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             return new ODataMessageReader(requestMessage);
         }
 
-        public static ODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
+        public static IODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
         {
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             serializerProvider.Setup(sp => sp.GetEdmTypeSerializer(It.IsAny<IEdmTypeReference>())).Returns(serializer);
             return serializerProvider.Object;
         }

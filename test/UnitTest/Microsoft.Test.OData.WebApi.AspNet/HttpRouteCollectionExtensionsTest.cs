@@ -10,6 +10,7 @@ using System.Web.Http.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Batch;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;

@@ -21,7 +21,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
     {
         private static readonly IEdmModel Model = GetEdmModel();
 
-        private static readonly ODataSerializerProvider SerializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+        private static readonly IODataSerializerProvider SerializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
 
         private static readonly ODataDeserializerProvider DeserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
 

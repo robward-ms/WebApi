@@ -8,9 +8,8 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Tracing;
 using Microsoft.OData.WebApi;
-using  Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 

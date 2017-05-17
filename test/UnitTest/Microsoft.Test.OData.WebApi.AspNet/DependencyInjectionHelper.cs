@@ -18,9 +18,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public static class DependencyInjectionHelper
     {
-        public static ODataSerializerProvider GetDefaultODataSerializerProvider()
+        public static IODataSerializerProvider GetDefaultODataSerializerProvider()
         {
-            return new MockContainer().GetRequiredService<ODataSerializerProvider>();
+            return new MockContainer().GetRequiredService<IODataSerializerProvider>();
         }
 
         public static ODataDeserializerProvider GetDefaultODataDeserializerProvider()

@@ -7,12 +7,11 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using  Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -283,7 +282,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             HttpRequestMessage request = GetODataRequest(model.Model);
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = request.GetUrlHelper() };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             ResourceContext instanceContext = new ResourceContext(serializerContext, model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -301,7 +300,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             IEdmEntitySet specialCustomers = new EdmEntitySet(model.Container, "SpecialCustomers", model.SpecialCustomer);
             HttpRequestMessage request = GetODataRequest(model.Model);
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = specialCustomers, Url = request.GetUrlHelper() };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = specialCustomers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             ResourceContext instanceContext = new ResourceContext(serializerContext, model.Customer.AsReference(), new { ID = 42 });
 
             // Act
@@ -318,7 +317,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             HttpRequestMessage request = GetODataRequest(model.Model);
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = request.GetUrlHelper() };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             ResourceContext instanceContext = new ResourceContext(serializerContext, model.Customer.AsReference(), new { ID = 42 });
             IEdmNavigationProperty ordersProperty = model.Customer.NavigationProperties().First(p => p.Name == "Orders");
 
@@ -337,7 +336,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             HttpRequestMessage request = GetODataRequest(model.Model);
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = request.GetUrlHelper() };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model.Model, NavigationSource = model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             ResourceContext instanceContext = new ResourceContext(serializerContext, model.SpecialCustomer.AsReference(), new { ID = 42 });
             IEdmNavigationProperty ordersProperty = model.SpecialCustomer.NavigationProperties().First(p => p.Name == "SpecialOrders");
 

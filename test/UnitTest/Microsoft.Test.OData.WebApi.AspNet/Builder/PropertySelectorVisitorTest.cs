@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using using using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder

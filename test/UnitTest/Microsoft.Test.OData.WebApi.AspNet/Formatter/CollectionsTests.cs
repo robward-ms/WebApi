@@ -11,7 +11,6 @@ using System.Web.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
@@ -103,9 +102,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         public void EntityCollectionProperty_Deserialize()
         {
             string message = "{ 'ID' : 44,  'Vehicles' : [ " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.Car', 'Model': 2009, 'Name': 'Car'}, " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.Motorcycle', 'Model': 2010, 'Name': 'Motorcycle'}, " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.SportBike', 'Model': 2012, 'Name': 'SportBike'} " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Car', 'Model': 2009, 'Name': 'Car'}, " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle', 'Model': 2010, 'Name': 'Motorcycle'}, " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SportBike', 'Model': 2012, 'Name': 'SportBike'} " +
                 " ] }";
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/CollectionsTests/");
@@ -120,9 +119,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         public void Posting_A_Feed_To_NonCollectionProperty_ODataLibThrows()
         {
             string message = "{ 'ID' : 44,  'Vehicle' : [ " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.Car', 'Model': 2009, 'Name': 'Car'}, " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.Motorcycle', 'Model': 2010, 'Name': 'Motorcycle'}, " +
-                "{ '@odata.type' : '#System.Web.OData.Builder.TestModels.SportBike', 'Model': 2012, 'Name': 'SportBike'} " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Car', 'Model': 2009, 'Name': 'Car'}, " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle', 'Model': 2010, 'Name': 'Motorcycle'}, " +
+                "{ '@odata.type' : '#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SportBike', 'Model': 2012, 'Name': 'SportBike'} " +
                 " ] }";
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/CollectionsTests/");

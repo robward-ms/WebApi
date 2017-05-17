@@ -6,10 +6,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.AspNetCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
@@ -106,7 +103,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
             Assert.Same(enumProperty, enumKey);
 
             Assert.Equal(EdmTypeKind.Enum, enumKey.Type.TypeKind());
-            Assert.Equal("System.Web.OData.Builder.TestModels.Color", enumKey.Type.Definition.FullTypeName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color", enumKey.Type.Definition.FullTypeName());
         }
 
         [Fact]

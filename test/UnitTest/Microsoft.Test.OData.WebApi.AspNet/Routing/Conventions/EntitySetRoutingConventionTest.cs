@@ -7,12 +7,12 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
-using ODataPath = Microsoft.OData.UriParser.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 {
@@ -23,13 +23,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
         [InlineData("POST")]
         public void SelectAction_ReturnsNull_IfActionIsMissing(string httpMethod)
         {
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(), "http://any/", "RoutingCustomers");
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(), "http://any/", "RoutingCustomers");
             ILookup<string, HttpActionDescriptor> emptyActionMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
             HttpControllerContext controllerContext = new HttpControllerContext();
             controllerContext.Request = new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/");
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
-            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(emptyActionMap));
 
             Assert.Null(selectedAction);
             Assert.Empty(controllerContext.Request.GetRouteData().Values);
@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => expected);
 
             // Act
-            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal(expected, actionName);
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => expected);
 
             // Act
-            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal(expected, actionName);
@@ -107,7 +107,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "PostCustomer");
 
             // Act
-            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Null(actionName);

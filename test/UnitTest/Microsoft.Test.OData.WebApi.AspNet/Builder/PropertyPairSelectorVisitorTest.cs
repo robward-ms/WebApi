@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder

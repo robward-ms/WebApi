@@ -3,8 +3,10 @@
 
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.Test.OData.WebApi.AspNet.Builder;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 {

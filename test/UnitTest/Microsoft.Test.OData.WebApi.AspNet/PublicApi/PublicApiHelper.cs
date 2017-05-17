@@ -401,27 +401,27 @@ namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
                 }
                 foreach (object attribute in attributes)
                 {
-                    if (attribute is Runtime.InteropServices.MarshalAsAttribute)
+                    if (attribute is System.Runtime.InteropServices.MarshalAsAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Runtime.InteropServices.StructLayoutAttribute)
+                    if (attribute is System.Runtime.InteropServices.StructLayoutAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Runtime.CompilerServices.CompilerGeneratedAttribute)
+                    if (attribute is System.Runtime.CompilerServices.CompilerGeneratedAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Runtime.CompilerServices.MethodImplAttribute)
+                    if (attribute is System.Runtime.CompilerServices.MethodImplAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Runtime.TargetedPatchingOptOutAttribute)
+                    if (attribute is System.Runtime.TargetedPatchingOptOutAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Diagnostics.CodeAnalysis.SuppressMessageAttribute)
+                    if (attribute is System.Diagnostics.CodeAnalysis.SuppressMessageAttribute)
                     {
                         continue;
                     }
@@ -863,7 +863,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
                 // only going into this method if there is a "Version=" present in the name.
                 AppendGenericTypeName(builder, parameterType);
             }
-            else if (name.StartsWith("System.Web.OData."))
+            else if (name.StartsWith("Microsoft.OData.WebApi."))
             {
                 builder.Append(parameterType.Name);
             }

@@ -76,7 +76,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
             model.AddElement(specialOrder);
 
             // test entity
-            EdmEntityType testEntity = new EdmEntityType("System.Web.OData.Query.Expressions", "TestEntity");
+            EdmEntityType testEntity = new EdmEntityType("Microsoft.Test.OData.WebApi.AspNet.Query.Expressions", "TestEntity");
             testEntity.AddStructuralProperty("SampleProperty", EdmPrimitiveTypeKind.Binary);
             model.AddElement(testEntity);
 

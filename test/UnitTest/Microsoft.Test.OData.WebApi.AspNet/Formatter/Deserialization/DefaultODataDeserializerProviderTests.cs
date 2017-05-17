@@ -7,6 +7,7 @@ using System.Net.Http;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -26,7 +27,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             HttpRequestMessage request = new HttpRequestMessage();
 
             // Act
-            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(typeof(Uri), request);
+            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(typeof(Uri), new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -53,7 +54,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             request.EnableHttpDependencyInjectionSupport();
 
             // Act
-            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(type, request);
+            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(type, new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -70,7 +71,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             // Act
             ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(
-                typeof(ODataResourceDeserializerTests.Product), request);
+                typeof(ODataResourceDeserializerTests.Product), new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -88,7 +89,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             // Act
             ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(
-                typeof(ODataResourceDeserializerTests.Address), request);
+                typeof(ODataResourceDeserializerTests.Address), new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -111,7 +112,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             request.EnableHttpDependencyInjectionSupport(_edmModel);
 
             // Act
-            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(collectionType, request);
+            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(collectionType, new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -134,7 +135,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             request.EnableHttpDependencyInjectionSupport(_edmModel);
 
             // Act
-            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(collectionType, request);
+            ODataDeserializer deserializer = _deserializerProvider.GetODataDeserializer(collectionType, new WebApiRequestMessage(request));
 
             // Assert
             Assert.NotNull(deserializer);
@@ -152,9 +153,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             // Act
             ODataDeserializer firstCallDeserializer = _deserializerProvider.GetODataDeserializer(
-                typeof(ODataResourceDeserializerTests.Supplier), request);
+                typeof(ODataResourceDeserializerTests.Supplier), new WebApiRequestMessage(request));
             ODataDeserializer secondCallDeserializer = _deserializerProvider.GetODataDeserializer(
-                typeof(ODataResourceDeserializerTests.Supplier), request);
+                typeof(ODataResourceDeserializerTests.Supplier), new WebApiRequestMessage(request));
 
             // Assert
             Assert.Same(firstCallDeserializer, secondCallDeserializer);
@@ -170,7 +171,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             // Act
             ODataActionPayloadDeserializer basicActionPayload = _deserializerProvider.GetODataDeserializer(
-                resourceType, request) as ODataActionPayloadDeserializer;
+                resourceType, new WebApiRequestMessage(request)) as ODataActionPayloadDeserializer;
 
             // Assert
             Assert.NotNull(basicActionPayload);
@@ -184,7 +185,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => _deserializerProvider.GetODataDeserializer(type: null, request: request),
+                () => _deserializerProvider.GetODataDeserializer(type: null, request: new WebApiRequestMessage(request)),
                 "type");
         }
 

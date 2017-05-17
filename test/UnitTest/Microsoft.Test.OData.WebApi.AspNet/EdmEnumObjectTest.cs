@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet

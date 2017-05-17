@@ -8,9 +8,7 @@ using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -155,7 +153,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             var osCorp = container.FindSingleton("OsCorp");
             Assert.NotNull(osCorp);
-            Assert.Equal("System.Web.OData.Builder.TestModels.Company", osCorp.EntityType().FullName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Company", osCorp.EntityType().FullName());
 
             var companies = container.FindEntitySet("Companies");
             Assert.NotNull(companies);
@@ -388,8 +386,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.ThrowsArgument(
                 () => myVehicle.HasNavigationPropertyLink(navProperty, new NavigationLinkBuilder((ctxt, property) => new Uri("http://works/"), followsConventions: false)),
                 "navigationProperty",
-                "The declaring entity type 'System.Web.OData.Builder.TestModels.Car' of the given navigation property is not a part of the " +
-                "entity type 'System.Web.OData.Builder.TestModels.Vehicle' hierarchy of the entity set or singleton 'MyVehicle'.");
+                "The declaring entity type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Car' of the given navigation property is not a part of the " +
+                "entity type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle' hierarchy of the entity set or singleton 'MyVehicle'.");
         }
 
         [Fact]

@@ -20,16 +20,15 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Query;
-using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Query.Controllers;
 using Microsoft.Test.OData.WebApi.AspNet.Query.Validators;
 using Microsoft.Test.OData.WebApi.AspNet.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -482,7 +481,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage request = new HttpRequestMessage();
             request.EnableHttpDependencyInjectionSupport();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer)), request);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer)), new WebApiRequestMessage(request));
 
             // Act & Assert
             Assert.ThrowsArgumentNull(() => attribute.ValidateQuery(null, options), "request");
@@ -515,8 +514,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             defaultQuerySettings.MaxTop = null;
 
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var context = new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer), null);
-            var options = new ODataQueryOptions(context, request);
+            var context = new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer), null);
+            var options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             // Act & Assert
             Assert.DoesNotThrow(() => attribute.ValidateQuery(request, options));
@@ -530,7 +529,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$xxx");
             request.EnableHttpDependencyInjectionSupport();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer)), request);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer)), new WebApiRequestMessage(request));
 
             // Act & Assert
             HttpResponseException responseException = Assert.Throws<HttpResponseException>(
@@ -559,7 +558,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             message.EnableHttpDependencyInjectionSupport();
             EnableQueryAttribute attribute = new EnableQueryAttribute();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer)), message);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer)), new WebApiRequestMessage(message));
 
             // Act & Assert
             Assert.ThrowsArgumentNull(() => attribute.ApplyQuery(null, options), "queryable");
@@ -587,10 +586,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
             request.EnableHttpDependencyInjectionSupport();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer)), request);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer)), new WebApiRequestMessage(request));
 
             // Act & Assert
-            Assert.DoesNotThrow(() => attribute.ApplyQuery(new List<System.Web.OData.Builder.TestModels.Customer>().AsQueryable(), options));
+            Assert.DoesNotThrow(() => attribute.ApplyQuery(new List<Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer>().AsQueryable(), options));
         }
 
         [Fact]
@@ -606,7 +605,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$top=2");
             request.EnableHttpDependencyInjectionSupport();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
-            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(System.Web.OData.Builder.TestModels.Customer)), request);
+            var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer)), new WebApiRequestMessage(request));
 
             // Act & Assert
             Assert.Same(result, mockAttribute.Object.ApplyQuery(result, options));
@@ -623,7 +622,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             attribute.AllowedOrderByProperties = allowedProperties;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/Customers/?$orderby=Id,Name");
             request.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions queryOptions = new ODataQueryOptions(ValidationTestHelper.CreateCustomerContext(false), request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(ValidationTestHelper.CreateCustomerContext(false), new WebApiRequestMessage(request));
 
             Assert.Throws<ODataException>(() => attribute.ValidateQuery(request, queryOptions),
                 "Order by 'Name' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
@@ -647,7 +646,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             request.EnableHttpDependencyInjectionSupport();
 
             ODataQueryContext context = ValidationTestHelper.CreateCustomerContext(false);
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             Assert.DoesNotThrow(() => attribute.ValidateQuery(request, queryOptions));
         }
@@ -665,7 +664,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var queryModel = new EnableQueryAttribute().GetModel(entityClrType, request, descriptor);
 
             Assert.NotNull(queryModel);
-            Assert.Same(descriptor.Properties["System.Web.OData.Model+System.Web.OData.Query.QueryCompositionCustomer"],
+            Assert.Same(descriptor.Properties["Microsoft.OData.WebApi.Model+Microsoft.Test.OData.WebApi.AspNet.Query.QueryCompositionCustomer"],
                 queryModel);
         }
 
@@ -683,7 +682,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var queryModel = new EnableQueryAttribute().GetModel(entityClrType, request, descriptor);
 
             Assert.NotNull(queryModel);
-            Assert.Same(descriptor.Properties["System.Web.OData.Model+System.Web.OData.Query.QueryCompositionCustomer"],
+            Assert.Same(descriptor.Properties["Microsoft.OData.WebApi.Model+Microsoft.Test.OData.WebApi.AspNet.Query.QueryCompositionCustomer"],
                 queryModel);
         }
 
@@ -704,7 +703,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             Assert.NotNull(queryModel);
             Assert.Same(model, queryModel);
-            Assert.DoesNotContain("System.Web.OData.Model+System.Web.OData.Query.QueryCompositionCustomer",
+            Assert.DoesNotContain("Microsoft.OData.WebApi.Model+Microsoft.Test.OData.WebApi.AspNet.Query.QueryCompositionCustomer",
                 descriptor.Properties.Keys.OfType<string>());
         }
 
@@ -749,7 +748,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntitySet<QueryCompositionCustomer>(typeof(QueryCompositionCustomer).Name);
             IEdmModel model = modelBuilder.GetEdmModel();
-            model.SetAnnotationValue<ClrTypeAnnotation>(model.FindType("System.Web.OData.Query.QueryCompositionCustomer"), null);
+            model.SetAnnotationValue<ClrTypeAnnotation>(model.FindType("Microsoft.Test.OData.WebApi.AspNet.Query.QueryCompositionCustomer"), null);
 
             bool called = false;
             Mock<IAssembliesResolver> assembliesResolver = new Mock<IAssembliesResolver>();
@@ -773,7 +772,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage message = new HttpRequestMessage();
             message.EnableHttpDependencyInjectionSupport();
             EnableQueryAttribute attribute = new EnableQueryAttribute();
-            ODataQueryOptions options = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), message);
+            ODataQueryOptions options = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), new WebApiRequestMessage(message));
 
             Assert.ThrowsArgumentNull(
                 () => attribute.ApplyQuery(entity: null, queryOptions: options),
@@ -1052,7 +1051,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?" + parameter);
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryContext context = new ODataQueryContext(model.Model, typeof(Customer));
-            ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
+            ODataQueryOptions queryOptions = new ODataQueryOptions(context, new WebApiRequestMessage(request));
 
             Assert.Throws<ODataException>(
                 () => EnableQueryAttribute.ValidateSelectExpandOnly(queryOptions),

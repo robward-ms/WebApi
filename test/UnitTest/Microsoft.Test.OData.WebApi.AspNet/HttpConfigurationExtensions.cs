@@ -3,6 +3,7 @@
 
 using System.Web.Http;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi.Extensions;
 
 namespace Microsoft.Test.OData.WebApi.AspNet
 {

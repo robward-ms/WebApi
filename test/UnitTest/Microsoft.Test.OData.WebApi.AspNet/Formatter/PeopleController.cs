@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.OData.WebApi;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {

@@ -21,14 +21,14 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
+using Microsoft.OData.WebApi.Interfaces;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class ODataMediaTypeFormatterTests : MediaTypeFormatterTestBase<ODataMediaTypeFormatter>
     {
-        private readonly ODataSerializerProvider _serializerProvider =
+        private readonly IODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
         private readonly ODataDeserializerProvider _deserializerProvider =
             DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         [Fact]
         public void Ctor_ThrowsArgumentNull_DeserializerProvider()
         {
-            ODataSerializerProvider serializerProvider = _serializerProvider;
+            IODataSerializerProvider serializerProvider = _serializerProvider;
             ODataPayloadKind[] payloadKinds = new ODataPayloadKind[0];
 
             Assert.ThrowsArgumentNull(
@@ -333,7 +333,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         {
             Type type = typeof(Delta<Customer>);
 
-            bool success = ODataMediaTypeFormatter.TryGetInnerTypeForDelta(ref type);
+            bool success = EdmLibHelpers.TryGetInnerTypeForDelta(ref type);
 
             Assert.Same(typeof(Customer), type);
             Assert.True(success);
@@ -346,7 +346,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         {
             Type type = originalType;
 
-            bool success = ODataMediaTypeFormatter.TryGetInnerTypeForDelta(ref type);
+            bool success = EdmLibHelpers.TryGetInnerTypeForDelta(ref type);
 
             Assert.Same(originalType, type);
             Assert.False(success);
@@ -437,9 +437,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             var model = CreateModel();
             var request = CreateFakeODataRequest(model);
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), request)).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.MetadataLevel == ODataMetadataLevel.FullMetadata)))
@@ -468,9 +468,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             request.ODataProperties().SelectExpandClause = selectExpandClause;
 
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), request)).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.SelectExpandClause == selectExpandClause)))
@@ -567,7 +567,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             Mock<ODataDeserializerProvider> deserializerProvider = new Mock<ODataDeserializerProvider>();
             deserializerProvider.Setup(p => p.GetEdmTypeDeserializer(It.IsAny<IEdmTypeReference>())).Returns(deserializer.Object);
             deserializer
-                .Setup(d => d.Read(It.IsAny<ODataMessageReader>(), typeof(int), It.Is<ODataDeserializerContext>(c => c.Request == request)))
+                .Setup(d => d.Read(It.IsAny<ODataMessageReader>(), typeof(int), It.IsAny<ODataDeserializerContext>()))
                 .Verifiable();
 
             var formatter = new ODataMediaTypeFormatter(deserializerProvider.Object, _serializerProvider, Enumerable.Empty<ODataPayloadKind>());
@@ -726,7 +726,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 .Setup(s => s.WriteObject(instance.Object, instance.GetType(), It.IsAny<ODataMessageWriter>(), It.IsAny<ODataSerializerContext>()))
                 .Verifiable();
 
-            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
+            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(edmType)).Returns(serializer.Object);
 
             var formatter = new ODataMediaTypeFormatter(_deserializerProvider, serializerProvider.Object, new ODataPayloadKind[0]);
@@ -763,7 +763,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             IEdmModel model = CreateModel();
-            IEdmSchemaType entityType = model.FindDeclaredType("System.Net.Http.Formatting.SampleType");
+            IEdmSchemaType entityType = model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Formatter.SampleType");
             IEdmStructuralProperty property =
                 ((IEdmStructuredType)entityType).FindProperty("Number") as IEdmStructuralProperty;
             HttpRequestMessage request = CreateFakeODataRequest(model);
@@ -803,7 +803,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 .Verifiable();
 
             Mock<ODataDeserializerProvider> provider = new Mock<ODataDeserializerProvider>();
-            provider.Setup(p => p.GetODataDeserializer(typeof(int), request)).Returns(deserializer.Object);
+            provider.Setup(p => p.GetODataDeserializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(deserializer.Object);
 
             // Act
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(provider.Object,
@@ -879,7 +879,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             params ODataPayloadKind[] payloadKinds)
         {
             ODataMediaTypeFormatter formatter = CreateFormatter(model, request, payloadKinds);
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
             return formatter;
         }
 
@@ -932,7 +932,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 return Encoding.UTF8.GetBytes(
                     "{" +
                         "\"@odata.context\":\"http://localhost/$metadata#sampleTypes/$entity\"," +
-                        "\"@odata.type\":\"#System.Net.Http.Formatting.SampleType\"," +
+                        "\"@odata.type\":\"#Microsoft.Test.OData.WebApi.AspNet.Formatter.SampleType\"," +
                         "\"@odata.id\":\"http://localhost/sampleTypes(42)\"," +
                         "\"@odata.editLink\":\"http://localhost/sampleTypes(42)\"," +
                         "\"Number\":42" +

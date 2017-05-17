@@ -13,7 +13,6 @@ using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
@@ -114,7 +113,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             IEdmType edmType = model.GetEdmType(typeof(IEnumerable<BaseType>));
 
             Assert.Equal(EdmTypeKind.Collection, edmType.TypeKind);
-            Assert.Equal("System.Web.OData.Formatter.BaseType", (edmType as IEdmCollectionType).ElementType.FullName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BaseType", (edmType as IEdmCollectionType).ElementType.FullName());
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             IEdmType edmType = model.GetEdmType(typeof(IEnumerable<SelectExpandWrapper<BaseType>>));
 
             Assert.Equal(EdmTypeKind.Collection, edmType.TypeKind);
-            Assert.Equal("System.Web.OData.Formatter.BaseType", (edmType as IEdmCollectionType).ElementType.FullName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.AspNet.Formatter.BaseType", (edmType as IEdmCollectionType).ElementType.FullName());
         }
 
         [Fact]

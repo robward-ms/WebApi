@@ -11,14 +11,12 @@ using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Properties;
-using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+//using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
-using BuilderTestModels = System.Web.OData.Builder.TestModels;
+using BuilderTestModels = Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 {
@@ -811,7 +809,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Throws<InvalidOperationException>(
                 () => builder.EntityType<ForeignEntity>().HasRequired(c => c.Principal,
                     (c, r) => c.InvalidForeignKey == r.InvalidPrincipalKey),
-                String.Format(SRResources.ReferentialConstraintPropertyTypeNotValid, "System.Web.OData.MockType"));
+                String.Format(SRResources.ReferentialConstraintPropertyTypeNotValid, "Microsoft.Test.OData.WebApi.AspNet.TestCommon.MockType"));
         }
 
         class ForeignPrincipal

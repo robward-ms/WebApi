@@ -1,18 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using 
-using 
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
@@ -27,8 +25,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         {
             _formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.Collection });
             _formatter.Request = GetSampleRequest();
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
-            _formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            _formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
         }
 
         [Fact]
@@ -36,7 +34,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         {
             // Arrange
             ObjectContent<int[]> content = new ObjectContent<int[]>(new int[] { 10, 20, 30, 40, 50 }, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(Resources.ArrayOfInt32, content.ReadAsStringAsync().Result);
@@ -47,7 +45,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         {
             // Arrange
             ObjectContent<bool[]> content = new ObjectContent<bool[]>(new bool[] { true, false, true, false },
-                _formatter, ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                _formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(Resources.ArrayOfBoolean, content.ReadAsStringAsync().Result);
@@ -64,7 +62,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             listOfStrings.Add("Chandler");
 
             ObjectContent<List<string>> content = new ObjectContent<List<string>>(listOfStrings, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(Resources.ListOfString, content.ReadAsStringAsync().Result);
@@ -87,7 +85,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             listOfDates.Add(Date.MaxValue);
 
             ObjectContent<List<Date>> content = new ObjectContent<List<Date>>(listOfDates, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
@@ -111,7 +109,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             listOfDates.Add(Date.MaxValue);
 
             ObjectContent<List<Date?>> content = new ObjectContent<List<Date?>>(listOfDates, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
@@ -134,7 +132,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             listOfDates.Add(TimeOfDay.MaxValue);
 
             ObjectContent<List<TimeOfDay>> content = new ObjectContent<List<TimeOfDay>>(listOfDates, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
@@ -158,7 +156,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             listOfDates.Add(TimeOfDay.MaxValue);
 
             ObjectContent<List<TimeOfDay?>> content = new ObjectContent<List<TimeOfDay?>>(listOfDates, _formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
@@ -173,7 +171,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             List<DateTime> listOfDateTime = new List<DateTime> { dt1, dt2 };
 
             ObjectContent<List<DateTime>> content = new ObjectContent<List<DateTime>>(listOfDateTime,
-                _formatter, ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                _formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             dynamic result = JObject.Parse(content.ReadAsStringAsync().Result);
@@ -195,7 +193,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             List<DateTime?> listOfDateTime = new List<DateTime?> { dt1, null, dt2 };
 
             ObjectContent<List<DateTime?>> content = new ObjectContent<List<DateTime?>>(listOfDateTime,
-                _formatter, ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                _formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             dynamic result = JObject.Parse(content.ReadAsStringAsync().Result);
@@ -229,7 +227,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             _formatter.Request.GetConfiguration()
                 .SetTimeZoneInfo(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             ObjectContent<List<DateTime>> content = new ObjectContent<List<DateTime>>(listOfDateTime,
-                _formatter, ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                _formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);

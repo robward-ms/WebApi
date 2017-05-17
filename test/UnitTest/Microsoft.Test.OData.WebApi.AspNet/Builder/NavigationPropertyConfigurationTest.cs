@@ -4,11 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Web.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.OData.WebApi.Properties;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
@@ -382,7 +380,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Act & Assert
             Assert.Throws<InvalidOperationException>(
                 () => navigationProperty.HasConstraint(dependentPropertyInfo, principalPropertyInfo),
-                String.Format(SRResources.ReferentialConstraintPropertyTypeNotValid, "System.Web.OData.MockType"));
+                String.Format(SRResources.ReferentialConstraintPropertyTypeNotValid, "Microsoft.Test.OData.WebApi.AspNet.TestCommon.MockType"));
         }
 
         class Principal

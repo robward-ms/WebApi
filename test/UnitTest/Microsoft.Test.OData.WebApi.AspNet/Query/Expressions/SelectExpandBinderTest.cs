@@ -18,7 +18,6 @@ using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
 {
@@ -587,7 +586,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
                     "IIF((value({0}) == null), null, IIF((value({0}).Orders == null), null, " +
                     "value({0}).Orders.AsQueryable().Where($it => ($it.ID == value({1}).TypedProperty))))",
                     customer.Type,
-                    "System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]"),
+                    "Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]"),
                 filterInExpand.ToString());
             var orders = Expression.Lambda(filterInExpand).Compile().DynamicInvoke() as IEnumerable<Order>;
             Assert.Single(orders);
@@ -621,7 +620,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
             Assert.Equal(
                 string.Format(
                     "value({0}).Orders.AsQueryable().Where($it => ($it.ID == value(" +
-                    "System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]).TypedProperty))",
+                    "Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int32]).TypedProperty))",
                     customer.Type),
                 filterInExpand.ToString());
             var orders = Expression.Lambda(filterInExpand).Compile().DynamicInvoke() as IEnumerable<Order>;

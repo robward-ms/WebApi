@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.OData.WebApi;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Query.Controllers
 {

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -9,8 +8,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Query;
-using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Routing;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -111,7 +110,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataPath path = new ODataPath(new[] { new EntitySetSegment(entityset) });
             ODataQueryContext context = new ODataQueryContext(model, entityType, path);
-            return new ODataQueryOptions(context, request);
+            return new ODataQueryOptions(context, new WebApiRequestMessage(request));
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.WebApi;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
@@ -260,7 +261,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 
             headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata.metadata=full");
 
-            return new ODataMessageWrapper(Stream.Null, headers);
+            return ODataMessageWrapperHelper.Create(Stream.Null, headers);
         }
 
         private static IODataRequestMessage CreateRequest(string body)
@@ -269,7 +270,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             HttpContentHeaders headers = content.Headers;
             headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata.metadata=full");
 
-            return new ODataMessageWrapper(content.ReadAsStreamAsync().Result, headers);
+            return ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, headers);
         }
 
         private static IEdmModel CreateModel()

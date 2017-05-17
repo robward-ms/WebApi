@@ -3,14 +3,13 @@
 
 using System;
 using System.Linq;
-using System.Web.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions;
 using Microsoft.OData.WebApi.Formatter.Serialization;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon.Types;
 using Microsoft.Test.OData.WebApi.TestCommon.Types;
 using Moq;
 
@@ -69,10 +68,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
                     { new DateTimeOffset(1,1,1,0,0,0,TimeSpan.Zero), "0001-01-01T00:00:00Z" },
                     { TimeSpan.FromSeconds(86456), "duration'P1DT56S'" },
                     { DateTimeOffset.FromFileTime(0).ToUniversalTime(), "1601-01-01T00:00:00Z" },
-                    { SimpleEnum.First, "Microsoft.TestCommon.Types.SimpleEnum'First'" },
-                    { FlagsEnum.One | FlagsEnum.Two, "Microsoft.TestCommon.Types.FlagsEnum'One, Two'" },
-                    { (SimpleEnum)123, "Microsoft.TestCommon.Types.SimpleEnum'123'" },
-                    { (FlagsEnum)123, "Microsoft.TestCommon.Types.FlagsEnum'123'" },
+                    { SimpleEnum.First, "Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum'First'" },
+                    { FlagsEnum.One | FlagsEnum.Two, "Microsoft.Test.OData.WebApi.TestCommon.Types.FlagsEnum'One, Two'" },
+                    { (SimpleEnum)123, "Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum'123'" },
+                    { (FlagsEnum)123, "Microsoft.Test.OData.WebApi.TestCommon.Types.FlagsEnum'123'" },
                     { new Date(2014, 10, 14), "2014-10-14"},
                     { new TimeOfDay(15, 38, 25, 109), "15:38:25.1090000"},
                 };

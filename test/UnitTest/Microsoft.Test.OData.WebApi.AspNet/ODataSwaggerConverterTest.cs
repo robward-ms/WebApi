@@ -104,7 +104,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Customer""
             }
           },
           ""default"": {
@@ -128,7 +128,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             ""in"": ""body"",
             ""description"": ""The entity to post"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Customer""
             }
           }
         ],
@@ -136,7 +136,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Customer""
             }
           },
           ""default"": {
@@ -175,7 +175,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Customer""
             }
           },
           ""default"": {
@@ -206,7 +206,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             ""in"": ""body"",
             ""description"": ""The entity to patch"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Customer""
             }
           }
         ],
@@ -307,7 +307,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Order""
             }
           },
           ""default"": {
@@ -331,7 +331,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             ""in"": ""body"",
             ""description"": ""The entity to post"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Order""
             }
           }
         ],
@@ -339,7 +339,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Order""
             }
           },
           ""default"": {
@@ -378,7 +378,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Order""
             }
           },
           ""default"": {
@@ -409,7 +409,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             ""in"": ""body"",
             ""description"": ""The entity to patch"",
             ""schema"": {
-              ""$ref"": ""#/definitions/System.Web.OData.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.OData.WebApi.AspNet.Order""
             }
           }
         ],
@@ -568,7 +568,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
     }
   },
   ""definitions"": {
-    ""System.Web.OData.Customer"": {
+    ""Microsoft.Test.OData.WebApi.AspNet.Customer"": {
       ""properties"": {
         ""CustomerId"": {
           ""description"": ""CustomerId"",
@@ -577,7 +577,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         }
       }
     },
-    ""System.Web.OData.Order"": {
+    ""Microsoft.Test.OData.WebApi.AspNet.Order"": {
       ""properties"": {
         ""OrderId"": {
           ""description"": ""OrderId"",

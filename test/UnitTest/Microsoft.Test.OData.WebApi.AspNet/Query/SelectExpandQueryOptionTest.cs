@@ -10,16 +10,15 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Query;
-using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
-using Customer = System.Web.OData.Formatter.Serialization.Models.Customer;
+using Customer = Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models.Customer;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Query
@@ -258,7 +257,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = ODataLevelsTest.GetEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.Routing.LevelsEntity"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsEntity"));
             context.RequestContainer = new MockContainer();
             var selectExpand = new SelectExpandQueryOption(
                 select: null,
@@ -314,7 +313,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = ODataLevelsTest.GetEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.Routing.LevelsEntity"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsEntity"));
             context.RequestContainer = new MockContainer();
             var selectExpand = new SelectExpandQueryOption(
                 select: "Name",
@@ -381,7 +380,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = ODataLevelsTest.GetEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.Routing.LevelsEntity"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsEntity"));
             context.RequestContainer = new MockContainer();
             var selectExpand = new SelectExpandQueryOption(
                 select: null,
@@ -490,7 +489,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = ODataLevelsTest.GetEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.Routing.LevelsEntity"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsEntity"));
             context.RequestContainer = new MockContainer();
             var selectExpand = new SelectExpandQueryOption(
                 select: null,
@@ -576,7 +575,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = ODataLevelsTest.GetEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.Routing.LevelsEntity"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.Routing.LevelsEntity"));
             context.RequestContainer = new MockContainer();
             var selectExpand = new SelectExpandQueryOption(
                 select: null,
@@ -635,10 +634,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             var model = GetAutoExpandEdmModel();
             var context = new ODataQueryContext(
                 model,
-                model.FindDeclaredType("System.Web.OData.TestCommon.Models.AutoExpandCustomer"));
+                model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.AutoExpandCustomer"));
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.EnableHttpDependencyInjectionSupport();
-            var queryOption = new ODataQueryOptions(context, request);
+            var queryOption = new ODataQueryOptions(context, new WebApiRequestMessage(request));
             queryOption.AddAutoSelectExpandProperties();
             var selectExpand = queryOption.SelectExpand;
 

@@ -6,10 +6,10 @@ using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -29,7 +29,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(null, controllerContext.Object, emptyMap),
+                () => new SingletonRoutingConvention().SelectAction(null, new WebApiControllerContext(controllerContext.Object, null), new WebApiActionMap(emptyMap)),
                 "odataPath");
         }
 
@@ -43,7 +43,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(odataPath, null, emptyMap),
+                () => new SingletonRoutingConvention().SelectAction(odataPath, null, new WebApiActionMap(emptyMap)),
                 "controllerContext");
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new SingletonRoutingConvention().SelectAction(odataPath, controllerContext.Object, null),
+                () => new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext.Object, null), null),
                 "actionMap");
         }
 
@@ -72,14 +72,14 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             const string SingletonName = "VipCustomer";
             string actionName = httpMethodNamePrefix + SingletonName;
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, _serviceRoot, SingletonName);
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, _serviceRoot, SingletonName);
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => actionName);
             HttpControllerContext controllerContext = new HttpControllerContext();
             controllerContext.Request = new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/");
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string selectedAction = new SingletonRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.NotNull(selectedAction);
@@ -101,7 +101,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string actionName = new SingletonRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new SingletonRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Act & Assert
             Assert.Null(actionName);
@@ -123,7 +123,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new EntitySetRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(emptyActionMap));
 
             // Assert
             Assert.Null(selectedAction);

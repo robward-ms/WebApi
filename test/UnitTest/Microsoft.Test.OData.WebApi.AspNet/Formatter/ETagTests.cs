@@ -8,9 +8,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             MethodCallExpression methodCall = queryable.Expression as MethodCallExpression;
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
-            Assert.Equal(@"Param_0 => (Param_0.FirstName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)",
+            Assert.Equal(@"Param_0 => (Param_0.FirstName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)",
                 methodCall.Arguments[1].ToString());
         }
 
@@ -141,7 +141,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
             Assert.Equal(
-                @"Param_0 => Not((Param_0.LastName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty))",
+                @"Param_0 => Not((Param_0.LastName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty))",
                 methodCall.Arguments[1].ToString());
         }
 
@@ -167,8 +167,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             Assert.NotNull(methodCall);
             Assert.Equal(2, methodCall.Arguments.Count);
             Assert.Equal(
-                @"Param_0 => Not(((Param_0.FirstName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty) "
-                + "AndAlso (Param_0.LastName == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)))",
+                @"Param_0 => Not(((Param_0.FirstName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty) "
+                + "AndAlso (Param_0.LastName == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.String]).TypedProperty)))",
                 methodCall.Arguments[1].ToString());
         }
 
@@ -216,7 +216,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
             IETagHandler handerl = new DefaultODataETagHandler();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "DoubleETag", value } };
-            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             HttpRequestMessage request = new HttpRequestMessage();
 
@@ -250,13 +251,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             if (ifMatch)
             {
                 Assert.Equal(
-                    "Param_0 => (Param_0.DoubleETag == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Double]).TypedProperty)",
+                    "Param_0 => (Param_0.DoubleETag == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Double]).TypedProperty)",
                     methodCall.Arguments[1].ToString());
             }
             else
             {
                 Assert.Equal(
-                    "Param_0 => Not((Param_0.DoubleETag == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Double]).TypedProperty))",
+                    "Param_0 => Not((Param_0.DoubleETag == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Double]).TypedProperty))",
                     methodCall.Arguments[1].ToString());
             }
         }
@@ -306,7 +307,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 { "ByteVal", byteVal },
                 { "ShortVal", shortVal }
             };
-            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             HttpRequestMessage request = new HttpRequestMessage();
 
@@ -336,15 +338,15 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             if (ifMatch)
             {
                 Assert.Equal(
-                    "Param_0 => ((Param_0.ByteVal == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.SByte]).TypedProperty) " +
-                    "AndAlso (Param_0.ShortVal == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int16]).TypedProperty))",
+                    "Param_0 => ((Param_0.ByteVal == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.SByte]).TypedProperty) " +
+                    "AndAlso (Param_0.ShortVal == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int16]).TypedProperty))",
                     methodCall.Arguments[1].ToString());
             }
             else
             {
                 Assert.Equal(
-                    "Param_0 => Not(((Param_0.ByteVal == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.SByte]).TypedProperty) " +
-                    "AndAlso (Param_0.ShortVal == value(System.Web.OData.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int16]).TypedProperty)))",
+                    "Param_0 => Not(((Param_0.ByteVal == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.SByte]).TypedProperty) " +
+                    "AndAlso (Param_0.ShortVal == value(Microsoft.OData.WebApi.Query.Expressions.LinqParameterContainer+TypedLinqParameterContainer`1[System.Int16]).TypedProperty)))",
                     methodCall.Arguments[1].ToString());
             }
         }

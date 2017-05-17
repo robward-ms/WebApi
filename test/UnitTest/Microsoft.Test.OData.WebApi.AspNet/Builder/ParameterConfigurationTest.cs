@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder

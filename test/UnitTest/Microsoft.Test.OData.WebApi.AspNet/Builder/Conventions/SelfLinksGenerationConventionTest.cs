@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Serialization;
@@ -73,13 +73,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             HttpRequestMessage request = GetODataRequest(model);
             NavigationSourceLinkBuilderAnnotation linkBuilder = model.GetNavigationSourceLinkBuilder(vehiclesEdmEntitySet);
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehiclesEdmEntitySet, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehiclesEdmEntitySet, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, carType.AsReference(), new Car { Model = 2009, Name = "Contoso" });
 
             EntitySelfLinks selfLinks = linkBuilder.BuildEntitySelfLinks(entityContext, ODataMetadataLevel.FullMetadata);
 
             Assert.Equal("http://localhost/vehicles(Model=2009,Name='Contoso')", selfLinks.IdLink.ToString());
-            Assert.Equal("http://localhost/vehicles(Model=2009,Name='Contoso')/System.Web.OData.Builder.TestModels.Car", selfLinks.EditLink.ToString());
+            Assert.Equal("http://localhost/vehicles(Model=2009,Name='Contoso')/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Car", selfLinks.EditLink.ToString());
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             HttpRequestMessage request = GetODataRequest(model);
             NavigationSourceLinkBuilderAnnotation linkBuilder = model.GetNavigationSourceLinkBuilder(vehicleEdmSingleton);
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehicleEdmSingleton, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehicleEdmSingleton, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, carType.AsReference(), new Car { Model = 2014, Name = "Contoso" });
 
             // Act
@@ -103,7 +103,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             // Assert
             Assert.Equal("http://localhost/MyVehicle", selfLinks.IdLink.ToString());
-            Assert.Equal("http://localhost/MyVehicle/System.Web.OData.Builder.TestModels.Car", selfLinks.EditLink.ToString());
+            Assert.Equal("http://localhost/MyVehicle/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Car", selfLinks.EditLink.ToString());
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             HttpRequestMessage request = GetODataRequest(model);
             NavigationSourceLinkBuilderAnnotation linkBuilder = model.GetNavigationSourceLinkBuilder(vehiclesEdmEntitySet);
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehiclesEdmEntitySet, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehiclesEdmEntitySet, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, sportbikeType.AsReference(), new SportBike { Model = 2009, Name = "Ninja" });
 
             EntitySelfLinks selfLinks = linkBuilder.BuildEntitySelfLinks(entityContext, ODataMetadataLevel.FullMetadata);
@@ -139,7 +139,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             HttpRequestMessage request = GetODataRequest(model);
             NavigationSourceLinkBuilderAnnotation linkBuilder = model.GetNavigationSourceLinkBuilder(vehicleEdmSingleton);
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehicleEdmSingleton, Url = request.GetUrlHelper() };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = vehicleEdmSingleton, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
             var entityContext = new ResourceContext(serializerContext, sportbikeType.AsReference(), new SportBike { Model = 2014, Name = "Ninja" });
 
             // Act

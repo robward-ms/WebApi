@@ -189,8 +189,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
         public void ConstructorNullRequestThrows()
         {
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
+            HttpRequestMessage request = null;
             Assert.Throws<ArgumentNullException>(
-                () => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), null)
+                () => new ODataQueryOptions(new ODataQueryContext(model, typeof(Customer)), request)
             );
         }
 
@@ -830,7 +831,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
                 IQueryable<int> e = Enumerable.Range(1, 9).AsQueryable();
                 return new TheoryDataSet<IQueryable, string, object>
                 {
-                    { e.Select(i => (SimpleEnum)(i%3)), "$filter=$it eq Microsoft.TestCommon.Types.SimpleEnum'First'&$orderby=$it desc&$skip=1&$top=1", SimpleEnum.First },
+                    { e.Select(i => (SimpleEnum)(i%3)), "$filter=$it eq Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum'First'&$orderby=$it desc&$skip=1&$top=1", SimpleEnum.First },
                     { e.Select(i => (SimpleEnum?)null), "$filter=$it eq null&$orderby=$it desc&$skip=1&$top=1", null },
                 };
             }

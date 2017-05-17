@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.OData.WebApi.TestCommon;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing
 {

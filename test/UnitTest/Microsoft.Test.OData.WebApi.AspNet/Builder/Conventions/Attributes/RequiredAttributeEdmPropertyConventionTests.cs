@@ -3,11 +3,11 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Web.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.Test.OData.WebApi.AspNet.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 

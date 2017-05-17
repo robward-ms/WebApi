@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
-using using using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {

@@ -20,7 +20,7 @@ namespace Microsoft.OData.WebApi.Extensions
         // Maintain the System.Web.OData. prefix in any new properties to avoid conflicts with user properties
         // and those of the v3 assembly.  Concern is reduced here due to addition of user type name but prefix
         // also clearly ties the property to code in this assembly.
-        private const string ModelKeyPrefix = "System.Web.OData.Model+";
+        private const string ModelKeyPrefix = "Microsoft.OData.WebApi.Model+";
 
         internal static IEdmModel GetEdmModel(this HttpActionDescriptor actionDescriptor, Type entityClrType)
         {

@@ -112,7 +112,7 @@ namespace Microsoft.Test.OData.WebApi.TestCommon
         protected override bool ExcludeStackFrame(string stackFrame)
         {
             return base.ExcludeStackFrame(stackFrame)
-                || stackFrame.StartsWith("at Microsoft.TestCommon.Assert.", StringComparison.OrdinalIgnoreCase);
+                || stackFrame.StartsWith("at Microsoft.Test.OData.WebApi.TestCommon.Assert.", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

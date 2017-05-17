@@ -9,13 +9,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Query;
-using Microsoft.OData.WebApi.Query.Validators;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.Query.Validators;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
@@ -529,7 +526,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             var parser = new ODataQueryOptionParser(
                 model,
-                model.FindType("System.Web.OData.Builder.TestModels.Customer"),
+                model.FindType("Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer"),
                 model.FindDeclaredNavigationSource("Default.Container.Customers"),
                 new Dictionary<string, string> { { "$orderby", "@q desc,@p asc" }, { "@q", "Address/HouseNumber" }, { "@p", "CustomerId" } });
 
@@ -563,7 +560,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             var parser = new ODataQueryOptionParser(
                 model,
-                model.FindType("System.Web.OData.Builder.TestModels.Customer"),
+                model.FindType("Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer"),
                 model.FindDeclaredNavigationSource("Default.Container.Customers"),
                 new Dictionary<string, string> { { "$orderby", "@p1" }, { "@p2", "Name" }, { "@p1", "@p2" } });
 

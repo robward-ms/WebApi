@@ -8,7 +8,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using PropertyKind = System.Data.Metadata.Edm.PropertyKind;
+using PropertyKind = Microsoft.OData.WebApi.Builder.PropertyKind;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 {

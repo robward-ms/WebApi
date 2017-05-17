@@ -16,9 +16,8 @@ using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
-using  Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
@@ -218,7 +217,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -242,7 +242,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -283,7 +284,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [Fact]
         public void GetNextPageLink_ThatTakesUri_GetsNextPageLink()
         {
-            Uri nextPageLink = Web.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(new Uri("http://localhost/Customers?$filter=Age ge 18"), 10);
+            Uri nextPageLink = Microsoft.OData.WebApi.Extensions.HttpRequestMessageExtensions.GetNextPageLink(new Uri("http://localhost/Customers?$filter=Age ge 18"), 10);
             Assert.Equal("http://localhost/Customers?$filter=Age%20ge%2018&$skip=10", nextPageLink.AbsoluteUri);
         }
 
@@ -291,10 +292,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         public void GetNextPageLink_WithNullRequestOrUri_Throws()
         {
             HttpRequestMessage nullRequest = null;
-            Assert.Throws<ArgumentNullException>(() => { Web.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(nullRequest, 10); });
+            Assert.Throws<ArgumentNullException>(() => { Microsoft.OData.WebApi.Extensions.HttpRequestMessageExtensions.GetNextPageLink(nullRequest, 10); });
 
             HttpRequestMessage requestWithNullUri = new HttpRequestMessage() { RequestUri = null };
-            Assert.Throws<ArgumentNullException>(() => { Web.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithNullUri, 10); });
+            Assert.Throws<ArgumentNullException>(() => { Microsoft.OData.WebApi.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithNullUri, 10); });
         }
 
         [Fact]
@@ -302,7 +303,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         {
             Uri relativeUri = new Uri("/test", UriKind.Relative);
             HttpRequestMessage requestWithRelativeUri = new HttpRequestMessage() { RequestUri = relativeUri };
-            Assert.Throws<ArgumentException>(() => { Web.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithRelativeUri, 10); });
+            Assert.Throws<ArgumentException>(() => { Microsoft.OData.WebApi.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithRelativeUri, 10); });
         }
 
         [Theory]
@@ -319,7 +320,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         {
             // Arrange
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Version", value } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagCustomer>("Customers");
@@ -372,7 +374,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 { "LongVal", longValue },
                 { "ShortVal", shortValue }
             };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagOrder>("Orders");

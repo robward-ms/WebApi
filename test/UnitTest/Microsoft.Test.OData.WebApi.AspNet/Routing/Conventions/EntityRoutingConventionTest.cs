@@ -5,10 +5,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using ODataPath = Microsoft.OData.UriParser.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 {
@@ -27,7 +28,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             controllerContext.Request = new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/");
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
-            string selectedAction = new EntityRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new EntityRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(emptyActionMap));
 
             Assert.Null(selectedAction);
             Assert.Empty(controllerContext.Request.GetRouteData().Values);

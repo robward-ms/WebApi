@@ -6,11 +6,9 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 

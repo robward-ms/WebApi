@@ -4,7 +4,6 @@
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Web.OData;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;

@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Http;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
@@ -122,7 +123,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             var messageWriter = new ODataMessageWriter(mockRequest.Object);
             var request = new HttpRequestMessage();
             request.ODataProperties().Path = new ODataPath(CountSegment.Instance);
-            var context = new ODataSerializerContext { Request = request };
+            var context = new ODataSerializerContext { Request = new WebApiRequestMessage(request) };
 
             // Act
             serializer.WriteObject(5, null, messageWriter, context);

@@ -288,7 +288,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             IEdmModel model = GetEdmModel();
             IEdmEntityType edmType = model.SchemaElements.OfType<IEdmEntityType>().Single(t => t.Name == "LimitedEntity");
-            IEdmEntitySet entitySet = model.FindDeclaredEntitySet("System.Web.OData.Query.Validators.LimitedEntities");
+            IEdmEntitySet entitySet = model.FindDeclaredEntitySet("Microsoft.Test.OData.WebApi.AspNet.Query.Validators.LimitedEntities");
             ODataQueryContext context = new ODataQueryContext(model, edmType);
 
             OrderByQueryOption option = new OrderByQueryOption(

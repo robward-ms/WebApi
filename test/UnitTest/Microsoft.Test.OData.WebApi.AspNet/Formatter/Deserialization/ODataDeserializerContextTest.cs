@@ -4,7 +4,6 @@
 using System;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
-using  Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 

@@ -4,6 +4,7 @@
 using System.Net.Http;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -22,7 +23,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new MockNavigationSourceRoutingConvention().SelectController(null, request.Object),
+                () => new MockNavigationSourceRoutingConvention().SelectController(null, new WebApiRequestMessage(request.Object)),
                 "odataPath");
         }
 
@@ -50,10 +51,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ODataPath odataPath = new ODataPath(navigationLinkSegment);
 
             // Act
-            string controller = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
+            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
 
             // Assert
-            Assert.Null(controller);
+            Assert.Null(controllerResult);
         }
 
         [Fact]
@@ -62,13 +63,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             // Arrange
             Mock<HttpRequestMessage> request = new Mock<HttpRequestMessage>();
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", "Customers");
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", "Customers");
 
             // Act
-            string controller = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
+            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
 
             // Assert
-            Assert.Equal("Customers", controller);
+            Assert.Equal("Customers", controllerResult.ControllerName);
         }
 
         [Fact]
@@ -80,10 +81,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", "VipCustomer");
 
             // Act
-            string controller = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
+            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
 
             // Assert
-            Assert.Equal("VipCustomer", controller);
+            Assert.Equal("VipCustomer", controllerResult.ControllerName);
         }
     }
 }

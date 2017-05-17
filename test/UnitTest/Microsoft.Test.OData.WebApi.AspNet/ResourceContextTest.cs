@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
@@ -57,7 +58,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [Fact]
         public void Property_Request_RoundTrips()
         {
-            Assert.Reflection.Property(_context, (c) => c.Request, null, allowNull: true, roundTripTestValue: new HttpRequestMessage());
+            var roundTripTestValue = new WebApiRequestMessage(new HttpRequestMessage());
+            Assert.Reflection.Property(_context, (c) => c.Request, null, allowNull: true, roundTripTestValue: roundTripTestValue);
         }
 
         [Fact]
@@ -75,7 +77,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [Fact]
         public void Property_Url_RoundTrips()
         {
-            Assert.Reflection.Property(_context, (c) => c.Url, null, allowNull: true, roundTripTestValue: new UrlHelper(new HttpRequestMessage()));
+            var roundTripTestValue = new WebApiUrlHelper(new UrlHelper(new HttpRequestMessage()));
+            Assert.Reflection.Property(_context, (c) => c.Url, null, allowNull: true, roundTripTestValue: roundTripTestValue);
         }
 
         [Fact]

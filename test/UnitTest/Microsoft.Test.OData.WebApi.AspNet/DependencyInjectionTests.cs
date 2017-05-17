@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Routing.Conventions;
@@ -48,7 +49,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 builder.AddService(ServiceLifetime.Singleton, sp => instance)
                        .AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
             return new HttpClient(new HttpServer(config));
         }
 

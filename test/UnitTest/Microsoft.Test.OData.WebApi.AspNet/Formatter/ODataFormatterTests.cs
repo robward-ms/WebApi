@@ -15,7 +15,6 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Formatter.Deserialization;
@@ -24,7 +23,6 @@ using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -174,7 +172,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 foreach (ODataMediaTypeFormatter odataFormatter in
                     configuration.Formatters.OfType<ODataMediaTypeFormatter>())
                 {
-                    odataFormatter.SupportedMediaTypes.Remove(ODataMediaTypes.ApplicationJson);
+                    odataFormatter.SupportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
                 }
 
                 using (HttpServer host = new HttpServer(configuration))
@@ -306,10 +304,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                     dynamic json = JToken.Parse(result);
 
                     Assert.Equal("The query specified in the URI is not valid. " +
-                        "Could not find a property named 'abc' on type 'System.Web.OData.Formatter.FormatterPerson'.",
+                        "Could not find a property named 'abc' on type 'Microsoft.Test.OData.WebApi.AspNet.Formatter.FormatterPerson'.",
                         json["error"]["message"].Value);
 
-                    Assert.Equal("Could not find a property named 'abc' on type 'System.Web.OData.Formatter.FormatterPerson'.",
+                    Assert.Equal("Could not find a property named 'abc' on type 'Microsoft.Test.OData.WebApi.AspNet.Formatter.FormatterPerson'.",
                         json["error"]["innererror"]["message"].Value);
 
                     Assert.Equal("Microsoft.OData.ODataException",
@@ -393,7 +391,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
-                "http://localhost/" + entitySet + "(System.Web.OData.Builder.TestModels.Color'Red')");
+                "http://localhost/" + entitySet + "(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color'Red')");
             HttpResponseMessage response = client.SendAsync(request).Result;
 
             // Assert
@@ -424,7 +422,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/EnumCustomers"))
                 {
                     request.Content = new StringContent(
-                        string.Format(@"{{'@odata.type':'#System.Web.OData.Formatter.EnumCustomer',
+                        string.Format(@"{{'@odata.type':'#Microsoft.Test.OData.WebApi.AspNet.Formatter.EnumCustomer',
                             'ID':0,'Color':'Green, Blue','Colors':['Red','Red, Blue']}}"));
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     request.Headers.Accept.ParseAdd("application/json");
@@ -456,9 +454,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             // Assert
             response.EnsureSuccessStatusCode();
             JObject customer = response.Content.ReadAsAsync<JObject>().Result;
-            Assert.Equal("#System.Web.OData.Builder.TestModels.Color",
+            Assert.Equal("#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color",
                 customer.GetValue("Color@odata.type"));
-            Assert.Equal("#Collection(System.Web.OData.Builder.TestModels.Color)",
+            Assert.Equal("#Collection(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color)",
                 customer.GetValue("Colors@odata.type"));
         }
 
@@ -490,7 +488,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/EnumCustomers");
             request.Content = new StringContent(
-                string.Format(@"{{'@odata.type':'#System.Web.OData.Formatter.EnumCustomer',
+                string.Format(@"{{'@odata.type':'#Microsoft.Test.OData.WebApi.AspNet.Formatter.EnumCustomer',
                             'ID':0,'Color':'Green, Blue','Colors':['Red','Red, Blue']}}"));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             request.Headers.Accept.ParseAdd(acceptHeader);
@@ -516,7 +514,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/EnumCustomers"))
                 {
                     request.Content = new StringContent(
-                        string.Format(@"{{'@odata.type':'#System.Web.OData.Formatter.EnumCustomer',
+                        string.Format(@"{{'@odata.type':'#Microsoft.Test.OData.WebApi.AspNet.Formatter.EnumCustomer',
                             'ID':0,'Color':'Green, Blue','Colors':['Red','Red, Blue']}}"));
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                     request.Headers.Accept.ParseAdd("application/json;odata.metadata=full");
@@ -527,9 +525,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                         // Assert
                         response.EnsureSuccessStatusCode();
                         dynamic payload = JToken.Parse(response.Content.ReadAsStringAsync().Result);
-                        Assert.Equal("#System.Web.OData.Formatter.EnumCustomer", payload["@odata.type"].Value);
-                        Assert.Equal("#System.Web.OData.Builder.TestModels.Color", payload["Color@odata.type"].Value);
-                        Assert.Equal("#Collection(System.Web.OData.Builder.TestModels.Color)", payload["Colors@odata.type"].Value);
+                        Assert.Equal("#Microsoft.Test.OData.WebApi.AspNet.Formatter.EnumCustomer", payload["@odata.type"].Value);
+                        Assert.Equal("#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color", payload["Color@odata.type"].Value);
+                        Assert.Equal("#Collection(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color)", payload["Colors@odata.type"].Value);
                     }
                 }
             }
@@ -592,7 +590,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         {
             // Arrange
             const string expect = @"{
-  ""@odata.context"": ""http://localhost/$metadata#Collection(System.Web.OData.Builder.TestModels.Color)"",
+  ""@odata.context"": ""http://localhost/$metadata#Collection(Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Color)"",
   ""@odata.count"": 3,
   ""@odata.nextLink"": ""http://localhost/EnumCustomers(5)/Colors?$count=true&$skip=2"",
   ""value"": [
@@ -1070,7 +1068,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
         private class CustomFeedSerializer : ODataResourceSetSerializer
         {
-            public CustomFeedSerializer(ODataSerializerProvider serializerProvider)
+            public CustomFeedSerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }
@@ -1115,7 +1113,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
         private class CustomEntrySerializer : ODataResourceSerializer
         {
-            public CustomEntrySerializer(ODataSerializerProvider serializerProvider)
+            public CustomEntrySerializer(IODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }

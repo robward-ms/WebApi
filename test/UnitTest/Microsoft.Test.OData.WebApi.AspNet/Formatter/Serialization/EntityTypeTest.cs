@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -9,10 +10,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using using using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
@@ -29,7 +28,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             ODataMediaTypeFormatter formatter = CreateFormatter();
             Employee employee = (Employee)TypeInitializer.GetInstance(SupportedTypes.Employee);
             ObjectContent<Employee> content = new ObjectContent<Employee>(employee, formatter,
-                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+                MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
 
             // Act & Assert
             JsonAssert.Equal(Resources.EmployeeEntry, content.ReadAsStringAsync().Result);
@@ -39,7 +38,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         {
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.Resource });
             formatter.Request = GetSampleRequest();
-            formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
+            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
             return formatter;
         }
 

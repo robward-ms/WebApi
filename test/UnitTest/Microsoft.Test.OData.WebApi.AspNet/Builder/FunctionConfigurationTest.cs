@@ -10,11 +10,11 @@ using System.Web.Http;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -628,7 +628,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             IEdmEntityContainer container = model.SchemaElements.OfType<IEdmEntityContainer>().SingleOrDefault();
             IEdmFunction watchFunction = Assert.Single(model.SchemaElements.OfType<IEdmFunction>()); // Guard
             IEdmEntitySet entitySet = container.EntitySets().SingleOrDefault();
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = urlHelper };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = new WebApiUrlHelper(urlHelper) };
 
             ResourceContext context = new ResourceContext(serializerContext, movieType.AsReference(), new Movie { ID = 1, Name = "Avatar" });
             OperationLinkBuilder functionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchFunction);
@@ -667,8 +667,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             ResourceSetContext context = new ResourceSetContext
             {
                 EntitySetBase = entitySet,
-                Url = urlHelper,
-                Request = request
+                Url = new WebApiUrlHelper(urlHelper),
+                Request = new WebApiRequestMessage(request)
             };
 
             OperationLinkBuilder functionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchFunction);

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => functionConvention.SelectAction(odataPath, controllerContext, actionMap: null),
+                () => functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), actionMap: null),
                 "actionMap");
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
 
             // Act
-            string selectedAction = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Null(selectedAction);
@@ -96,7 +96,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "IsUpgraded");
 
             // Act
-            string function = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string function = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("IsUpgraded", function);
@@ -122,7 +122,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "IsUpgraded");
 
             // Act
-            string function = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string function = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("IsUpgraded", function);
@@ -147,7 +147,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "IsAnyUpgraded");
 
             // Act
-            string function = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string function = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("IsAnyUpgraded", function);
@@ -172,7 +172,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "IsUpgradedWithParam");
 
             // Act
-            string function = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string function = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("IsUpgradedWithParam", function);
@@ -199,7 +199,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "IsUpgradedWithParam");
 
             // Act
-            string function = functionConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string function = functionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("IsUpgradedWithParam", function);
@@ -221,7 +221,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
             // Act
-            string selectedAction = new FunctionRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = new FunctionRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(emptyActionMap));
 
             // Assert
             Assert.Null(selectedAction);
@@ -246,7 +246,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetOrders");
 
             // Act
-            string selectedAction = new FunctionRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new FunctionRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal("GetOrders", selectedAction);

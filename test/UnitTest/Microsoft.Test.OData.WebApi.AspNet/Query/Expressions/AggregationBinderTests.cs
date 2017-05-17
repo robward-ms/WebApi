@@ -10,6 +10,7 @@ using System.Web.Http.Dispatcher;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.WebApi.Query.Expressions;
@@ -146,7 +147,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
 
             var binder = new AggregationBinder(
                 customizeSettings(new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False }),
-                assembliesResolver,
+                new WebApiAssembliesResolver(assembliesResolver),
                 typeof(T),
                 model,
                 clause.Transformations.First());

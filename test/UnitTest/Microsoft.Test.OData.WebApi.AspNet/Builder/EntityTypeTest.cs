@@ -7,8 +7,6 @@ using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
@@ -116,7 +114,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Equal(1, entityType.DeclaredKey.Count());
             IEdmStructuralProperty key = entityType.DeclaredKey.First();
             Assert.Equal(EdmTypeKind.Enum, key.Type.TypeKind());
-            Assert.Equal("Microsoft.TestCommon.Types.SimpleEnum", key.Type.Definition.FullTypeName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum", key.Type.Definition.FullTypeName());
         }
 
         [Fact]
@@ -139,11 +137,11 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Equal(2, entityType.DeclaredKey.Count());
             IEdmStructuralProperty simpleKey = entityType.DeclaredKey.First(k => k.Name == "Simple");
             Assert.Equal(EdmTypeKind.Enum, simpleKey.Type.TypeKind());
-            Assert.Equal("Microsoft.TestCommon.Types.SimpleEnum", simpleKey.Type.Definition.FullTypeName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum", simpleKey.Type.Definition.FullTypeName());
 
             IEdmStructuralProperty longKey = entityType.DeclaredKey.First(k => k.Name == "Long");
             Assert.Equal(EdmTypeKind.Enum, longKey.Type.TypeKind());
-            Assert.Equal("Microsoft.TestCommon.Types.LongEnum", longKey.Type.Definition.FullTypeName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.TestCommon.Types.LongEnum", longKey.Type.Definition.FullTypeName());
         }
 
         [Fact]
@@ -166,7 +164,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.Equal(2, entityType.DeclaredKey.Count());
             IEdmStructuralProperty enumKey = entityType.DeclaredKey.First(k => k.Name == "Simple");
             Assert.Equal(EdmTypeKind.Enum, enumKey.Type.TypeKind());
-            Assert.Equal("Microsoft.TestCommon.Types.SimpleEnum", enumKey.Type.Definition.FullTypeName());
+            Assert.Equal("Microsoft.Test.OData.WebApi.TestCommon.Types.SimpleEnum", enumKey.Type.Definition.FullTypeName());
 
             IEdmStructuralProperty primitiveKey = entityType.DeclaredKey.First(k => k.Name == "Id");
             Assert.Equal(EdmTypeKind.Primitive, primitiveKey.Type.TypeKind());
@@ -360,7 +358,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sportBikeType.DerivesFrom<Motorcycle>().HasKey(s => s.SportBikeProperty_NotVisible),
-                "Cannot define keys on type 'System.Web.OData.Builder.TestModels.SportBike' deriving from 'System.Web.OData.Builder.TestModels.Motorcycle'. " +
+                "Cannot define keys on type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SportBike' deriving from 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle'. " +
                 "The base type in the entity inheritance hierarchy already contains keys.");
         }
 
@@ -375,7 +373,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sportBikeType.HasKey(s => s.SportBikeProperty_NotVisible).DerivesFrom<Motorcycle>(),
-                "Cannot define keys on type 'System.Web.OData.Builder.TestModels.SportBike' deriving from 'System.Web.OData.Builder.TestModels.Motorcycle'. " +
+                "Cannot define keys on type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SportBike' deriving from 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle'. " +
                 "The base type in the entity inheritance hierarchy already contains keys.");
         }
 
@@ -438,7 +436,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                         .DerivesFrom<Vehicle>()
                         .Property(m => m.WheelCount),
                 "propertyInfo",
-                "Cannot redefine property 'WheelCount' already defined on the base type 'System.Web.OData.Builder.TestModels.Vehicle'.");
+                "Cannot redefine property 'WheelCount' already defined on the base type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle'.");
         }
 
         [Fact]
@@ -456,7 +454,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                         .EntityType<Vehicle>()
                         .Property(v => v.Model),
                 "propertyInfo",
-                "Cannot define property 'Model' in the base type 'System.Web.OData.Builder.TestModels.Vehicle' as the derived type 'System.Web.OData.Builder.TestModels.Motorcycle' already defines it.");
+                "Cannot define property 'Model' in the base type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle' as the derived type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle' already defines it.");
         }
 
         [Fact]
@@ -479,7 +477,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                         .EntityType<string>()
                         .DerivesFrom<Vehicle>(),
                 "baseType",
-                "'System.String' does not inherit from 'System.Web.OData.Builder.TestModels.Vehicle'.");
+                "'System.String' does not inherit from 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle'.");
         }
 
         [Fact]
@@ -498,7 +496,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.ThrowsArgument(
                 () => motorcycle.DerivesFrom<Vehicle>(),
                 "propertyInfo",
-                "Cannot redefine property 'Model' already defined on the base type 'System.Web.OData.Builder.TestModels.Vehicle'.");
+                "Cannot redefine property 'Model' already defined on the base type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle'.");
         }
 
         [Fact]
@@ -520,7 +518,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                     .EntityType<Motorcycle>()
                     .DerivesFrom<Vehicle>(),
                 "propertyInfo",
-                "Cannot define property 'Model' in the base type 'System.Web.OData.Builder.TestModels.Motorcycle' as the derived type 'System.Web.OData.Builder.TestModels.SportBike' already defines it.");
+                "Cannot define property 'Model' in the base type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Motorcycle' as the derived type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SportBike' already defines it.");
         }
 
         [Fact]
@@ -533,7 +531,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                 .EntityType<Vehicle>()
                 .DerivesFrom<Vehicle>(),
             "baseType",
-            "'System.Web.OData.Builder.TestModels.Vehicle' does not inherit from 'System.Web.OData.Builder.TestModels.Vehicle'.");
+            "Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle' does not inherit from 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Vehicle'.");
         }
 
         [Fact]

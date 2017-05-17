@@ -10,11 +10,11 @@ using System.Web.Http;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Builder;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
@@ -420,7 +420,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => builder.GetEdmModel(),
                 "Found more than one action with name 'ActionOnCustomer' " +
-                "bound to the same type 'System.Web.OData.Builder.TestModels.Customer'. " +
+                "bound to the same type 'Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Customer'. " +
                 "Each bound action must have a different binding type or name.");
         }
 
@@ -559,7 +559,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             IEdmEntityContainer container = model.SchemaElements.OfType<IEdmEntityContainer>().SingleOrDefault();
             IEdmAction watchAction = Assert.Single(model.SchemaElements.OfType<IEdmAction>()); // Guard
             IEdmEntitySet entitySet = container.EntitySets().SingleOrDefault();
-            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = urlHelper };
+            ODataSerializerContext serializerContext = new ODataSerializerContext { Model = model, NavigationSource = entitySet, Url = new WebApiUrlHelper(urlHelper) };
 
             ResourceContext context = new ResourceContext(serializerContext, movieType.AsReference(), new Movie { ID = 1, Name = "Avatar" });
             OperationLinkBuilder actionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchAction);
@@ -596,8 +596,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             ResourceSetContext context = new ResourceSetContext
             {
                 EntitySetBase = entitySet,
-                Url = urlHelper,
-                Request = request
+                Url = new WebApiUrlHelper(urlHelper),
+                Request = new WebApiRequestMessage(request)
             };
 
             OperationLinkBuilder actionLinkBuilder = model.GetAnnotationValue<OperationLinkBuilder>(watchAction);
@@ -868,7 +868,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => action.Returns<Movie>(),
-                "The EDM type 'System.Web.OData.Builder.Movie' is already declared as an entity type. Use the " +
+                "The EDM type 'Microsoft.Test.OData.WebApi.AspNet.Builder.Movie' is already declared as an entity type. Use the " +
                 "method 'ReturnsFromEntitySet' if the return type is an entity.");
         }
 
@@ -882,7 +882,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => action.ReturnsCollection<Movie>(),
-                "The EDM type 'System.Web.OData.Builder.Movie' is already declared as an entity type. Use the " +
+                "The EDM type 'Microsoft.Test.OData.WebApi.AspNet.Builder.Movie' is already declared as an entity type. Use the " +
                 "method 'ReturnsCollectionFromEntitySet' if the return type is an entity collection.");
         }
 

@@ -11,9 +11,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
 {
     public class PublicApiTest
     {
-        private const string AssemblyName = "System.Web.OData.dll";
-        private const string OutputFileName = "System.Web.OData.PublicApi.out";
-        private const string BaseLineFileName = "System.Web.OData.PublicApi.bsl";
+        private const string AssemblyName = "Microsoft.OData.WebApi.AspNet.dll";
+        private const string OutputFileName = "Microsoft.OData.WebApi.AspNet.PublicApi.out";
+        private const string BaseLineFileName = "Microsoft.OData.WebApi.AspNet.PublicApi.bsl";
 
         [Fact]
         public void TestPublicApi()
@@ -45,13 +45,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
                 String.Format("Base line file {1} and output file {2} do not match, please check.{0}" +
                 "To update the baseline, please run:{0}{0}" +
                 "copy /y \"{2}\" \"{1}\"", Environment.NewLine,
-                @"OData\test\UnitTest\System.Web.OData.Test\PublicApi\System.Web.OData.PublicApi.bsl",
+                @"test\UnitTest\System.Web.OData.Test\PublicApi\Microsoft.OData.WebApi.AspNet.PublicApi.bsl",
                 outputFile));
         }
 
         private string GetBaseLineString()
         {
-            const string projectDefaultNamespace = "System.Web.OData.Test";
+            const string projectDefaultNamespace = "Microsoft.Test.OData.WebApi.AspNet";
             const string resourcesFolderName = "PublicApi";
             const string pathSeparator = ".";
             string path = projectDefaultNamespace + pathSeparator + resourcesFolderName + pathSeparator + BaseLineFileName;

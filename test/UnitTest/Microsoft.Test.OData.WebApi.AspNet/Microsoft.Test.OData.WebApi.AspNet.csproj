@@ -438,14 +438,12 @@
     <Compile Include="TestCommon\TypeInitializer.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeHelperTest.cs" />
-    <Compile Include="Builder\Conventions\Attributes\KeyAttributeEdmPropertyConventionTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\Conventions\Attributes\KeyAttributeEdmPropertyConventionTests.cs" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ArrayOfBoolean.json" />
     <EmbeddedResource Include="Resources\ArrayOfByteFullMetadata.json" />
     <EmbeddedResource Include="Resources\ArrayOfInt32.json" />
@@ -497,24 +495,21 @@
     <EmbeddedResource Include="Resources\PeopleWithMultipleAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithoutAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithSpecialAnnotations.json" />
-    <EmbeddedResource Include="PublicApi\System.Web.OData.PublicApi.bsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
-      <Project>{d23e28f1-ccd0-43e0-8c0d-36731ec91318}</Project>
-      <Name>System.Web.OData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Microsoft.TestCommon\Microsoft.TestCommon.csproj">
-      <Project>{fccc4cb7-baf7-4a57-9f89-e5766fe536c0}</Project>
-      <Name>Microsoft.TestCommon</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="PublicApi\Microsoft.OData.WebApi.AspNet.PublicApi.bsl" />
     <EmbeddedResource Include="Resources\MetadataWithSingleton.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.WebApi.AspNet\Microsoft.OData.WebApi.AspNet.csproj">
+      <Project>{8424faa0-bdcc-4f38-b725-99d6204daded}</Project>
+      <Name>Microsoft.OData.WebApi.AspNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Test.OData.WebApi.TestCommon\Microsoft.Test.OData.WebApi.TestCommon.csproj">
+      <Project>{74a22c68-168d-4492-9a43-fd7fb9c04cc5}</Project>
+      <Name>Microsoft.Test.OData.WebApi.TestCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

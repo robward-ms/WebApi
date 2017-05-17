@@ -10,7 +10,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.WebApi.Formatter.Serialization;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization

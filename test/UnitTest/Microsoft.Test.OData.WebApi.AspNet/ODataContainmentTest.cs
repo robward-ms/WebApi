@@ -16,7 +16,6 @@ using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModelss;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Test.OData.WebApi.AspNet
@@ -60,7 +59,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         public void GetSpecialOrderLines_Containment()
         {
             // Arrange
-            var requestUri = BaseAddress + "/odata/MyOrders(1)/OrderLines/System.Web.OData.Builder.TestModels.SpecialOrderLine";
+            var requestUri = BaseAddress + "/odata/MyOrders(1)/OrderLines/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SpecialOrderLine";
 
             // Act
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
@@ -70,12 +69,12 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             // Assert
             Assert.True(response.IsSuccessStatusCode);
             Assert.Contains(
-                "http://localhost/odata/$metadata#MyOrders(1)/OrderLines/System.Web.OData.Builder.TestModels.SpecialOrderLine",
+                "http://localhost/odata/$metadata#MyOrders(1)/OrderLines/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SpecialOrderLine",
                 (string)result["@odata.context"]);
         }
 
         [Theory]
-        [InlineData("/odata/MyOrders(2)/System.Web.OData.Builder.TestModels.MySpecialOrder")]
+        [InlineData("/odata/MyOrders(2)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder")]
         [InlineData("/odata/MyOrders(2)")]
         public void GetMyOrder_WithOrWithoutCastType_Containment(string url)
         {
@@ -90,7 +89,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             // Assert
             Assert.True(response.IsSuccessStatusCode);
             Assert.Contains(
-                "http://localhost/odata/$metadata#MyOrders/System.Web.OData.Builder.TestModels.MySpecialOrder/$entity",
+                "http://localhost/odata/$metadata#MyOrders/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder/$entity",
                 (string)result["@odata.context"]);
         }
         
@@ -173,9 +172,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             Assert.Equal("http://localhost/odata/MyOrders(1)/OrderLines/$ref", myOrder["OrderLines@odata.associationLink"]);
             var mySpecialOrder = array[1];
             Assert.Equal("http://localhost/odata/MyOrders(2)", mySpecialOrder["@odata.id"]);
-            Assert.Equal("http://localhost/odata/MyOrders(2)/System.Web.OData.Builder.TestModels.MySpecialOrder", mySpecialOrder["@odata.editLink"]);
-            Assert.Equal("http://localhost/odata/MyOrders(2)/System.Web.OData.Builder.TestModels.MySpecialOrder/OrderLines", mySpecialOrder["OrderLines@odata.navigationLink"]);
-            Assert.Equal("http://localhost/odata/MyOrders(2)/System.Web.OData.Builder.TestModels.MySpecialOrder/OrderLines/$ref", mySpecialOrder["OrderLines@odata.associationLink"]);
+            Assert.Equal("http://localhost/odata/MyOrders(2)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder", mySpecialOrder["@odata.editLink"]);
+            Assert.Equal("http://localhost/odata/MyOrders(2)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder/OrderLines", mySpecialOrder["OrderLines@odata.navigationLink"]);
+            Assert.Equal("http://localhost/odata/MyOrders(2)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder/OrderLines/$ref", mySpecialOrder["OrderLines@odata.associationLink"]);
         }
         
         [Fact]
@@ -225,15 +224,15 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             Assert.Equal("ns.Tag", tag["title"]);
             Assert.Equal("http://localhost/odata/MyOrders(1)/OrderLines(2)/ns.Tag", tag["target"]);
             orderLine = orderLines[1];
-            Assert.Equal("#System.Web.OData.Builder.TestModels.SpecialOrderLine", orderLine["@odata.type"]);
+            Assert.Equal("#Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SpecialOrderLine", orderLine["@odata.type"]);
             Assert.Equal("MyOrders(1)/OrderLines(22)", orderLine["@odata.id"]);
             Assert.Equal(
-                "MyOrders(1)/OrderLines(22)/System.Web.OData.Builder.TestModels.SpecialOrderLine",
+                "MyOrders(1)/OrderLines(22)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SpecialOrderLine",
                 orderLine["@odata.editLink"]);
             tag = orderLine["#ns.Tag"];
             Assert.Equal("ns.Tag", tag["title"]);
             Assert.Equal(
-                "http://localhost/odata/MyOrders(1)/OrderLines(22)/System.Web.OData.Builder.TestModels.OrderLine/ns.Tag",
+                "http://localhost/odata/MyOrders(1)/OrderLines(22)/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.OrderLine/ns.Tag",
                 tag["target"]);
         }
 
@@ -468,7 +467,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             }
 
             [EnableQuery]
-            [ODataRoute("MyOrders({orderId})/System.Web.OData.Builder.TestModels.MySpecialOrder")]
+            [ODataRoute("MyOrders({orderId})/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.MySpecialOrder")]
             public SingleResult<MySpecialOrder> GetMySpecialOrder(int orderId)
             {
                 var result = _myOrders.AsQueryable().Where(mo => mo.ID == orderId).OfType<MySpecialOrder>();
@@ -481,7 +480,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 return _orderLines.AsQueryable().Where(orderLine => orderLine.OrderId == orderId);
             }
 
-            [ODataRoute("MyOrders({orderId})/OrderLines/System.Web.OData.Builder.TestModels.SpecialOrderLine")]
+            [ODataRoute("MyOrders({orderId})/OrderLines/Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.SpecialOrderLine")]
             public IQueryable<SpecialOrderLine> GetSpecialOrderLines(int orderId)
             {
                 return _orderLines.AsQueryable().Where(orderLine => orderLine.OrderId == orderId).OfType<SpecialOrderLine>();

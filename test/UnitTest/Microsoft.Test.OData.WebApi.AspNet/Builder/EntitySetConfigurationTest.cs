@@ -5,7 +5,6 @@ using System;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Builder;
 using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
-using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Builderer

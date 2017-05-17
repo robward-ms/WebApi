@@ -9,11 +9,9 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.OData.WebApi;
 using Microsoft.OData.WebApi.Extensions;
-using Microsoft.OData.WebApi.Formatter;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.Test.OData.WebApi.AspNet.Formatter;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing

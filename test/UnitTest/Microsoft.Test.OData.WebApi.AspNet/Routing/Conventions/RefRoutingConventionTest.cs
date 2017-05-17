@@ -8,10 +8,10 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -101,7 +101,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var actionMap = GetMockActionMap(methodsInController);
 
             // Act
-            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Equal(expectedSelectedAction, selectedAction);
@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var actionMap = GetMockActionMap("DeleteRef");
 
             // Act
-            new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert
@@ -153,12 +153,12 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
         {
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", uri);
+            Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", uri);
             HttpControllerContext controllerContext = CreateControllerContext("DELETE");
             var actionMap = GetMockActionMap("DeleteRef");
 
             // Act
-            var actionName = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            var actionName = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var actionMap = GetMockActionMap("DeleteRef", "CreateRef", "GetRef", "PutRef", "PostRef");
 
             // Act
-            string actionName = new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            string actionName = new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
 
             // Assert
             Assert.Null(actionName);
@@ -211,7 +211,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var actionMap = new[] { GetMockActionDescriptor(actionName) }.ToLookup(a => a.ActionName);
 
             // Act
-            new RefRoutingConvention().SelectAction(odataPath, controllerContext, actionMap);
+            new RefRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
             var routeData = controllerContext.RouteData;
 
             // Assert

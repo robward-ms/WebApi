@@ -7,9 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.OData.WebApi;
-using Microsoft.OData.WebApi.Extensions;
 using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
-using Microsoft.Test.OData.WebApi.TestCommon;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Routing

@@ -3,6 +3,7 @@
 
 using System.Linq;
 using System.Web.Http;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.Test.OData.WebApi.TestCommon;
 
@@ -17,7 +18,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var config = new HttpConfiguration();
 
             // Act
-            var conventions = ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config);
+            var conventions = ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config));
 
             // Assert
             Assert.Single(conventions.OfType<AttributeRoutingConvention>());
