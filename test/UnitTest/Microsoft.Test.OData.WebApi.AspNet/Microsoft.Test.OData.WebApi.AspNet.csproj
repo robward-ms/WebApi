@@ -499,7 +499,7 @@
     <EmbeddedResource Include="Resources\PeopleWithMultipleAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithoutAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithSpecialAnnotations.json" />
-    <EmbeddedResource Include="PublicApi\System.Web.OData.PublicApi.bsl" />
+    <EmbeddedResource Include="PublicApi\Microsoft.OData.WebApi.PublicApi.bsl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
