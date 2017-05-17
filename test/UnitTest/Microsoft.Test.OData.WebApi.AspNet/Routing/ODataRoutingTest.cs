@@ -9,13 +9,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.Extensions;
-using System.Web.OData.TestCommon;
-using Microsoft.TestCommon;
-using Microsoft.TestCommon.Types;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace System.Web.OData.Routing
+namespace Microsoft.Test.OData.WebApi.AspNet.Routing
 {
     public class ODataRoutingTest
     {

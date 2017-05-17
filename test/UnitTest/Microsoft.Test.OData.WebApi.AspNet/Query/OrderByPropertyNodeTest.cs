@@ -3,15 +3,18 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Query
+namespace Microsoft.Test.OData.WebApi.AspNet.Query
 {
     public class OrderByPropertyNodeTest
     {

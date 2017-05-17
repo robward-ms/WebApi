@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     /// <summary>
     /// Assert class that compares two XML strings for equality. Namespaces are ignored during comparison

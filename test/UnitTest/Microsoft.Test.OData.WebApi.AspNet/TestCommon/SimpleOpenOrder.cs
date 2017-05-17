@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     public class SimpleOpenOrder
     {

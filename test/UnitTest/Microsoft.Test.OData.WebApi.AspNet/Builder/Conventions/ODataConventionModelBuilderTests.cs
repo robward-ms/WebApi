@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,17 +11,22 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.Formatter;
-using System.Web.OData.Query;
-using System.Web.OData.TestCommon;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.AspNet.Builder;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.AspNet.Formatter;
+using Microsoft.Test.OData.WebApi.AspNet.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Moq;
 
-namespace System.Web.OData.Builder.Conventions
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 {
     public class ODataConventionModelBuilderTests
     {

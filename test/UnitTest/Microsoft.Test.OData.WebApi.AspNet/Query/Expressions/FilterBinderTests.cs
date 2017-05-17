@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Globalization;
@@ -8,14 +9,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Builder;
 using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
 {
     public class FilterBinderTests
     {

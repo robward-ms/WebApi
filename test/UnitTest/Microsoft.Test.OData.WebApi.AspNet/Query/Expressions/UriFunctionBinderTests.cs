@@ -2,11 +2,11 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Reflection;
-using System.Web.OData.Query.Expressions;
+using Microsoft.OData.WebApi.Query.Expressions;
 using Microsoft.OData;
-using Microsoft.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Test.OData.Query.Expressions
+namespace Microsoft.Test.OData.WebApi.AspNet.OData.Query.Expressions
 {
     /// <summary>
     /// Tests to UriFunctions binder.

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.TestCommon.Types
+namespace Microsoft.Test.OData.WebApi.TestCommon.Types
 {
     [Flags]
     public enum FlagsEnum

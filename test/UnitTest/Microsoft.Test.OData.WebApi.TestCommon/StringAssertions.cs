@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     // An early copy of the new string assert from xUnit.net 2.0 (temporarily, until it RTMs)
 

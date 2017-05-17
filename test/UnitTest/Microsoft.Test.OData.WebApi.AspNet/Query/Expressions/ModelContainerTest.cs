@@ -2,9 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Query.Expressions
+namespace Microsoft.Test.OData.WebApi.AspNet.Query.Expressions
 {
     public class ModelContainerTest
     {

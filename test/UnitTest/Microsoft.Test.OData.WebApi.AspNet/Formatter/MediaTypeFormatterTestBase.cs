@@ -1,19 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Common;
+using Microsoft.Test.OData.WebApi.TestCommon;
+using Microsoft.Test.OData.WebApi.TestCommon.DataTypes;
 using Moq;
 
-namespace System.Net.Http.Formatting
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     /// <summary>
     /// A test class for common <see cref="MediaTypeFormatter"/> functionality across multiple implementations.

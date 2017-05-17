@@ -5,9 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.Edm;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Builder.Conventions.Attributes;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Builder.Conventions.Attributes
+namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions.Attributes
 {
     public class ForeignKeyAttributeConventionTest
     {

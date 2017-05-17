@@ -7,7 +7,7 @@ using System.Reflection;
 using Moq;
 using Moq.Protected;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     public sealed class MockType : Mock<Type>
     {

@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.OData.Builder;
-using System.Web.OData.Builder.TestModels;
-using System.Web.OData.Extensions;
-using System.Web.OData.Query;
-using System.Web.OData.Query.Expressions;
 using Microsoft.OData.UriParser;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Query;
+using Microsoft.OData.WebApi.Query.Expressions;
+using Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels;
+using Microsoft.Test.OData.WebApi.TestCommon;
 using Newtonsoft.Json.Linq;
-using Address = System.Web.OData.Builder.TestModels.Address;
+using Address = Microsoft.Test.OData.WebApi.AspNet.Builder.TestModels.Address;
 
-namespace System.Web.OData.Test.OData.Query
+namespace Microsoft.Test.OData.WebApi.AspNet.OData.Query
 {
     public class ApplyQueryOptionTest
     {

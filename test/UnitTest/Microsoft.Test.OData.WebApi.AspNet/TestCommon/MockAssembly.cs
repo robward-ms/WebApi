@@ -4,7 +4,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace System.Web.OData
+namespace Microsoft.Test.OData.WebApi.AspNet.TestCommon
 {
     internal sealed class MockAssembly : Assembly
     {

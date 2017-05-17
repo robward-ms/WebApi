@@ -4,7 +4,7 @@
 using System;
 using System.IO;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     //// TODO RONCAIN using System.Runtime.Serialization.Json;
 

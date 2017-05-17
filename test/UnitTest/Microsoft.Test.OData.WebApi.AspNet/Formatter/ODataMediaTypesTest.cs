@@ -2,9 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http.Headers;
-using Microsoft.TestCommon;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.Test.OData.WebApi.TestCommon;
 
-namespace System.Web.OData.Formatter
+namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class ODataMediaTypesTest
     {

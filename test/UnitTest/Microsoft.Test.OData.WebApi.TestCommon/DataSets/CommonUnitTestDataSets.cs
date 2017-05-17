@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.ObjectModel;
-using Microsoft.TestCommon.Types;
+using Microsoft.Test.OData.WebApi.TestCommon.Types;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon.DataTypes
 {
     public class CommonUnitTestDataSets
     {

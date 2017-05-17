@@ -10,7 +10,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
 
-namespace Microsoft.TestCommon
+namespace Microsoft.Test.OData.WebApi.TestCommon
 {
     /// <summary>
     /// This class allocates ports while ensuring that:
