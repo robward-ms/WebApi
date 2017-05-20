@@ -53,7 +53,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
                     if (writeContext.Request != null)
                     {
-                        entityReferenceLinks.Count = writeContext.Request.Context.TotalCount;
+                        entityReferenceLinks.Count = writeContext.InternalRequest.Context.TotalCount;
                     }
                 }
 

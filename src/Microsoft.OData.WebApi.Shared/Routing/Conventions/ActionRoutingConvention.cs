@@ -12,10 +12,10 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles action invocations.
     /// </summary>
-    public class ActionRoutingConvention : NavigationSourceRoutingConvention
+    public partial class ActionRoutingConvention
     {
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {

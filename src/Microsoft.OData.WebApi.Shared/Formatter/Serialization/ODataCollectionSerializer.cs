@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
+using Microsoft.OData.WebApi.Extensions;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
@@ -20,7 +21,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// Initializes a new instance of the <see cref="ODataCollectionSerializer"/> class.
         /// </summary>
         /// <param name="serializerProvider">The serializer provider to use to serialize nested objects.</param>
-        public ODataCollectionSerializer(IODataSerializerProvider serializerProvider)
+        public ODataCollectionSerializer(ODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Collection, serializerProvider)
         {
         }
@@ -85,14 +86,14 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
             if (writeContext.Request != null)
             {
-                if (writeContext.Request.Context.NextLink != null)
+                if (writeContext.Request.ODataProperties().NextLink != null)
                 {
-                    collectionStart.NextPageLink = writeContext.Request.Context.NextLink;
+                    collectionStart.NextPageLink = writeContext.Request.ODataProperties().NextLink;
                 }
 
-                if (writeContext.Request.Context.TotalCount != null)
+                if (writeContext.Request.ODataProperties().TotalCount != null)
                 {
-                    collectionStart.Count = writeContext.Request.Context.TotalCount;
+                    collectionStart.Count = writeContext.Request.ODataProperties().TotalCount;
                 }
             }
 

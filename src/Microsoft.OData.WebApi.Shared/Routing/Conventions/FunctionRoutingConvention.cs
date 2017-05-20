@@ -13,12 +13,12 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles function invocations.
     /// </summary>
-    public class FunctionRoutingConvention : NavigationSourceRoutingConvention
+    public partial class FunctionRoutingConvention
     {
         /// <inheritdoc/>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
             Justification = "These are simple conversion function and cannot be split up.")]
-        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext,
             IWebApiActionMap actionMap)
         {
             if (odataPath == null)

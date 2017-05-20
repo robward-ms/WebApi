@@ -14,7 +14,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
     /// <summary>
     /// Context information used by the <see cref="ODataSerializer"/> when serializing objects in OData message format.
     /// </summary>
-    public class ODataSerializerContext
+    public partial class ODataSerializerContext
     {
         private ClrTypeCache _typeMappingCache;
         private IDictionary<object, object> _items;
@@ -67,15 +67,12 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             }
         }
 
-        /// <summary>
-        /// Gets or sets the HTTP Request whose response is being serialized.
-        /// </summary>
-        public IWebApiRequestMessage Request { get; set; }
+        internal IWebApiRequestMessage InternalRequest { get; private set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IWebApiUrlHelper"/> to use for generating OData links.
         /// </summary>
-        public IWebApiUrlHelper Url { get; set; }
+        internal IWebApiUrlHelper InternalUrl { get; private set; }
 
         /// <summary>
         /// Gets or sets the navigation source.

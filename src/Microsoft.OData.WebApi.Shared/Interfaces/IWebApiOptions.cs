@@ -6,7 +6,12 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// An interface for WebApi options.
     /// </summary>
-    public interface IWebApiOptions
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiOptions
     {
         /// <summary>
         /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically

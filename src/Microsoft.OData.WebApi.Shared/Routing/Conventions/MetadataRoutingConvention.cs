@@ -9,7 +9,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles OData metadata requests.
     /// </summary>
-    public class MetadataRoutingConvention : IODataRoutingConvention
+    public partial class MetadataRoutingConvention
     {
         /// <summary>
         /// Selects the controller for OData requests.
@@ -19,7 +19,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller
         /// </returns>
-        public SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        internal static SelectControllerResult SelectControllerImpl(ODataPath odataPath, IWebApiRequestMessage request)
         {
             if (odataPath == null)
             {
@@ -49,7 +49,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action
         /// </returns>
-        public string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {

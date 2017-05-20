@@ -12,7 +12,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles navigation sources
     /// (entity sets or singletons)
     /// </summary>
-    public abstract class NavigationSourceRoutingConvention : IODataRoutingConvention
+    public abstract partial class NavigationSourceRoutingConvention
     {
         /// <summary>
         /// Selects the controller for OData requests.
@@ -22,7 +22,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected controller
         /// </returns>
-        public virtual SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        internal static SelectControllerResult SelectControllerImpl(ODataPath odataPath, IWebApiRequestMessage request)
         {
             if (odataPath == null)
             {
@@ -50,17 +50,5 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
 
             return null;
         }
-
-        /// <summary>
-        /// Selects the action for OData requests.
-        /// </summary>
-        /// <param name="odataPath">The OData path.</param>
-        /// <param name="controllerContext">The controller context.</param>
-        /// <param name="actionMap">The action map.</param>
-        /// <returns>
-        ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action
-        /// </returns>
-        public abstract string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
-            IWebApiActionMap actionMap);
     }
 }

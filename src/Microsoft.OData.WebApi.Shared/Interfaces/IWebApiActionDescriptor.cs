@@ -9,17 +9,22 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Provides information about the action methods.
     /// </summary>
-    public interface IWebApiActionDescriptor
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiActionDescriptor
     {
+        /// <summary>
+        /// Gets the name of the controller.
+        /// </summary>
+        string ControllerName { get; }
+
         /// <summary>
         /// Gets the name of the action.
         /// </summary>
         string ActionName { get; }
-
-        /// <summary>
-        /// Gets the information that describes the controller of the action.
-        /// </summary>
-        IWebApiControllerDescriptor ControllerDescriptor { get; }
 
         /// <summary>
         /// Returns the custom attributes associated with the action descriptor.

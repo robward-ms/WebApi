@@ -14,50 +14,8 @@ namespace Microsoft.OData.WebApi.Query
     /// Currently this only supports $filter, $orderby, $top, $skip.
     /// </summary>
     [ODataQueryParameterBinding]
-    public class ODataQueryOptions<TEntity> : ODataQueryOptions
+    public partial class ODataQueryOptions<TEntity> : ODataQueryOptions
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ODataQueryOptions"/> class based on the incoming request and some metadata information from
-        /// the <see cref="ODataQueryContext"/>.
-        /// </summary>
-        /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information</param>
-        /// <param name="request">The incoming request message</param>
-        public ODataQueryOptions(ODataQueryContext context, IWebApiRequestMessage request)
-            : base(context, request)
-        {
-            if (Context.ElementClrType == null)
-            {
-                throw Error.Argument("context", SRResources.ElementClrTypeNull, typeof(ODataQueryContext).Name);
-            }
-
-            if (context.ElementClrType != typeof(TEntity))
-            {
-                throw Error.Argument("context", SRResources.EntityTypeMismatch, context.ElementClrType.FullName, typeof(TEntity).FullName);
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ETag{TEntity}"/> from IfMatch header.
-        /// </summary>
-        public new ETag<TEntity> IfMatch
-        {
-            get
-            {
-                return base.IfMatch as ETag<TEntity>;
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ETag{TEntity}"/> from IfNoneMatch header.
-        /// </summary>
-        public new ETag<TEntity> IfNoneMatch
-        {
-            get
-            {
-                return base.IfNoneMatch as ETag<TEntity>;
-            }
-        }
-
         /// <summary>
         /// Apply the individual query to the given IQueryable in the right order.
         /// </summary>
@@ -79,11 +37,6 @@ namespace Microsoft.OData.WebApi.Query
         {
             ValidateQuery(query);
             return base.ApplyTo(query, querySettings);
-        }
-
-        internal override ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
-        {
-            return Request.GetETag<TEntity>(etagHeaderValue);
         }
 
         private static void ValidateQuery(IQueryable query)

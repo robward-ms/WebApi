@@ -12,24 +12,15 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// Represents a routing convention that looks for <see cref="ODataRouteAttribute"/>s to match an <see cref="ODataPath"/>
     /// to a controller and an action.
     /// </summary>
-    public class AttributeRoutingConvention : IODataRoutingConvention
+    public partial class AttributeRoutingConvention : IODataRoutingConvention
     {
-        private IAttributeMappingProvider _mappingProvider;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
-        /// </summary>
-        public AttributeRoutingConvention(IAttributeMappingProvider mappingProvider)
-        {
-            this._mappingProvider = mappingProvider;
-        }
-
         /// <inheritdoc />
-        public SelectControllerResult SelectController(ODataPath odataPath, IWebApiRequestMessage request)
+        internal static SelectControllerResult SelectControllerImpl(ODataPath odataPath, IWebApiRequestMessage request,
+            IDictionary<ODataPathTemplate, IWebApiActionDescriptor> attributeMappings)
         {
             Dictionary<string, object> values = new Dictionary<string, object>();
 
-            foreach (KeyValuePair<ODataPathTemplate, IWebApiActionDescriptor> attributeMapping in _mappingProvider.AttributeMappings)
+            foreach (KeyValuePair<ODataPathTemplate, IWebApiActionDescriptor> attributeMapping in attributeMappings)
             {
                 ODataPathTemplate template = attributeMapping.Key;
                 IWebApiActionDescriptor action = attributeMapping.Value;
@@ -37,7 +28,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
                 if (action.IsHttpMethodMatch(request.Method) && template.TryMatch(odataPath, values))
                 {
                     values["action"] = action.ActionName;
-                    SelectControllerResult result = new SelectControllerResult(action.ControllerDescriptor.ControllerName, values);
+                    SelectControllerResult result = new SelectControllerResult(action.ControllerName, values);
 
                     return result;
                 }
@@ -47,7 +38,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         }
 
         /// <inheritdoc />
-        public string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext,
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext,
             IWebApiActionMap actionMap)
         {
             var routeData = controllerContext.Request.RouteData;

@@ -2,14 +2,18 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
     /// An return value for SelectController.
     /// </summary>
-    public class SelectControllerResult
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal class SelectControllerResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectControllerResult"/> class.

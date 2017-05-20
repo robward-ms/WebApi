@@ -11,7 +11,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
     /// <summary>
     /// This class encapsulates the state and settings that get passed to <see cref="ODataDeserializer"/>.
     /// </summary>
-    public class ODataDeserializerContext
+    public partial class ODataDeserializerContext
     {
         private bool? _isDeltaOfT;
         private bool? _isUntyped;
@@ -39,7 +39,7 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
         /// <summary>
         /// Gets or sets the HTTP Request that is being deserialized.
         /// </summary>
-        public IWebApiRequestMessage Request { get; set; }
+        internal IWebApiRequestMessage InternalRequest { get; private set; }
 
         internal bool IsDeltaOfT
         {

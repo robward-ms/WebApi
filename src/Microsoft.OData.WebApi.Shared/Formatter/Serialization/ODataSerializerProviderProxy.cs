@@ -5,14 +5,13 @@ using System;
 using System.Diagnostics.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
-    /// The default <see cref="IODataSerializerProvider"/>.
+    /// The default <see cref="ODataSerializerProvider"/>.
     /// </summary>
-    internal class ODataSerializerProviderProxy : IODataSerializerProvider
+    internal partial class ODataSerializerProviderProxy : ODataSerializerProvider
     {
         private static readonly ODataSerializerProviderProxy _instance = new ODataSerializerProviderProxy();
 
@@ -41,16 +40,9 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public override ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
-            return RequestContainer.GetRequiredService<IODataSerializerProvider>().GetEdmTypeSerializer(edmType);
-        }
-
-        /// <inheritdoc />
-        public ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
-        {
-            return RequestContainer.GetRequiredService<IODataSerializerProvider>()
-                .GetODataPayloadSerializer(type, request);
+            return RequestContainer.GetRequiredService<ODataSerializerProvider>().GetEdmTypeSerializer(edmType);
         }
     }
 }

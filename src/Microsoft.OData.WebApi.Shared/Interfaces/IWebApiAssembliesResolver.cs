@@ -9,7 +9,12 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Provides an abstraction for managing the assemblies of an application.
     /// </summary>
-    public interface IWebApiAssembliesResolver
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiAssembliesResolver
     {
         /// <summary>
         /// Gets a list of assemblies available for the application. 

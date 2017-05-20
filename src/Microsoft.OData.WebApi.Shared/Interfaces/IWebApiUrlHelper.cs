@@ -10,7 +10,12 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Contains methods to build URLs for ASP.NET within an application.
     /// </summary>
-    public interface IWebApiUrlHelper
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiUrlHelper
     {
         /// <summary>
         /// Generates an OData link using the request's OData route name and path handler and given segments.

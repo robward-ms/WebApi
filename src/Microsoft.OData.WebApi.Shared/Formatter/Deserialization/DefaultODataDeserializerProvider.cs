@@ -5,14 +5,13 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Deserialization
 {
     /// <summary>
     /// The default <see cref="ODataDeserializerProvider"/>.
     /// </summary>
-    public class DefaultODataDeserializerProvider : ODataDeserializerProvider
+    public partial class DefaultODataDeserializerProvider : ODataDeserializerProvider
     {
         private readonly IServiceProvider _rootContainer;
 
@@ -63,38 +62,6 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
 
                 default:
                     return null;
-            }
-        }
-
-        /// <inheritdoc />
-        public override ODataDeserializer GetODataDeserializer(Type type, IWebApiRequestMessage request)
-        {
-            if (type == null)
-            {
-                throw Error.ArgumentNull("type");
-            }
-
-            if (type == typeof(Uri))
-            {
-                return _rootContainer.GetRequiredService<ODataEntityReferenceLinkDeserializer>();
-            }
-
-            if (type == typeof(ODataActionParameters) || type == typeof(ODataUntypedActionParameters))
-            {
-                return _rootContainer.GetRequiredService<ODataActionPayloadDeserializer>();
-            }
-
-            IEdmModel model = request.Model;
-            ClrTypeCache typeMappingCache = model.GetTypeMappingCache();
-            IEdmTypeReference edmType = typeMappingCache.GetEdmType(type, model);
-
-            if (edmType == null)
-            {
-                return null;
-            }
-            else
-            {
-                return GetEdmTypeDeserializer(edmType);
             }
         }
     }

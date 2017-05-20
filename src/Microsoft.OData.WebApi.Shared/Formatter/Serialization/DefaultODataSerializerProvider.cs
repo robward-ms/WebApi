@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Interfaces;
 
 namespace Microsoft.OData.WebApi.Formatter.Serialization
 {
     /// <summary>
-    /// The default <see cref="IODataSerializerProvider"/>.
+    /// The default <see cref="ODataSerializerProvider"/>.
     /// </summary>
-    public class DefaultODataSerializerProvider : IODataSerializerProvider
+    public partial class DefaultODataSerializerProvider : ODataSerializerProvider
     {
         private readonly IServiceProvider _rootContainer;
 
@@ -32,7 +31,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         }
 
         /// <inheritdoc />
-        public virtual ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
+        public override ODataEdmTypeSerializer GetEdmTypeSerializer(IEdmTypeReference edmType)
         {
             if (edmType == null)
             {
@@ -68,64 +67,6 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
 
                 default:
                     return null;
-            }
-        }
-
-        /// <inheritdoc />
-        public ODataSerializer GetODataPayloadSerializer(Type type, IWebApiRequestMessage request)
-        {
-            if (type == null)
-            {
-                throw Error.ArgumentNull("type");
-            }
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
-            // handle the special types.
-            if (type == typeof(ODataServiceDocument))
-            {
-                return _rootContainer.GetRequiredService<ODataServiceDocumentSerializer>();
-            }
-            else if (type == typeof(Uri) || type == typeof(ODataEntityReferenceLink))
-            {
-                return _rootContainer.GetRequiredService<ODataEntityReferenceLinkSerializer>();
-            }
-            else if (typeof(IEnumerable<Uri>).IsAssignableFrom(type) || type == typeof(ODataEntityReferenceLinks))
-            {
-                return _rootContainer.GetRequiredService<ODataEntityReferenceLinksSerializer>();
-            }
-            else if (type == typeof(ODataError) || type == request.Context.HttpErrorType)
-            {
-                return _rootContainer.GetRequiredService<ODataErrorSerializer>();
-            }
-            else if (typeof(IEdmModel).IsAssignableFrom(type))
-            {
-                return _rootContainer.GetRequiredService<ODataMetadataSerializer>();
-            }
-
-            // if it is not a special type, assume it has a corresponding EdmType.
-            IEdmModel model = request.Model;
-            ClrTypeCache typeMappingCache = model.GetTypeMappingCache();
-            IEdmTypeReference edmType = typeMappingCache.GetEdmType(type, model);
-
-            if (edmType != null)
-            {
-                if (((edmType.IsPrimitive() || edmType.IsEnum()) &&
-                    request.IsRawValueRequest()) ||
-                    request.IsCountRequest())
-                {
-                    return _rootContainer.GetRequiredService<ODataRawValueSerializer>();
-                }
-                else
-                {
-                    return GetEdmTypeSerializer(edmType);
-                }
-            }
-            else
-            {
-                return null;
             }
         }
     }

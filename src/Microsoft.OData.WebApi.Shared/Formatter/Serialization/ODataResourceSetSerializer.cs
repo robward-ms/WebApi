@@ -25,8 +25,8 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <summary>
         /// Initializes a new instance of <see cref="ODataResourceSetSerializer"/>.
         /// </summary>
-        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use to write nested entries.</param>
-        public ODataResourceSetSerializer(IODataSerializerProvider serializerProvider)
+        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use to write nested entries.</param>
+        public ODataResourceSetSerializer(ODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.ResourceSet, serializerProvider)
         {
         }
@@ -178,7 +178,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             {
                 ResourceSetContext resourceSetContext = new ResourceSetContext
                 {
-                    Request = writeContext.Request,
+                    Request= writeContext.Request,
                     EntitySetBase = writeContext.NavigationSource as IEdmEntitySetBase,
                     Url = writeContext.Url,
                     ResourceSetInstance = resourceSetInstance
@@ -212,9 +212,9 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 }
                 else if (writeContext.Request != null)
                 {
-                    resourceSet.NextPageLink = writeContext.Request.Context.NextLink;
+                    resourceSet.NextPageLink = writeContext.InternalRequest.Context.NextLink;
 
-                    long? countValue = writeContext.Request.Context.TotalCount;
+                    long? countValue = writeContext.InternalRequest.Context.TotalCount;
                     if (countValue.HasValue)
                     {
                         resourceSet.Count = countValue.Value;
@@ -287,7 +287,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 return null;
             }
 
-            Uri baseUri = new Uri(writeContext.Url.CreateODataLink(MetadataSegment.Instance));
+            Uri baseUri = new Uri(writeContext.InternalUrl.CreateODataLink(MetadataSegment.Instance));
             Uri metadata = new Uri(baseUri, "#" + operation.FullName());
 
             ODataOperation odataOperation;

@@ -10,7 +10,12 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Contains information for a single HTTP operation.
     /// </summary>
-    public interface IWebApiControllerContext
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiControllerContext
     {
         /// <summary>
         /// The selected controller result.

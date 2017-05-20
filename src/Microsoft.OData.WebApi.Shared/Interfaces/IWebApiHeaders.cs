@@ -9,18 +9,13 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Represents the collection of Request Headers as defined in RFC 2616.
     /// </summary>
-    public interface IWebApiHeaders
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiHeaders
     {
-        /// <summary>
-        /// Gets the value of the If-None-Match header for an HTTP request.
-        /// </summary>
-        IEnumerable<WebApiEntityTagHeaderValue> IfNoneMatch { get; }
-        
-        /// <summary>
-        /// Gets the value of the If-Match header for an HTTP request.
-        /// </summary>
-        IEnumerable<WebApiEntityTagHeaderValue> IfMatch { get; }
-
         /// <summary>
         /// Return if a specified header and specified values are stored in the collection.
         /// </summary>

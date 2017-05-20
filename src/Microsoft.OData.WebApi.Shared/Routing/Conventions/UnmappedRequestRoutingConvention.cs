@@ -9,12 +9,12 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that always selects the action named HandleUnmappedRequest if that action is present.
     /// </summary>
-    public class UnmappedRequestRoutingConvention : NavigationSourceRoutingConvention
+    public partial class UnmappedRequestRoutingConvention
     {
         private const string UnmappedRequestActionName = "HandleUnmappedRequest";
 
         /// <inheritdoc/>
-        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {

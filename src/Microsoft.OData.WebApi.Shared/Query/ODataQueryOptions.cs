@@ -27,60 +27,9 @@ namespace Microsoft.OData.WebApi.Query
     {
         private static readonly MethodInfo _limitResultsGenericMethod = typeof(ODataQueryOptions).GetMethod("LimitResults");
 
-        private ETag _etagIfMatch;
-
-        private bool _etagIfMatchChecked;
-
-        private ETag _etagIfNoneMatch;
-
-        private bool _etagIfNoneMatchChecked;
-
         private ODataQueryOptionParser _queryOptionParser;
 
         private AllowedQueryOptions _ignoreQueryOptions = AllowedQueryOptions.None;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ODataQueryOptions"/> class based on the incoming request and some metadata information from
-        /// the <see cref="ODataQueryContext"/>.
-        /// </summary>
-        /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information.</param>
-        /// <param name="request">The incoming request message.</param>
-        public ODataQueryOptions(ODataQueryContext context, IWebApiRequestMessage request)
-        {
-            if (context == null)
-            {
-                throw Error.ArgumentNull("context");
-            }
-
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
-            // Set the request container into context
-            Contract.Assert(context.RequestContainer == null);
-            context.RequestContainer = request.RequestContainer;
-
-            // Remember the context and request
-            Context = context;
-            Request = request;
-
-            // Parse the query from request Uri, including only keys which are OData query parameters or parameter alias
-            RawValues = new ODataRawQueryOptions();
-            IDictionary<string, string> queryParameters = GetODataQueryParameters();
-
-            _queryOptionParser = new ODataQueryOptionParser(
-                context.Model,
-                context.ElementType,
-                context.NavigationSource,
-                queryParameters);
-
-            _queryOptionParser.Resolver = request.RequestContainer.GetRequiredService<ODataUriResolver>();
-
-            BuildQueryOptions(queryParameters);
-
-            Validator = ODataQueryValidator.GetODataQueryValidator(context);
-        }
 
         /// <summary>
         ///  Gets the given <see cref="ODataQueryContext"/>
@@ -90,7 +39,7 @@ namespace Microsoft.OData.WebApi.Query
         /// <summary>
         /// Gets the request message associated with this instance.
         /// </summary>
-        public IWebApiRequestMessage Request { get; private set; }
+        internal IWebApiRequestMessage InternalRequest { get; private set; }
 
         /// <summary>
         /// Gets the raw string of all the OData query options
@@ -136,46 +85,6 @@ namespace Microsoft.OData.WebApi.Query
         /// Gets or sets the query validator.
         /// </summary>
         public ODataQueryValidator Validator { get; set; }
-
-        /// <summary>
-        /// Gets the <see cref="ETag"/> from IfMatch header.
-        /// </summary>
-        public virtual ETag IfMatch
-        {
-            get
-            {
-                if (!_etagIfMatchChecked && _etagIfMatch == null)
-                {
-                    WebApiEntityTagHeaderValue etagHeaderValue = Request.Headers.IfMatch.SingleOrDefault();
-                    _etagIfMatch = GetETag(etagHeaderValue);
-                    _etagIfMatchChecked = true;
-                }
-
-                return _etagIfMatch;
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ETag"/> from IfNoneMatch header.
-        /// </summary>
-        public virtual ETag IfNoneMatch
-        {
-            get
-            {
-                if (!_etagIfNoneMatchChecked && _etagIfNoneMatch == null)
-                {
-                    WebApiEntityTagHeaderValue etagHeaderValue = Request.Headers.IfNoneMatch.SingleOrDefault();
-                    _etagIfNoneMatch = GetETag(etagHeaderValue);
-                    if (_etagIfNoneMatch != null)
-                    {
-                        _etagIfNoneMatch.IsIfNoneMatch = true;
-                    }
-                    _etagIfNoneMatchChecked = true;
-                }
-
-                return _etagIfNoneMatch;
-            }
-        }
 
         /// <summary>
         /// Check if the given query option is an OData system query option.
@@ -280,7 +189,7 @@ namespace Microsoft.OData.WebApi.Query
             if (IsAvailableODataQueryOption(Apply, AllowedQueryOptions.Apply))
             {
                 result = Apply.ApplyTo(result, querySettings);
-                Request.Context.ApplyClause = Apply.ApplyClause;
+                InternalRequest.Context.ApplyClause = Apply.ApplyClause;
                 this.Context.ElementClrType = Apply.ResultClrType;
             }
 
@@ -292,16 +201,16 @@ namespace Microsoft.OData.WebApi.Query
 
             if (IsAvailableODataQueryOption(Count, AllowedQueryOptions.Count))
             {
-                if (Request.Context.TotalCountFunc == null)
+                if (InternalRequest.Context.TotalCountFunc == null)
                 {
                     Func<long> countFunc = Count.GetEntityCountFunc(result);
                     if (countFunc != null)
                     {
-                        Request.Context.TotalCountFunc = countFunc;
+                        InternalRequest.Context.TotalCountFunc = countFunc;
                     }
                 }
 
-                if (Request.IsCountRequest())
+                if (InternalRequest.IsCountRequest())
                 {
                     return result;
                 }
@@ -368,11 +277,11 @@ namespace Microsoft.OData.WebApi.Query
             {
                 bool resultsLimited;
                 result = LimitResults(result, pageSize, out resultsLimited);
-                if (resultsLimited && Request.RequestUri != null && Request.RequestUri.IsAbsoluteUri &&
-                    Request.Context.NextLink == null)
+                if (resultsLimited && InternalRequest.RequestUri != null && InternalRequest.RequestUri.IsAbsoluteUri &&
+                    InternalRequest.Context.NextLink == null)
                 {
-                    Uri nextPageLink = Request.GetNextPageLink(pageSize);
-                    Request.Context.NextLink = nextPageLink;
+                    Uri nextPageLink = InternalRequest.GetNextPageLink(pageSize);
+                    InternalRequest.Context.NextLink = nextPageLink;
                 }
             }
 
@@ -573,11 +482,6 @@ namespace Microsoft.OData.WebApi.Query
             return truncatedCollection.AsQueryable();
         }
 
-        internal virtual ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
-        {
-            return Request.GetETag(etagHeaderValue);
-        }
-
         internal void AddAutoSelectExpandProperties()
         {
             bool containsAutoSelectExpandProperties = false;
@@ -628,7 +532,7 @@ namespace Microsoft.OData.WebApi.Query
 
         private IDictionary<string, string> GetODataQueryParameters()
         {
-            return Request.ODataQueryParameters;
+            return InternalRequest.ODataQueryParameters;
         }
 
         private string GetAutoSelectRawValue()
@@ -781,7 +685,7 @@ namespace Microsoft.OData.WebApi.Query
                     Context, _queryOptionParser);
             }
 
-            if (Request.IsCountRequest())
+            if (InternalRequest.IsCountRequest())
             {
                 Count = new CountQueryOption(
                     "true",
@@ -822,7 +726,7 @@ namespace Microsoft.OData.WebApi.Query
                     SelectExpand.Context,
                     processedClause);
 
-                Request.Context.SelectExpandClause = processedClause;
+                InternalRequest.Context.SelectExpandClause = processedClause;
 
                 var type = typeof(T);
                 if (type == typeof(IQueryable))

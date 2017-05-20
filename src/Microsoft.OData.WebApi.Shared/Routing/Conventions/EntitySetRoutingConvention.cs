@@ -11,7 +11,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles entity sets.
     /// </summary>
-    public class EntitySetRoutingConvention : NavigationSourceRoutingConvention
+    public partial class EntitySetRoutingConvention
     {
         /// <summary>
         /// Selects the action for OData requests.
@@ -22,7 +22,7 @@ namespace Microsoft.OData.WebApi.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the name of the selected action
         /// </returns>
-        public override string SelectAction(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
+        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
         {
             if (odataPath == null)
             {

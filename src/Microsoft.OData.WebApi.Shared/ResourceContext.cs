@@ -24,7 +24,7 @@ namespace Microsoft.OData.WebApi
     /// <see cref="M:NavigationSourceConfiguration.HasNavigationPropertiesLink"/>
     /// ) builders and can be used by the link builders to generate links.
     /// </summary>
-    public class ResourceContext
+    public partial class ResourceContext
     {
         private object _resourceInstance;
 
@@ -67,15 +67,11 @@ namespace Microsoft.OData.WebApi
         /// <summary>
         /// Gets or sets the HTTP request that caused this instance to be generated.
         /// </summary>
-        public IWebApiRequestMessage Request
+        internal IWebApiRequestMessage InternalRequest
         {
             get
             {
-                return SerializerContext.Request;
-            }
-            set
-            {
-                SerializerContext.Request = value;
+                return SerializerContext.InternalRequest;
             }
         }
 
@@ -143,15 +139,11 @@ namespace Microsoft.OData.WebApi
         /// Gets or sets a <see cref="IWebApiUrlHelper"/> that may be used to generate links while serializing this resource
         /// instance.
         /// </summary>
-        public IWebApiUrlHelper Url
+        internal IWebApiUrlHelper InternalUrlHelper
         {
             get
             {
-                return SerializerContext.Url;
-            }
-            set
-            {
-                SerializerContext.Url = value;
+                return SerializerContext.InternalUrl;
             }
         }
 

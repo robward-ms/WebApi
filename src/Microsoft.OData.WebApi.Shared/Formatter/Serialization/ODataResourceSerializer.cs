@@ -27,7 +27,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         private const string Resource = "Resource";
 
         /// <inheritdoc />
-        public ODataResourceSerializer(IODataSerializerProvider serializerProvider)
+        public ODataResourceSerializer(ODataSerializerProvider serializerProvider)
             : base(ODataPayloadKind.Resource, serializerProvider)
         {
         }
@@ -379,7 +379,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
             bool nullDynamicPropertyEnabled = false;
             if (resourceContext.Request != null)
             {
-                nullDynamicPropertyEnabled = resourceContext.Request.Options.NullDynamicPropertyIsEnabled;
+                nullDynamicPropertyEnabled = resourceContext.InternalRequest.Options.NullDynamicPropertyIsEnabled;
             }
 
             IEdmStructuredType structuredType = resourceContext.StructuredType;
@@ -505,11 +505,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                     properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
                 }
 
-                WebApiEntityTagHeaderValue etagHeaderValue = resourceContext.Request.CreateETag(properties);
-                if (etagHeaderValue != null)
-                {
-                    return etagHeaderValue.ToString();
-                }
+                return resourceContext.InternalRequest.CreateETag(properties);
             }
 
             return null;
@@ -917,7 +913,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
                 return null;
             }
 
-            Uri baseUri = new Uri(resourceContext.Url.CreateODataLink(MetadataSegment.Instance));
+            Uri baseUri = new Uri(resourceContext.InternalUrlHelper.CreateODataLink(MetadataSegment.Instance));
             Uri metadata = new Uri(baseUri, "#" + CreateMetadataFragment(operation));
 
             ODataOperation odataOperation;

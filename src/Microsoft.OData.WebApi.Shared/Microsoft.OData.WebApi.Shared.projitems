@@ -41,23 +41,20 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\BindingPathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\ODataModelBinderConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\IODataSerializerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProviderProxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HttpMethodHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IAttributeMappingProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiActionDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiActionMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiAssembliesResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiControllerContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiControllerDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiHeaders.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiRequestMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiUrlHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NonValidatingParameterBindingAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ODataController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ODataPathParameterBindingAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ODataQueryParameterBindingAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ODataQueryContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\CountAttribute.cs" />
@@ -176,10 +173,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)EdmEntityObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EdmStructuredObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\ClrTypeCache.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formatter\DefaultODataETagHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\ETag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\ETagOfTEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formatter\IETagHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\TypedEdmComplexObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\TypedEdmEntityObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Deserialization\DeserializationHelpers.cs" />
@@ -192,7 +187,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IEdmComplexObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IEdmEntityObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NullEdmComplexObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\SelectExpandNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IEdmObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IEdmStructuredObject.cs" />
@@ -217,6 +211,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Routing\DefaultODataPathHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataParameterValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\DefaultODataPathValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPathParameterBindingAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPathSegmentExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataParameterHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Template\NavigationPropertyLinkSegmentTemplate.cs" />
@@ -237,7 +232,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\ActionMapExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\FunctionRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\AttributeRoutingConvention.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\ODataRoutingConventions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\RoutingConventionHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\PropertyRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\IODataPathTemplateHandler.cs" />
@@ -279,7 +273,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\MetadataRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\EntityRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\EntitySetRoutingConvention.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\IODataRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\IODataPathHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataSegmentKinds.cs" />
@@ -399,6 +392,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Query\Expressions\ClrCanonicalFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\Expressions\FilterBinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\PropertySelectorVisitor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WebApiEntityTagHeaderValue.cs" />
   </ItemGroup>
 </Project>

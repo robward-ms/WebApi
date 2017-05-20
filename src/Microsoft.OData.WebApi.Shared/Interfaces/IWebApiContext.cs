@@ -13,17 +13,17 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// General context for WebApi.
     /// </summary>
-    public interface IWebApiContext
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiContext
     {
         /// <summary>
         /// Gets or sets the parsed OData <see cref="ApplyClause"/> of the request.
         /// </summary>
         ApplyClause ApplyClause { get; set; }
-
-        /// <summary>
-        /// Get the type of an Http error.
-        /// </summary>
-        Type HttpErrorType { get; }
 
         /// <summary>
         /// Gets or sets the next link for the OData response.

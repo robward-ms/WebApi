@@ -14,23 +14,17 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// Represents a HTTP request message.
     /// </summary>
-    public interface IWebApiRequestMessage
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiRequestMessage
     {
         /// <summary>
         /// Gets the contents of the HTTP message. 
         /// </summary>
         IWebApiContext Context { get; }
-
-        /// <summary>
-        /// Gets the collection of HTTP request headers.
-        /// </summary>
-        IWebApiHeaders Headers { get; }
-
-        /// <summary>
-        /// Gets a value indicating if this is a raw request.
-        /// </summary>
-        /// <returns></returns>
-        bool IsRawValueRequest();
 
         /// <summary>
         /// Gets a value indicating if this is a count request.
@@ -70,35 +64,11 @@ namespace Microsoft.OData.WebApi.Interfaces
         ODataDeserializerProvider DeserializerProvider { get; }
 
         /// <summary>
-        /// Get the entity tag associated with the request.
-        /// </summary>
-        /// <param name="etagHeaderValue"></param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "etag is valid and not hungarian.")]
-        ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue);
-
-        /// <summary>
-        /// Get a specific type of entity tage associated with the request.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="etagHeaderValue"></param>
-        /// <returns></returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "False positive.")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "etag is valid and not hungarian.")]
-        ETag GetETag<T>(WebApiEntityTagHeaderValue etagHeaderValue);
-
-        /// <summary>
         /// Creates an ETag from concurrency property names and values.
         /// </summary>
         /// <param name="properties">The input property names and values.</param>
         /// <returns>The generated ETag string.</returns>
-        WebApiEntityTagHeaderValue CreateETag(IDictionary<string, object> properties);
-
-        /// <summary>
-        /// Get the Edm model associated with the request.
-        /// </summary>
-        /// <returns></returns>
-        IEdmModel Model { get; }
+        string CreateETag(IDictionary<string, object> properties);
 
         /// <summary>
         /// Get the next page link for a given page size.
@@ -106,14 +76,6 @@ namespace Microsoft.OData.WebApi.Interfaces
         /// <param name="pageSize">The page size.</param>
         /// <returns></returns>
         Uri GetNextPageLink(int pageSize);
-
-        /// <summary>
-        /// Get the next page link for a given Uri and page size.
-        /// </summary>
-        /// <param name="requestUri">The Uri</param>
-        /// <param name="pageSize">The page size</param>
-        /// <returns></returns>
-        Uri GetNextPageLink(Uri requestUri, int pageSize);
 
         /// <summary>
         /// Get a list of content Id mappings associated with the request.

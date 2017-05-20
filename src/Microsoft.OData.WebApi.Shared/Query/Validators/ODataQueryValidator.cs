@@ -61,7 +61,7 @@ namespace Microsoft.OData.WebApi.Query.Validators
                 options.Filter.Validate(validationSettings);
             }
 
-            if (options.Count != null || options.Request.IsCountRequest())
+            if (options.Count != null || options.InternalRequest.IsCountRequest())
             {
                 ValidateQueryOptionAllowed(AllowedQueryOptions.Count, validationSettings.AllowedQueryOptions);
 

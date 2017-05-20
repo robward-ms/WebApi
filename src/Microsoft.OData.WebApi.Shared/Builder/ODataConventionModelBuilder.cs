@@ -89,7 +89,7 @@ namespace Microsoft.OData.WebApi.Builder
         /// Initializes a new <see cref="ODataConventionModelBuilder"/>.
         /// </summary>
         /// <param name="resolver">The <see cref="IWebApiAssembliesResolver"/> to use.</param>
-        public ODataConventionModelBuilder(IWebApiAssembliesResolver resolver)
+        internal ODataConventionModelBuilder(IWebApiAssembliesResolver resolver)
             : this(resolver, isQueryCompositionMode: false)
         {
         }
@@ -101,7 +101,7 @@ namespace Microsoft.OData.WebApi.Builder
         /// <param name="isQueryCompositionMode">If the model is being built for only querying.</param>
         /// <remarks>The model built if <paramref name="isQueryCompositionMode"/> is <c>true</c> has more relaxed
         /// inference rules and also treats all types as entity types. This constructor is intended for use by unit testing only.</remarks>
-        public ODataConventionModelBuilder(IWebApiAssembliesResolver resolver, bool isQueryCompositionMode)
+        internal ODataConventionModelBuilder(IWebApiAssembliesResolver resolver, bool isQueryCompositionMode)
         {
             if (resolver == null)
             {

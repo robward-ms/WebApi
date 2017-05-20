@@ -48,10 +48,10 @@ namespace Microsoft.OData.WebApi.Formatter.Deserialization
         {
             if (uri != null)
             {
-                IDictionary<string, string> contentIDToLocationMapping = readContext.Request.ODataContentIdMapping;
+                IDictionary<string, string> contentIDToLocationMapping = readContext.InternalRequest.ODataContentIdMapping;
                 if (contentIDToLocationMapping != null)
                 {
-                    IWebApiUrlHelper urlHelper = readContext.Request.UrlHelper;
+                    IWebApiUrlHelper urlHelper = readContext.InternalRequest.UrlHelper;
                     Uri baseAddress = new Uri(urlHelper.CreateODataLink());
                     string relativeUrl = uri.IsAbsoluteUri ? baseAddress.MakeRelativeUri(uri).OriginalString : uri.OriginalString;
                     string resolvedUrl = ContentIdHelpers.ResolveContentId(relativeUrl, contentIDToLocationMapping);

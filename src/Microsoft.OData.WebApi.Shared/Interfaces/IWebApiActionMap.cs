@@ -6,7 +6,12 @@ namespace Microsoft.OData.WebApi.Interfaces
     /// <summary>
     /// An interface used to search for an available action.
     /// </summary>
-    public interface IWebApiActionMap
+    /// <remarks>
+    /// This class is not intended to be exposed publicly; it used for the internal
+    /// implementations of SelectControl(). Any design which makes this class public
+    /// should be find an alternative.
+    /// </remarks>
+    internal interface IWebApiActionMap
     {
         /// <summary>
         /// Determines whether a specified key exists.
