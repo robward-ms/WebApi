@@ -49,11 +49,11 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
                 Model = model.Model,
                 Path = new ODataPath(),
-                Request = new WebApiRequestMessage(new HttpRequestMessage()),
+                Request = new HttpRequestMessage(),
                 RootElementName = "somename",
                 SelectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true),
                 SkipExpensiveAvailabilityChecks = true,
-                Url = new WebApiUrlHelper(new UrlHelper())
+                Url = new UrlHelper()
             };
             ResourceContext resource = new ResourceContext { SerializerContext = context };
             SelectExpandClause selectExpand = new SelectExpandClause(new SelectItem[0], allSelected: true);

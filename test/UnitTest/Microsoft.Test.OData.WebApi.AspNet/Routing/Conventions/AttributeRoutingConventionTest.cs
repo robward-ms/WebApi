@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
         public void CtorTakingModelAndConfiguration_ThrowsArgumentNull_Configuration()
         {
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(routeName: RouteName, configuration: null)),
+                () => new AttributeRoutingConvention(routeName: RouteName, configuration: null),
                 "configuration");
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             HttpConfiguration configuration = new HttpConfiguration();
 
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(routeName: null, configuration: configuration)),
+                () => new AttributeRoutingConvention(routeName: null, configuration: configuration),
                 "routeName");
         }
 
@@ -47,8 +47,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             IODataPathTemplateHandler oDataPathTemplateHandler = new Mock<IODataPathTemplateHandler>().Object;
 
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(configuration: null,
-                    routeName: RouteName, pathTemplateHandler: oDataPathTemplateHandler)),
+                () => new AttributeRoutingConvention(configuration: null,
+                    routeName: RouteName, pathTemplateHandler: oDataPathTemplateHandler),
                 "configuration");
         }
 
@@ -58,8 +58,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             HttpConfiguration configuration = DependencyInjectionHelper.CreateConfigurationWithRootContainer();
 
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(configuration: configuration,
-                    routeName: RouteName, pathTemplateHandler: null)),
+                () => new AttributeRoutingConvention(configuration: configuration,
+                    routeName: RouteName, pathTemplateHandler: null),
                 "pathTemplateHandler");
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
         public void CtorTakingModelAndControllers_ThrowsArgumentNull_Controllers()
         {
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(routeName: RouteName, controllers: null)),
+                () => new AttributeRoutingConvention(routeName: RouteName, controllers: null),
                 "controllers");
         }
 
@@ -77,8 +77,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             IODataPathTemplateHandler oDataPathTemplateHandler = new Mock<IODataPathTemplateHandler>().Object;
 
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(controllers: null,
-                    routeName: RouteName, pathTemplateHandler: oDataPathTemplateHandler)),
+                () => new AttributeRoutingConvention(controllers: null,
+                    routeName: RouteName, pathTemplateHandler: oDataPathTemplateHandler),
                 "controllers");
         }
 
@@ -88,8 +88,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             IEnumerable<HttpControllerDescriptor> controllers = new HttpControllerDescriptor[0];
 
             Assert.ThrowsArgumentNull(
-                () => new AttributeRoutingConvention(new AttributeMappingProvider(controllers: controllers,
-                    routeName: RouteName, pathTemplateHandler: null)),
+                () => new AttributeRoutingConvention(controllers: controllers,
+                    routeName: RouteName, pathTemplateHandler: null),
                 "pathTemplateHandler");
         }
 
@@ -104,17 +104,16 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             pathTemplateHandler.Setup(p => p.ParseTemplate("Customers", config.GetODataRootContainer(RouteName)))
                 .Returns(pathTemplate).Verifiable();
 
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(RouteName, config, pathTemplateHandler.Object);
-            AttributeRoutingConvention convention = new AttributeRoutingConvention(mappingProvider);
+            AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, config, pathTemplateHandler.Object);
             config.EnsureInitialized();
 
             // Act
-            convention.SelectController(new ODataPath(), new WebApiRequestMessage(new HttpRequestMessage()));
+            convention.SelectController(new ODataPath(), new HttpRequestMessage());
 
             // Assert
             pathTemplateHandler.VerifyAll();
-            Assert.NotNull(mappingProvider.AttributeMappings);
-            Assert.Equal("GetCustomers", mappingProvider.AttributeMappings[pathTemplate].ActionName);
+            Assert.NotNull(convention.AttributeMappings);
+            Assert.Equal("GetCustomers", convention.AttributeMappings[pathTemplate].ActionName);
         }
 
         [Theory]
@@ -147,16 +146,15 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
                 .Returns(pathTemplate)
                 .Verifiable();
 
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(RouteName, new[] { controller }, pathTemplateHandler.Object);
-            AttributeRoutingConvention convention = new AttributeRoutingConvention(mappingProvider);
+            AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, new[] { controller }, pathTemplateHandler.Object);
 
             // Act
-            convention.SelectController(new ODataPath(), new WebApiRequestMessage(new HttpRequestMessage()));
+            convention.SelectController(new ODataPath(), new HttpRequestMessage());
 
             // Assert
             pathTemplateHandler.VerifyAll();
-            Assert.NotNull(mappingProvider.AttributeMappings);
-            Assert.Equal(expectedActionName, mappingProvider.AttributeMappings[pathTemplate].ActionName);
+            Assert.NotNull(convention.AttributeMappings);
+            Assert.Equal(expectedActionName, convention.AttributeMappings[pathTemplate].ActionName);
         }
 
         [Fact]
@@ -169,7 +167,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(
-                () => new AttributeMappingProvider(RouteName, new[] { controller }),
+                () => new AttributeRoutingConvention(RouteName, new[] { controller }),
                 "The path template 'Customers/Order' on the action 'GetCustomers' in controller 'TestController' is not " +
                 "a valid OData path template. The request URI is not valid. Since the segment 'Customers' refers to a " +
                 "collection, this must be the last segment in the request URI or it must be followed by an function or " +
@@ -181,12 +179,11 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
         {
             // Arrange
             HttpConfiguration configuration = DependencyInjectionHelper.CreateConfigurationWithRootContainer();
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(RouteName, configuration);
-            AttributeRoutingConvention convention = new AttributeRoutingConvention(mappingProvider);
+            AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, configuration);
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(
-                () => mappingProvider.AttributeMappings,
+                () => convention.AttributeMappings,
                 "The object has not yet been initialized. Ensure that HttpConfiguration.EnsureInitialized() is called " +
                 "in the application's startup code after all other initialization code.");
         }
@@ -197,8 +194,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             // Arrange
             HttpConfiguration configuration = new[] { typeof(TestODataController) }.GetHttpConfiguration();
             configuration.EnableODataDependencyInjectionSupport();
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(RouteName, configuration);
-            AttributeRoutingConvention convention = new AttributeRoutingConvention(mappingProvider);
+            AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, configuration);
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(
@@ -214,8 +210,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             IEdmModel model = new CustomersModelWithInheritance().Model;
             HttpConfiguration configuration = new[] { typeof(TestODataController) }.GetHttpConfiguration();
             configuration.EnableODataDependencyInjectionSupport(model);
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(RouteName, configuration);
-            AttributeRoutingConvention convention = new AttributeRoutingConvention(mappingProvider);
+            AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, configuration);
 
             // Act & Assert
             Assert.DoesNotThrow(() => configuration.EnsureInitialized());

@@ -47,7 +47,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Any", value } };
 
             // Act
-            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
             IList<object> values = handler.ParseETag(etagHeaderValue).Select(p => p.Value).ToList();
 
             // Assert
@@ -70,7 +70,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Any", value } };
 
             // Act
-            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
             IList<object> values = handler.ParseETag(etagHeaderValue).Select(p => p.Value).ToList();
 
             // Assert
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             }
 
             // Act
-            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
+            EntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
             IList<object> results = handler.ParseETag(etagHeaderValue).Select(p => p.Value).ToList();
 
             // Assert

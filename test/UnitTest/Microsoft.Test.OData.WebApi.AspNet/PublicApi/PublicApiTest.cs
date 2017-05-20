@@ -12,8 +12,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.PublicApi
     public class PublicApiTest
     {
         private const string AssemblyName = "Microsoft.OData.WebApi.AspNet.dll";
-        private const string OutputFileName = "Microsoft.OData.WebApi.AspNet.PublicApi.out";
-        private const string BaseLineFileName = "Microsoft.OData.WebApi.AspNet.PublicApi.bsl";
+        private const string OutputFileName = "Microsoft.OData.WebApi.PublicApi.out";
+        private const string BaseLineFileName = "Microsoft.OData.WebApi.PublicApi.bsl";
 
         [Fact]
         public void TestPublicApi()

@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
         private readonly IEdmModel _model;
         private readonly IEdmCollectionTypeReference _customersType;
         private readonly IEdmEntityTypeReference _customerType;
-        private readonly IODataSerializerProvider _serializerProvider;
+        private readonly ODataSerializerProvider _serializerProvider;
         private readonly ODataDeserializerProvider _deserializerProvider;
 
         public ODataResourceSetDeserializerTest()

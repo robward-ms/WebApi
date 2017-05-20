@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             ODataSerializerContext writeContext = new ODataSerializerContext();
             HttpRequestMessage request = new HttpRequestMessage();
             request.ODataProperties().TotalCount = 1;
-            writeContext.Request = new WebApiRequestMessage(request);
+            writeContext.Request = request;
 
             MemoryStream stream = new MemoryStream();
             IODataResponseMessage message = new ODataMessageWrapper(stream);

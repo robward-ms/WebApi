@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
             Assert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, new WebApiRequestMessage(message)),
+                () => new ODataQueryOptions<int>(context, message),
                 "context", "The entity type 'Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.Customer' does not match the expected entity type 'System.Int32' as set on the query context.");
         }
 
@@ -48,7 +48,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             ODataQueryContext context = new ODataQueryContext(model, elementType);
 
             Assert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, new WebApiRequestMessage(message)),
+                () => new ODataQueryOptions<int>(context, message),
                 "context", "The property 'ElementClrType' of ODataQueryContext cannot be null.");
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
             Assert.Equal("10", query.Top.RawValue);
         }
 
@@ -75,8 +75,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
-            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
             if (header.Equals("IfMatch"))
             {
                 request.Headers.IfMatch.Add(etagHeaderValue);
@@ -104,7 +103,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 
             // Act
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(request));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
             ETag result = header.Equals("IfMatch") ? query.IfMatch : query.IfNoneMatch;
             dynamic dynamicResult = result;
 
@@ -129,7 +128,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 
             // Act
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
             ETag result = header.Equals("IfMatch") ? query.IfMatch : query.IfNoneMatch;
 
             // Assert
@@ -147,7 +146,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable()),
@@ -166,7 +165,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable()));
@@ -183,7 +182,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable()));
@@ -200,7 +199,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable(), new ODataQuerySettings()),
@@ -219,7 +218,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable(), new ODataQuerySettings()));
@@ -236,7 +235,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, new WebApiRequestMessage(message));
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
 
             Assert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable(), new ODataQuerySettings()));

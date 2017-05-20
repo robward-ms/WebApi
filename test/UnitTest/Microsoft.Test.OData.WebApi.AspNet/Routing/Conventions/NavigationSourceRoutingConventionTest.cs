@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new MockNavigationSourceRoutingConvention().SelectController(null, new WebApiRequestMessage(request.Object)),
+                () => new MockNavigationSourceRoutingConvention().SelectController(null, request.Object),
                 "odataPath");
         }
 
@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ODataPath odataPath = new ODataPath(navigationLinkSegment);
 
             // Act
-            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
+            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
 
             // Assert
             Assert.Null(controllerResult);
@@ -66,10 +66,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             Microsoft.OData.WebApi.Routing.ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", "Customers");
 
             // Act
-            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
+            var controllerName = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
 
             // Assert
-            Assert.Equal("Customers", controllerResult.ControllerName);
+            Assert.Equal("Customers", controllerName);
         }
 
         [Fact]
@@ -81,10 +81,10 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://any/", "VipCustomer");
 
             // Act
-            var controllerResult = new MockNavigationSourceRoutingConvention().SelectController(odataPath, new WebApiRequestMessage(request.Object));
+            var controllerName = new MockNavigationSourceRoutingConvention().SelectController(odataPath, request.Object);
 
             // Assert
-            Assert.Equal("VipCustomer", controllerResult.ControllerName);
+            Assert.Equal("VipCustomer", controllerName);
         }
     }
 }

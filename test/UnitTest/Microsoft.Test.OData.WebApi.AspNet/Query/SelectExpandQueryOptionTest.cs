@@ -637,7 +637,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
                 model.FindDeclaredType("Microsoft.Test.OData.WebApi.AspNet.TestCommon.Models.AutoExpandCustomer"));
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.EnableHttpDependencyInjectionSupport();
-            var queryOption = new ODataQueryOptions(context, new WebApiRequestMessage(request));
+            var queryOption = new ODataQueryOptions(context, request);
             queryOption.AddAutoSelectExpandProperties();
             var selectExpand = queryOption.SelectExpand;
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -38,7 +39,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         private ODataResourceSerializer _serializer;
         private ODataSerializerContext _writeContext;
         private ResourceContext _entityContext;
-        private IODataSerializerProvider _serializerProvider;
+        private ODataSerializerProvider _serializerProvider;
         private IEdmEntityTypeReference _customerType;
         private IEdmEntityTypeReference _orderType;
         private IEdmEntityTypeReference _specialCustomerType;
@@ -331,7 +332,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
                     })
                 .Verifiable();
 
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(ordersProperty.Type))
                 .Returns(innerSerializer.Object);
             Mock<ODataResourceSerializer> serializer = new Mock<ODataResourceSerializer>(serializerProvider.Object);
@@ -376,7 +377,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             Mock<ODataEdmTypeSerializer> ordersSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Resource);
             ordersSerializer.Setup(s => s.WriteObjectInline(ordersValue, ordersProperty.Type, writer.Object, It.IsAny<ODataSerializerContext>())).Verifiable();
 
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(ordersProperty.Type)).Returns(ordersSerializer.Object);
 
             Mock<ODataResourceSerializer> serializer = new Mock<ODataResourceSerializer>(serializerProvider.Object);
@@ -421,7 +422,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
                     Assert.Null(feed.NextPageLink);
                 }).Verifiable();
             Mock<ODataEdmTypeSerializer> ordersSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Resource);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(ordersProperty.Type)).Returns(ordersSerializer.Object);
 
             Mock<ODataResourceSerializer> serializer = new Mock<ODataResourceSerializer>(serializerProvider.Object);
@@ -459,7 +460,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 
             writer.Setup(w => w.WriteStart(null as ODataResource)).Verifiable();
             Mock<ODataEdmTypeSerializer> ordersSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Resource);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(customerProperty.Type))
                 .Returns(ordersSerializer.Object);
 
@@ -514,7 +515,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
                     Assert.Null(feed.NextPageLink);
                 }).Verifiable();
             Mock<ODataEdmTypeSerializer> ordersSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Resource);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(specialOrdersProperty.Type))
                 .Returns(ordersSerializer.Object);
 
@@ -562,7 +563,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 
             writer.Setup(w => w.WriteStart(null as ODataResource)).Verifiable();
             Mock<ODataEdmTypeSerializer> ordersSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Resource);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(customerProperty.Type))
                 .Returns(ordersSerializer.Object);
 
@@ -680,7 +681,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
 
             MockHttpRequestMessage request = new MockHttpRequestMessage();
             request.SetConfiguration(new HttpConfiguration());
-            _entityContext.Request = new WebApiRequestMessage(request);
+            _entityContext.Request = request;
 
             // Act
             ODataResource entry = serializer.Object.CreateResource(selectExpandNode, _entityContext);
@@ -713,11 +714,11 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             HttpConfiguration configuration = new HttpConfiguration();
             Mock<IETagHandler> mockETagHandler = new Mock<IETagHandler>();
             string tag = "\"'anycity'\"";
-            WebApiEntityTagHeaderValue etagHeaderValue = new WebApiEntityTagHeaderValue(tag, isWeak: true);
+            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(tag, isWeak: true);
             mockETagHandler.Setup(e => e.CreateETag(It.IsAny<IDictionary<string, object>>())).Returns(etagHeaderValue);
             configuration.SetETagHandler(mockETagHandler.Object);
             request.SetConfiguration(configuration);
-            _entityContext.Request = new WebApiRequestMessage(request);
+            _entityContext.Request = request;
 
             // Act
             ODataResource resource = serializer.Object.CreateResource(selectExpandNode, _entityContext);
@@ -902,7 +903,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             {
                 Model = model,
                 Path = new ODataPath(new EntitySetSegment(customers)),
-                Request = new WebApiRequestMessage(request)
+                Request = request
             };
 
             SimpleOpenCustomer customer = new SimpleOpenCustomer()
@@ -982,7 +983,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             Mock<IEdmTypeReference> propertyType = new Mock<IEdmTypeReference>();
             propertyType.Setup(t => t.Definition).Returns(new EdmEntityType("Namespace", "Name"));
             Mock<IEdmStructuralProperty> property = new Mock<IEdmStructuralProperty>();
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>(MockBehavior.Strict);
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>(MockBehavior.Strict);
             IEdmEntityObject entity = new Mock<IEdmEntityObject>().Object;
             property.Setup(p => p.Type).Returns(propertyType.Object);
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(propertyType.Object)).Returns<ODataEdmTypeSerializer>(null);
@@ -1001,7 +1002,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             // Arrange
             Mock<IEdmStructuralProperty> property = new Mock<IEdmStructuralProperty>();
             property.Setup(p => p.Name).Returns("PropertyName");
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>(MockBehavior.Strict);
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>(MockBehavior.Strict);
             var entity = new { PropertyName = 42 };
             Mock<ODataEdmTypeSerializer> innerSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Property);
             ODataValue propertyValue = new Mock<ODataValue>().Object;
@@ -1732,7 +1733,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             ODataWriter mockWriter = new Mock<ODataWriter>().Object;
             IEdmNavigationProperty ordersProperty = _customerSet.EntityType().DeclaredNavigationProperties().Single();
             Mock<ODataEdmTypeSerializer> expandedItemSerializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.ResourceSet);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(p => p.GetEdmTypeSerializer(ordersProperty.Type))
                 .Returns(expandedItemSerializer.Object);
 
@@ -1857,7 +1858,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             return new ResourceContext
             {
                 EdmModel = model,
-                Url = new WebApiUrlHelper(url),
+                Url = url,
             };
         }
 

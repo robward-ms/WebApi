@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
                         .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
             return config;
         }
 
@@ -225,7 +225,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                     builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel())
                         .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", new AttributeMappingProvider("odata", config))));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config)));
             return config;
         }
 
@@ -252,7 +252,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
                         .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act
@@ -301,7 +301,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                     builder.AddService(ServiceLifetime.Singleton, sp => model)
                         .AddService(ServiceLifetime.Singleton, sp => resolver)
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
             HttpClient client = new HttpClient(new HttpServer(config));
 
             // Act

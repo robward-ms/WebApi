@@ -123,7 +123,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             var messageWriter = new ODataMessageWriter(mockRequest.Object);
             var request = new HttpRequestMessage();
             request.ODataProperties().Path = new ODataPath(CountSegment.Instance);
-            var context = new ODataSerializerContext { Request = new WebApiRequestMessage(request) };
+            var context = new ODataSerializerContext { Request = request };
 
             // Act
             serializer.WriteObject(5, null, messageWriter, context);

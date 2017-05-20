@@ -48,7 +48,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
 
             // Act & Assert
             Assert.ThrowsArgumentNull(
-                () => new ActionRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), actionMap: null),
+                () => new ActionRoutingConvention().SelectAction(odataPath, controllerContext, actionMap: null),
                 "actionMap");
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
 
             // Act
-            string selectedAction = new ActionRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
+            string selectedAction = new ActionRoutingConvention().SelectAction(odataPath,controllerContext, actionMap);
 
             // Assert
             Assert.Null(selectedAction);
@@ -91,7 +91,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetVIPs");
 
             // Act
-            string action = actionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
+            string action = actionConvention.SelectAction(odataPath, controllerContext, actionMap);
 
             // Assert
             Assert.Equal("GetVIPs", action);
@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "upgrade");
 
             // Act
-            string action = actionConvention.SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(actionMap));
+            string action = actionConvention.SelectAction(odataPath, controllerContext, actionMap);
 
             // Assert
             Assert.Equal("upgrade", action);
@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             controllerContext.Request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/");
             controllerContext.Request.SetRouteData(new HttpRouteData(new HttpRoute()));
 
-            string selectedAction = new ActionRoutingConvention().SelectAction(odataPath, new WebApiControllerContext(controllerContext, null), new WebApiActionMap(emptyActionMap));
+            string selectedAction = new ActionRoutingConvention().SelectAction(odataPath, controllerContext, emptyActionMap);
 
             Assert.Null(selectedAction);
             Assert.Empty(controllerContext.Request.GetRouteData().Values);

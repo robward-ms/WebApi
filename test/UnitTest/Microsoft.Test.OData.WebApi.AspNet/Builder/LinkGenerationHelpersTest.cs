@@ -31,7 +31,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -48,7 +48,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
             IEdmNavigationProperty ordersProperty = _model.Customer.NavigationProperties().Single();
 
@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -83,7 +83,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
             IEdmNavigationProperty ordersProperty = _model.Customer.NavigationProperties().Single();
 
@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                     new NavigationPropertySegment(orderLinesProperty, _model.OrderLines),
                     new KeySegment(parameters2.ToArray(),  _model.OrderLine, _model.OrderLines)),
 
-                Url = new WebApiUrlHelper(GetODataRequest(_model.Model).GetUrlHelper()),
+                Url = GetODataRequest(_model.Model).GetUrlHelper(),
             };
             var entityContext = new ResourceContext(serializerContext, _model.OrderLine.AsReference(), new { ID = 21 });
 
@@ -171,7 +171,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
                     new NavigationPropertySegment(orderLinesProperty, _model.NonContainedOrderLines),
                     new KeySegment(parameters2.ToArray(), _model.OrderLine, _model.NonContainedOrderLines)),
 
-                Url = new WebApiUrlHelper(GetODataRequest(_model.Model).GetUrlHelper()),
+                Url = GetODataRequest(_model.Model).GetUrlHelper(),
             };
 
             var entityContext = new ResourceContext(serializerContext, _model.OrderLine.AsReference(), new { ID = 21 });
@@ -271,9 +271,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = _model.Customers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -291,9 +291,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.NotNull(action); // Guard
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = _model.Customers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -314,9 +314,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = specialCustomers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -362,7 +362,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.Customer.AsReference(), new { ID = 42 });
 
             // Act
@@ -376,7 +376,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -392,7 +392,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             IEdmEntitySet specialCustomers = new EdmEntitySet(_model.Container, "SpecialCustomers", _model.SpecialCustomer);
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = specialCustomers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = specialCustomers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -407,7 +407,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -423,7 +423,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             IEdmSingleton me = new EdmSingleton(_model.Container, "Me", _model.SpecialCustomer);
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = me, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = me, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -438,7 +438,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.OrderLines, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.OrderLines, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.OrderLine.AsReference(), new { ID = 42 });
 
             // Act
@@ -495,9 +495,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = _model.Customers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -515,9 +515,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             Assert.NotNull(function); // Guard
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = _model.Customers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -538,9 +538,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
 
             var context = new ResourceSetContext
             {
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 EntitySetBase = specialCustomers,
-                Url = new WebApiUrlHelper(request.GetUrlHelper()),
+                Url = request.GetUrlHelper(),
             };
 
             // Act
@@ -555,7 +555,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.Customer.AsReference(), new { ID = 42 });
 
             // Act
@@ -570,7 +570,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -586,7 +586,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             IEdmEntitySet specialCustomers = new EdmEntitySet(_model.Container, "SpecialCustomers", _model.SpecialCustomer);
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = specialCustomers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = specialCustomers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -602,7 +602,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
         {
             // Arrange
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = _model.Mary, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act
@@ -618,7 +618,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder
             // Arrange
             IEdmSingleton me = new EdmSingleton(_model.Container, "Me", _model.SpecialCustomer);
             HttpRequestMessage request = GetODataRequest(_model.Model);
-            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = me, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = _model.Model, NavigationSource = me, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, _model.SpecialCustomer.AsReference(), new { ID = 42 });
 
             // Act

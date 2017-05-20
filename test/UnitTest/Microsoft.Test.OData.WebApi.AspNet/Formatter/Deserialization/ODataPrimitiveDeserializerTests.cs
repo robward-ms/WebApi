@@ -217,8 +217,8 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             ODataMessageWriter messageWriter = new ODataMessageWriter(message as IODataResponseMessage, settings, model);
             ODataMessageReader messageReader = new ODataMessageReader(message as IODataResponseMessage, new ODataMessageReaderSettings(), model);
-            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = new WebApiRequestMessage(request) };
-            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = new WebApiRequestMessage(request) };
+            ODataSerializerContext writeContext = new ODataSerializerContext { RootElementName = "Property", Model = model, Request = request };
+            ODataDeserializerContext readContext = new ODataDeserializerContext { Model = model, Request = request };
 
             serializer.WriteObject(value, typeof(DateTimeOffset), messageWriter, writeContext);
             stream.Seek(0, SeekOrigin.Begin);

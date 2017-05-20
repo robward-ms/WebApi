@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             IEdmEntitySet customers = model.EntityContainer.FindEntitySet("Customers");
             var edmType = model.SchemaElements.OfType<IEdmEntityType>().First(e => e.Name == "Customer");
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = customers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = customers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, edmType.AsReference(), new Customer { Id = 109 });
 
             // Assert
@@ -119,7 +119,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
             request.EnableODataDependencyInjectionSupport("odata");
 
             IEdmEntitySet customers = model.EntityContainer.FindEntitySet("Customers");
-            var entityContext = new ResourceSetContext { EntitySetBase = customers, Request = new WebApiRequestMessage(request), Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var entityContext = new ResourceSetContext { EntitySetBase = customers, Request = request, Url = request.GetUrlHelper() };
 
             // Assert
             var edmFunction = model.SchemaElements.OfType<IEdmFunction>().First(f => f.Name == "MyFunction");
@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Builder.Conventions
 
             OperationLinkBuilder fuinctionLinkBuilder = model.GetOperationLinkBuilder(edmFunction);
 
-            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = edmCustomers, Url = new WebApiUrlHelper(request.GetUrlHelper()) };
+            var serializerContext = new ODataSerializerContext { Model = model, NavigationSource = edmCustomers, Url = request.GetUrlHelper() };
             var entityContext = new ResourceContext(serializerContext, edmType.AsReference(), new Customer { Id = 109 });
 
             // Assert

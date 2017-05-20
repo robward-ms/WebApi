@@ -217,8 +217,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -242,8 +241,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
             request.EnableHttpDependencyInjectionSupport(model.Model);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "City", "Foo" } };
-            WebApiEntityTagHeaderValue value = new DefaultODataETagHandler().CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(value.Tag, value.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
             ODataPath odataPath = new ODataPath(new EntitySetSegment(model.Customers));
             request.ODataProperties().Path = odataPath;
@@ -320,8 +318,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         {
             // Arrange
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Version", value } };
-            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagCustomer>("Customers");
@@ -374,8 +371,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 { "LongVal", longValue },
                 { "ShortVal", shortValue }
             };
-            WebApiEntityTagHeaderValue headerValue = new DefaultODataETagHandler().CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
             var builder = new ODataConventionModelBuilder();
             builder.EntitySet<MyEtagOrder>("Orders");

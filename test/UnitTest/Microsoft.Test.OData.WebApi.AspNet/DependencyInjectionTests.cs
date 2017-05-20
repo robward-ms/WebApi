@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
                 builder.AddService(ServiceLifetime.Singleton, sp => instance)
                        .AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config))));
+                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config)));
             return new HttpClient(new HttpServer(config));
         }
 

@@ -59,10 +59,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             configuration.MapODataServiceRoute("odata1", "odata", model, pathHandler, ODataRoutingConventions.CreateDefault());
 
             // only with attribute routing
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider("odata2", configuration);
             IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
             {
-                new AttributeRoutingConvention(mappingProvider)
+                new AttributeRoutingConvention("odata2", configuration)
             };
             configuration.MapODataServiceRoute("odata2", "attribute", model, pathHandler, routingConventions);
 

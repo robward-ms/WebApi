@@ -1068,7 +1068,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
         private class CustomFeedSerializer : ODataResourceSetSerializer
         {
-            public CustomFeedSerializer(IODataSerializerProvider serializerProvider)
+            public CustomFeedSerializer(ODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }
@@ -1113,7 +1113,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
         private class CustomEntrySerializer : ODataResourceSerializer
         {
-            public CustomEntrySerializer(IODataSerializerProvider serializerProvider)
+            public CustomEntrySerializer(ODataSerializerProvider serializerProvider)
                 : base(serializerProvider)
             {
             }

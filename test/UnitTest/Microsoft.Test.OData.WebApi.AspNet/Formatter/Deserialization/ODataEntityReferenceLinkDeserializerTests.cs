@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             ODataMessageReader messageReader = new ODataMessageReader(new MockODataRequestMessage(requestMessage), readSettings, model);
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new WebApiRequestMessage(new HttpRequestMessage()),
+                Request = new HttpRequestMessage(),
                 Path = new ODataPath(new NavigationPropertySegment(GetNavigationProperty(model), navigationSource: null))
             };
 
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
 
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new WebApiRequestMessage(new HttpRequestMessage()),
+                Request = new HttpRequestMessage(),
                 Path = new ODataPath(new NavigationPropertySegment(navigationProperty, navigationSource: null))
             };
 

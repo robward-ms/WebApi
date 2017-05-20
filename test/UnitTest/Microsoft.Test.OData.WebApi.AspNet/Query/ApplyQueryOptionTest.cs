@@ -370,7 +370,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.OData.Query
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + filter);
             request.EnableHttpDependencyInjectionSupport();
 
-            var options = new ODataQueryOptions(context, new WebApiRequestMessage(request));
+            var options = new ODataQueryOptions(context, request);
 
             IEnumerable<Customer> customers = CustomerApplyTestData;
             // Act

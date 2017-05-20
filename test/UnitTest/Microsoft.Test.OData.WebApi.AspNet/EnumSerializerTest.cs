@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
 {
     public class EnumSerializerTest
     {
-        private readonly IODataSerializerProvider _serializerProvider =
+        private readonly ODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
 
         [Fact]

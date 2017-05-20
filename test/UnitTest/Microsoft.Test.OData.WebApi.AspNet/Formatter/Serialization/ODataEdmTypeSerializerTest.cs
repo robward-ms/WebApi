@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
         [Fact]
         public void Ctor_SetsProperty_SerializerProvider()
         {
-            IODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            ODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
             var serializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Unsupported, serializerProvider).Object;
 
             Assert.Same(serializerProvider, serializer.SerializerProvider);

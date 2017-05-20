@@ -66,12 +66,12 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
                 var people = model.EntitySet<FormatterPerson>("People");
 
-                people.HasFeedSelfLink(context => new Uri(context.Url.CreateODataLink(new EntitySetSegment(
+                people.HasFeedSelfLink(context => new Uri(context.InternalUrlHelper.CreateODataLink(new EntitySetSegment(
                     context.EntitySetBase as IEdmEntitySet))));
                 people.HasIdLink(context =>
                 {
                     var keys = new[] {new KeyValuePair<string, object>("PerId", context.GetPropertyValue("PerId"))};
-                        return new Uri(context.Url.CreateODataLink(
+                        return new Uri(context.InternalUrlHelper.CreateODataLink(
                             new EntitySetSegment(context.NavigationSource as IEdmEntitySet),
                             new KeySegment(keys, context.StructuredType as IEdmEntityType, context.NavigationSource)));
                     },
@@ -145,7 +145,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 var president = model.Singleton<FormatterPerson>("President");
                 president.HasIdLink(context =>
                     {
-                        return new Uri(context.Url.CreateODataLink(new SingletonSegment((IEdmSingleton)context.NavigationSource)));
+                        return new Uri(context.InternalUrlHelper.CreateODataLink(new SingletonSegment((IEdmSingleton)context.NavigationSource)));
                     },
                     followsConventions: false);
 
@@ -167,9 +167,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             return new ODataMessageReader(requestMessage);
         }
 
-        public static IODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
+        public static ODataSerializerProvider GetMockODataSerializerProvider(ODataEdmTypeSerializer serializer)
         {
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(sp => sp.GetEdmTypeSerializer(It.IsAny<IEdmTypeReference>())).Returns(serializer);
             return serializerProvider.Object;
         }

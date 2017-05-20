@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Routing.Conventions
             var config = new HttpConfiguration();
 
             // Act
-            var conventions = ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", new AttributeMappingProvider("odata", config));
+            var conventions = ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config);
 
             // Assert
             Assert.Single(conventions.OfType<AttributeRoutingConvention>());

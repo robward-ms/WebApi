@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {
     public class ODataMediaTypeFormatterTests : MediaTypeFormatterTestBase<ODataMediaTypeFormatter>
     {
-        private readonly IODataSerializerProvider _serializerProvider =
+        private readonly ODataSerializerProvider _serializerProvider =
             DependencyInjectionHelper.GetDefaultODataSerializerProvider();
         private readonly ODataDeserializerProvider _deserializerProvider =
             DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
         [Fact]
         public void Ctor_ThrowsArgumentNull_DeserializerProvider()
         {
-            IODataSerializerProvider serializerProvider = _serializerProvider;
+            ODataSerializerProvider serializerProvider = _serializerProvider;
             ODataPayloadKind[] payloadKinds = new ODataPayloadKind[0];
 
             Assert.ThrowsArgumentNull(
@@ -437,9 +437,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             var model = CreateModel();
             var request = CreateFakeODataRequest(model);
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<HttpRequestMessage>())).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.MetadataLevel == ODataMetadataLevel.FullMetadata)))
@@ -468,9 +468,9 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
             request.ODataProperties().SelectExpandClause = selectExpandClause;
 
             Mock<ODataSerializer> serializer = new Mock<ODataSerializer>(ODataPayloadKind.Property);
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
 
-            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(serializer.Object);
+            serializerProvider.Setup(p => p.GetODataPayloadSerializer(typeof(int), It.IsAny<HttpRequestMessage>())).Returns(serializer.Object);
             serializer
                 .Setup(s => s.WriteObject(42, typeof(int), It.IsAny<ODataMessageWriter>(),
                     It.Is<ODataSerializerContext>(c => c.SelectExpandClause == selectExpandClause)))
@@ -726,7 +726,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 .Setup(s => s.WriteObject(instance.Object, instance.GetType(), It.IsAny<ODataMessageWriter>(), It.IsAny<ODataSerializerContext>()))
                 .Verifiable();
 
-            Mock<IODataSerializerProvider> serializerProvider = new Mock<IODataSerializerProvider>();
+            Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
             serializerProvider.Setup(s => s.GetEdmTypeSerializer(edmType)).Returns(serializer.Object);
 
             var formatter = new ODataMediaTypeFormatter(_deserializerProvider, serializerProvider.Object, new ODataPayloadKind[0]);
@@ -803,7 +803,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 .Verifiable();
 
             Mock<ODataDeserializerProvider> provider = new Mock<ODataDeserializerProvider>();
-            provider.Setup(p => p.GetODataDeserializer(typeof(int), It.IsAny<IWebApiRequestMessage>())).Returns(deserializer.Object);
+            provider.Setup(p => p.GetODataDeserializer(typeof(int), It.IsAny<HttpRequestMessage>())).Returns(deserializer.Object);
 
             // Act
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(provider.Object,

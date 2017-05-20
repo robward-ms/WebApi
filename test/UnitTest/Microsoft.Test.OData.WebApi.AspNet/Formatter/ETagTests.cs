@@ -216,8 +216,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 
             IETagHandler handerl = new DefaultODataETagHandler();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "DoubleETag", value } };
-            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
 
             HttpRequestMessage request = new HttpRequestMessage();
 
@@ -307,8 +306,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
                 { "ByteVal", byteVal },
                 { "ShortVal", shortVal }
             };
-            WebApiEntityTagHeaderValue headerValue = handerl.CreateETag(properties);
-            EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(headerValue.Tag, headerValue.IsWeak);
+            EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
 
             HttpRequestMessage request = new HttpRequestMessage();
 

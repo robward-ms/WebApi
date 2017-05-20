@@ -495,8 +495,8 @@
     <EmbeddedResource Include="Resources\PeopleWithMultipleAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithoutAnnotations.json" />
     <EmbeddedResource Include="Resources\PeopleWithSpecialAnnotations.json" />
-    <EmbeddedResource Include="PublicApi\Microsoft.OData.WebApi.AspNet.PublicApi.bsl" />
     <EmbeddedResource Include="Resources\MetadataWithSingleton.xml" />
+    <EmbeddedResource Include="PublicApi\Microsoft.OData.WebApi.PublicApi.bsl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Microsoft.OData.WebApi.AspNet\Microsoft.OData.WebApi.AspNet.csproj">
@@ -510,6 +510,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

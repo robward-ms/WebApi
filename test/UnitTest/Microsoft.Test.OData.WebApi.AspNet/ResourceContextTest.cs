@@ -58,7 +58,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [Fact]
         public void Property_Request_RoundTrips()
         {
-            var roundTripTestValue = new WebApiRequestMessage(new HttpRequestMessage());
+            var roundTripTestValue = new HttpRequestMessage();
             Assert.Reflection.Property(_context, (c) => c.Request, null, allowNull: true, roundTripTestValue: roundTripTestValue);
         }
 
@@ -77,7 +77,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet
         [Fact]
         public void Property_Url_RoundTrips()
         {
-            var roundTripTestValue = new WebApiUrlHelper(new UrlHelper(new HttpRequestMessage()));
+            var roundTripTestValue = new UrlHelper(new HttpRequestMessage());
             Assert.Reflection.Property(_context, (c) => c.Url, null, allowNull: true, roundTripTestValue: roundTripTestValue);
         }
 

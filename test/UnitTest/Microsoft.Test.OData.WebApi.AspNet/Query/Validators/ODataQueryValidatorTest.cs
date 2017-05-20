@@ -71,7 +71,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             message.EnableHttpDependencyInjectionSupport();
 
             Assert.Throws<ArgumentNullException>(() =>
-                _validator.Validate(new ODataQueryOptions(_context, new WebApiRequestMessage(message)), null));
+                _validator.Validate(new ODataQueryOptions(_context, message), null));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?$" + query));
             message.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            ODataQueryOptions option = new ODataQueryOptions(_context, message);
             ODataValidationSettings settings = new ODataValidationSettings()
             {
                 AllowedQueryOptions = allow,
@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             var message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?" + query));
             message.EnableHttpDependencyInjectionSupport();
-            var option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            var option = new ODataQueryOptions(_context, message);
             var expectedMessage = string.Format(
                 "Query option '{0}' is not allowed. " +
                 "To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.",
@@ -156,7 +156,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             var message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?" + query));
             message.EnableHttpDependencyInjectionSupport();
-            var option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            var option = new ODataQueryOptions(_context, message);
             var expectedMessage = string.Format(
                 "Query option '{0}' is not allowed. " +
                 "To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.",
@@ -177,7 +177,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?$" + query));
             message.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            ODataQueryOptions option = new ODataQueryOptions(_context, message);
             ODataValidationSettings settings = new ODataValidationSettings()
             {
                 AllowedQueryOptions = AllowedQueryOptions.Supported,
@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             var message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?" + query));
             message.EnableHttpDependencyInjectionSupport();
-            var option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            var option = new ODataQueryOptions(_context, message);
             var expectedMessage = string.Format(
                 "Query option '{0}' is not allowed. " +
                 "To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.",
@@ -215,7 +215,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?$" + query));
             message.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            ODataQueryOptions option = new ODataQueryOptions(_context, message);
             ODataValidationSettings settings = new ODataValidationSettings()
             {
                 AllowedQueryOptions = AllowedQueryOptions.All & ~AllowedQueryOptions.Supported,
@@ -232,7 +232,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             var message = new HttpRequestMessage(HttpMethod.Get, new Uri("http://localhost/?" + query));
             message.EnableHttpDependencyInjectionSupport();
-            var option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            var option = new ODataQueryOptions(_context, message);
             var expectedMessage = string.Format(
                 "Query option '{0}' is not allowed. " +
                 "To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.",
@@ -252,7 +252,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query.Validators
             // Arrange
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$expand=Contacts/Contacts");
             message.EnableHttpDependencyInjectionSupport();
-            ODataQueryOptions option = new ODataQueryOptions(_context, new WebApiRequestMessage(message));
+            ODataQueryOptions option = new ODataQueryOptions(_context, message);
 
             Mock<SelectExpandQueryValidator> selectExpandValidator = new Mock<SelectExpandQueryValidator>(new DefaultQuerySettings());
             option.SelectExpand.Validator = selectExpandValidator.Object;

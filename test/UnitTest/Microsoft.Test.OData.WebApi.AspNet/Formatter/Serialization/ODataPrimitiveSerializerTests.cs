@@ -240,7 +240,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Serialization
             HttpRequestMessage request = new HttpRequestMessage();
             request.SetConfiguration(configuration);
 
-            ODataSerializerContext context = new ODataSerializerContext{ Request = new WebApiRequestMessage(request) };
+            ODataSerializerContext context = new ODataSerializerContext{ Request = request };
 
             // Act
             ODataValue odataValue = serializer.CreateODataValue(value, edmPrimitiveType, context);

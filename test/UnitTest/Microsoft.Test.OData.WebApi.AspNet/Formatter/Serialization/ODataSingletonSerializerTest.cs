@@ -38,13 +38,13 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Formatter.Deserialization
             HttpRequestMessage request = GetRequest(model, singleton);
             ODataSerializerContext readContext = new ODataSerializerContext()
             {
-                Url = new WebApiUrlHelper(new UrlHelper(request)),
+                Url = new UrlHelper(request),
                 Path = request.ODataProperties().Path,
                 Model = model,
                 NavigationSource = singleton
             };
 
-            IODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            ODataSerializerProvider serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
             EmployeeModel boss = new EmployeeModel {EmployeeId = 987, EmployeeName = "John Mountain"};
             MemoryStream bufferedStream = new MemoryStream();
 

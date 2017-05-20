@@ -110,7 +110,7 @@ namespace Microsoft.Test.OData.WebApi.AspNet.Query
 
             ODataPath path = new ODataPath(new[] { new EntitySetSegment(entityset) });
             ODataQueryContext context = new ODataQueryContext(model, entityType, path);
-            return new ODataQueryOptions(context, new WebApiRequestMessage(request));
+            return new ODataQueryOptions(context, request);
         }
     }
 }
