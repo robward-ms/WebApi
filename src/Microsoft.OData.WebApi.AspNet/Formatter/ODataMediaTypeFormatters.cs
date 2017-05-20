@@ -39,7 +39,7 @@ namespace Microsoft.OData.WebApi.Formatter
         /// <param name="serializerProvider">The serializer provider to use.</param>
         /// <param name="deserializerProvider">The deserializer provider to use.</param>
         /// <returns>A list of media type formatters to handle OData.</returns>
-        public static IList<ODataMediaTypeFormatter> Create(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        public static IList<ODataMediaTypeFormatter> Create(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             return new List<ODataMediaTypeFormatter>()
             {
@@ -58,7 +58,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 throwOnInvalidBytes: true));
         }
 
-        private static ODataMediaTypeFormatter CreateRawValue(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateRawValue(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(serializerProvider, deserializerProvider, ODataPayloadKind.Value);
             formatter.MediaTypeMappings.Add(new ODataPrimitiveValueMediaTypeMapping());
@@ -68,7 +68,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateApplicationJson(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateApplicationJson(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(
                 serializerProvider,
@@ -105,7 +105,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateApplicationXml(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
+        private static ODataMediaTypeFormatter CreateApplicationXml(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider)
         {
             ODataMediaTypeFormatter formatter = CreateFormatterWithoutMediaTypes(
                 serializerProvider,
@@ -119,7 +119,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return formatter;
         }
 
-        private static ODataMediaTypeFormatter CreateFormatterWithoutMediaTypes(IODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider, params ODataPayloadKind[] payloadKinds)
+        private static ODataMediaTypeFormatter CreateFormatterWithoutMediaTypes(ODataSerializerProvider serializerProvider, ODataDeserializerProvider deserializerProvider, params ODataPayloadKind[] payloadKinds)
         {
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(deserializerProvider, serializerProvider, payloadKinds);
             AddSupportedEncodings(formatter);

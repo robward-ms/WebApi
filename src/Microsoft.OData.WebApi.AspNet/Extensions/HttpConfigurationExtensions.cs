@@ -582,12 +582,10 @@ namespace Microsoft.OData.WebApi.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model)
         {
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
-
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, configuration)));
         }
 
         /// <summary>
@@ -603,13 +601,11 @@ namespace Microsoft.OData.WebApi.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model, ODataBatchHandler batchHandler)
         {
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
-
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService(ServiceLifetime.Singleton, sp => batchHandler)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, configuration)));
         }
 
         /// <summary>
@@ -625,13 +621,11 @@ namespace Microsoft.OData.WebApi.Extensions
         public static ODataRoute MapODataServiceRoute(this HttpConfiguration configuration, string routeName,
             string routePrefix, IEdmModel model, HttpMessageHandler defaultHandler)
         {
-            AttributeMappingProvider mappingProvider = new AttributeMappingProvider(routeName, configuration);
-
             return configuration.MapODataServiceRoute(routeName, routePrefix, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService(ServiceLifetime.Singleton, sp => defaultHandler)
                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, mappingProvider)));
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, configuration)));
         }
 
         /// <summary>

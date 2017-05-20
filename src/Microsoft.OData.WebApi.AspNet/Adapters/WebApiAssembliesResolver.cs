@@ -12,7 +12,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi assembly resolver to OData WebApi.
     /// </summary>
-    public class WebApiAssembliesResolver : IWebApiAssembliesResolver
+    internal class WebApiAssembliesResolver : IWebApiAssembliesResolver
     {
         /// <summary>
         /// The inner resolver wrapped by this instance.

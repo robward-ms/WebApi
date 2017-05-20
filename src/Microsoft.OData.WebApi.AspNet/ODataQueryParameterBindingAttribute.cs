@@ -94,7 +94,7 @@ namespace Microsoft.OData.WebApi
 
             public static ODataQueryOptions<T> CreateODataQueryOptions<T>(ODataQueryContext context, HttpRequestMessage request)
             {
-                return new ODataQueryOptions<T>(context, new WebApiRequestMessage(request));
+                return new ODataQueryOptions<T>(context, request);
             }
 
             internal static Type GetEntityClrTypeFromActionReturnType(HttpActionDescriptor actionDescriptor)

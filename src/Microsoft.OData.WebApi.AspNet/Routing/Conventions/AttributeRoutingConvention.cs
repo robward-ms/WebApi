@@ -6,22 +6,23 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
+using Microsoft.OData.WebApi.Adapters;
 using Microsoft.OData.WebApi.Common;
 using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Routing;
-using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.OData.WebApi.Routing.Template;
 
-namespace Microsoft.OData.WebApi.Adapters
+namespace Microsoft.OData.WebApi.Routing.Conventions
 {
     /// <summary>
-    /// Adapter class to convert Asp.Net WebApi attribute mappings to OData WebApi.
+    /// Represents a routing convention that looks for <see cref="ODataRouteAttribute"/>s to match an <see cref="ODataPath"/>
+    /// to a controller and an action.
     /// </summary>
-    public class AttributeMappingProvider : IAttributeMappingProvider
+    public partial class AttributeRoutingConvention : IODataRoutingConvention
     {
         private static readonly DefaultODataPathHandler _defaultPathHandler = new DefaultODataPathHandler();
 
@@ -33,9 +34,9 @@ namespace Microsoft.OData.WebApi.Adapters
         /// Initializes a new instance of the <see cref="AttributeRoutingConvention"/> class.
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
-        /// <param name="configuration">The <see cref="HttpConfiguration"/> to use for figuring out all the controllers to
+        /// <param name="configuration">The <see cref="System.Web.Http.HttpConfiguration"/> to use for figuring out all the controllers to
         /// look for a match.</param>
-        public AttributeMappingProvider(string routeName, HttpConfiguration configuration)
+        public AttributeRoutingConvention(string routeName, HttpConfiguration configuration)
             : this(routeName, configuration, _defaultPathHandler)
         {
         }
@@ -47,7 +48,7 @@ namespace Microsoft.OData.WebApi.Adapters
         /// <param name="configuration">The <see cref="HttpConfiguration"/> to use for figuring out all the controllers to
         /// look for a match.</param>
         /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
-        public AttributeMappingProvider(string routeName, HttpConfiguration configuration,
+        public AttributeRoutingConvention(string routeName, HttpConfiguration configuration,
             IODataPathTemplateHandler pathTemplateHandler)
             : this(routeName, pathTemplateHandler)
         {
@@ -83,7 +84,7 @@ namespace Microsoft.OData.WebApi.Adapters
         /// </summary>
         /// <param name="routeName">The name of the route.</param>
         /// <param name="controllers">The collection of controllers to search for a match.</param>
-        public AttributeMappingProvider(string routeName,
+        public AttributeRoutingConvention(string routeName,
             IEnumerable<HttpControllerDescriptor> controllers)
             : this(routeName, controllers, _defaultPathHandler)
         {
@@ -97,7 +98,7 @@ namespace Microsoft.OData.WebApi.Adapters
         /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "See note on <see cref=\"ShouldMapController()\"> method.")]
-        public AttributeMappingProvider(string routeName,
+        public AttributeRoutingConvention(string routeName,
             IEnumerable<HttpControllerDescriptor> controllers,
             IODataPathTemplateHandler pathTemplateHandler)
             : this(routeName, pathTemplateHandler)
@@ -110,7 +111,7 @@ namespace Microsoft.OData.WebApi.Adapters
             _attributeMappings = BuildAttributeMappings(controllers);
         }
 
-        private AttributeMappingProvider(string routeName, IODataPathTemplateHandler pathTemplateHandler)
+        private AttributeRoutingConvention(string routeName, IODataPathTemplateHandler pathTemplateHandler)
         {
             if (routeName == null)
             {
@@ -127,9 +128,11 @@ namespace Microsoft.OData.WebApi.Adapters
         }
 
         /// <summary>
-        /// Gets the attribute mapping for the system.
+        /// Gets the <see cref="IODataPathTemplateHandler"/> to be used for parsing the route templates.
         /// </summary>
-        public IDictionary<ODataPathTemplate, IWebApiActionDescriptor> AttributeMappings
+        public IODataPathTemplateHandler ODataPathTemplateHandler { get; private set; }
+
+        internal IDictionary<ODataPathTemplate, IWebApiActionDescriptor> AttributeMappings
         {
             get
             {
@@ -145,12 +148,66 @@ namespace Microsoft.OData.WebApi.Adapters
         }
 
         /// <summary>
-        /// Gets the <see cref="IODataPathTemplateHandler"/> to be used for parsing the route templates.
+        /// Specifies whether OData route attributes on this controller should be mapped.
+        /// This method will execute before the derived type's instance constructor executes. Derived types must
+        /// be aware of this and should plan accordingly. For example, the logic in ShouldMapController() should be simple
+        /// enough so as not to depend on the "this" pointer referencing a fully constructed object.
         /// </summary>
-        public IODataPathTemplateHandler ODataPathTemplateHandler { get; private set; }
+        /// <param name="controller">The controller.</param>
+        /// <returns><c>true</c> if this controller should be included in the map; <c>false</c> otherwise.</returns>
+        public virtual bool ShouldMapController(HttpControllerDescriptor controller)
+        {
+            return true;
+        }
 
-        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> BuildAttributeMappings(
-            IEnumerable<HttpControllerDescriptor> controllers)
+        /// <inheritdoc />
+        public string SelectController(ODataPath odataPath, HttpRequestMessage request)
+        {
+            SelectControllerResult controllerResult = SelectControllerImpl(
+                odataPath,
+                new WebApiRequestMessage(request),
+                this.AttributeMappings);
+
+            if (controllerResult != null)
+            {
+                request.Properties["AttributeRouteData"] = controllerResult.Values;
+            }
+
+            return controllerResult?.ControllerName;
+        }
+
+        /// <inheritdoc />
+        public string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        {
+            if (odataPath == null)
+            {
+                throw Error.ArgumentNull("odataPath");
+            }
+
+            if (controllerContext == null)
+            {
+                throw Error.ArgumentNull("controllerContext");
+            }
+
+            if (actionMap == null)
+            {
+                throw Error.ArgumentNull("actionMap");
+            }
+
+            object value = null;
+            controllerContext.Request.Properties.TryGetValue("AttributeRouteData", out value);
+
+            SelectControllerResult controllerResult = new SelectControllerResult(
+                controllerContext.ControllerDescriptor.ControllerName,
+                value as IDictionary<string, object>);
+
+            return SelectActionImpl(
+                odataPath,
+                new WebApiControllerContext(controllerContext, controllerResult),
+                new WebApiActionMap(actionMap));
+        }
+
+        private IDictionary<ODataPathTemplate, IWebApiActionDescriptor> BuildAttributeMappings(IEnumerable<HttpControllerDescriptor> controllers)
         {
             Dictionary<ODataPathTemplate, IWebApiActionDescriptor> attributeMappings =
                 new Dictionary<ODataPathTemplate, IWebApiActionDescriptor>();
@@ -159,8 +216,6 @@ namespace Microsoft.OData.WebApi.Adapters
             {
                 if (IsODataController(controller) && ShouldMapController(controller))
                 {
-                    WebApiControllerDescriptor controllerDescriptor = new WebApiControllerDescriptor(controller);
-
                     IHttpActionSelector actionSelector = controller.Configuration.Services.GetActionSelector();
                     ILookup<string, HttpActionDescriptor> actionMapping = actionSelector.GetActionMapping(controller);
                     HttpActionDescriptor[] actions = actionMapping.SelectMany(a => a).ToArray();
@@ -172,7 +227,7 @@ namespace Microsoft.OData.WebApi.Adapters
                             IEnumerable<ODataPathTemplate> pathTemplates = GetODataPathTemplates(prefix, action);
                             foreach (ODataPathTemplate pathTemplate in pathTemplates)
                             {
-                                attributeMappings.Add(pathTemplate, new WebApiActionDescriptor(action, controllerDescriptor));
+                                attributeMappings.Add(pathTemplate, new WebApiActionDescriptor(action));
                             }
                         }
                     }
@@ -180,19 +235,6 @@ namespace Microsoft.OData.WebApi.Adapters
             }
 
             return attributeMappings;
-        }
-
-        /// <summary>
-        /// Specifies whether OData route attributes on this controller should be mapped.
-        /// This method will execute before the derived type's instance constructor executes. Derived types must
-        /// be aware of this and should plan accordingly. For example, the logic in ShouldMapController() should be simple
-        /// enough so as not to depend on the "this" pointer referencing a fully constructed object.
-        /// </summary>
-        /// <param name="controller">The controller.</param>
-        /// <returns><c>true</c> if this controller should be included in the map; <c>false</c> otherwise.</returns>
-        public virtual bool ShouldMapController(HttpControllerDescriptor controller)
-        {
-            return true;
         }
 
         private static bool IsODataController(HttpControllerDescriptor controller)

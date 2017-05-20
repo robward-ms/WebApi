@@ -13,7 +13,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi action description to OData WebApi.
     /// </summary>
-    public class WebApiActionDescriptor : IWebApiActionDescriptor
+    internal class WebApiActionDescriptor : IWebApiActionDescriptor
     {
         /// <summary>
         /// Gets the collection of supported HTTP methods for the descriptor.
@@ -29,22 +29,15 @@ namespace Microsoft.OData.WebApi.Adapters
         /// Initializes a new instance of the WebApiActionDescriptor class.
         /// </summary>
         /// <param name="actionDescriptor">The inner descriptor.</param>
-        /// <param name="controllerDescriptor">The parent controller descriptor.</param>
-        public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor,
-            WebApiControllerDescriptor controllerDescriptor)
+        public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor)
+            ////WebApiControllerDescriptor controllerDescriptor)
         {
             if (actionDescriptor == null)
             {
                 throw Error.ArgumentNull("actionDescriptor");
             }
 
-            if (controllerDescriptor == null)
-            {
-                throw Error.ArgumentNull("controllerDescriptor");
-            }
-
             this.innerDescriptor = actionDescriptor;
-            this.ControllerDescriptor = controllerDescriptor;
 
             this.supportedHttpMethods = new List<string>();
             foreach (HttpMethod method in actionDescriptor.SupportedHttpMethods)
@@ -54,17 +47,20 @@ namespace Microsoft.OData.WebApi.Adapters
         }
 
         /// <summary>
+        /// Gets the name of the controller.
+        /// </summary>
+        public string ControllerName
+        {
+            get { return this.innerDescriptor.ControllerDescriptor.ControllerName; }
+        }
+
+        /// <summary>
         /// Gets the name of the action.
         /// </summary>
         public string ActionName
         {
             get { return this.innerDescriptor.ActionName; }
         }
-
-        /// <summary>
-        /// Gets the information that describes the controller of the action.
-        /// </summary>
-        public IWebApiControllerDescriptor ControllerDescriptor { get; private set; }
 
         /// <summary>
         /// Returns the custom attributes associated with the action descriptor.

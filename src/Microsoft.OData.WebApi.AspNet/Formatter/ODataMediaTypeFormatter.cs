@@ -42,7 +42,7 @@ namespace Microsoft.OData.WebApi.Formatter
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
 
         private readonly ODataDeserializerProvider _deserializerProvider;
-        private readonly IODataSerializerProvider _serializerProvider;
+        private readonly ODataSerializerProvider _serializerProvider;
 
         private HttpRequestMessage _request;
 
@@ -59,9 +59,9 @@ namespace Microsoft.OData.WebApi.Formatter
         /// Initializes a new instance of the <see cref="ODataMediaTypeFormatter"/> class.
         /// </summary>
         /// <param name="deserializerProvider">The <see cref="ODataDeserializerProvider"/> to use.</param>
-        /// <param name="serializerProvider">The <see cref="IODataSerializerProvider"/> to use.</param>
+        /// <param name="serializerProvider">The <see cref="ODataSerializerProvider"/> to use.</param>
         /// <param name="payloadKinds">The kind of payloads this formatter supports.</param>
-        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, IODataSerializerProvider serializerProvider,
+        public ODataMediaTypeFormatter(ODataDeserializerProvider deserializerProvider, ODataSerializerProvider serializerProvider,
             IEnumerable<ODataPayloadKind> payloadKinds)
         {
             if (deserializerProvider == null)
@@ -137,9 +137,9 @@ namespace Microsoft.OData.WebApi.Formatter
         }
 
         /// <summary>
-        /// Gets the <see cref="IODataSerializerProvider"/> that will be used by this formatter instance.
+        /// Gets the <see cref="ODataSerializerProvider"/> that will be used by this formatter instance.
         /// </summary>
-        public IODataSerializerProvider SerializerProvider
+        public ODataSerializerProvider SerializerProvider
         {
             get
             {
@@ -338,7 +338,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 type = type.GetGenericArguments()[0];
             }
 
-            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
+            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, Request);
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;
         }
 
@@ -379,7 +379,7 @@ namespace Microsoft.OData.WebApi.Formatter
                     {
                         Path = path,
                         Model = model,
-                        Request = new WebApiRequestMessage(Request),
+                        Request = Request,
                         ResourceType = type,
                         ResourceEdmType = expectedPayloadType,
                     };
@@ -510,8 +510,8 @@ namespace Microsoft.OData.WebApi.Formatter
             {
                 ODataSerializerContext writeContext = new ODataSerializerContext()
                 {
-                    Request = new WebApiRequestMessage(Request),
-                    Url = new WebApiUrlHelper(urlHelper),
+                    Request = Request,
+                    Url = urlHelper,
                     NavigationSource = targetNavigationSource,
                     Model = model,
                     RootElementName = GetRootElementName(path) ?? "root",
@@ -572,7 +572,7 @@ namespace Microsoft.OData.WebApi.Formatter
             expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);
 
             // Get the deserializer using the CLR type first from the deserializer provider.
-            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, new WebApiRequestMessage(Request));
+            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, Request);
             if (deserializer == null && expectedPayloadType != null)
             {
                 // we are in typeless mode, get the deserializer using the edm type from the path.
@@ -582,7 +582,7 @@ namespace Microsoft.OData.WebApi.Formatter
             return deserializer;
         }
 
-        private ODataSerializer GetSerializer(Type type, object value, IODataSerializerProvider serializerProvider)
+        private ODataSerializer GetSerializer(Type type, object value, ODataSerializerProvider serializerProvider)
         {
             ODataSerializer serializer;
 
@@ -612,7 +612,7 @@ namespace Microsoft.OData.WebApi.Formatter
                     type = value == null ? type : value.GetType();
                 }
 
-                serializer = serializerProvider.GetODataPayloadSerializer(type, new WebApiRequestMessage(Request));
+                serializer = serializerProvider.GetODataPayloadSerializer(type, Request);
                 if (serializer == null)
                 {
                     string message = Error.Format(SRResources.TypeCannotBeSerialized, type.Name, typeof(ODataMediaTypeFormatter).Name);

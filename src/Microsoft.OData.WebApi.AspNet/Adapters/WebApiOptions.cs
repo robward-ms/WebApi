@@ -11,7 +11,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi options to OData WebApi.
     /// </summary>
-    public class WebApiOptions : IWebApiOptions
+    internal class WebApiOptions : IWebApiOptions
     {
         /// <summary>
         /// Initializes a new instance of the WebApiOptions class.

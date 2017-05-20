@@ -18,7 +18,7 @@ namespace Microsoft.OData.WebApi.Routing
     /// Implementation of <see cref="ParameterBindingAttribute"/> used to bind an instance of <see cref="ODataPath"/> as an action parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed class ODataPathParameterBindingAttribute : ParameterBindingAttribute
+    public sealed partial class ODataPathParameterBindingAttribute : ParameterBindingAttribute
     {
         /// <summary>
         /// Gets the parameter binding.

@@ -86,7 +86,7 @@ namespace Microsoft.OData.WebApi.Results
                 resourceContext.NavigationSource.NavigationSourceKind() == EdmNavigationSourceKind.ContainedEntitySet);
             Contract.Assert(resourceContext.Request != null);
 
-            ODataPath path = resourceContext.Request.Context.Path;
+            ODataPath path = resourceContext.InternalRequest.Context.Path;
             if (path == null)
             {
                 throw Error.InvalidOperation(SRResources.ODataPathMissing);
@@ -145,9 +145,9 @@ namespace Microsoft.OData.WebApi.Results
             {
                 NavigationSource = navigationSource,
                 Model = model,
-                Url = new WebApiUrlHelper(request.GetUrlHelper() ?? new UrlHelper(request)),
+                Url = request.GetUrlHelper() ?? new UrlHelper(request),
                 MetadataLevel = ODataMetadataLevel.FullMetadata, // Used internally to always calculate the links.
-                Request = new WebApiRequestMessage(request),
+                Request = request,
                 Path = path
             };
 

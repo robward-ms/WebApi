@@ -23,12 +23,12 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi request message to OData WebApi.
     /// </summary>
-    public class WebApiRequestMessage : IWebApiRequestMessage
+    internal class WebApiRequestMessage : IWebApiRequestMessage
     {
         /// <summary>
         /// The inner request wrapped by this instance.
         /// </summary>
-        private HttpRequestMessage innerRequest;
+        internal HttpRequestMessage innerRequest;
 
         /// <summary>
         /// Initializes a new instance of the WebApiRequestMessage class.
@@ -49,12 +49,6 @@ namespace Microsoft.OData.WebApi.Adapters
                 this.Context = new WebApiContext(context);
             }
 
-            HttpRequestHeaders headers = request.Headers;
-            if (headers != null)
-            {
-                this.Headers = new WebApiRequestHeaders(headers);
-            }
-
             UrlHelper uriHelper = request.GetUrlHelper();
             if (uriHelper != null)
             {
@@ -72,20 +66,6 @@ namespace Microsoft.OData.WebApi.Adapters
         /// Gets the contents of the HTTP message. 
         /// </summary>
         public IWebApiContext Context { get; private set; }
-
-        /// <summary>
-        /// Gets the collection of HTTP request headers.
-        /// </summary>
-        public IWebApiHeaders Headers { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating if this is a raw request.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsRawValueRequest()
-        {
-            return ODataRawValueMediaTypeMapping.IsRawValueRequest(this.innerRequest);
-        }
 
         /// <summary>
         /// Gets a value indicating if this is a count request.
@@ -140,38 +120,6 @@ namespace Microsoft.OData.WebApi.Adapters
         }
 
         /// <summary>
-        /// Get the entity tag associated with the request.
-        /// </summary>
-        /// <param name="etagHeaderValue"></param>
-        /// <returns></returns>
-        public ETag GetETag(WebApiEntityTagHeaderValue etagHeaderValue)
-        {
-            EntityTagHeaderValue value = etagHeaderValue.AsEntityTagHeaderValue();
-            return this.innerRequest.GetETag(value);
-        }
-
-        /// <summary>
-        /// Get a specific type of entity tage associated with the request.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="etagHeaderValue"></param>
-        /// <returns></returns>
-        public ETag GetETag<T>(WebApiEntityTagHeaderValue etagHeaderValue)
-        {
-            EntityTagHeaderValue value = etagHeaderValue.AsEntityTagHeaderValue();
-            return this.innerRequest.GetETag<T>(value);
-        }
-
-        /// <summary>
-        /// Gets the Edm model associated with the request.
-        /// </summary>
-        /// <returns></returns>
-        public IEdmModel Model
-        {
-            get { return this.innerRequest.GetModel(); }
-        }
-
-        /// <summary>
         /// Get the next page link for a given page size.
         /// </summary>
         /// <param name="pageSize">The page size.</param>
@@ -182,22 +130,11 @@ namespace Microsoft.OData.WebApi.Adapters
         }
 
         /// <summary>
-        /// Get the next page link for a given Uri and page size.
-        /// </summary>
-        /// <param name="requestUri">The Uri</param>
-        /// <param name="pageSize">The page size</param>
-        /// <returns></returns>
-        public Uri GetNextPageLink(Uri requestUri, int pageSize)
-        {
-            return HttpRequestMessageExtensions.GetNextPageLink(requestUri, pageSize);
-        }
-
-        /// <summary>
         /// Creates an ETag from concurrency property names and values.
         /// </summary>
         /// <param name="properties">The input property names and values.</param>
         /// <returns>The generated ETag string.</returns>
-        public WebApiEntityTagHeaderValue CreateETag(IDictionary<string, object> properties)
+        public string CreateETag(IDictionary<string, object> properties)
         {
             HttpConfiguration configuration = this.innerRequest.GetConfiguration();
             if (configuration == null)
@@ -205,7 +142,7 @@ namespace Microsoft.OData.WebApi.Adapters
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            return configuration.GetETagHandler().CreateETag(properties);
+            return configuration.GetETagHandler().CreateETag(properties)?.ToString();
         }
 
         /// <summary>

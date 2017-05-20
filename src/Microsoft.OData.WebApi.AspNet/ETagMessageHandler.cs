@@ -132,8 +132,7 @@ namespace Microsoft.OData.WebApi
             {
                 properties.Add(etagProperty.Name, resourceContext.GetPropertyValue(etagProperty.Name));
             }
-            WebApiEntityTagHeaderValue etagHeaderValue = handler.CreateETag(properties);
-            return etagHeaderValue.AsEntityTagHeaderValue();
+            return handler.CreateETag(properties);
         }
 
         private static object GetSingleEntityObject(HttpResponseMessage response)

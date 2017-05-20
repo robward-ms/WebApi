@@ -52,7 +52,7 @@ namespace Microsoft.OData.WebApi.Extensions
             builder.AddService<TopQueryValidator>(ServiceLifetime.Singleton);
 
             // SerializerProvider and DeserializerProvider.
-            builder.AddService<IODataSerializerProvider, DefaultODataSerializerProvider>(ServiceLifetime.Singleton);
+            builder.AddService<ODataSerializerProvider, DefaultODataSerializerProvider>(ServiceLifetime.Singleton);
             builder.AddService<ODataDeserializerProvider, DefaultODataDeserializerProvider>(ServiceLifetime.Singleton);
 
             // Deserializers.

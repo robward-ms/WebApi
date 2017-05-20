@@ -13,7 +13,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi controller context to OData WebApi.
     /// </summary>
-    public class WebApiControllerContext : IWebApiControllerContext
+    internal class WebApiControllerContext : IWebApiControllerContext
     {
         /// <summary>
         /// The inner context wrapped by this instance.

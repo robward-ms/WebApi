@@ -138,7 +138,7 @@ namespace Microsoft.OData.WebApi.Formatter
                 {
                     Path = path,
                     Model = edmModel,
-                    Request = new WebApiRequestMessage(request),
+                    Request = request,
                     ResourceType = bindingContext.ModelType,
                     ResourceEdmType = edmTypeReference,
                 };

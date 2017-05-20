@@ -17,7 +17,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi OData properties to OData WebApi.
     /// </summary>
-    public class WebApiContext : IWebApiContext
+    internal class WebApiContext : IWebApiContext
     {
         /// <summary>
         /// The inner context wrapped by this instance.
@@ -45,14 +45,6 @@ namespace Microsoft.OData.WebApi.Adapters
         {
             get { return this.innerContext.ApplyClause; }
             set { this.innerContext.ApplyClause = value; }
-        }
-
-        /// <summary>
-        /// Get the type of an Http error.
-        /// </summary>
-        public Type HttpErrorType
-        {
-            get { return typeof(HttpError); }
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace Microsoft.OData.WebApi.Formatter.Serialization
         /// <param name="requestUri">The Uri</param>
         /// <param name="pageSize">The page size</param>
         /// <returns></returns>
-        public static Uri GetNextPageLink(Uri requestUri, int pageSize)
+        internal static Uri GetNextPageLink(Uri requestUri, int pageSize)
         {
             return HttpRequestMessageExtensions.GetNextPageLink(requestUri, pageSize);
         }

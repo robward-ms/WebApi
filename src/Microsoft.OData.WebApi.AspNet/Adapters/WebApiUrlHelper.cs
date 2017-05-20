@@ -14,12 +14,12 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi Url helper to OData WebApi.
     /// </summary>
-    public class WebApiUrlHelper : IWebApiUrlHelper
+    internal class WebApiUrlHelper : IWebApiUrlHelper
     {
         /// <summary>
         /// The inner helper wrapped by this instance.
         /// </summary>
-        private UrlHelper innerHelper;
+        internal UrlHelper innerHelper;
 
         /// <summary>
         /// Initializes a new instance of the WebApiUrlHelper class.

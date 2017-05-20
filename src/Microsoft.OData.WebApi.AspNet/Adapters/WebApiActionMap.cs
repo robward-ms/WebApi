@@ -11,7 +11,7 @@ namespace Microsoft.OData.WebApi.Adapters
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi action map to OData WebApi.
     /// </summary>
-    public class WebApiActionMap : IWebApiActionMap
+    internal class WebApiActionMap : IWebApiActionMap
     {
         /// <summary>
         /// The inner map wrapped by this instance.

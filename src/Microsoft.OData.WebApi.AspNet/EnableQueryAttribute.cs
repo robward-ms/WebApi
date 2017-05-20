@@ -584,7 +584,7 @@ namespace Microsoft.OData.WebApi
                 queryContext = GetODataQueryContext(response, request, actionDescriptor);
             }
 
-            ODataQueryOptions queryOptions = new ODataQueryOptions(queryContext, new WebApiRequestMessage(request));
+            ODataQueryOptions queryOptions = new ODataQueryOptions(queryContext, request);
 
             ValidateQuery(request, queryOptions);
 

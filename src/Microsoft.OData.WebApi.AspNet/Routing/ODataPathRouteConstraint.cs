@@ -137,11 +137,10 @@ namespace Microsoft.OData.WebApi.Routing
                         if (!values.ContainsKey(ODataRouteConstants.Controller))
                         {
                             // Select controller name using the routing conventions
-                            SelectControllerResult controllerResult = SelectControllerName(path, request);
-                            if (controllerResult != null)
+                            string controllerName = SelectControllerName(path, request);
+                            if (controllerName != null)
                             {
-                                values[ODataRouteConstants.Controller] = controllerResult.ControllerName;
-                                request.Properties["AttributeRouteData"] = controllerResult.Values;
+                                values[ODataRouteConstants.Controller] = controllerName;
                             }
                         }
 
@@ -166,14 +165,14 @@ namespace Microsoft.OData.WebApi.Routing
         /// <param name="path">The OData path of the request.</param>
         /// <param name="request">The request.</param>
         /// <returns>The name of the controller to dispatch to, or <c>null</c> if one cannot be resolved.</returns>
-        protected virtual SelectControllerResult SelectControllerName(ODataPath path, HttpRequestMessage request)
+        protected virtual string SelectControllerName(ODataPath path, HttpRequestMessage request)
         {
             foreach (IODataRoutingConvention routingConvention in request.GetRoutingConventions())
             {
-                SelectControllerResult controllerResult = routingConvention.SelectController(path, new WebApiRequestMessage(request));
-                if (controllerResult != null)
+                string controllerName = routingConvention.SelectController(path, request);
+                if (controllerName != null)
                 {
-                    return controllerResult;
+                    return controllerName;
                 }
             }
 
