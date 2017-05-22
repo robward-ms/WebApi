@@ -1,5 +1,5 @@
 ﻿using System.Web.Http;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi.Extensions;
 
 namespace WebApiPerformance.Service
 {

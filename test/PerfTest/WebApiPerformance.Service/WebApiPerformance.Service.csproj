@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -97,9 +98,9 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
-      <Project>{d23e28f1-ccd0-43e0-8c0d-36731ec91318}</Project>
-      <Name>System.Web.OData</Name>
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.WebApi.AspNet\Microsoft.OData.WebApi.AspNet.csproj">
+      <Project>{8424faa0-bdcc-4f38-b725-99d6204daded}</Project>
+      <Name>Microsoft.OData.WebApi.AspNet</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

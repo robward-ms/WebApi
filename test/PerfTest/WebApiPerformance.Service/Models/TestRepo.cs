@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
 
 namespace WebApiPerformance.Service
