@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi.Builder;
 
 namespace WebStack.QA.Test.OData.AutoExpand
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.OData;
+using Microsoft.OData.WebApi;
 using WebStack.QA.Test.OData.Common.Controllers;
 using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
 

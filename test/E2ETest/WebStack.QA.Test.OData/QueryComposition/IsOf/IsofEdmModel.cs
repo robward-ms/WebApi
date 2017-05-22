@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
 
 namespace WebStack.QA.Test.OData.QueryComposition.IsOf

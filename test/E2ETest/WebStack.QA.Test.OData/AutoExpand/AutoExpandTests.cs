@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi.Extensions;
 using Newtonsoft.Json.Linq;
 using Nuwa;
 using WebStack.QA.Common.XUnit;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.OData.Builder;
-using System.Web.OData.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
 
 namespace WebStack.QA.Test.OData.Singleton
 {

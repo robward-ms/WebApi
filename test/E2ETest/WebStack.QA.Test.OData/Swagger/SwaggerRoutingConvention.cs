@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 
 namespace WebStack.QA.Test.OData.Swagger
 {

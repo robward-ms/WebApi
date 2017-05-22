@@ -9,11 +9,11 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using System.Web.OData;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Newtonsoft.Json.Linq;
@@ -21,7 +21,7 @@ using Nuwa;
 using WebStack.QA.Test.OData.Common;
 using Xunit;
 using Xunit.Extensions;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace WebStack.QA.Test.OData.Swagger
 {

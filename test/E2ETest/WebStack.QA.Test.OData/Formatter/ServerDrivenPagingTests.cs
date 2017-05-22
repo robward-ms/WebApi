@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
-using System.Web.OData;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;

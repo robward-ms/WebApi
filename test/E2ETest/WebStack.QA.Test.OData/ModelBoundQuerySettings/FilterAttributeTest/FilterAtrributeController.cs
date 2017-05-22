@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.OData;
+using Microsoft.OData.WebApi;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
 {

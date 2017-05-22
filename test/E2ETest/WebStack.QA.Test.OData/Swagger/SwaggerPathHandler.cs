@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web.OData.Routing;
+using Microsoft.OData.WebApi.Routing;
 using Microsoft.OData.Edm;
 
 namespace WebStack.QA.Test.OData.Swagger

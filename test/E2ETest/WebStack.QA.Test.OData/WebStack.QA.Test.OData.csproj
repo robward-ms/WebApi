@@ -946,33 +946,6 @@
     <Compile Include="Singleton\SingletonEdmModel.cs" />
     <Compile Include="Singleton\SingletonTest.cs" />
     <Compile Include="Singleton\MonstersIncController.cs" />
-    <Compile Include="SxS2\ODataV3\Controllers\ProductsController.cs" />
-    <Compile Include="SxS2\ODataV3\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS2\ODataV3\Models\ModelBuilder.cs" />
-    <Compile Include="SxS2\ODataV3\Models\Product.cs" />
-    <Compile Include="SxS2\ODataV3\ODataV3WebApiConfig.cs" />
-    <Compile Include="SxS2\ODataV4\Controllers\ProductsV2Controller.cs" />
-    <Compile Include="SxS2\ODataV4\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS2\ODataV4\Models\ModelBuilder.cs" />
-    <Compile Include="SxS2\ODataV4\Models\Product.cs" />
-    <Compile Include="SxS2\ODataV4\ODataV4WebApiConfig.cs" />
-    <Compile Include="SxS2\SxSODataV3AndV4Test.cs" />
-    <Compile Include="SxS\ODataV3\Controllers\PartsController.cs" />
-    <Compile Include="SxS\ODataV3\Controllers\ProductsController.cs" />
-    <Compile Include="SxS\ODataV3\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS\ODataV3\Models\ModelBuilder.cs" />
-    <Compile Include="SxS\ODataV3\Models\Part.cs" />
-    <Compile Include="SxS\ODataV3\Models\Product.cs" />
-    <Compile Include="SxS\ODataV3\ODataV3WebApiConfig.cs" />
-    <Compile Include="SxS\ODataV4\Controllers\PartsV2Controller.cs" />
-    <Compile Include="SxS\ODataV4\Controllers\ProductsV2Controller.cs" />
-    <Compile Include="SxS\ODataV4\Extensions\EntitySetVersioningRoutingConvention.cs" />
-    <Compile Include="SxS\ODataV4\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS\ODataV4\Models\ModelBuilder.cs" />
-    <Compile Include="SxS\ODataV4\Models\Part.cs" />
-    <Compile Include="SxS\ODataV4\Models\Product.cs" />
-    <Compile Include="SxS\ODataV4\ODataV4WebApiConfig.cs" />
-    <Compile Include="SxS\SxSODataV3AndV4Test.cs" />
     <Compile Include="UnboundOperation\UnboundOperationController.cs" />
     <Compile Include="UnboundOperation\UnboundOperationDataModel.cs" />
     <Compile Include="UnboundOperation\UnboundOperationEdmModel.cs" />
@@ -1012,9 +985,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
-      <Project>{d23e28f1-ccd0-43e0-8c0d-36731ec91318}</Project>
-      <Name>System.Web.OData</Name>
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.WebApi.AspNet\Microsoft.OData.WebApi.AspNet.csproj">
+      <Project>{8424faa0-bdcc-4f38-b725-99d6204daded}</Project>
+      <Name>Microsoft.OData.WebApi.AspNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\WebStack.QA.Common.csproj">
       <Project>{a71a9be1-93a6-487e-98eb-9550c7401c12}</Project>

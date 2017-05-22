@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Http;
-using System.Web.OData;
-using System.Web.OData.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Routing;
 using Xunit;
 
 namespace WebStack.QA.Test.OData.BoundOperation

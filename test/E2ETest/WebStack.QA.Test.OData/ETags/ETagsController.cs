@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using System.Web.OData;
-using System.Web.OData.Query;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Query;
 
 namespace WebStack.QA.Test.OData.ETags
 {

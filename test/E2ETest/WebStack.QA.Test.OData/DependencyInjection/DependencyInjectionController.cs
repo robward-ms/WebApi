@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.OData;
+using Microsoft.OData.WebApi;
 
 namespace WebStack.QA.Test.OData.DependencyInjection
 {

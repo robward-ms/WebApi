@@ -5,9 +5,9 @@
     using System.Linq;
     using System.Net;
     using System.Web.Http;
-    using System.Web.OData;
-    using System.Web.OData.Query;
-    using System.Web.OData.Routing;
+    using Microsoft.OData.WebApi;
+    using Microsoft.OData.WebApi.Query;
+    using Microsoft.OData.WebApi.Routing;
 
     public class EmployeesController : ODataController
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.OData;
-using System.Web.OData.Extensions;
-using System.Web.OData.Routing;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Extensions;
+using Microsoft.OData.WebApi.Routing;
 
 namespace WebStack.QA.Test.OData.UriParserExtension
 {

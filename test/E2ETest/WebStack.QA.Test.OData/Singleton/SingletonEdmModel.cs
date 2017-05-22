@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web.OData;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Builder;
 using Microsoft.OData.Edm;
 
 namespace WebStack.QA.Test.OData.Singleton

@@ -13,8 +13,8 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Http.Hosting;
-using System.Web.OData;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Extensions;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Instancing;
 using WebStack.QA.Test.OData.ModelBuilder;
@@ -230,7 +230,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
                 // 'System.Security.Cryptography.X509Certificates.X509Certificate2' type is not a supported type. 
                 // Change to use 'System.DateTimeOffset' or ignore this type by calling 
                 // Ignore<System.Security.Cryptography.X509Certificates.X509Certificate2>() 
-                // on 'System.Web.OData.Builder.ODataModelBuilder'.
+                // on 'Microsoft.OData.WebApi.Builder.ODataModelBuilder'.
                 Assert.True(ae.Message.Contains("The type 'System.DateTime' of property")
                     || ae.Message.Contains("System.Windows.Forms.AxHost")
                     || ae.Message.Contains("Found more than one dynamic property container in type"),

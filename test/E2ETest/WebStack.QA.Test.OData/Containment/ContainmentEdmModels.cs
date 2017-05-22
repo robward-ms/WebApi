@@ -1,7 +1,7 @@
 ﻿using Microsoft.OData.Edm;
 using System;
 using System.Collections.Generic;
-using System.Web.OData.Builder;
+using Microsoft.OData.WebApi.Builder;
 
 namespace WebStack.QA.Test.OData.Containment
 {

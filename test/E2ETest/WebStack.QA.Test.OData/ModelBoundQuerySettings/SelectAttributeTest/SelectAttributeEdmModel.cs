@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Web.OData.Builder;
-using System.Web.OData.Query;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Query;
 using Microsoft.OData.Edm;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest

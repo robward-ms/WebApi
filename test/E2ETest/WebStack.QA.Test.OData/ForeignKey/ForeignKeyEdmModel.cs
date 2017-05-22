@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Web.OData.Builder;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi.Builder;
+using Microsoft.OData.WebApi.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 

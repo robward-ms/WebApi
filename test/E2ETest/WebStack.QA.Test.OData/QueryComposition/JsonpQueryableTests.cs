@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.OData.Extensions;
+using Microsoft.OData.WebApi.Extensions;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
 using Xunit;

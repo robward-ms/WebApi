@@ -5,11 +5,11 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
-using System.Web.OData.Routing;
-using System.Web.OData.Routing.Conventions;
+using Microsoft.OData.WebApi.Routing;
+using Microsoft.OData.WebApi.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using ODataPath = System.Web.OData.Routing.ODataPath;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
 namespace WebStack.QA.Test.OData.Common
 {
