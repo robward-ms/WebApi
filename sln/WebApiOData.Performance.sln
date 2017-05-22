@@ -18,6 +18,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.OData.WebApi.Shar
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\src\Microsoft.OData.WebApi.Shared\Microsoft.OData.WebApi.Shared.projitems*{8424faa0-bdcc-4f38-b725-99d6204daded}*SharedItemsImports = 4
 		..\src\Microsoft.OData.WebApi.Shared\Microsoft.OData.WebApi.Shared.projitems*{c56fbe13-ce70-49e7-8260-2b9ee82e962c}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
