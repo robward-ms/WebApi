@@ -10,7 +10,7 @@ namespace Microsoft.AspNet.OData
     /// <summary>
     /// The default container builder implementation based on the Microsoft dependency injection framework.
     /// </summary>
-    public class DefaultContainerBuilder : IContainerBuilder
+    public class DefaultContainerBuilder : Microsoft.OData.IContainerBuilder
     {
         private readonly IServiceCollection services = new ServiceCollection();
 
@@ -20,9 +20,9 @@ namespace Microsoft.AspNet.OData
         /// <param name="lifetime">The lifetime of the service to register.</param>
         /// <param name="serviceType">The type of the service to register.</param>
         /// <param name="implementationType">The implementation type of the service.</param>
-        /// <returns>The <see cref="IContainerBuilder"/> instance itself.</returns>
-        public virtual IContainerBuilder AddService(
-            ServiceLifetime lifetime,
+        /// <returns>The <see cref="Microsoft.OData.IContainerBuilder"/> instance itself.</returns>
+        public virtual Microsoft.OData.IContainerBuilder AddService(
+            Microsoft.OData.ServiceLifetime lifetime,
             Type serviceType,
             Type implementationType)
         {
@@ -48,9 +48,9 @@ namespace Microsoft.AspNet.OData
         /// <param name="lifetime">The lifetime of the service to register.</param>
         /// <param name="serviceType">The type of the service to register.</param>
         /// <param name="implementationFactory">The factory that creates the service.</param>
-        /// <returns>The <see cref="IContainerBuilder"/> instance itself.</returns>
-        public IContainerBuilder AddService(
-            ServiceLifetime lifetime,
+        /// <returns>The <see cref="Microsoft.OData.IContainerBuilder"/> instance itself.</returns>
+        public Microsoft.OData.IContainerBuilder AddService(
+            Microsoft.OData.ServiceLifetime lifetime,
             Type serviceType,
             Func<IServiceProvider, object> implementationFactory)
         {
@@ -81,13 +81,13 @@ namespace Microsoft.AspNet.OData
         }
 
         private static Microsoft.Extensions.DependencyInjection.ServiceLifetime TranslateServiceLifetime(
-            ServiceLifetime lifetime)
+            Microsoft.OData.ServiceLifetime lifetime)
         {
             switch (lifetime)
             {
-            case ServiceLifetime.Scoped:
+            case Microsoft.OData.ServiceLifetime.Scoped:
                 return Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped;
-            case ServiceLifetime.Singleton:
+            case Microsoft.OData.ServiceLifetime.Singleton:
                 return Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton;
             default:
                 return Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient;
