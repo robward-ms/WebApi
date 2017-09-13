@@ -402,11 +402,11 @@ namespace Microsoft.Test.AspNet.OData.PublicApi
                 }
                 foreach (object attribute in attributes)
                 {
-                    if (attribute is Runtime.InteropServices.MarshalAsAttribute)
+                    if (attribute is System.Runtime.InteropServices.MarshalAsAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Runtime.InteropServices.StructLayoutAttribute)
+                    if (attribute is System.Runtime.InteropServices.StructLayoutAttribute)
                     {
                         continue;
                     }
@@ -418,11 +418,11 @@ namespace Microsoft.Test.AspNet.OData.PublicApi
                     {
                         continue;
                     }
-                    if (attribute is Runtime.TargetedPatchingOptOutAttribute)
+                    if (attribute is System.Runtime.TargetedPatchingOptOutAttribute)
                     {
                         continue;
                     }
-                    if (attribute is Diagnostics.CodeAnalysis.SuppressMessageAttribute)
+                    if (attribute is System.Diagnostics.CodeAnalysis.SuppressMessageAttribute)
                     {
                         continue;
                     }
@@ -868,7 +868,7 @@ namespace Microsoft.Test.AspNet.OData.PublicApi
                 // only going into this method if there is a "Version=" present in the name.
                 AppendGenericTypeName(builder, parameterType);
             }
-            else if (name.StartsWith("System.Web.OData."))
+            else if (name.StartsWith("Microsoft.AspNet.OData."))
             {
                 builder.Append(parameterType.Name);
             }
