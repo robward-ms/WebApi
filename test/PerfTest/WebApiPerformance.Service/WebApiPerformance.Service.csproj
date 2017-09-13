@@ -38,10 +38,6 @@
           <HintPath>..\..\..\sln\packages\Microsoft.Spatial.7.2.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <ProjectReference Include="..\..\..\src\System.Web.OData\System.Web.OData.csproj">
-          <Project>{d23e28f1-ccd0-43e0-8c0d-36731ec91318}</Project>
-          <Name>System.Web.OData</Name>
-        </ProjectReference>
       </ItemGroup>
     </When>
     <When Condition=" '$(TestType)'=='Official' ">
@@ -127,6 +123,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.AspNet.OData\Microsoft.AspNet.OData.csproj">
+      <Project>{a6f9775d-f7e2-424e-8363-79644a73038f}</Project>
+      <Name>Microsoft.AspNet.OData</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
