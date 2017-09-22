@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Put the obj outputs in a folder to allow side-by-side projects -->
+    <BaseIntermediateOutputPath>.\obj\netstandard2x</BaseIntermediateOutputPath>
+
+    <!-- Let's generate our own assembly info, partially because VS does like like us changing BaseIntermediateOutputPath -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- A seperate build task scans the obj folder and adds these items. -->
+  <!-- For the first one, it adds a non-existent file since we specified GenerateAssemblyInfo as false. -->
+  <!-- For the last three, it adds those again. Remove them all to get a clean compile. -->
+  <Target Name="RemoveGeneratedAssemblyInfo" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Compile Remove="$(GeneratedAssemblyInfoFile)" />
+      <Compile Remove="$(GenerateCompiledExpressionsTempFilePathForEditing)" />
+      <Compile Remove="$(GenerateCompiledExpressionsTempFilePathForValidation)" />
+      <Compile Remove="$(GenerateCompiledExpressionsTempFilePathForTypeInfer)" />
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;ASPNETODATA;ASPNETWEBAPI;NOT_CLS_COMPLIANT;NETCORE2x;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;ASPNETODATA;ASPNETWEBAPI;NOT_CLS_COMPLIANT;RELEASE;NETCORE2x;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="..\Microsoft.AspNet.OData.Shared\Microsoft.AspNet.OData.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Microsoft.OData.Core" Version="7.3.1" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.3.1" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.3.1" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Microsoft.AspNet.OData.Shared\Common\CommonWebApiResources.resx">
+      <Link>Properties\CommonWebApiResources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Microsoft.AspNet.OData.Shared\Common\SRResources.resx">
+      <Link>Properties\SRResources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="..\Microsoft.AspNet.OData.Shared\Common\CommonWebApiResources.Designer.cs">
+      <Link>Properties\CommonWebApiResources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommonWebApiResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.OData.Shared\Common\SRResources.Designer.cs">
+      <Link>Properties\SRResources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SRResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
