@@ -3,15 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Interfaces;
-using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi OData properties to OData WebApi.
@@ -26,15 +22,10 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// Initializes a new instance of the WebApiContext class.
         /// </summary>
-        /// <param name="context">The inner context.</param>
-        public WebApiContext(HttpRequestMessageProperties context)
+        /// <param name="feature">The inner feature.</param>
+        public WebApiContext(IODataFeature feature)
         {
-            if (context == null)
-            {
-                throw Error.ArgumentNull("context");
-            }
-
-            this.innerContext = context;
+            this.innerContext = feature;
         }
 
         /// <summary>
@@ -77,7 +68,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public string RouteName
         {
-            get { return this.innerContext.RouteName; }
+            get { return string.Empty; }
         }
 
         /// <summary>

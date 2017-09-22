@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http.Controllers;
+using System.Reflection;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi action description to OData WebApi.
@@ -23,14 +24,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner action wrapped by this instance.
         /// </summary>
-        private HttpActionDescriptor innerDescriptor;
+        private ControllerActionDescriptor innerDescriptor;
 
         /// <summary>
         /// Initializes a new instance of the WebApiActionDescriptor class.
         /// </summary>
         /// <param name="actionDescriptor">The inner descriptor.</param>
-        public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor)
-            ////WebApiControllerDescriptor controllerDescriptor)
+        public WebApiActionDescriptor(ControllerActionDescriptor actionDescriptor)
         {
             if (actionDescriptor == null)
             {
@@ -38,17 +38,6 @@ namespace Microsoft.AspNet.OData.Adapters
             }
 
             this.innerDescriptor = actionDescriptor;
-
-            this.supportedHttpMethods = new List<ODataRequestMethod>();
-            foreach (System.Net.Http.HttpMethod method in actionDescriptor.SupportedHttpMethods)
-            {
-                bool ignoreCase = true;
-                ODataRequestMethod methodEnum = ODataRequestMethod.Unknown;
-                if (Enum.TryParse<ODataRequestMethod>(method.Method, ignoreCase, out methodEnum))
-                {
-                    this.supportedHttpMethods.Add(methodEnum);
-                }
-            }
         }
 
         /// <summary>
@@ -56,7 +45,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public string ControllerName
         {
-            get { return this.innerDescriptor.ControllerDescriptor.ControllerName; }
+            get { return this.innerDescriptor.ControllerName; }
         }
 
         /// <summary>
@@ -75,7 +64,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>A list of attributes of type T.</returns>
         public IEnumerable<T> GetCustomAttributes<T>(bool inherit) where T : Attribute
         {
-            return this.innerDescriptor.GetCustomAttributes<T>(inherit);
+            return this.innerDescriptor.ControllerTypeInfo.GetCustomAttributes<T>(inherit);
         }
 
         /// <summary>
@@ -83,7 +72,9 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public bool IsHttpMethodMatch(ODataRequestMethod method)
         {
-            return this.supportedHttpMethods.Contains(method);
+            // ControllerActionDescriptor no longer contains a SupportedHttpMethods
+            // property so return true, allowing all methods to potentially match.
+            return true;
         }
     }
 }

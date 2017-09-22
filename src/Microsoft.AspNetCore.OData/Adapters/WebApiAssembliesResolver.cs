@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using System.Web.Http.Dispatcher;
-using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 
 namespace Microsoft.AspNet.OData.Adapters
@@ -17,32 +15,29 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner resolver wrapped by this instance.
         /// </summary>
-        private IAssembliesResolver innerResolver;
+        private IAssemblyProvider innerProvider;
 
         /// <summary>
         /// Initializes a new instance of the WebApiAssembliesResolver class.
         /// </summary>
-        /// <param name="resolver">The inner resolver.</param>
-        public WebApiAssembliesResolver(IAssembliesResolver resolver)
+        /// <param name="provider">The inner provider.</param>
+        public WebApiAssembliesResolver(IAssemblyProvider provider)
         {
-            if (resolver == null)
-            {
-                throw Error.ArgumentNull("resolver");
-            }
-
-            this.innerResolver = resolver;
+            this.InnerProvider = provider;
         }
+        
+        /// <summary>
+        /// The inner resolver wrapped by this instance.
+        /// </summary>
+        public IAssemblyProvider InnerProvider { get; private set; }
 
         /// <summary>
         /// Returns a list of assemblies available for the application. 
         /// </summary>
         /// <returns>A list of assemblies available for the application. </returns>
-        public IEnumerable<Assembly> Assemblies
+        public IEnumerable<Assembly> GetAssemblies()
         {
-            get
-            {
-                return this.innerResolver.GetAssemblies();
-            }
+            return this.InnerProvider.CandidateAssemblies;
         }
     }
 }
