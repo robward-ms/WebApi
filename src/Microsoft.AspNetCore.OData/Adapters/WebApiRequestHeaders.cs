@@ -2,11 +2,13 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Net.Http.Headers;
+using System.Linq;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi request headers to OData WebApi.
@@ -16,13 +18,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner collection wrapped by this instance.
         /// </summary>
-        private HttpRequestHeaders innerCollection;
+        private IHeaderDictionary innerCollection;
 
         /// <summary>
         /// Initializes a new instance of the WebApiRequestMessage class.
         /// </summary>
         /// <param name="headers">The inner collection.</param>
-        public WebApiRequestHeaders(HttpRequestHeaders headers)
+        public WebApiRequestHeaders(IHeaderDictionary headers)
         {
             if (headers == null)
             {
@@ -40,7 +42,11 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>true is the specified header name and values are stored in the collection; otherwise false.</returns>
         public bool TryGetValues(string key, out IEnumerable<string> values)
         {
-            return this.innerCollection.TryGetValues(key, out values);
+            StringValues stringValues;
+            bool found = this.innerCollection.TryGetValue(key, out stringValues);
+
+            values = stringValues.AsEnumerable();
+            return found;
         }
     }
 }

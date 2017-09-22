@@ -4,19 +4,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Routing;
-using Microsoft.AspNet.OData.Batch;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.WebApi;
+using Microsoft.OData.WebApi.Formatter;
+using Microsoft.OData.WebApi.Formatter.Deserialization;
+using Microsoft.OData.WebApi.Interfaces;
+using Microsoft.OData.WebApi.Routing;
+using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi request message to OData WebApi.
@@ -26,13 +37,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner request wrapped by this instance.
         /// </summary>
-        internal HttpRequestMessage innerRequest;
+        internal HttpRequest innerRequest;
 
         /// <summary>
         /// Initializes a new instance of the WebApiRequestMessage class.
         /// </summary>
         /// <param name="request">The inner request.</param>
-        public WebApiRequestMessage(HttpRequestMessage request)
+        public WebApiRequestMessage(HttpRequest request)
         {
             if (request == null)
             {
@@ -41,22 +52,18 @@ namespace Microsoft.AspNet.OData.Adapters
 
             this.innerRequest = request;
 
-            HttpRequestMessageProperties context = request.ODataProperties();
-            if (context != null)
+
+            IODataFeaure feature = request.ODataFeature();
+            if (feature != null)
             {
-                this.Context = new WebApiContext(context);
+                this.Context = new WebApiContext(feature);
+                this.Options = new WebApiOptions(feature);
             }
 
-            UrlHelper uriHelper = request.GetUrlHelper();
+            IUrlHelper uriHelper = request.GetUrlHelper();
             if (uriHelper != null)
             {
                 this.UrlHelper = new WebApiUrlHelper(uriHelper);
-            }
-
-            HttpConfiguration configuration = request.GetConfiguration();
-            if (configuration != null)
-            {
-                this.Options = new WebApiOptions(configuration);
             }
         }
 
@@ -71,7 +78,8 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public bool IsCountRequest()
         {
-            return ODataCountMediaTypeMapping.IsCountRequest(this.innerRequest);
+            ODataPath path = this.innerRequest.ODataFeature().Path;
+            return path != null && path.Segments.LastOrDefault() is CountSegment;
         }
 
         /// <summary>
@@ -104,7 +112,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public IServiceProvider RequestContainer
         {
-            get { return this.innerRequest.GetRequestContainer(); }
+            get { return this.innerRequest.HttpContext.RequestServices; }
         }
 
         /// <summary>
@@ -112,7 +120,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public Uri RequestUri
         {
-            get { return this.innerRequest.RequestUri; }
+            get { return new Uri(this.innerRequest.GetEncodedUrl()); }
         }
 
         /// <summary>
@@ -121,12 +129,12 @@ namespace Microsoft.AspNet.OData.Adapters
         public IWebApiUrlHelper UrlHelper { get; set; }
 
         /// <summary>
-        /// Gets the deserializer provider associated with the request.
+        /// get the deserializer provider associated with the request.
         /// </summary>
         /// <returns></returns>
-        public ODataDeserializerProvider DeserializerProvider
+        public ODataDeserializerProvider GetDeserializerProvider()
         {
-            get { return this.innerRequest.GetDeserializerProvider(); }
+            return this.innerRequest.HttpContext.RequestServices.GetRequiredService<ODataDeserializerProvider>();
         }
 
         /// <summary>
@@ -146,13 +154,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated ETag string.</returns>
         public string CreateETag(IDictionary<string, object> properties)
         {
-            HttpConfiguration configuration = this.innerRequest.GetConfiguration();
-            if (configuration == null)
+            IODataFeature feature = this.innerRequest.ODataFeature();
+            if (feature == null)
             {
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            return configuration.GetETagHandler().CreateETag(properties)?.ToString();
+            return feature.GetETagHandler().CreateETag(properties)?.ToString();
         }
 
         /// <summary>
@@ -161,7 +169,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public IDictionary<string, string> ODataContentIdMapping
         {
-            get { return this.innerRequest.GetODataContentIdMapping(); }
+            get { return null; }
         }
 
         /// <summary>
@@ -170,21 +178,19 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public IODataPathHandler PathHandler
         {
-            get { return this.innerRequest.GetPathHandler(); }
+            get { return this.innerRequest.HttpContext.ODataPathHandler(); }
         }
 
         /// <summary>
         /// Gets the OData query parameters from the query.
         /// </summary>
         /// <returns></returns>
-        public IDictionary<string, string> ODataQueryParameters
+        public IEnumerable<KeyValuePair<string, string>> ODataQueryParameters
         {
             get
             {
-                return this.innerRequest.GetQueryNameValuePairs()
-                    .Where(p => p.Key.StartsWith("$", StringComparison.Ordinal) ||
-                    p.Key.StartsWith("@", StringComparison.Ordinal))
-                    .ToDictionary(p => p.Key, p => p.Value);
+                IQueryCollection colleciton = this.innerRequest.Query;
+                return colleciton.SelectMany(kvp => kvp.Value, (kvp, value) => new KeyValuePair<string, string>(kvp.Key, value));
             }
         }
 
@@ -194,7 +200,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public ODataMessageReaderSettings ReaderSettings
         {
-            get { return this.innerRequest.GetReaderSettings(); }
+            get { return this.innerRequest.HttpContext.GetReaderSettings(); }
         }
 
         /// <summary>
@@ -203,7 +209,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public IDictionary<string, object> RouteData
         {
-            get { return this.innerRequest.GetRouteData().Values; }
+            get { return this.innerRequest.HttpContext.GetRouteData().Values; }
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.UriParser;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi Url helper to OData WebApi.
@@ -41,8 +41,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(IList<ODataPathSegment> segments)
         {
-            //return this.innerHelper.CreateODataLink(segments);
-            return null;
+            return this.innerHelper.CreateODataLink(segments);
         }
 
         /// <summary>
@@ -52,8 +51,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(params ODataPathSegment[] segments)
         {
-            //return this.innerHelper.CreateODataLink(segments);
-            return null;
+            return this.innerHelper.CreateODataLink(segments);
         }
 
         /// <summary>
@@ -65,8 +63,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(string routeName, IODataPathHandler pathHandler, IList<ODataPathSegment> segments)
         {
-            //return this.innerHelper.CreateODataLink(routeName, pathHandler, segments);
-            return null;
+            return this.innerHelper.CreateODataLink(routeName, pathHandler, segments);
         }
     }
 }

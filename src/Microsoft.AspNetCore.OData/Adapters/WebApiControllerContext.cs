@@ -2,13 +2,13 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi controller context to OData WebApi.
@@ -18,24 +18,24 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner context wrapped by this instance.
         /// </summary>
-        private HttpControllerContext innerContext;
+        private RouteContext innerContext;
 
         /// <summary>
         /// Initializes a new instance of the WebApiControllerContext class.
         /// </summary>
-        /// <param name="controllerContext">The inner context.</param>
+        /// <param name="routeContext">The inner context.</param>
         /// <param name="controllerResult">The selected controller result.</param>
-        public WebApiControllerContext(HttpControllerContext controllerContext, SelectControllerResult controllerResult)
+        public WebApiControllerContext(RouteContext routeContext, SelectControllerResult controllerResult)
         {
-            if (controllerContext == null)
+            if (routeContext == null)
             {
-                throw Error.ArgumentNull("controllerContext");
+                throw Error.ArgumentNull("routeContext");
             }
 
-            this.innerContext = controllerContext;
+            this.innerContext = routeContext;
             this.ControllerResult = controllerResult;
 
-            HttpRequestMessage request = controllerContext.Request;
+            HttpRequest request = routeContext.HttpContext.Request;
             if (request != null)
             {
                 this.Request = new WebApiRequestMessage(request);

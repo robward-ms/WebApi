@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Web.Http;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.OData;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi options to OData WebApi.
@@ -17,16 +15,16 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// Initializes a new instance of the WebApiOptions class.
         /// </summary>
-        /// <param name="configuration">The inner configuration.</param>
-        public WebApiOptions(HttpConfiguration configuration)
+        /// <param name="feature">The inner feature.</param>
+        public WebApiOptions(IODataFeature feature)
         {
-            if (configuration == null)
+            if (feature != null)
             {
                 throw Error.ArgumentNull("configuration");
             }
 
-            this.NullDynamicPropertyIsEnabled = configuration.HasEnabledNullDynamicProperty();
-            this.UrlKeyDelimiter = configuration.GetUrlKeyDelimiter();
+            this.NullDynamicPropertyIsEnabled = feature.IsNullDynamicPropertyEnabled;
+            this.UrlKeyDelimiter = feature.UrlKeyDelimiter;
         }
 
         /// <summary>

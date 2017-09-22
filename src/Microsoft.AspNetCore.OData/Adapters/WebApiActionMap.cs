@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace Microsoft.AspNet.OData.Adapters
+namespace Microsoft.AspNetCore.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi action map to OData WebApi.
@@ -16,13 +17,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner map wrapped by this instance.
         /// </summary>
-        private ILookup<string, HttpActionDescriptor> innerMap;
+        private IEnumerable<ControllerActionDescriptor> innerMap;
 
         /// <summary>
         /// Initializes a new instance of the WebApiActionMap class.
         /// </summary>
         /// <param name="actionMap">The inner map.</param>
-        public WebApiActionMap(ILookup<string, HttpActionDescriptor> actionMap)
+        public WebApiActionMap(IEnumerable<ControllerActionDescriptor> actionMap)
         {
             if (actionMap == null)
             {
@@ -39,7 +40,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>True if the key exist; false otherwise.</returns>
         public bool Contains(string name)
         {
-            return this.innerMap.Contains(name);
+            return this.innerMap.Any(a => a.ActionName == name);
         }
     }
 }
