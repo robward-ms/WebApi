@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using Microsoft.AspNet.OData.Interfaces;
 
 namespace Microsoft.AspNet.OData
@@ -10,7 +9,8 @@ namespace Microsoft.AspNet.OData
     {
         public static IWebApiAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
         {
-            throw new NotImplementedException();
+            //IAssembliesResolver resolver = context.RequestContainer.GetRequiredService<IAssembliesResolver>();
+            return null; // new WebApiAssembliesResolver(resolver);
         }
     }
 }

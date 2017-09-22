@@ -19,7 +19,13 @@ namespace Microsoft.AspNet.OData.Query.Expressions
         /// <param name="requestContainer">The request container.</param>
         protected ExpressionBinderBase(IServiceProvider requestContainer)
         {
-            throw new NotImplementedException();
+            Contract.Assert(requestContainer != null);
+
+            QuerySettings = requestContainer.GetRequiredService<ODataQuerySettings>();
+            Model = requestContainer.GetRequiredService<IEdmModel>();
+
+            //IAssembliesResolver resolver = requestContainer.GetRequiredService<IAssembliesResolver>();
+            //AssembliesResolver = new WebApiAssembliesResolver(resolver);
         }
     }
 }

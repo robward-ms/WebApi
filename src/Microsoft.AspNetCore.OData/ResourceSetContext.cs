@@ -15,6 +15,7 @@ namespace Microsoft.AspNet.OData
     /// </summary>
     public partial class ResourceSetContext
     {
+        private HttpRequestMessage _request;
         private IUrlHelper _urlHelper;
 
         /// <summary>
@@ -22,13 +23,11 @@ namespace Microsoft.AspNet.OData
         /// </summary>
         public HttpRequest Request
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return _request; }
             set
             {
-                throw new NotImplementedException();
+                _request = value;
+                //InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
             }
         }
 
@@ -51,10 +50,7 @@ namespace Microsoft.AspNet.OData
         /// </summary>
         public IEdmModel EdmModel
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return null; } // Request.GetModel(); }
         }
 
         /// <summary>

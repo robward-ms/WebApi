@@ -42,7 +42,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(IList<ODataPathSegment> segments)
         {
-            throw new NotImplementedException();
+            return this.innerHelper.CreateODataLink(segments);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(params ODataPathSegment[] segments)
         {
-            throw new NotImplementedException();
+            return this.innerHelper.CreateODataLink(segments);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(string routeName, IODataPathHandler pathHandler, IList<ODataPathSegment> segments)
         {
-            throw new NotImplementedException();
+            return this.innerHelper.CreateODataLink(routeName, pathHandler, segments);
         }
     }
 }

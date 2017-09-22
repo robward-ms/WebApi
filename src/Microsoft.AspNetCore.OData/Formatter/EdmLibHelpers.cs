@@ -7,6 +7,6 @@ namespace Microsoft.AspNet.OData.Formatter
 {
     internal static partial class EdmLibHelpers
     {
-        private static readonly IWebApiAssembliesResolver _defaultAssemblyResolver = null;
+        private static readonly IWebApiAssembliesResolver _defaultAssemblyResolver = null; //  new WebApiAssembliesResolver(new DefaultAssembliesResolver());
     }
 }
