@@ -27,7 +27,7 @@ namespace Microsoft.AspNet.OData
         /// Initializes a new instance of the <see cref="DefaultContainerBuilder"/> class.
         /// </summary>
         /// <param name="services">IServiceCollection collection in which to add services.</param>
-        public DefaultContainerBuilder(IServiceCollection services)
+        internal DefaultContainerBuilder(IServiceCollection services)
         {
             if (services == null)
             {

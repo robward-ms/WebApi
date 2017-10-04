@@ -84,9 +84,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
             services.AddSingleton<IODataPathTemplateHandler, DefaultODataPathHandler>();
             services.AddSingleton<IActionSelector, ODataActionSelector>();
 
-            // Add an action context accessor in order to create UrlHelpers outside of of controller
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
             // Assembly
             //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
 

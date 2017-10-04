@@ -17,7 +17,6 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
     public partial class ODataSerializerContext
     {
         private HttpRequest _request;
-        private IUrlHelper _urlHelper;
 
         /// <summary>
         /// Gets or sets the HTTP Request whose response is being serialized.
@@ -30,21 +29,23 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
             {
                 _request = value;
                 InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
+                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request) : null;
             }
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="UrlHelper"/> to use for generating OData links.
+        /// Clone this instance of <see cref="ODataSerializerContext"/> from an existing instance.
         /// </summary>
-        public IUrlHelper Url
+        /// <param name="context"></param>
+        private void CopyProperties(ODataSerializerContext context)
         {
-            get { return _urlHelper; }
-
-            set
-            {
-                _urlHelper = value;
-                InternalUrl = _urlHelper != null ? new WebApiUrlHelper(_urlHelper) : null;
-            }
+            Request = context.Request;
+            Model = context.Model;
+            Path = context.Path;
+            RootElementName = context.RootElementName;
+            SkipExpensiveAvailabilityChecks = context.SkipExpensiveAvailabilityChecks;
+            MetadataLevel = context.MetadataLevel;
+            Items = context.Items;
         }
     }
 }

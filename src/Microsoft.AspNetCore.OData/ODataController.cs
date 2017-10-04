@@ -59,16 +59,16 @@ namespace Microsoft.AspNet.OData
         /// Get the Edm model associated with the controller.
         /// </summary>
         /// <returns></returns>
-        protected IEdmModel GetModel()
-        {
-            IEdmModel model = GetModel();
-            if (model == null)
-            {
-                throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
-            }
+        //protected IEdmModel GetModel()
+        //{
+        //    IEdmModel model = GetModel();
+        //    if (model == null)
+        //    {
+        //        throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
+        //    }
 
-            model.SetEdmxVersion(_defaultEdmxVersion);
-            return model;
-        }
+        //    model.SetEdmxVersion(_defaultEdmxVersion);
+        //    return model;
+        //}
     }
 }

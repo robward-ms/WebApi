@@ -116,7 +116,7 @@ namespace Microsoft.AspNet.OData.Results
                 }
             }
 
-            string odataLink = resourceContext.Url.CreateODataLink(odataPath);
+            string odataLink = resourceContext.InternalUrlHelper.CreateODataLink(odataPath);
             return odataLink == null ? null : new Uri(odataLink);
         }
 
@@ -144,7 +144,6 @@ namespace Microsoft.AspNet.OData.Results
             {
                 NavigationSource = navigationSource,
                 Model = model,
-                Url = request.UrlHelper(), // TODO: ?? new UrlHelper(request),
                 MetadataLevel = ODataMetadataLevel.FullMetadata, // Used internally to always calculate the links.
                 Request = request,
                 Path = path

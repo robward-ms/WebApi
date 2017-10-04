@@ -48,12 +48,6 @@ namespace Microsoft.AspNet.OData.Adapters
                 this.Context = new WebApiContext(context);
             }
 
-            UrlHelper uriHelper = request.GetUrlHelper();
-            if (uriHelper != null)
-            {
-                this.UrlHelper = new WebApiUrlHelper(uriHelper);
-            }
-
             HttpConfiguration configuration = request.GetConfiguration();
             if (configuration != null)
             {
@@ -113,11 +107,6 @@ namespace Microsoft.AspNet.OData.Adapters
         {
             get { return this.innerRequest.RequestUri; }
         }
-
-        /// <summary>
-        /// Gets or sets the <see cref="IWebApiUrlHelper"/> to use for generating OData links.
-        /// </summary>
-        public IWebApiUrlHelper UrlHelper { get; set; }
 
         /// <summary>
         /// Gets the deserializer provider associated with the request.
