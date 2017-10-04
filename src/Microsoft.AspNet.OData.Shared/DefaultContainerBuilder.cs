@@ -13,7 +13,29 @@ namespace Microsoft.AspNet.OData
     /// </summary>
     public class DefaultContainerBuilder : IContainerBuilder
     {
-        private readonly IServiceCollection services = new ServiceCollection();
+        private IServiceCollection services;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultContainerBuilder"/> class.
+        /// </summary>
+        public DefaultContainerBuilder()
+            : this(new ServiceCollection())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultContainerBuilder"/> class.
+        /// </summary>
+        /// <param name="services">IServiceCollection collection in which to add services.</param>
+        public DefaultContainerBuilder(IServiceCollection services)
+        {
+            if (services == null)
+            {
+                throw Error.ArgumentNull("services");
+            }
+
+            this.services = services;
+        }
 
         /// <summary>
         /// Adds a service of <paramref name="serviceType"/> with an <paramref name="implementationType"/>.

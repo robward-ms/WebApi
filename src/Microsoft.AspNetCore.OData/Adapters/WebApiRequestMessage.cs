@@ -11,21 +11,14 @@ using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OData;
-using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.WebApi;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Formatter.Deserialization;
-using Microsoft.OData.WebApi.Interfaces;
-using Microsoft.OData.WebApi.Routing;
-using ODataPath = Microsoft.OData.WebApi.Routing.ODataPath;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNetCore.OData.Adapters
 {
@@ -52,15 +45,19 @@ namespace Microsoft.AspNetCore.OData.Adapters
 
             this.innerRequest = request;
 
-
-            IODataFeaure feature = request.ODataFeature();
+            IODataFeature feature = request.ODataFeature();
             if (feature != null)
             {
                 this.Context = new WebApiContext(feature);
-                this.Options = new WebApiOptions(feature);
             }
 
-            IUrlHelper uriHelper = request.GetUrlHelper();
+            ODataOptions options = request.HttpContext.ODataOptions();
+            if (options != null)
+            {
+                this.Options = new WebApiOptions(options);
+            }
+
+            IUrlHelper uriHelper = request.HttpContext.UrlHelper();
             if (uriHelper != null)
             {
                 this.UrlHelper = new WebApiUrlHelper(uriHelper);
@@ -132,9 +129,12 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// get the deserializer provider associated with the request.
         /// </summary>
         /// <returns></returns>
-        public ODataDeserializerProvider GetDeserializerProvider()
+        public ODataDeserializerProvider DeserializerProvider
         {
-            return this.innerRequest.HttpContext.RequestServices.GetRequiredService<ODataDeserializerProvider>();
+            get
+            {
+                return this.innerRequest.HttpContext.RequestServices.GetRequiredService<ODataDeserializerProvider>();
+            }
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            return feature.GetETagHandler().CreateETag(properties)?.ToString();
+            return this.innerRequest.ETagHandler().CreateETag(properties)?.ToString();
         }
 
         /// <summary>
@@ -185,12 +185,15 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// Gets the OData query parameters from the query.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<KeyValuePair<string, string>> ODataQueryParameters
+        public IDictionary<string, string> ODataQueryParameters
         {
             get
             {
-                IQueryCollection colleciton = this.innerRequest.Query;
-                return colleciton.SelectMany(kvp => kvp.Value, (kvp, value) => new KeyValuePair<string, string>(kvp.Key, value));
+                return this.innerRequest.Query
+                    .Where(kvp => kvp.Key.StartsWith("$", StringComparison.Ordinal) ||
+                        kvp.Key.StartsWith("@", StringComparison.Ordinal))
+                    .SelectMany(kvp => kvp.Value, (kvp, value) => new KeyValuePair<string, string>(kvp.Key, value))
+                    .ToDictionary(p => p.Key, p => p.Value);
             }
         }
 

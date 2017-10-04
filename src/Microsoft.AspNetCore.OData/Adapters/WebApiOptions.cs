@@ -16,15 +16,15 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// Initializes a new instance of the WebApiOptions class.
         /// </summary>
         /// <param name="feature">The inner feature.</param>
-        public WebApiOptions(IODataFeature feature)
+        public WebApiOptions(ODataOptions options)
         {
-            if (feature != null)
+            if (options == null)
             {
-                throw Error.ArgumentNull("configuration");
+                throw Error.ArgumentNull("options");
             }
 
-            this.NullDynamicPropertyIsEnabled = feature.IsNullDynamicPropertyEnabled;
-            this.UrlKeyDelimiter = feature.UrlKeyDelimiter;
+            this.NullDynamicPropertyIsEnabled = options.NullDynamicPropertyIsEnabled;
+            this.UrlKeyDelimiter = options.UrlKeyDelimiter;
         }
 
         /// <summary>

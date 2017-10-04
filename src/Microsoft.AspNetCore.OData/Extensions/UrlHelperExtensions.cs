@@ -5,17 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Properties;
-using Microsoft.OData.WebApi.Routing;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Routing;
+using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace Microsoft.AspNetCore.OData.Extensions
 {
     /// <summary>
-    /// Provides extension methods for the <see cref="IUrlHelper"/> class.
+    /// Provides extension methods for the <see cref="UrlHelper"/> class.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class UrlHelperExtensions
@@ -39,23 +40,22 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// <returns>The generated OData link.</returns>
         public static string CreateODataLink(this IUrlHelper urlHelper, IList<ODataPathSegment> segments)
         {
-            //if (urlHelper == null)
-            //{
-            //    throw Error.ArgumentNull("urlHelper");
-            //}
+            if (urlHelper == null)
+            {
+                throw Error.ArgumentNull("urlHelper");
+            }
 
-            //HttpRequestMessage request = urlHelper.Request;
-            //Contract.Assert(request != null);
+            HttpRequest request = urlHelper.ActionContext.HttpContext.Request;
+            Contract.Assert(request != null);
 
-            //string routeName = request.ODataProperties().RouteName;
-            //if (String.IsNullOrEmpty(routeName))
-            //{
-            //    throw Error.InvalidOperation(SRResources.RequestMustHaveODataRouteName);
-            //}
+            string routeName = request.ODataFeature().RouteName;
+            if (String.IsNullOrEmpty(routeName))
+            {
+                throw Error.InvalidOperation(SRResources.RequestMustHaveODataRouteName);
+            }
 
-            //IODataPathHandler pathHandler = request.ODataProperties().PathHandler;
-            //return CreateODataLink(urlHelper, routeName, pathHandler, segments);
-            return "http://service-root/";
+            IODataPathHandler pathHandler = request.GetPathHandler();
+            return CreateODataLink(urlHelper, routeName, pathHandler, segments);
         }
 
         /// <summary>
@@ -69,21 +69,20 @@ namespace Microsoft.AspNetCore.OData.Extensions
         public static string CreateODataLink(this IUrlHelper urlHelper, string routeName, IODataPathHandler pathHandler,
             IList<ODataPathSegment> segments)
         {
-            //if (urlHelper == null)
-            //{
-            //    throw Error.ArgumentNull("urlHelper");
-            //}
+            if (urlHelper == null)
+            {
+                throw Error.ArgumentNull("urlHelper");
+            }
 
-            //if (pathHandler == null)
-            //{
-            //    throw Error.ArgumentNull("pathHandler");
-            //}
+            if (pathHandler == null)
+            {
+                throw Error.ArgumentNull("pathHandler");
+            }
 
-            //string odataPath = pathHandler.Link(new ODataPath(segments));
-            //return urlHelper.Link(
-            //     routeName,
-            //     new HttpRouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
-            return "http://service-root/";
+            string odataPath = pathHandler.Link(new ODataPath(segments));
+            return urlHelper.Link(
+                routeName,
+                new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.OData.Extensions;
 
 namespace Microsoft.AspNet.OData.Query.Expressions
 {
@@ -23,9 +24,7 @@ namespace Microsoft.AspNet.OData.Query.Expressions
 
             QuerySettings = requestContainer.GetRequiredService<ODataQuerySettings>();
             Model = requestContainer.GetRequiredService<IEdmModel>();
-
-            //IAssembliesResolver resolver = requestContainer.GetRequiredService<IAssembliesResolver>();
-            //AssembliesResolver = new WebApiAssembliesResolver(resolver);
+            AssembliesResolver = requestContainer.GetWebApiAssembliesResolver();
         }
     }
 }

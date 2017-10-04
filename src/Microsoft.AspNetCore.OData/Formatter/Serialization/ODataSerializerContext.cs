@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Adapters;
 
 namespace Microsoft.AspNet.OData.Formatter.Serialization
 {
@@ -15,20 +16,20 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
     /// </summary>
     public partial class ODataSerializerContext
     {
-        private HttpRequestMessage _request;
+        private HttpRequest _request;
         private IUrlHelper _urlHelper;
 
         /// <summary>
         /// Gets or sets the HTTP Request whose response is being serialized.
         /// </summary>
-        public HttpRequestMessage Request
+        public HttpRequest Request
         {
             get { return _request; }
 
             set
             {
                 _request = value;
-                //InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
+                InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
             }
         }
 

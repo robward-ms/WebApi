@@ -2,19 +2,23 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.OData.Abstracts;
 using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.OData;
-using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Formatter.Deserialization;
-using Microsoft.OData.WebApi.Formatter.Serialization;
-using Microsoft.OData.WebApi.Routing;
 
 namespace Microsoft.AspNetCore.OData.Extensions
 {
@@ -27,69 +31,110 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// Adds essential OData services to the specified <see cref="IServiceCollection" />.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
-        /// <returns>An <see cref="IODataCoreBuilder"/> that can be used to further configure the OData services.</returns>
-        public static IODataCoreBuilder AddOData(this IServiceCollection services)
+        /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the OData services.</returns>
+        public static IODataBuilder AddOData(this IServiceCollection services)
         {
-            if (services == null)
-            {
-                throw Error.ArgumentNull(nameof(services));
-            }
-
-            // add the default OData lib services into service collection.
-            IContainerBuilder builder = new DefaultContainerBuilder(services);
-            builder.AddDefaultODataServices();
-
-            // Options
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<ODataOptions>, ODataOptionsSetup>());
-
-            // SerializerProvider
-            services.AddSingleton<IODataSerializerProvider, DefaultIoDataSerializerProvider>();
-
-            // Deserializer provider
-            services.AddSingleton<ODataDeserializerProvider, DefaultODataDeserializerProvider>();
-
-            services.AddMvcCore(options =>
-            {
-                options.InputFormatters.Insert(0, new ModernInputFormatter());
-
-                foreach (var outputFormatter in ODataOutputFormatters.Create())
-                {
-                    options.OutputFormatters.Insert(0, outputFormatter);
-                }
-                //options.OutputFormatters.Insert(0, new ModernOutputFormatter());
-            });
-
-            services.AddSingleton<IActionSelector, ODataActionSelector>();
-            services.AddSingleton<IETagHandler, DefaultODataETagHandler>();
-
-            // Routing
-            services.AddSingleton<IODataPathHandler, DefaultODataPathHandler>();
-            services.AddSingleton<IODataPathTemplateHandler, DefaultODataPathHandler>();
-
-            // Assembly
-            services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
-
-            // Serializers
-            AddDefaultSerializers(services);
-
-            // Deserializers
-            AddDefaultDeserializers(services);
-
-            return new ODataCoreBuilder(services);
+            return AddOData(services, new DefaultContainerBuilder(services));
         }
 
         /// <summary>
         /// Adds essential OData services to the specified <see cref="IServiceCollection" />.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
-        /// <param name="setupAction">An <see cref="Action{MvcOptions}"/> to configure the provided <see cref="ODataOptions"/>.</param>
-        /// <returns>An <see cref="IODataCoreBuilder"/> that can be used to further configure the MVC services.</returns>
-        public static IODataCoreBuilder AddOData(this IServiceCollection services,
-            Action<ODataOptions> setupAction)
+        /// <param name="builder">The IContainerBuilder to use.</param>
+        /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the OData services.</returns>
+        public static IODataBuilder AddOData(this IServiceCollection services, IContainerBuilder builder)
         {
             if (services == null)
             {
-                throw new ArgumentNullException(nameof(services));
+                throw Error.ArgumentNull(nameof(services));
+            }
+
+            // Setup OData dependency injection.
+            builder.AddDefaultODataServices();
+            builder.AddDefaultWebApiServices();
+
+            // Add OData options.
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<ODataOptions>, ODataOptionsSetup>());
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<DefaultQuerySettings>, DefaultQuerySettingsSetup>());
+
+            // Configure MvcCore to use formatters.
+            services.AddMvcCore(options =>
+            {
+                // Add OData input formatters at index 0, which overrides the built-in json and xml formatters.
+                foreach (ODataInputFormatter inputFormatter in ODataInputFormatterFactory.Create())
+                {
+                    options.InputFormatters.Insert(0, inputFormatter);
+                }
+
+                //options.FormatterMappings.SetMediaTypeMappingForFormat("pdf", "application/pdf");
+
+
+                // Add OData output formatters at index 0, which overrides the built-in json and xml formatters.
+                foreach (ODataOutputFormatter outputFormatter in ODataOutputFormatterFactory.Create())
+                {
+                    options.OutputFormatters.Insert(0, outputFormatter);
+                }
+            });
+
+            // Add ETag handler.
+            services.AddSingleton<IETagHandler, DefaultODataETagHandler>();
+
+            // Routing
+            services.AddSingleton<IODataPathTemplateHandler, DefaultODataPathHandler>();
+            services.AddSingleton<IActionSelector, ODataActionSelector>();
+
+            // Add an action context accessor in order to create UrlHelpers outside of of controller
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            // Assembly
+            //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
+
+            return new ODataBuilder(services);
+        }
+
+        /// <summary>
+        /// Enables query support for actions with an <see cref="IQueryable" /> or <see cref="IQueryable{T}" /> return
+        /// type. To avoid processing unexpected or malicious queries, use the validation settings on
+        /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
+        /// http://go.microsoft.com/fwlink/?LinkId=279712.
+        /// </summary>
+        /// <param name="configuration">The server configuration.</param>
+        public static IServiceCollection AddODataQueryFilter(this IServiceCollection services)
+        {
+            return AddODataQueryFilter(services, new EnableQueryAttribute());
+        }
+
+        /// <summary>
+        /// Enables query support for actions with an <see cref="IQueryable" /> or <see cref="IQueryable{T}" /> return
+        /// type. To avoid processing unexpected or malicious queries, use the validation settings on
+        /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
+        /// http://go.microsoft.com/fwlink/?LinkId=279712.
+        /// </summary>
+        /// <param name="configuration">The server configuration.</param>
+        /// <param name="queryFilter">The action filter that executes the query.</param>
+        public static IServiceCollection AddODataQueryFilter(this IServiceCollection services, IActionFilter queryFilter)
+        {
+            if (services == null)
+            {
+                throw Error.ArgumentNull("services");
+            }
+
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IFilterProvider>(new QueryFilterProvider(queryFilter)));
+            return services;
+        }
+
+        /// <summary>
+        /// Configure the <see cref="ODataOptions" /> options.
+        /// </summary>
+        /// <param name="builder">The <see cref="IODataBuilder" /> to add configuration to.</param>
+        /// <param name="setupAction">An <see cref="Action{ODataOptions}"/> to configure the provided <see cref="ODataOptions"/>.</param>
+        /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the MVC services.</returns>
+        public static IODataBuilder ConfigureODataOptions(this IODataBuilder builder, Action<ODataOptions> setupAction)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
             }
 
             if (setupAction == null)
@@ -97,55 +142,47 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw new ArgumentNullException(nameof(setupAction));
             }
 
-            IODataCoreBuilder builder = services.AddOData();
             builder.Services.Configure(setupAction);
             return builder;
         }
 
-        public static IODataCoreBuilder AddOData(this IServiceCollection services, Action<IServiceCollection> configSerivces)
+        /// <summary>
+        /// Configure the <see cref="DefaultQuerySettings" /> options.
+        /// </summary>
+        /// <param name="builder">The <see cref="IODataBuilder" /> to add configuration to.</param>
+        /// <param name="setupAction">An <see cref="Action{DefaultQuerySettings}"/> to configure the provided <see cref="DefaultQuerySettings"/>.</param>
+        /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the MVC services.</returns>
+        public static IODataBuilder ConfigureDefaultQuerySettings(this IODataBuilder builder, Action<DefaultQuerySettings> setupAction)
         {
-            IODataCoreBuilder builder = services.AddOData();
-            configSerivces(services); // for customers override services
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (setupAction == null)
+            {
+                throw new ArgumentNullException(nameof(setupAction));
+            }
+
+            builder.Services.Configure(setupAction);
             return builder;
         }
 
-        public static void AddApiContext<T>(this ODataCoreBuilder builder, string prefix) where T : class
+
+        /// <summary>
+        /// Get the default assembly resolver.
+        /// </summary>
+        /// <param name="provider">The server configuration.</param>
+        internal static IWebApiAssembliesResolver GetWebApiAssembliesResolver(this IServiceProvider provider)
         {
-            builder.Register<T>(prefix);
+            if (provider == null)
+            {
+                throw Error.ArgumentNull(nameof(provider));
+            }
+
+            ApplicationPartManager applicationPartManager = provider.GetRequiredService<ApplicationPartManager>();
+            return new WebApiAssembliesResolver(applicationPartManager);
         }
 
-        internal static void AddODataCoreServices(this IServiceCollection services)
-        {
-            
-        }
-
-        private static void AddDefaultSerializers(IServiceCollection services)
-        {
-            services.AddSingleton<ODataMetadataSerializer>();
-            services.AddSingleton<ODataServiceDocumentSerializer>();
-
-            services.AddSingleton<ODataEnumSerializer>();
-            services.AddSingleton<ODataPrimitiveSerializer>();
-            services.AddSingleton<ODataDeltaFeedSerializer>();
-            services.AddSingleton<ODataResourceSetSerializer>();
-            services.AddSingleton<ODataCollectionSerializer>();
-            services.AddSingleton<ODataResourceSerializer>();
-            services.AddSingleton<ODataServiceDocumentSerializer>();
-            services.AddSingleton<ODataEntityReferenceLinkSerializer>();
-            services.AddSingleton<ODataEntityReferenceLinksSerializer>();
-            services.AddSingleton<ODataErrorSerializer>();
-            services.AddSingleton<ODataRawValueSerializer>();
-        }
-
-        private static void AddDefaultDeserializers(IServiceCollection services)
-        {
-            services.AddSingleton<ODataResourceDeserializer>();
-            services.AddSingleton<ODataEnumDeserializer>();
-            services.AddSingleton<ODataPrimitiveDeserializer>();
-            services.AddSingleton<ODataResourceSetDeserializer>();
-            services.AddSingleton<ODataCollectionDeserializer>();
-            services.AddSingleton<ODataEntityReferenceLinkDeserializer>();
-            services.AddSingleton<ODataActionPayloadDeserializer>();
-        }
     }
 }

@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
@@ -17,7 +19,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <summary>
         /// The inner context wrapped by this instance.
         /// </summary>
-        private HttpRequestMessageProperties innerContext;
+        private IODataFeature innerFeature;
 
         /// <summary>
         /// Initializes a new instance of the WebApiContext class.
@@ -25,7 +27,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <param name="feature">The inner feature.</param>
         public WebApiContext(IODataFeature feature)
         {
-            this.innerContext = feature;
+            this.innerFeature = feature;
         }
 
         /// <summary>
@@ -33,8 +35,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public ApplyClause ApplyClause
         {
-            get { return this.innerContext.ApplyClause; }
-            set { this.innerContext.ApplyClause = value; }
+            get { return this.innerFeature.ApplyClause; }
+            set { this.innerFeature.ApplyClause = value; }
         }
 
         /// <summary>
@@ -42,8 +44,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public Uri NextLink
         {
-            get { return this.innerContext.NextLink; }
-            set { this.innerContext.NextLink = value; }
+            get { return this.innerFeature.NextLink; }
+            set { this.innerFeature.NextLink = value; }
         }
 
         /// <summary>
@@ -51,8 +53,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public Uri DeltaLink
         {
-            get { return this.innerContext.DeltaLink; }
-            set { this.innerContext.DeltaLink = value; }
+            get { return this.innerFeature.DeltaLink; }
+            set { this.innerFeature.DeltaLink = value; }
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public ODataPath Path
         {
-            get { return this.innerContext.Path; }
+            get { return this.innerFeature.Path; }
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <value>Initially an empty <c>IDictionary&lt;string, object&gt;</c>.</value>
         public IDictionary<string, object> RoutingConventionsStore
         {
-            get { return this.innerContext.RoutingConventionsStore; }
+            get { return this.innerFeature.RoutingConventionsStore; }
         }
 
         /// <summary>
@@ -85,8 +87,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public SelectExpandClause SelectExpandClause
         {
-            get { return this.innerContext.SelectExpandClause; }
-            set { this.innerContext.SelectExpandClause = value; }
+            get { return this.innerFeature.SelectExpandClause; }
+            set { this.innerFeature.SelectExpandClause = value; }
         }
 
         /// <summary>
@@ -95,7 +97,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <value><c>null</c> if no count should be sent back to the client.</value>
         public long? TotalCount
         {
-            get { return this.innerContext.TotalCount; }
+            get { return this.innerFeature.TotalCount; }
         }
 
         /// <summary>
@@ -103,8 +105,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public Func<long> TotalCountFunc
         {
-            get { return this.innerContext.TotalCountFunc; }
-            set { this.innerContext.TotalCountFunc = value; }
+            get { return this.innerFeature.TotalCountFunc; }
+            set { this.innerFeature.TotalCountFunc = value; }
         }
     }
 }

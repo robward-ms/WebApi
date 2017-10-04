@@ -19,7 +19,7 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
         /// <returns></returns>
         internal static Uri GetNextPageLink(Uri requestUri, int pageSize)
         {
-            return HttpRequestMessageExtensions.GetNextPageLink(requestUri, pageSize);
+            return null; // TODO: HttpRequestMessageExtensions.GetNextPageLink(requestUri, pageSize);
         }
     }
 }
