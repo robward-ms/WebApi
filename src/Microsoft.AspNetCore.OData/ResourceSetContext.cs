@@ -2,9 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
-using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNet.OData
@@ -14,19 +15,19 @@ namespace Microsoft.AspNet.OData
     /// </summary>
     public partial class ResourceSetContext
     {
-        private HttpRequestMessage _request;
+        private HttpRequest _request;
         private IUrlHelper _urlHelper;
 
         /// <summary>
         /// Gets or sets the HTTP request that caused this instance to be generated.
         /// </summary>
-        public HttpRequestMessage Request
+        public HttpRequest Request
         {
             get { return _request; }
             set
             {
                 _request = value;
-                //InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
+                InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
             }
         }
 

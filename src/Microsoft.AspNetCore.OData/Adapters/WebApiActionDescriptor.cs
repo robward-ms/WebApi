@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <summary>
         /// Gets the collection of supported HTTP methods for the descriptor.
         /// </summary>
-        private IList<ODataRequestMethod> supportedHttpMethods;
+        //private IList<ODataRequestMethod> supportedHttpMethods;
 
         /// <summary>
         /// The inner action wrapped by this instance.

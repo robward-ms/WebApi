@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.AspNet.OData
@@ -21,7 +22,7 @@ namespace Microsoft.AspNet.OData
         /// <summary>
         /// Gets or sets the HTTP request that caused this instance to be generated.
         /// </summary>
-        public HttpRequestMessage Request
+        public HttpRequest Request
         {
             get
             {

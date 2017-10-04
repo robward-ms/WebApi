@@ -2,53 +2,46 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.OData.Extensions;
 
 namespace Microsoft.AspNet.OData.Routing
 {
     /// <summary>
-    /// Implementation of <see cref="ParameterBindingAttribute"/> used to bind an instance of <see cref="ODataPath"/> as an action parameter.
+    /// Implementation of <see cref="ModelBinderAttribute"/> used to bind an instance of <see cref="ODataPath"/> as an action parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
-    public sealed partial class ODataPathParameterBindingAttribute : Attribute
+    public sealed partial class ODataPathParameterBindingAttribute : ModelBinderAttribute
     {
-        ///// <summary>
-        ///// Gets the parameter binding.
-        ///// </summary>
-        ///// <param name="parameter">The parameter description.</param>
-        ///// <returns>
-        ///// The parameter binding.
-        ///// </returns>
-        //public override HttpParameterBinding GetBinding(HttpParameterDescriptor parameter)
-        //{
-        //    return new ODataPathParameterBinding(parameter);
-        //}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataPathParameterBindingAttribute" /> class.
+        /// </summary>
+        public ODataPathParameterBindingAttribute()
+        {
+            this.BinderType = typeof(ODataPathParameterModelBinder);
+        }
 
-        //internal class ODataPathParameterBinding : HttpParameterBinding
-        //{
-        //    public ODataPathParameterBinding(HttpParameterDescriptor parameterDescriptor)
-        //        : base(parameterDescriptor)
-        //    {
-        //    }
+        /// <summary>
+        /// Implementation of <see cref="IModelBinder"/> used to bind an instance of <see cref="ODataPath"/> as an action parameter.
+        /// </summary>
+        internal class ODataPathParameterModelBinder : IModelBinder
+        {
+            /// <inheritdoc />
+            public Task BindModelAsync(ModelBindingContext bindingContext)
+            {
+                if (bindingContext == null)
+                {
+                    throw Error.ArgumentNull("bindingContext");
+                }
 
-        //    [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Response disposed later")]
-        //    public override Task ExecuteBindingAsync(ModelMetadataProvider metadataProvider, HttpActionContext actionContext, CancellationToken cancellationToken)
-        //    {
-        //        if (actionContext == null)
-        //        {
-        //            throw Error.ArgumentNull("actionContext");
-        //        }
+                ODataPath odataPath = bindingContext.HttpContext.ODataFeature().Path;
+                bindingContext.Result = ModelBindingResult.Success(odataPath);
 
-        //        HttpRequestMessage request = actionContext.Request;
-
-        //        if (request == null)
-        //        {
-        //            throw Error.Argument("actionContext", SRResources.ActionContextMustHaveRequest);
-        //        }
-
-        //        SetValue(actionContext, request.ODataProperties().Path);
-
-        //        return TaskHelpers.Completed();
-        //    }
-        //}
+                return TaskHelpers.Completed();
+            }
+        }
     }
 }

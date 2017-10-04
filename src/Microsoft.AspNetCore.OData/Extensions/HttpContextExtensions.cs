@@ -4,11 +4,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.OData.Abstracts;
+using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.WebApi.Common;
-using Microsoft.OData.WebApi.Formatter;
-using Microsoft.OData.WebApi.Routing;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.Extensions.Options;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Microsoft.AspNetCore.OData.Extensions
 {
@@ -39,15 +44,24 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return odataFeature;
         }
 
+        public static ODataOptions ODataOptions(this HttpContext httpContext)
+        {
+            if (httpContext == null)
+            {
+                throw Error.ArgumentNull("httpContext");
+            }
+
+            return httpContext.RequestServices.GetRequiredService<IOptions<ODataOptions>>().Value;
+        }
+
         public static IUrlHelper UrlHelper(this HttpContext httpContext)
         {
             if (httpContext == null)
             {
                 throw Error.ArgumentNull("httpContext");
             }
-            var actionContext = new ActionContext {
-                HttpContext = httpContext
-            };
+
+            ActionContext actionContext = httpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
             return httpContext.RequestServices.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(actionContext);
         }
 
@@ -71,14 +85,74 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return httpContext.RequestServices.GetRequiredService<IODataPathHandler>();
         }
 
-        public static IAssemblyProvider AssemblyProvider(this HttpContext httpContext)
+        //public static IAssemblyProvider AssemblyProvider(this HttpContext httpContext)
+        //{
+        //    if (httpContext == null)
+        //    {
+        //        throw Error.ArgumentNull("httpContext");
+        //    }
+
+        //    return httpContext.RequestServices.GetRequiredService<IAssemblyProvider>();
+        //}
+
+        /// <summary>
+        /// Gets the <see cref="ODataMessageReaderSettings"/> from the request container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="ODataMessageReaderSettings"/> from the request container.</returns>
+        public static ODataMessageReaderSettings GetReaderSettings(this HttpContext httpContext)
         {
             if (httpContext == null)
             {
                 throw Error.ArgumentNull("httpContext");
             }
 
-            return httpContext.RequestServices.GetRequiredService<IAssemblyProvider>();
+            return httpContext.RequestServices.GetRequiredService<ODataMessageReaderSettings>();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IODataPathHandler"/> from the request container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="IODataPathHandler"/> from the request container.</returns>
+        public static IODataPathHandler GetPathHandler(this HttpContext httpContext)
+        {
+            if (httpContext == null)
+            {
+                throw Error.ArgumentNull("httpContext");
+            }
+
+            return httpContext.RequestServices.GetRequiredService<IODataPathHandler>();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IEdmModel"/> from the request container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="IEdmModel"/> from the request container.</returns>
+        public static IEdmModel GetModel(this HttpContext httpContext)
+        {
+            if (httpContext == null)
+            {
+                throw Error.ArgumentNull("httpContext");
+            }
+
+            return httpContext.RequestServices.GetRequiredService<IEdmModel>();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ODataMessageWriterSettings"/> from the request container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="ODataMessageWriterSettings"/> from the request container.</returns>
+        public static ODataMessageWriterSettings GetWriterSettings(this HttpContext httpContext)
+        {
+            if (httpContext == null)
+            {
+                throw Error.ArgumentNull("httpContext");
+            }
+
+            return httpContext.RequestServices.GetRequiredService<ODataMessageWriterSettings>();
         }
     }
 }

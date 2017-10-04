@@ -27,6 +27,5 @@ namespace Microsoft.AspNet.OData
             model.SetEdmxVersion(_defaultEdmxVersion);
             return model;
         }
-
     }
 }

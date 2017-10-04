@@ -3,8 +3,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
@@ -12,11 +10,10 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.AspNet.OData.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
-namespace Microsoft.AspNet.OData.Extensions
+namespace Microsoft.AspNetCore.OData.Extensions
 {
     internal static class ContainerBuilderExtensions
     {
@@ -79,20 +76,11 @@ namespace Microsoft.AspNet.OData.Extensions
             builder.AddService<ODataMetadataSerializer>(ServiceLifetime.Singleton);
             builder.AddService<ODataRawValueSerializer>(ServiceLifetime.Singleton);
 
-            // AssembliesResolver.
-            builder.AddService(ServiceLifetime.Singleton, GetAssembliesResolver);
-
             // Binders.
             builder.AddService<ODataQuerySettings>(ServiceLifetime.Scoped);
             builder.AddService<FilterBinder>(ServiceLifetime.Transient);
 
             return builder;
-        }
-
-        private static IAssembliesResolver GetAssembliesResolver(IServiceProvider rootContainer)
-        {
-            HttpConfiguration configuration = rootContainer.GetRequiredService<HttpConfiguration>();
-            return configuration.Services.GetAssembliesResolver() ?? new DefaultAssembliesResolver();
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.OData.Extensions;
 
 namespace Microsoft.AspNet.OData
 {
@@ -9,8 +10,7 @@ namespace Microsoft.AspNet.OData
     {
         public static IWebApiAssembliesResolver GetAssembliesResolver(this ODataQueryContext context)
         {
-            //IAssembliesResolver resolver = context.RequestContainer.GetRequiredService<IAssembliesResolver>();
-            return null; // new WebApiAssembliesResolver(resolver);
+            return context.RequestContainer.GetWebApiAssembliesResolver();
         }
     }
 }

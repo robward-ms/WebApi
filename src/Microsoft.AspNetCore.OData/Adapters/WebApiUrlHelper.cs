@@ -6,6 +6,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.OData.UriParser;
 
 namespace Microsoft.AspNetCore.OData.Adapters

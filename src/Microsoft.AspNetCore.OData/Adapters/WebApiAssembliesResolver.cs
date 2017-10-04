@@ -2,8 +2,11 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Microsoft.AspNet.OData.Adapters
 {
@@ -13,31 +16,46 @@ namespace Microsoft.AspNet.OData.Adapters
     internal class WebApiAssembliesResolver : IWebApiAssembliesResolver
     {
         /// <summary>
-        /// The inner resolver wrapped by this instance.
+        /// The inner manager wrapped by this instance.
         /// </summary>
-        private IAssemblyProvider innerProvider;
+        private ApplicationPartManager innerManager;
 
         /// <summary>
         /// Initializes a new instance of the WebApiAssembliesResolver class.
         /// </summary>
-        /// <param name="provider">The inner provider.</param>
-        public WebApiAssembliesResolver(IAssemblyProvider provider)
+        public WebApiAssembliesResolver()
         {
-            this.InnerProvider = provider;
         }
-        
+
         /// <summary>
-        /// The inner resolver wrapped by this instance.
+        /// Initializes a new instance of the WebApiAssembliesResolver class.
         /// </summary>
-        public IAssemblyProvider InnerProvider { get; private set; }
+        /// <param name="applicationPartManager">The inner manager.</param>
+        public WebApiAssembliesResolver(ApplicationPartManager applicationPartManager)
+        {
+            this.innerManager = applicationPartManager;
+        }
 
         /// <summary>
         /// Returns a list of assemblies available for the application. 
         /// </summary>
         /// <returns>A list of assemblies available for the application. </returns>
-        public IEnumerable<Assembly> GetAssemblies()
+        public IEnumerable<Assembly> Assemblies
         {
-            return this.InnerProvider.CandidateAssemblies;
+            get
+            {
+                if (this.innerManager != null)
+                {
+                    IList<ApplicationPart> parts = this.innerManager.ApplicationParts;
+                    return parts.Where(p => p is AssemblyPart).Select(p => (p as AssemblyPart).Assembly);
+                }
+
+                // Default: return all assemblies in the current app domain.
+                // TODO: This is pretty expensive.
+                //AssemblyName[] assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
+                Debug.Assert(false);
+                return null;
+            }
         }
     }
 }

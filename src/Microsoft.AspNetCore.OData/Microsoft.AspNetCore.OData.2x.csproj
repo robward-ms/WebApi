@@ -10,6 +10,8 @@
 
     <!-- Let's generate our own assembly info, partially because VS does like like us changing BaseIntermediateOutputPath -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>Microsoft.AspNetCore.OData</AssemblyName>
+    <RootNamespace>Microsoft.AspNetCore.OData</RootNamespace>
   </PropertyGroup>
 
   <!-- A seperate build task scans the obj folder and adds these items. -->
