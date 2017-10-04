@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.OData.Extensions;
+using System.Collections;
+using Microsoft.AspNet.OData.Formatter.Serialization;
 
 namespace Microsoft.AspNet.OData
 {
@@ -16,7 +19,6 @@ namespace Microsoft.AspNet.OData
     public partial class ResourceSetContext
     {
         private HttpRequest _request;
-        private IUrlHelper _urlHelper;
 
         /// <summary>
         /// Gets or sets the HTTP request that caused this instance to be generated.
@@ -28,6 +30,7 @@ namespace Microsoft.AspNet.OData
             {
                 _request = value;
                 InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
+                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request) : null;
             }
         }
 
@@ -37,36 +40,29 @@ namespace Microsoft.AspNet.OData
         //public HttpRequestContext RequestContext { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="IWebApiUrlHelper"/> to be used for generating links while serializing this
-        /// feed instance.
-        /// </summary>
-        public IUrlHelper Url
-        {
-            get { return _urlHelper; }
-            set
-            {
-                _urlHelper = value;
-                InternalUrlHelper = _urlHelper != null ? new WebApiUrlHelper(_urlHelper) : null;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the <see cref="IEdmModel"/> to which this instance belongs.
         /// </summary>
         public IEdmModel EdmModel
         {
-            get { return null; } // Request.GetModel(); }
+            get { return Request.GetModel(); }
         }
 
         /// <summary>
-        /// Gets or sets the HTTP request that caused this instance to be generated.
+        /// Create a <see cref="ResourceSetContext"/> from an <see cref="ODataSerializerContext"/> and <see cref="IEnumerable"/>.
         /// </summary>
-        internal IWebApiRequestMessage InternalRequest { get; private set; }
+        /// <param name="resourceSetInstance">The instance representing the resourceSet being written.</param>
+        /// <param name="writeContext">The serializer context.</param>
+        /// <returns>A new <see cref="ResourceSetContext"/>.</returns>
+        internal static ResourceSetContext Create(ODataSerializerContext writeContext, IEnumerable resourceSetInstance)
+        {
+            ResourceSetContext resourceSetContext = new ResourceSetContext
+            {
+                Request = writeContext.Request,
+                EntitySetBase = writeContext.NavigationSource as IEdmEntitySetBase,
+                ResourceSetInstance = resourceSetInstance
+            };
 
-        /// <summary>
-        /// Gets or sets the <see cref="IWebApiUrlHelper"/> to be used for generating links while serializing this
-        /// feed instance.
-        /// </summary>
-        internal IWebApiUrlHelper InternalUrlHelper { get; private set; }
+            return resourceSetContext;
+        }
     }
 }

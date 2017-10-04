@@ -310,8 +310,6 @@ namespace Microsoft.AspNetCore.OData.Formatter
 
             ODataSerializer serializer = GetSerializer(type, value, _serializerProvider);
 
-            IUrlHelper urlHelper = request.UrlHelper() ?? null; // TODO: new UrlHelper(Request);
-
             ODataPath path = request.ODataFeature().Path;
             IEdmNavigationSource targetNavigationSource = path == null ? null : path.NavigationSource;
 
@@ -338,7 +336,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             writerSettings.Version = _version;
             writerSettings.Validations = writerSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-            string metadataLink = urlHelper.CreateODataLink(MetadataSegment.Instance);
+            string metadataLink = request.UrlHelper().CreateODataLink(MetadataSegment.Instance);
 
             if (metadataLink == null)
             {
@@ -370,7 +368,6 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 ODataSerializerContext writeContext = new ODataSerializerContext()
                 {
                     Request = Request,
-                    Url = urlHelper,
                     NavigationSource = targetNavigationSource,
                     Model = model,
                     RootElementName = GetRootElementName(path) ?? "root",
@@ -524,9 +521,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
-            IUrlHelper urlHelper = request.UrlHelper(); //TODO: ?? new UrlHelper(request);
-
-            string baseAddress = urlHelper.CreateODataLink();
+            string baseAddress = request.UrlHelper().CreateODataLink();
             if (baseAddress == null)
             {
                 throw new SerializationException(SRResources.UnableToDetermineBaseUrl);

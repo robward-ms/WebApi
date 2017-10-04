@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Routing;
 using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Microsoft.AspNetCore.OData.Extensions
 {
@@ -83,6 +84,13 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return urlHelper.Link(
                 routeName,
                 new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
+            //return RouteUrl(new UrlRouteContext()
+            //{
+            //    RouteName = routeName,
+            //    Values = new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } },
+            //    Protocol = HttpContext.Request.Scheme,
+            //    Host = HttpContext.Request.Host.ToUriComponent()
+            //});
         }
     }
 }

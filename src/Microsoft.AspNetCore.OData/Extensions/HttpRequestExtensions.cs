@@ -8,9 +8,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.Extensions.Primitives;
@@ -93,14 +95,14 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return request.HttpContext.GetReaderSettings();
         }
 
-        public static IUrlHelper UrlHelper(this HttpRequest request)
+        internal static IWebApiUrlHelper UrlHelper(this HttpRequest request)
         {
             if (request == null)
             {
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.UrlHelper();
+            return new WebApiUrlHelper(request);
         }
 
         /// <summary>

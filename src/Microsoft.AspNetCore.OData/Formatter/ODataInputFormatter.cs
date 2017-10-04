@@ -487,9 +487,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
-            IUrlHelper urlHelper = request.UrlHelper(); // TODO: ?? new UrlHelper(request.Ac);
-
-            string baseAddress = urlHelper.CreateODataLink();
+            string baseAddress = request.UrlHelper().CreateODataLink();
             if (baseAddress == null)
             {
                 throw new SerializationException(SRResources.UnableToDetermineBaseUrl);
