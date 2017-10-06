@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc.Internal;
@@ -48,6 +49,9 @@ namespace Microsoft.AspNetCore.OData.Extensions
             // TODO: In AspNetCore, we have one container for all routes.
             //IServiceProvider rootContainer = configuration.CreateODataRootContainer(routeName, configureAction);
 
+            // TODO: Actually need per-route containers.
+            configureAction?.Invoke(new DefaultContainerBuilder(builder.ApplicationBuilder.ApplicationServices));
+
             // Resolve the path handler and set URI resolver to it.
             IODataPathHandler pathHandler = builder.ServiceProvider.GetRequiredService<IODataPathHandler>();
 
@@ -61,9 +65,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
             // Resolve some required services and create the route constraint.
             ODataPathRouteConstraint routeConstraint = new ODataPathRouteConstraint(routeName);
 
-            // Get route handler.
-            IRouter target = builder.ServiceProvider.GetRequiredService<MvcRouteHandler>();
-
             // Get constraint resolver.
             IInlineConstraintResolver inlineConstraintResolver = builder
                 .ServiceProvider
@@ -71,7 +72,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
 
             // Resolve HTTP handler, create the OData route and register it.
             routePrefix = RemoveTrailingSlash(routePrefix);
-            ODataRoute route = new ODataRoute(target, routePrefix, routeConstraint, inlineConstraintResolver);
+            ODataRoute route = new ODataRoute(builder.DefaultHandler, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
             builder.Routes.Add(route);
 
             // Add a mapping between the route prefix and the EDM model.

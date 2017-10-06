@@ -24,11 +24,12 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// Initializes a new instance of the <see cref="ODataRoute"/> class.
         /// </summary>
         /// <param name="target">The target router.</param>
+        /// <param name="routeName">The route name.</param>
         /// <param name="routePrefix">The route prefix.</param>
         /// <param name="routeConstraint">The OData route constraint.</param>
         /// <param name="resolver">The inline constraint resolver.</param>
-        public ODataRoute(IRouter target, string routePrefix, ODataPathRouteConstraint routeConstraint, IInlineConstraintResolver resolver)
-            : this(target, routePrefix, (IRouteConstraint)routeConstraint, resolver)
+        public ODataRoute(IRouter target, string routeName, string routePrefix, ODataPathRouteConstraint routeConstraint, IInlineConstraintResolver resolver)
+            : this(target, routeName, routePrefix, (IRouteConstraint)routeConstraint, resolver)
         {
         }
 
@@ -36,11 +37,12 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// Initializes a new instance of the <see cref="ODataRoute"/> class.
         /// </summary>
         /// <param name="target">The target router.</param>
+        /// <param name="routeName">The route name.</param>
         /// <param name="routePrefix">The route prefix.</param>
         /// <param name="routeConstraint">The OData route constraint.</param>
         /// <param name="resolver">The inline constraint resolver.</param>
-        public ODataRoute(IRouter target, string routePrefix, IRouteConstraint routeConstraint, IInlineConstraintResolver resolver)
-            : base(target, GetRouteTemplate(routePrefix), inlineConstraintResolver: resolver)
+        public ODataRoute(IRouter target, string routeName, string routePrefix, IRouteConstraint routeConstraint, IInlineConstraintResolver resolver)
+            : base(target, routeName, GetRouteTemplate(routePrefix), defaults: null, constraints: null, dataTokens: null, inlineConstraintResolver: resolver)
         {
             RoutePrefix = routePrefix;
             PathRouteConstraint = routeConstraint as ODataPathRouteConstraint;
@@ -55,7 +57,7 @@ namespace Microsoft.AspNetCore.OData.Routing
                 Constraints.Add(ODataRouteConstants.ConstraintName, routeConstraint);
             }
 
-            Constraints.Add(ODataRouteConstants.VersionConstraintName, new ODataVersionConstraint());
+            //Constraints.Add(ODataRouteConstants.VersionConstraintName, new ODataVersionConstraint());
         }
 
         /// <summary>
@@ -82,34 +84,34 @@ namespace Microsoft.AspNetCore.OData.Routing
         }
 
         /// <inheritdoc />
-        public override VirtualPathData GetVirtualPath(VirtualPathContext context)
-        {
-            // Only perform URL generation if the "httproute" key was specified. This allows these
-            // routes to be ignored when a regular MVC app tries to generate URLs. Without this special
-            // key an HTTP route used for Web API would normally take over almost all the routes in a
-            // typical app.
-            
-            if (context.Values != null && context.Values.Keys.Contains("TODO" /*Route.HttpRouteKey*/, StringComparer.OrdinalIgnoreCase))
-            {
-                // Fast path link generation where we recognize an OData route of the form "prefix/{*odataPath}".
-                // Link generation using HttpRoute.GetVirtualPath can consume up to 30% of processor time
-                object odataPathValue;
-                if (context.Values.TryGetValue(ODataRouteConstants.ODataPath, out odataPathValue))
-                {
-                    string odataPath = odataPathValue as string;
-                    if (odataPath != null)
-                    {
-                        // Try to generate an optimized direct link
-                        // Otherwise, fall back to the base implementation
-                        return _canGenerateDirectLink
-                            ? GenerateLinkDirectly(odataPath)
-                            : base.GetVirtualPath(context);
-                    }
-                }
-            }
+        //public override VirtualPathData GetVirtualPath(VirtualPathContext context)
+        //{
+        //    // Only perform URL generation if the "httproute" key was specified. This allows these
+        //    // routes to be ignored when a regular MVC app tries to generate URLs. Without this special
+        //    // key an HTTP route used for Web API would normally take over almost all the routes in a
+        //    // typical app.
 
-            return null;
-        }
+        //    //if (context.Values != null && context.Values.Keys.Contains("TODO" /*Route.HttpRouteKey*/, StringComparer.OrdinalIgnoreCase))
+        //    //{
+        //    // Fast path link generation where we recognize an OData route of the form "prefix/{*odataPath}".
+        //    // Link generation using HttpRoute.GetVirtualPath can consume up to 30% of processor time
+        //    object odataPathValue;
+        //    if (context.Values.TryGetValue(ODataRouteConstants.ODataPath, out odataPathValue))
+        //    {
+        //        string odataPath = odataPathValue as string;
+        //        if (odataPath != null)
+        //        {
+        //            // Try to generate an optimized direct link
+        //            // Otherwise, fall back to the base implementation
+        //            return _canGenerateDirectLink
+        //                ? GenerateLinkDirectly(odataPath)
+        //                : base.GetVirtualPath(context);
+        //        }
+        //    }
+        //    //}
+
+        //    return null;
+        //}
 
         internal VirtualPathData GenerateLinkDirectly(string odataPath)
         {

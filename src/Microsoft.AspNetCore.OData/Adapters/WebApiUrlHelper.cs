@@ -7,9 +7,12 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.UriParser;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
@@ -86,13 +89,16 @@ namespace Microsoft.AspNetCore.OData.Adapters
             }
 
             string odataPath = pathHandler.Link(new ODataPath(segments));
-            return Url.RouteUrl(new UrlRouteContext()
-            {
-                RouteName = routeName,
-                Values = new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } },
-                Protocol = this.innerRequest.Scheme,
-                Host = this.innerRequest.Host.ToUriComponent()
-            });
+
+            IActionContextAccessor actionContextAccessor = this.innerRequest.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>();
+            ActionContext actionContext = actionContextAccessor.ActionContext;
+
+            IUrlHelperFactory urlHelperFactory = this.innerRequest.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
+            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(actionContext);
+
+            return urlHelper.Link(
+                routeName,
+                new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
         }
     }
 }

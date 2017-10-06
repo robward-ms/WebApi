@@ -54,6 +54,8 @@ namespace Microsoft.AspNetCore.OData.Extensions
             builder.AddDefaultODataServices();
             builder.AddDefaultWebApiServices();
 
+            // TODO: Need to move the build stuff to route instantiation.
+
             // Add OData options.
             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<ODataOptions>, ODataOptionsSetup>());
             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<DefaultQuerySettings>, DefaultQuerySettingsSetup>());
@@ -83,6 +85,8 @@ namespace Microsoft.AspNetCore.OData.Extensions
             // Routing
             services.AddSingleton<IODataPathTemplateHandler, DefaultODataPathHandler>();
             services.AddSingleton<IActionSelector, ODataActionSelector>();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             // Assembly
             //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
