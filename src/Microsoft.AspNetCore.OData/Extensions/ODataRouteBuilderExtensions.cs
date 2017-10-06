@@ -29,11 +29,10 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// <param name="builder">The <see cref="IRouteBuilder"/> to add the route to.</param>
         /// <param name="routeName">The name of the route to map.</param>
         /// <param name="routePrefix">The prefix to add to the OData route's path template.</param>
-        /// <param name="model">The EDM model to use for parsing OData paths.</param>
         /// <param name="configureAction">The configuring action to add the services to the root container.</param>
         /// <returns>The added <see cref="ODataRoute"/>.</returns>
         public static ODataRoute MapODataServiceRoute(this IRouteBuilder builder, string routeName,
-            string routePrefix, IEdmModel model, Action<IContainerBuilder> configureAction)
+            string routePrefix, Action<IContainerBuilder> configureAction)
         {
             if (builder == null)
             {
@@ -46,17 +45,19 @@ namespace Microsoft.AspNetCore.OData.Extensions
             }
 
             // Build and configure the root container.
-            // TODO: In AspNetCore, we have one container for all routes.
-            //IServiceProvider rootContainer = configuration.CreateODataRootContainer(routeName, configureAction);
+            IPerRouteContainer perRouteContainer = builder.ServiceProvider.GetRequiredService<IPerRouteContainer>();
+            if (perRouteContainer == null)
+            {
+                throw Error.ArgumentNull("routeName");
+            }
 
-            // TODO: Actually need per-route containers.
-            configureAction?.Invoke(new DefaultContainerBuilder(builder.ApplicationBuilder.ApplicationServices));
+            IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, configureAction);
 
             // Resolve the path handler and set URI resolver to it.
-            IODataPathHandler pathHandler = builder.ServiceProvider.GetRequiredService<IODataPathHandler>();
+            IODataPathHandler pathHandler = serviceProvider.GetRequiredService<IODataPathHandler>();
 
             // If settings is not on local, use the global configuration settings.
-            ODataOptions options = builder.ServiceProvider.GetRequiredService<IOptions<ODataOptions>>().Value;
+            ODataOptions options = serviceProvider.GetRequiredService<IOptions<ODataOptions>>().Value;
             if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
             {
                 pathHandler.UrlKeyDelimiter = options.UrlKeyDelimiter;
@@ -75,9 +76,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
             ODataRoute route = new ODataRoute(builder.DefaultHandler, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
             builder.Routes.Add(route);
 
-            // Add a mapping between the route prefix and the EDM model.
-            //options.ModelManager.AddModel(routePrefix, model);
-
             return route;
         }
 
@@ -92,7 +90,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
         public static ODataRoute MapODataServiceRoute(this IRouteBuilder builder, string routeName,
             string routePrefix, IEdmModel model)
         {
-            return builder.MapODataServiceRoute(routeName, routePrefix, model, containerBuilder =>
+            return builder.MapODataServiceRoute(routeName, routePrefix, containerBuilder =>
                 containerBuilder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(Microsoft.OData.ServiceLifetime.Singleton, sp =>
                            ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, builder)));
@@ -114,7 +112,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
             string routePrefix, IEdmModel model, IODataPathHandler pathHandler,
             IEnumerable<IODataRoutingConvention> routingConventions)
         {
-            return builder.MapODataServiceRoute(routeName, routePrefix, model, containerBuilder =>
+            return builder.MapODataServiceRoute(routeName, routePrefix, containerBuilder =>
                 containerBuilder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)
                        .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => pathHandler)
                        .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routingConventions.ToList().AsEnumerable()));
