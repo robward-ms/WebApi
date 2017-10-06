@@ -172,7 +172,7 @@ namespace Microsoft.AspNet.OData.Adapters
             {
                 return this.innerRequest.GetQueryNameValuePairs()
                     .Where(p => p.Key.StartsWith("$", StringComparison.Ordinal) ||
-                    p.Key.StartsWith("@", StringComparison.Ordinal))
+                        p.Key.StartsWith("@", StringComparison.Ordinal))
                     .ToDictionary(p => p.Key, p => p.Value);
             }
         }
