@@ -7,14 +7,15 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -293,5 +294,111 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return null;
         }
 
+        /// <summary>
+        /// Gets the dependency injection container for the OData request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The dependency injection container.</returns>
+        public static IServiceProvider GetRequestContainer(this HttpRequest request)
+        {
+            if (request == null)
+            {
+                throw Error.ArgumentNull("request");
+            }
+
+            IServiceProvider requestContainer = request.HttpContext.ODataFeature().RequestContainer;
+            if (requestContainer != null)
+            {
+                return requestContainer;
+            }
+
+            // HTTP routes will not have chance to call CreateRequestContainer. We have to call it.
+            return request.CreateRequestContainer(request.HttpContext.ODataFeature().RouteName);
+        }
+
+        /// <summary>
+        /// Creates a request container that associates with the <paramref name="request"/>.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="routeName">The name of the route.</param>
+        /// <returns>The request container created.</returns>
+        public static IServiceProvider CreateRequestContainer(this HttpRequest request, string routeName)
+        {
+            if (request.HttpContext.ODataFeature().RequestContainer != null)
+            {
+                throw Error.InvalidOperation(SRResources.RequestContainerAlreadyExists);
+            }
+
+            IServiceScope requestScope = request.CreateRequestScope(routeName);
+            IServiceProvider requestContainer = requestScope.ServiceProvider;
+
+            request.HttpContext.ODataFeature().RequestScope = requestScope;
+            request.HttpContext.ODataFeature().RequestContainer = requestContainer;
+
+            return requestContainer;
+        }
+
+        /// <summary>
+        /// Deletes the request container from the <paramref name="request"/> and disposes
+        /// the container if <paramref name="dispose"/> is <c>true</c>.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="dispose">
+        /// Returns <c>true</c> to dispose the request container after deletion; <c>false</c> otherwise.
+        /// </param>
+        public static void DeleteRequestContainer(this HttpRequest request, bool dispose)
+        {
+            object value;
+            if (request.HttpContext.ODataFeature().RequestScope != null)
+            {
+                IServiceScope requestScope = request.HttpContext.ODataFeature().RequestScope;
+                request.HttpContext.ODataFeature().RequestScope = null;
+                request.HttpContext.ODataFeature().RequestContainer = null;
+
+                if (dispose)
+                {
+                    requestScope.Dispose();
+                }
+            }
+        }
+
+        private static IServiceProvider GetRootContainer(this HttpRequest request, string routeName)
+        {
+            HttpConfiguration configuration = request.GetConfiguration();
+            if (configuration == null)
+            {
+                throw Error.Argument("request", SRResources.RequestMustContainConfiguration);
+            }
+
+            // Requests from OData routes will have RouteName set.
+            return routeName != null
+                ? configuration.GetODataRootContainer(routeName)
+                : configuration.GetNonODataRootContainer();
+        }
+
+        private static IServiceScope CreateRequestScope(this HttpRequest request, string routeName)
+        {
+            IServiceProvider rootContainer;
+            if (string.IsNullOrEmpty(routeName))
+            {
+                rootContainer = request.HttpContext.RequestServices;
+            }
+            else
+            {
+                IPerRouteContainer perRouteContainer = request.HttpContext.RequestServices.GetRequiredService<IPerRouteContainer>();
+                if (perRouteContainer == null)
+                {
+                    throw Error.ArgumentNull("routeName");
+                }
+
+                rootContainer = perRouteContainer.GetODataRootContainer(routeName);
+                if (perRouteContainer == null)
+                {
+                    throw Error.ArgumentNull("routeName");
+                }
+            }
+
+            return rootContainer.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        }
     }
 }

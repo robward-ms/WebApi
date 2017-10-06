@@ -34,27 +34,14 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the OData services.</returns>
         public static IODataBuilder AddOData(this IServiceCollection services)
         {
-            return AddOData(services, new DefaultContainerBuilder(services));
-        }
-
-        /// <summary>
-        /// Adds essential OData services to the specified <see cref="IServiceCollection" />.
-        /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection" /> to add services to.</param>
-        /// <param name="builder">The IContainerBuilder to use.</param>
-        /// <returns>An <see cref="IODataBuilder"/> that can be used to further configure the OData services.</returns>
-        public static IODataBuilder AddOData(this IServiceCollection services, IContainerBuilder builder)
-        {
             if (services == null)
             {
                 throw Error.ArgumentNull(nameof(services));
             }
 
-            // Setup OData dependency injection.
-            builder.AddDefaultODataServices();
-            builder.AddDefaultWebApiServices();
-
-            // TODO: Need to move the build stuff to route instantiation.
+            // Setup per-route dependency injection. When routes are added, additional
+            // per-route classes will be injected, such as IEdmModel and IODataRoutingConventions.
+            services.AddSingleton<IPerRouteContainer, PerRouteContainer>();
 
             // Add OData options.
             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<ODataOptions>, ODataOptionsSetup>());
@@ -79,17 +66,9 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 }
             });
 
-            // Add ETag handler.
-            services.AddSingleton<IETagHandler, DefaultODataETagHandler>();
-
-            // Routing
-            services.AddSingleton<IODataPathTemplateHandler, DefaultODataPathHandler>();
-            services.AddSingleton<IActionSelector, ODataActionSelector>();
-
+            // Add the ActionContextAccessor; this allows access to the ActionContext which is needed
+            //during the formatting process to construct a IUrlHelper.
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            // Assembly
-            //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
 
             return new ODataBuilder(services);
         }

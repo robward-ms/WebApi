@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -40,6 +41,16 @@ namespace Microsoft.AspNetCore.OData
         /// Gets or sets the route name.
         /// </summary>
         public string RouteName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request scope.
+        /// </summary>
+        public IServiceScope RequestScope { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request container.
+        /// </summary>
+        public IServiceProvider RequestContainer { get; set; }
 
         /// <summary>
         /// Gets or sets whether the request is the valid OData request.
