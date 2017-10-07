@@ -92,7 +92,6 @@
     <Compile Include="Formatter\Serialization\ODataSerializerProviderProxy.cs" />
     <Compile Include="GetNextPageHelper.cs" />
     <Compile Include="MetadataController.cs" />
-    <Compile Include="Query\Expressions\ExpressionBinderBase.cs" />
     <Compile Include="Batch\UnbufferedODataBatchHandler.cs" />
     <Compile Include="Batch\ODataBatchResponseItem.cs" />
     <Compile Include="Batch\ODataBatchRequestItem.cs" />
@@ -114,7 +113,6 @@
     <Compile Include="ODataRoutingAttribute.cs" />
     <Compile Include="Builder\ODataConventionModelBuilder.cs" />
     <Compile Include="Formatter\Serialization\ODataErrorSerializer.cs" />
-    <Compile Include="ODataQueryContextExtensions.cs" />
     <Compile Include="Query\ODataQueryOptions.cs" />
     <Compile Include="PerRequestContentNegotiator.cs" />
     <Compile Include="Query\ODataQueryOptionsOfTEntity.cs" />
@@ -190,7 +188,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Query\Expressions\" />
+  </ItemGroup>
   <Import Project="..\Microsoft.AspNet.OData.Shared\Microsoft.AspNet.OData.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

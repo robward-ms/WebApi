@@ -214,6 +214,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Query\TruncatedCollectionOfT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\SelectExpandQueryOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Query\Validators\SelectExpandQueryValidator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Results\ResultHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\DynamicPropertyRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\NavigationSourceRoutingConvention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Conventions\SelectControllerResult.cs" />

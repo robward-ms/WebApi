@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
@@ -152,8 +154,10 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return (builder =>
             {
                 // Add platform-specific services here. Add Configuration first as other services may rely on it.
+                // For assembly resolution, add the and internal (IWebApiAssembliesResolver) where IWebApiAssembliesResolver
+                // is transient and instantiated from ApplicationPartManager by DI.
+                builder.AddService<IWebApiAssembliesResolver, WebApiAssembliesResolver>(ServiceLifetime.Transient);
                 builder.AddService<IODataPathTemplateHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
-                //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
                 // TODO:
                 // builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
 
