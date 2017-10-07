@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
+using HttpRequestMessageExtensions = Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions;
 
 namespace Microsoft.AspNet.OData.Adapters
 {

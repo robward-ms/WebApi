@@ -11,7 +11,6 @@ using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.AspNetCore.Routing;
