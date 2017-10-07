@@ -18,6 +18,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OData.Routing.Conventions;
+using Microsoft.AspNet.OData.Common;
 
 namespace Microsoft.AspNetCore.OData.Routing
 {
@@ -27,8 +29,7 @@ namespace Microsoft.AspNetCore.OData.Routing
     /// </summary>
     public class ODataActionSelector : IActionSelector
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IActionSelector _selector;
+        private readonly IActionSelector _innerSelector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataActionSelector" /> class.
@@ -37,54 +38,64 @@ namespace Microsoft.AspNetCore.OData.Routing
         /// <param name="decisionTreeProvider">IActionSelectorDecisionTreeProvider instance from dependency injection.</param>
         /// <param name="actionConstraintProviders">ActionConstraintCache instance from dependency injection.</param>
         /// <param name="loggerFactory">ILoggerFactory instance from dependency injection.</param>
-        public ODataActionSelector(IServiceProvider serviceProvider,
-            IActionSelectorDecisionTreeProvider decisionTreeProvider,
+        public ODataActionSelector(IActionSelectorDecisionTreeProvider decisionTreeProvider,
             ActionConstraintCache actionConstraintProviders,
             ILoggerFactory loggerFactory)
         {
-            _serviceProvider = serviceProvider;
-            _selector = new ActionSelector(decisionTreeProvider, actionConstraintProviders, loggerFactory);
+            _innerSelector = new ActionSelector(decisionTreeProvider, actionConstraintProviders, loggerFactory);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ActionDescriptor> SelectCandidates(RouteContext routeContext)
+        public IReadOnlyList<ActionDescriptor> SelectCandidates(RouteContext context)
         {
-            if (routeContext.HttpContext.ODataFeature().IsValidODataRequest)
+            if (context == null)
             {
-                ODataOptions options = _serviceProvider.GetRequiredService<IOptions<ODataOptions>>().Value;
+                throw Error.ArgumentNull("context");
+            }
 
-                IActionDescriptorCollectionProvider actionCollectionProvider =
-                    routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
-                Contract.Assert(actionCollectionProvider != null);
+            HttpRequest request = context.HttpContext.Request;
+            IEnumerable<IODataRoutingConvention> routingConventions = request.GetRoutingConventions();
+            ODataPath odataPath = context.HttpContext.ODataFeature().Path;
+            RouteData routeData = context.RouteData;
 
-                ActionDescriptor actionDescriptor = null;
-                foreach (var convention in options.RoutingConventions)
+            if (odataPath == null || routingConventions == null || routeData.Values.ContainsKey(ODataRouteConstants.Action))
+            {
+                // If there is no path, no routing conventions or there is already and indication we routed it,
+                // let the _innerSelector handle the request.
+                return _innerSelector.SelectCandidates(context);
+            }
+
+            foreach (IODataRoutingConvention convention in routingConventions)
+            {
+                ControllerActionDescriptor actionDescriptor = convention.SelectAction(context);
+                if (actionDescriptor != null)
                 {
-                    ODataPath odataPath = routeContext.HttpContext.ODataFeature().Path;
-                    HttpRequest request = routeContext.HttpContext.Request;
-
-                    actionDescriptor = convention.SelectAction(routeContext);
-                    if (actionDescriptor != null)
-                    {
-                        List<ActionDescriptor> list = new List<ActionDescriptor> { actionDescriptor };
-                        return list.AsReadOnly();
-                    }
+                    context.RouteData.Values[ODataRouteConstants.Action] = actionDescriptor.ActionName;
+                    List<ActionDescriptor> list = new List<ActionDescriptor> { actionDescriptor };
+                    return list.AsReadOnly();
                 }
             }
 
-            return _selector.SelectCandidates(routeContext);
+            // TODO:
+            //throw new HttpResponseException(CreateErrorResponse(request, HttpStatusCode.NotFound,
+            //    Error.Format(SRResources.NoMatchingResource, controllerContext.Request.RequestUri),
+            //    Error.Format(SRResources.NoRoutingHandlerToSelectAction, odataPath.PathTemplate)));
+            return null;
         }
 
         /// <inheritdoc />
         public ActionDescriptor SelectBestCandidate(RouteContext context, IReadOnlyList<ActionDescriptor> candidates)
         {
-            if (context.HttpContext.ODataFeature().IsValidODataRequest)
+            RouteData routeData = context.RouteData;
+            ODataPath odataPath = context.HttpContext.ODataFeature().Path;
+            if (odataPath != null && routeData.Values.ContainsKey(ODataRouteConstants.Action))
             {
-                // We shoudl have only put one candidate in the list, select it.
+                // If there is a path and is already and indication we routed it,
+                // select the first candidate; we should have only put one candidate in the list.
                 return candidates.First();
             }
 
-            return _selector.SelectBestCandidate(context, candidates);
+            return _innerSelector.SelectBestCandidate(context, candidates);
         }
     }
 }

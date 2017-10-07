@@ -90,12 +90,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
 
             string odataPath = pathHandler.Link(new ODataPath(segments));
 
-            IActionContextAccessor actionContextAccessor = this.innerRequest.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>();
-            ActionContext actionContext = actionContextAccessor.ActionContext;
-
-            IUrlHelperFactory urlHelperFactory = this.innerRequest.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
-            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(actionContext);
-
+            IUrlHelper urlHelper = this.innerRequest.HttpContext.GetUrlHelper();
             return urlHelper.Link(
                 routeName,
                 new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });

@@ -96,7 +96,5 @@ namespace Microsoft.AspNetCore.OData
         /// </summary>
         /// <value>Initially an empty <c>IDictionary&lt;string, object&gt;</c>.</value>
         public IDictionary<string, object> RoutingConventionsStore { get; set; } = new Dictionary<string, object>();
-
-        // TODO: and more features below.
     }
 }

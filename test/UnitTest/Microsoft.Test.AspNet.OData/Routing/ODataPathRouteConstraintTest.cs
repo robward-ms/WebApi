@@ -150,7 +150,8 @@ namespace Microsoft.Test.AspNet.OData.Routing
             HttpRouteCollection httpRouteCollection = new HttpRouteCollection();
             httpRouteCollection.Add(_routeName, new HttpRoute());
             var configuration = new HttpConfiguration(httpRouteCollection);
-            configuration.SetODataRootContainer(_routeName, _rootContainer);
+            PerRouteContainer perRouteContainer = configuration.GetPerRouteContainer() as PerRouteContainer;
+            perRouteContainer.SetODataRootContainer(_routeName, _rootContainer);
             request.SetConfiguration(configuration);
 
             var values = new Dictionary<string, object>() { { "odataPath", "$metadata" } };

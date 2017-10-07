@@ -3,9 +3,6 @@
 
 using System;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Routing;
-using Microsoft.AspNet.OData.Routing.Conventions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.OData
@@ -17,6 +14,9 @@ namespace Microsoft.AspNetCore.OData
     {
         private IServiceProvider services;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataOptionsSetup"/> class.
+        /// </summary>
         public ODataOptionsSetup(IServiceProvider services)
         {
             if (services == null)
@@ -27,26 +27,9 @@ namespace Microsoft.AspNetCore.OData
             this.services = services;
         }
 
+        /// <inheritdoc />
         public void Configure(ODataOptions options)
         {
-            //TODO: routeName?
-            string routeName = string.Empty;
-
-            // Set up the default routing conventions
-            options.RoutingConventions.Add(new AttributeRoutingConvention(routeName, this.services));
-            options.RoutingConventions.Add(new MetadataRoutingConvention());
-            options.RoutingConventions.Add(new EntitySetRoutingConvention());
-            options.RoutingConventions.Add(new SingletonRoutingConvention());
-            options.RoutingConventions.Add(new EntityRoutingConvention());
-            options.RoutingConventions.Add(new NavigationRoutingConvention());
-            options.RoutingConventions.Add(new PropertyRoutingConvention());
-            options.RoutingConventions.Add(new DynamicPropertyRoutingConvention());
-            options.RoutingConventions.Add(new RefRoutingConvention());
-            options.RoutingConventions.Add(new ActionRoutingConvention());
-            options.RoutingConventions.Add(new FunctionRoutingConvention());
-            options.RoutingConventions.Add(new UnmappedRequestRoutingConvention());
-
-            // TODO: add more default configuration here
         }
     }
 }

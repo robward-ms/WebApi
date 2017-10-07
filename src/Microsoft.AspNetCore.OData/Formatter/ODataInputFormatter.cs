@@ -113,7 +113,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             {
                 _deserializerProvider = new ODataDeserializerProviderProxy
                 {
-                    RequestContainer = request.HttpContext.RequestServices
+                    RequestContainer = request.GetRequestContainer()
                 };
             }
         }
@@ -146,7 +146,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 ODataDeserializerProviderProxy deserializerProviderProxy = _deserializerProvider as ODataDeserializerProviderProxy;
                 if (deserializerProviderProxy != null && deserializerProviderProxy.RequestContainer == null)
                 {
-                    deserializerProviderProxy.RequestContainer = value.HttpContext.RequestServices;
+                    deserializerProviderProxy.RequestContainer = value.GetRequestContainer();
                 }
 
                 _request = value;
@@ -307,7 +307,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                     oDataReaderSettings.BaseUri = GetBaseAddressInternal(Request);
                     oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, requestHeaders, Request.GetODataContentIdMapping(), Request.HttpContext.RequestServices);
+                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, requestHeaders, Request.GetODataContentIdMapping(), Request.GetRequestContainer());
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
 
                     ODataPath path = Request.ODataFeature().Path;
@@ -487,7 +487,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
-            string baseAddress = request.UrlHelper().CreateODataLink();
+            string baseAddress = request.HttpContext.GetUrlHelper().CreateODataLink();
             if (baseAddress == null)
             {
                 throw new SerializationException(SRResources.UnableToDetermineBaseUrl);

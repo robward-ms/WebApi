@@ -109,7 +109,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             {
                 _serializerProvider = new ODataSerializerProviderProxy
                 {
-                    RequestContainer = request.HttpContext.RequestServices,
+                    RequestContainer = request.GetRequestContainer(),
                 };
             }
         }
@@ -142,8 +142,8 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 ODataSerializerProviderProxy serializerProviderProxy = _serializerProvider as ODataSerializerProviderProxy;
                 if (serializerProviderProxy != null && serializerProviderProxy.RequestContainer == null)
                 {
-                    serializerProviderProxy.RequestContainer = value.HttpContext.RequestServices;
-            }
+                    serializerProviderProxy.RequestContainer = value.GetRequestContainer();
+                }
 
                 _request = value;
             }
@@ -222,8 +222,6 @@ namespace Microsoft.AspNetCore.OData.Formatter
         //}
 
         /// <inheritdoc/>
-        /// TODO: CanWriteResult?
-        //protected override bool CanWriteType(Type type)
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
             Type type = context.Object.GetType();
@@ -288,10 +286,8 @@ namespace Microsoft.AspNetCore.OData.Formatter
 
             try
             {
-                MemoryStream writeStream = new MemoryStream();
-                WriteToStream(type, value, writeStream, request, request.ContentType, request.ContentLength);
-
-                return response.WriteAsync(writeStream.ToString());
+                WriteToStream(type, value, response.Body, request, request.ContentType, request.ContentLength);
+                return TaskHelpers.Completed();
             }
             catch (Exception ex)
             {
@@ -323,7 +319,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
             }
 
-            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, request.Headers, request.HttpContext.RequestServices);
+            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, request.Headers, request.GetRequestContainer());
             IODataResponseMessage responseMessage = responseMessageWrapper;
             if (annotationFilter != null)
             {
@@ -336,7 +332,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             writerSettings.Version = _version;
             writerSettings.Validations = writerSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-            string metadataLink = request.UrlHelper().CreateODataLink(MetadataSegment.Instance);
+            string metadataLink = request.HttpContext.GetUrlHelper().CreateODataLink(MetadataSegment.Instance);
 
             if (metadataLink == null)
             {
@@ -356,7 +352,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
             if (!contentLength.HasValue || contentLength.Value == 0)
             {
-                // TODO: Rewrite the paramater part.
+                // TODO: Rewrite the parameter part.
                 //IEnumerable<KeyValuePair<string, string>> parameters =
                 //    contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
                 IEnumerable<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
@@ -521,7 +517,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
-            string baseAddress = request.UrlHelper().CreateODataLink();
+            string baseAddress = request.HttpContext.GetUrlHelper().CreateODataLink();
             if (baseAddress == null)
             {
                 throw new SerializationException(SRResources.UnableToDetermineBaseUrl);

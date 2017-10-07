@@ -66,6 +66,9 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 }
             });
 
+            // Add our action selector.
+            services.AddSingleton<IActionSelector, ODataActionSelector>();
+
             // Add the ActionContextAccessor; this allows access to the ActionContext which is needed
             //during the formatting process to construct a IUrlHelper.
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

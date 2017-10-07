@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.AspNetCore.OData.Extensions
 {
@@ -51,13 +53,14 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("routeName");
             }
 
-            IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, configureAction);
+            // Create an service provider for this route. Add the default services to the custom configuration actions.
+            IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, ConfigureDefaultServices(configureAction));
 
             // Resolve the path handler and set URI resolver to it.
             IODataPathHandler pathHandler = serviceProvider.GetRequiredService<IODataPathHandler>();
 
             // If settings is not on local, use the global configuration settings.
-            ODataOptions options = serviceProvider.GetRequiredService<IOptions<ODataOptions>>().Value;
+            ODataOptions options = builder.ServiceProvider.GetRequiredService<IOptions<ODataOptions>>().Value;
             if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
             {
                 pathHandler.UrlKeyDelimiter = options.UrlKeyDelimiter;
@@ -139,5 +142,28 @@ namespace Microsoft.AspNetCore.OData.Extensions
         }
 
         // TODO: Batch?
+
+        /// <summary>
+        /// Configure the default services.
+        /// </summary>
+        /// <param name="configureAction"></param>
+        /// <returns></returns>
+        private static Action<IContainerBuilder> ConfigureDefaultServices(Action<IContainerBuilder> configureAction)
+        {
+            return (builder =>
+            {
+                // Add platform-specific services here. Add Configuration first as other services may rely on it.
+                builder.AddService<IODataPathTemplateHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
+                //services.AddSingleton<IAssemblyProvider, DefaultAssemblyProvider>();
+                // TODO:
+                // builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
+
+                // Add the default webApi services.
+                builder.AddDefaultWebApiServices();
+
+                // Add custom actions.
+                configureAction?.Invoke(builder);
+            });
+        }
     }
 }

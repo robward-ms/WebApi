@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.OData.Extensions;
 using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
@@ -51,7 +52,8 @@ namespace Microsoft.AspNetCore.OData.Adapters
                 this.Context = new WebApiContext(feature);
             }
 
-            ODataOptions options = request.HttpContext.ODataOptions();
+            // Get the ODataOptions from the global service provider.
+            ODataOptions options = request.HttpContext.RequestServices.GetRequiredService<IOptions<ODataOptions>>().Value;
             if (options != null)
             {
                 this.Options = new WebApiOptions(options);
@@ -103,7 +105,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// </summary>
         public IServiceProvider RequestContainer
         {
-            get { return this.innerRequest.HttpContext.RequestServices; }
+            get { return this.innerRequest.GetRequestContainer(); }
         }
 
         /// <summary>
@@ -122,7 +124,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         {
             get
             {
-                return this.innerRequest.HttpContext.RequestServices.GetRequiredService<ODataDeserializerProvider>();
+                return this.innerRequest.GetRequestContainer().GetRequiredService<ODataDeserializerProvider>();
             }
         }
 
@@ -167,7 +169,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <returns></returns>
         public IODataPathHandler PathHandler
         {
-            get { return this.innerRequest.HttpContext.ODataPathHandler(); }
+            get { return this.innerRequest.GetPathHandler(); }
         }
 
         /// <summary>
@@ -192,7 +194,7 @@ namespace Microsoft.AspNetCore.OData.Adapters
         /// <returns></returns>
         public ODataMessageReaderSettings ReaderSettings
         {
-            get { return this.innerRequest.HttpContext.GetReaderSettings(); }
+            get { return this.innerRequest.GetReaderSettings(); }
         }
 
         /// <summary>
