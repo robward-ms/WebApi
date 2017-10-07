@@ -97,6 +97,7 @@ namespace Microsoft.AspNetCore.OData.Query
         {
         }
 
+        // TODO: Refactor, Typehelper?
         internal static bool IsIQueryable(Type type)
         {
             return type == typeof(IQueryable) ||

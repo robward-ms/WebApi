@@ -17,6 +17,7 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
         /// <summary>
         /// Gets or sets the HTTP Request whose response is being serialized.
         /// </summary>
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
         public HttpRequest Request
         {
             get { return _request; }
@@ -33,15 +34,10 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
         /// Clone this instance of <see cref="ODataSerializerContext"/> from an existing instance.
         /// </summary>
         /// <param name="context"></param>
-        private void CopyProperties(ODataSerializerContext context)
+        /// <remarks>This function uses types that are AspNetCore-specific.</remarks>
+        private void CopyPlatformSpecificProperties(ODataSerializerContext context)
         {
             Request = context.Request;
-            Model = context.Model;
-            Path = context.Path;
-            RootElementName = context.RootElementName;
-            SkipExpensiveAvailabilityChecks = context.SkipExpensiveAvailabilityChecks;
-            MetadataLevel = context.MetadataLevel;
-            Items = context.Items;
         }
     }
 }

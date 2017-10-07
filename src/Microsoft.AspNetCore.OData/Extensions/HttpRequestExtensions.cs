@@ -9,13 +9,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
@@ -164,71 +163,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
             UriBuilder uriBuilder = new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.HasValue ? request.Host.Port.Value : 80, request.Path.ToUriComponent());
             IEnumerable<KeyValuePair<string, string>> queryParameters = request.Query.SelectMany(kvp => kvp.Value, (kvp, value) => new KeyValuePair<string, string>(kvp.Key, value));
 
-            return GetNextPageLink(uriBuilder.Uri, queryParameters, pageSize);
-        }
-
-        internal static Uri GetNextPageLink(Uri requestUri, IEnumerable<KeyValuePair<string, string>> queryParameters, int pageSize)
-        {
-            Contract.Assert(requestUri != null);
-            Contract.Assert(queryParameters != null);
-            Contract.Assert(requestUri.IsAbsoluteUri);
-
-            StringBuilder queryBuilder = new StringBuilder();
-
-            int nextPageSkip = pageSize;
-
-            foreach (KeyValuePair<string, string> kvp in queryParameters)
-            {
-                string key = kvp.Key;
-                string value = kvp.Value;
-                switch (key)
-                {
-                    case "$top":
-                        int top;
-                        if (Int32.TryParse(value, out top))
-                        {
-                            // There is no next page if the $top query option's value is less than or equal to the page size.
-                            Contract.Assert(top > pageSize);
-                            // We decrease top by the pageSize because that's the number of results we're returning in the current page
-                            value = (top - pageSize).ToString(CultureInfo.InvariantCulture);
-                        }
-                        break;
-                    case "$skip":
-                        int skip;
-                        if (Int32.TryParse(value, out skip))
-                        {
-                            // We increase skip by the pageSize because that's the number of results we're returning in the current page
-                            nextPageSkip += skip;
-                        }
-                        continue;
-                    default:
-                        break;
-                }
-
-                if (key.Length > 0 && key[0] == '$')
-                {
-                    // $ is a legal first character in query keys
-                    key = '$' + Uri.EscapeDataString(key.Substring(1));
-                }
-                else
-                {
-                    key = Uri.EscapeDataString(key);
-                }
-                value = Uri.EscapeDataString(value);
-
-                queryBuilder.Append(key);
-                queryBuilder.Append('=');
-                queryBuilder.Append(value);
-                queryBuilder.Append('&');
-            }
-
-            queryBuilder.AppendFormat("$skip={0}", nextPageSkip);
-
-            UriBuilder uriBuilder = new UriBuilder(requestUri)
-            {
-                Query = queryBuilder.ToString()
-            };
-            return uriBuilder.Uri;
+            return GetNextPageHelper.GetNextPageLink(uriBuilder.Uri, queryParameters, pageSize);
         }
 
         /// <summary>

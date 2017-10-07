@@ -76,7 +76,6 @@
     <Compile Include="Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="Formatter\Deserialization\ODataDeserializerProvider.cs" />
     <Compile Include="Formatter\Deserialization\ODataDeserializerProviderProxy.cs" />
-    <Compile Include="Extensions\ContainerBuilderExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Batch\ODataBatchHandler.cs" />
     <Compile Include="Batch\ODataBatchHttpRequestMessageExtensions.cs" />
@@ -89,6 +88,7 @@
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProviderProxy.cs" />
+    <Compile Include="GetNextPageHelper.cs" />
     <Compile Include="MetadataController.cs" />
     <Compile Include="Query\Expressions\ExpressionBinderBase.cs" />
     <Compile Include="Batch\UnbufferedODataBatchHandler.cs" />
@@ -111,11 +111,9 @@
     <Compile Include="ODataNullValueMessageHandler.cs" />
     <Compile Include="ODataRoutingAttribute.cs" />
     <Compile Include="Builder\ODataConventionModelBuilder.cs" />
-    <Compile Include="Formatter\Serialization\ODataDeltaFeedSerializer.cs" />
     <Compile Include="Formatter\Serialization\ODataErrorSerializer.cs" />
     <Compile Include="ODataQueryContextExtensions.cs" />
     <Compile Include="Query\ODataQueryOptions.cs" />
-    <Compile Include="Formatter\Serialization\ODataResourceSetSerializer.cs" />
     <Compile Include="PerRequestContentNegotiator.cs" />
     <Compile Include="Query\ODataQueryOptionsOfTEntity.cs" />
     <Compile Include="ResourceContext.cs" />

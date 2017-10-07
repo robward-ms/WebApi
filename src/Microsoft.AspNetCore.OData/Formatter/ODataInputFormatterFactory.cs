@@ -7,7 +7,6 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.OData.Formatter.Deserialization;
 using Microsoft.OData;
 
 namespace Microsoft.AspNetCore.OData.Formatter

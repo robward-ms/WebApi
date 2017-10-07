@@ -13,7 +13,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
-namespace Microsoft.AspNetCore.OData.Extensions
+namespace Microsoft.AspNet.OData.Extensions
 {
     internal static class ContainerBuilderExtensions
     {
