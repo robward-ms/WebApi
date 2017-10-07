@@ -25,7 +25,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     public abstract partial class NavigationSourceRoutingConvention : IODataRoutingConvention
     {
         /// <inheritdoc/>
-        public ActionDescriptor SelectAction(RouteContext routeContext)
+        public ControllerActionDescriptor SelectAction(RouteContext routeContext)
         {
             if (routeContext == null)
             {
@@ -35,6 +35,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
             ODataPath odataPath = routeContext.HttpContext.ODataFeature().Path;
             HttpRequest request = routeContext.HttpContext.Request;
 
+            // Get a IActionDescriptorCollectionProvider from the global service provider.
             IActionDescriptorCollectionProvider actionCollectionProvider =
                 routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
             Contract.Assert(actionCollectionProvider != null);

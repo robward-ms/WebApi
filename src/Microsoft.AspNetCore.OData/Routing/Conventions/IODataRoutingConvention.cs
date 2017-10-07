@@ -24,6 +24,6 @@ namespace Microsoft.AspNetCore.OData.Routing.Conventions
         /// <c>null</c> if the request isn't handled by this convention;
         ///  otherwise, the <see cref="ActionDescriptor"/> of the selected controller.
         /// </returns>
-        ActionDescriptor SelectAction(RouteContext routeContext);
+        ControllerActionDescriptor SelectAction(RouteContext routeContext);
     }
 }

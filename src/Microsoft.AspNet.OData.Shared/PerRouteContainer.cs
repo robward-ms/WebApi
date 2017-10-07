@@ -3,16 +3,15 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.AspNet.OData.Routing;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.OData.Formatter;
-using Microsoft.AspNetCore.OData.Routing;
 using Microsoft.OData;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
@@ -21,6 +20,14 @@ namespace Microsoft.AspNet.OData
     internal class PerRouteContainer : IPerRouteContainer
     {
         private ConcurrentDictionary<string, IServiceProvider> _perRouteContainers;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataSerializerContext"/> class.
+        /// </summary>
+        public PerRouteContainer()
+        {
+            this._perRouteContainers = new ConcurrentDictionary<string, IServiceProvider>();
+        }
 
         /// <summary>
         /// Gets or sets a function to build an <see cref="IContainerBuilder"/>
@@ -36,7 +43,7 @@ namespace Microsoft.AspNet.OData
         public IServiceProvider CreateODataRootContainer(string routeName, Action<IContainerBuilder> configureAction)
         {
             IServiceProvider rootContainer = this.CreateODataRootContainer(configureAction);
-            this._perRouteContainers.AddOrUpdate(routeName, rootContainer, (k, v) => rootContainer);
+            this.SetODataRootContainer(routeName, rootContainer);
 
             return rootContainer;
         }
@@ -64,7 +71,7 @@ namespace Microsoft.AspNet.OData
         /// <returns>An instance of <see cref="IServiceProvider"/> to manage services for a route.</returns>
         public IServiceProvider CreateODataRootContainer(Action<IContainerBuilder> configureAction)
         {
-            IContainerBuilder builder = CreateContainerBuilderWithDefaultServices();
+            IContainerBuilder builder = CreateContainerBuilderWithCoreServices();
 
             if (configureAction != null)
             {
@@ -81,10 +88,27 @@ namespace Microsoft.AspNet.OData
         }
 
         /// <summary>
+        /// Get the root container for a given route name.
+        /// </summary>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="rootContainer">The root container to set.</param>
+        /// <returns>The root container for the route name.</returns>
+        /// <remarks>Used by unit tests to insert root containers.</remarks>
+        internal void SetODataRootContainer(string routeName, IServiceProvider rootContainer)
+        {
+            if (rootContainer == null)
+            {
+                throw Error.InvalidOperation(SRResources.NullContainer);
+            }
+
+            this._perRouteContainers.AddOrUpdate(routeName, rootContainer, (k, v) => rootContainer);
+        }
+
+        /// <summary>
         /// Create a container builder with the default OData services.
         /// </summary>
         /// <returns>An instance of <see cref="IContainerBuilder"/> to manage services.</returns>
-        private IContainerBuilder CreateContainerBuilderWithDefaultServices()
+        private IContainerBuilder CreateContainerBuilderWithCoreServices()
         {
             // Construct the IContainerBuilder.
             IContainerBuilder builder;
@@ -101,76 +125,8 @@ namespace Microsoft.AspNet.OData
                 builder = new DefaultContainerBuilder();
             }
 
-            // TODO: Add these in AspNet version only?
-            //builder.AddService(ServiceLifetime.Singleton, sp => configuration);
-            //builder.AddService(ServiceLifetime.Singleton, sp => configuration.GetDefaultQuerySettings());
-
             // Add default ODataLib services.
             builder.AddDefaultODataServices();
-
-            // Path handler.
-            builder.AddService<IODataPathHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
-
-            // ReaderSettings and WriterSettings are registered as prototype services.
-            // There will be a copy (if it is accessed) of each prototype for each request.
-            builder.AddServicePrototype(new ODataMessageReaderSettings
-            {
-                EnableMessageStreamDisposal = false,
-                MessageQuotas = new ODataMessageQuotas { MaxReceivedMessageSize = Int64.MaxValue },
-            });
-
-            builder.AddServicePrototype(new ODataMessageWriterSettings
-            {
-                EnableMessageStreamDisposal = false,
-                MessageQuotas = new ODataMessageQuotas { MaxReceivedMessageSize = Int64.MaxValue },
-            });
-
-            // QueryValidators.
-            builder.AddService<CountQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<FilterQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<ODataQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<OrderByQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<SelectExpandQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<SkipQueryValidator>(ServiceLifetime.Singleton);
-            builder.AddService<TopQueryValidator>(ServiceLifetime.Singleton);
-
-            // SerializerProvider and DeserializerProvider.
-            builder.AddService<ODataSerializerProvider, DefaultODataSerializerProvider>(ServiceLifetime.Singleton);
-            builder.AddService<ODataDeserializerProvider, DefaultODataDeserializerProvider>(ServiceLifetime.Singleton);
-
-            // Deserializers.
-            builder.AddService<ODataResourceDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataEnumDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataPrimitiveDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataResourceSetDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataCollectionDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataEntityReferenceLinkDeserializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataActionPayloadDeserializer>(ServiceLifetime.Singleton);
-
-            // Serializers.
-            builder.AddService<ODataEnumSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataPrimitiveSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataDeltaFeedSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataResourceSetSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataCollectionSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataResourceSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataServiceDocumentSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataEntityReferenceLinkSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataEntityReferenceLinksSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataErrorSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataMetadataSerializer>(ServiceLifetime.Singleton);
-            builder.AddService<ODataRawValueSerializer>(ServiceLifetime.Singleton);
-
-            // Binders.
-            builder.AddService<ODataQuerySettings>(ServiceLifetime.Scoped);
-            builder.AddService<FilterBinder>(ServiceLifetime.Transient);
-
-            // Add ETag handler.
-            builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
-
-            // Routing.
-            builder.AddService<IODataPathTemplateHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
-            builder.AddService<IActionSelector, ODataActionSelector>(ServiceLifetime.Singleton);
 
             return builder;
         }

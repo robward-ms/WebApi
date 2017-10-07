@@ -17,12 +17,7 @@ namespace Microsoft.AspNetCore.OData
         /// </summary>
         public ODataOptions()
         {
-            //Model = null;
-            RoutingConventions = new List<IODataRoutingConvention>();
-            //ModelManager = new ODataModelManager();
         }
-
-        //public IODataModelManger ModelManager { get; private set; }
 
         /// <summary>
         /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
@@ -34,12 +29,5 @@ namespace Microsoft.AspNetCore.OData
         /// Gets or Sets a value indicating if value should be emitted for dynamic properties which are null.
         /// </summary>
         public bool NullDynamicPropertyIsEnabled { get; private set; }
-
-        /// <summary>
-        /// Gets or sets a collection of <see cref="IODataRoutingConvention"/> which are used to routing.
-        /// </summary>
-        public IList<IODataRoutingConvention> RoutingConventions { get; set; }
-
-        // TODO: and more configuration here.
     }
 }

@@ -29,6 +29,8 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     /// </summary>
     public partial class AttributeRoutingConvention : IODataRoutingConvention
     {
+        private static readonly DefaultODataPathHandler _defaultPathHandler = new DefaultODataPathHandler();
+
         private readonly string _routeName;
 
         private readonly IServiceProvider _serviceProvider;
@@ -45,17 +47,14 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         /// look for a match.</param>
         /// <param name="pathTemplateHandler">The path template handler to be used for parsing the path templates.</param>
         public AttributeRoutingConvention(string routeName, IServiceProvider serviceProvider)
-            //: this(routeName, (IODataPathTemplateHandler)null)
+            : this(routeName, _defaultPathHandler)
         {
             if (serviceProvider == null)
             {
                 throw Error.ArgumentNull("serviceProvider");
             }
 
-            // Get service provider.
             _serviceProvider = serviceProvider;
-            _routeName = routeName;
-            _odataPathTemplateHandler = _serviceProvider.GetRequiredService<IODataPathTemplateHandler>();
         }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         }
 
         /// <summary>
-        /// Gets the atribute mappings.
+        /// Gets the attribute mappings.
         /// </summary>
         internal IDictionary<ODataPathTemplate, IWebApiActionDescriptor> AttributeMappings
         {
@@ -120,6 +119,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
             {
                 if (_attributeMappings == null)
                 {
+                    // Get the IActionDescriptorCollectionProvider from the global services provider.
                     IActionDescriptorCollectionProvider actionDescriptorCollectionProvider =
                             _serviceProvider.GetRequiredService<IActionDescriptorCollectionProvider>();
 
@@ -147,8 +147,9 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         }
 
         /// <inheritdoc/>
-        public ActionDescriptor SelectAction(RouteContext routeContext)
+        public ControllerActionDescriptor SelectAction(RouteContext routeContext)
         {
+            // Get a IActionDescriptorCollectionProvider from the global service provider.
             IActionDescriptorCollectionProvider actionCollectionProvider =
                 routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
             Contract.Assert(actionCollectionProvider != null);
@@ -283,16 +284,11 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
 
             try
             {
-                IODataPathTemplateHandler odataPathTemplateHandler = this._odataPathTemplateHandler;
-                if (odataPathTemplateHandler == null)
-                {
-                    odataPathTemplateHandler = _serviceProvider.GetRequiredService<IODataPathTemplateHandler>();
-                }
-
                 // We are NOT in a request but establishing the attribute routing convention.
                 // So use the root container rather than the request container.
-                odataPathTemplate = odataPathTemplateHandler.ParseTemplate(pathTemplate, _serviceProvider);
-                    // TODO: Suport pre-route containers? controllerAction.Configuration.GetODataRootContainer(_routeName));
+                IPerRouteContainer perRouteContainer = _serviceProvider.GetRequiredService<IPerRouteContainer>();
+                odataPathTemplate = _odataPathTemplateHandler.ParseTemplate(pathTemplate,
+                    perRouteContainer.GetODataRootContainer(_routeName));
             }
             catch (ODataException e)
             {

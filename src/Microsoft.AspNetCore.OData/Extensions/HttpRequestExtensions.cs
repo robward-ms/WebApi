@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.AspNetCore.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
@@ -30,6 +31,11 @@ namespace Microsoft.AspNetCore.OData.Extensions
         internal const string ODataMaxServiceVersionHeader = "OData-MaxVersion";
         internal const ODataVersion DefaultODataVersion = ODataVersion.V4;
 
+        /// <summary>
+        /// Gets the <see cref="IODataFeature"/> from the services container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="IODataFeature"/> from the services container.</returns>
         public static IODataFeature ODataFeature(this HttpRequest request)
         {
             if (request == null)
@@ -40,6 +46,11 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return request.HttpContext.ODataFeature();
         }
 
+        /// <summary>
+        /// Gets the <see cref="IETagHandler"/> from the services container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The <see cref="IETagHandler"/> from the services container.</returns>
         public static IETagHandler ETagHandler(this HttpRequest request)
         {
             if (request == null)
@@ -62,7 +73,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.GetPathHandler();
+            return request.GetRequestContainer().GetRequiredService<IODataPathHandler>();
         }
 
         /// <summary>
@@ -70,7 +81,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The <see cref="IEdmModel"/> from the request container.</returns>
-        /// /// TODO: Per-Request, multiple models?
         public static IEdmModel GetModel(this HttpRequest request)
         {
             if (request == null)
@@ -78,7 +88,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.GetModel();
+            return request.GetRequestContainer().GetRequiredService<IEdmModel>();
         }
 
         /// <summary>
@@ -93,17 +103,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.GetReaderSettings();
-        }
-
-        internal static IWebApiUrlHelper UrlHelper(this HttpRequest request)
-        {
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
-            return new WebApiUrlHelper(request);
+            return request.GetRequestContainer().GetRequiredService<ODataMessageReaderSettings>();
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.GetWriterSettings();
+            return request.GetRequestContainer().GetRequiredService<ODataMessageWriterSettings>();
         }
 
         internal static bool IsCountRequest(this HttpRequest request)
@@ -131,6 +131,21 @@ namespace Microsoft.AspNetCore.OData.Extensions
         {
             ODataPath path = request.ODataFeature().Path;
             return path != null && path.Segments.LastOrDefault() is ValueSegment;
+        }
+
+        /// <summary>
+        /// Gets the set of <see cref="IODataRoutingConvention"/> from the request container.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>The set of <see cref="IODataRoutingConvention"/> from the request container.</returns>
+        public static IEnumerable<IODataRoutingConvention> GetRoutingConventions(this HttpRequest request)
+        {
+            if (request == null)
+            {
+                throw Error.ArgumentNull("request");
+            }
+
+            return request.GetRequestContainer().GetServices<IODataRoutingConvention>();
         }
 
         /// <summary>
@@ -348,7 +363,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
         /// </param>
         public static void DeleteRequestContainer(this HttpRequest request, bool dispose)
         {
-            object value;
             if (request.HttpContext.ODataFeature().RequestScope != null)
             {
                 IServiceScope requestScope = request.HttpContext.ODataFeature().RequestScope;
@@ -362,29 +376,23 @@ namespace Microsoft.AspNetCore.OData.Extensions
             }
         }
 
-        private static IServiceProvider GetRootContainer(this HttpRequest request, string routeName)
-        {
-            HttpConfiguration configuration = request.GetConfiguration();
-            if (configuration == null)
-            {
-                throw Error.Argument("request", SRResources.RequestMustContainConfiguration);
-            }
-
-            // Requests from OData routes will have RouteName set.
-            return routeName != null
-                ? configuration.GetODataRootContainer(routeName)
-                : configuration.GetNonODataRootContainer();
-        }
-
+        /// <summary>
+        /// Create a scoped request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <returns></returns>
         private static IServiceScope CreateRequestScope(this HttpRequest request, string routeName)
         {
             IServiceProvider rootContainer;
             if (string.IsNullOrEmpty(routeName))
             {
+                // For HTTP routes, use the default request services.
                 rootContainer = request.HttpContext.RequestServices;
             }
             else
             {
+                // For OData routes, create a scoped requested from the per-route container.
                 IPerRouteContainer perRouteContainer = request.HttpContext.RequestServices.GetRequiredService<IPerRouteContainer>();
                 if (perRouteContainer == null)
                 {

@@ -23,8 +23,9 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     public partial class MetadataRoutingConvention : IODataRoutingConvention
     {
         /// <inheritdoc/>
-        public ActionDescriptor SelectAction(RouteContext routeContext)
+        public ControllerActionDescriptor SelectAction(RouteContext routeContext)
         {
+            // Get a IActionDescriptorCollectionProvider from the global service provider.
             IActionDescriptorCollectionProvider actionCollectionProvider =
                 routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
             Contract.Assert(actionCollectionProvider != null);

@@ -82,7 +82,5 @@ namespace Microsoft.AspNetCore.OData.Interfaces
         /// </summary>
         /// <value>Initially an empty <c>IDictionary&lt;string, object&gt;</c>.</value>
         IDictionary<string, object> RoutingConventionsStore { get; set; }
-
-        //TODO: Add more OData features below
     }
 }

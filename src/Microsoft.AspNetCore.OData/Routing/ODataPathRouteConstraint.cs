@@ -126,8 +126,7 @@ namespace Microsoft.AspNetCore.OData.Routing
                             serviceRoot = serviceRoot.Substring(0, serviceRoot.Length - _escapedSlash.Length);
                         }
 
-                        //IServiceProvider requestContainer = request.CreateRequestContainer(RouteName);
-                        IServiceProvider requestContainer = httpContext.RequestServices;
+                        IServiceProvider requestContainer = request.CreateRequestContainer(RouteName);
                         IODataPathHandler pathHandler = requestContainer.GetRequiredService<IODataPathHandler>();
                         path = pathHandler.Parse(serviceRoot, oDataPathAndQuery, requestContainer);
                     }
