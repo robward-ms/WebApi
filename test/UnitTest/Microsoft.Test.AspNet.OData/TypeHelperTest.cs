@@ -225,6 +225,20 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
+        [InlineData(typeof(IEnumerable), false)]
+        [InlineData(typeof(IQueryable), true)]
+        [InlineData(typeof(IEnumerable<CustomInternalClass>), false)]
+        [InlineData(typeof(IQueryable<CustomInternalClass>), true)]
+        [InlineData(typeof(object), false)]
+        [InlineData(typeof(string), false)]
+        [InlineData(typeof(List<CustomInternalClass>), false)]
+        [InlineData(typeof(CustomInternalClass[]), false)]
+        public void IsIQueryable(Type type, bool isIQueryable)
+        {
+            Assert.Equal(isIQueryable, TypeHelper.IsIQueryable(type));
+        }
+
+        [Theory]
         [InlineData(typeof(object), false)]
         [InlineData(typeof(ICollection), false)]
         [InlineData(typeof(IEnumerable), false)]

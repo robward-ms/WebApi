@@ -54,20 +54,6 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             Assert.Empty(filters);
         }
-
-        [Theory]
-        [InlineData(typeof(IEnumerable), false)]
-        [InlineData(typeof(IQueryable), true)]
-        [InlineData(typeof(IEnumerable<Customer>), false)]
-        [InlineData(typeof(IQueryable<Customer>), true)]
-        [InlineData(typeof(object), false)]
-        [InlineData(typeof(string), false)]
-        [InlineData(typeof(List<Customer>), false)]
-        [InlineData(typeof(Customer[]), false)]
-        public void IsIQueryable_ReturnsWhetherTypeIsIQueryable(Type type, bool isIQueryable)
-        {
-            Assert.Equal(isIQueryable, QueryFilterProvider.IsIQueryable(type));
-        }
     }
 
     public class FilterProviderTestController : ODataController

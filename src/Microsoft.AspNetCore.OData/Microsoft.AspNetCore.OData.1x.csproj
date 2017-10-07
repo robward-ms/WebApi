@@ -84,4 +84,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Query\Expressions\" />
+  </ItemGroup>
+
 </Project>

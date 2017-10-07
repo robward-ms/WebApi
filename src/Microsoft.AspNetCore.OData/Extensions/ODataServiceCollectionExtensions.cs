@@ -7,7 +7,6 @@ using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
-using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -150,22 +149,5 @@ namespace Microsoft.AspNetCore.OData.Extensions
             builder.Services.Configure(setupAction);
             return builder;
         }
-
-
-        /// <summary>
-        /// Get the default assembly resolver.
-        /// </summary>
-        /// <param name="provider">The server configuration.</param>
-        internal static IWebApiAssembliesResolver GetWebApiAssembliesResolver(this IServiceProvider provider)
-        {
-            if (provider == null)
-            {
-                throw Error.ArgumentNull(nameof(provider));
-            }
-
-            ApplicationPartManager applicationPartManager = provider.GetRequiredService<ApplicationPartManager>();
-            return new WebApiAssembliesResolver(applicationPartManager);
-        }
-
     }
 }
