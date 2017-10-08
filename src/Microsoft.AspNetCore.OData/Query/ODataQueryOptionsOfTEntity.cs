@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Net.Http;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNet.OData.Query
 {
@@ -19,8 +18,8 @@ namespace Microsoft.AspNet.OData.Query
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information</param>
         /// <param name="request">The incoming request message</param>
-        /// <remarks>This signature uses types that are AspNet-specific.</remarks>
-        public ODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
+        public ODataQueryOptions(ODataQueryContext context, HttpRequest request)
             : base(context, request)
         {
             if (Context.ElementClrType == null)

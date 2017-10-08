@@ -146,6 +146,24 @@ namespace Microsoft.AspNet.OData.Adapters
         }
 
         /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag(etagHeaderValue);
+        }
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag<TEntity>(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag<TEntity>(etagHeaderValue);
+        }
+
+        /// <summary>
         /// Gets a list of content Id mappings associated with the request.
         /// </summary>
         /// <returns></returns>
