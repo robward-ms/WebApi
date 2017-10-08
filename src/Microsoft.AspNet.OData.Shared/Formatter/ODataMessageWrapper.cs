@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.OData;
 
 namespace Microsoft.AspNet.OData.Formatter
