@@ -86,6 +86,8 @@
     <Compile Include="Formatter\IETagHandler.cs" />
     <Compile Include="Formatter\ODataCountMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
+    <Compile Include="Formatter\ODataMediaTypeInputFormatter.cs" />
+    <Compile Include="Formatter\ODataMediaTypeOutputFormatter.cs" />
     <Compile Include="Formatter\Serialization\DefaultODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
