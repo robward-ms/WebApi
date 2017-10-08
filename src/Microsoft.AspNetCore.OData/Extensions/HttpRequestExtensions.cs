@@ -26,10 +26,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
 {
     public static class HttpRequestExtensions
     {
-        internal const string ODataServiceVersionHeader = "OData-Version";
-        internal const string ODataMaxServiceVersionHeader = "OData-MaxVersion";
-        internal const ODataVersion DefaultODataVersion = ODataVersion.V4;
-
         /// <summary>
         /// Gets the <see cref="IODataFeature"/> from the services container.
         /// </summary>
@@ -208,7 +204,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return GetODataVersionFromHeader(request.Headers, ODataServiceVersionHeader);
+            return GetODataVersionFromHeader(request.Headers, ODataVersionConstraint.ODataServiceVersionHeader);
         }
 
         internal static ODataVersion? ODataMaxServiceVersion(this HttpRequest request)
@@ -218,7 +214,7 @@ namespace Microsoft.AspNetCore.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return GetODataVersionFromHeader(request.Headers, ODataMaxServiceVersionHeader);
+            return GetODataVersionFromHeader(request.Headers, ODataVersionConstraint.ODataMaxServiceVersionHeader);
         }
 
         private static ODataVersion? GetODataVersionFromHeader(IHeaderDictionary headers, string headerName)

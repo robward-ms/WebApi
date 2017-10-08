@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.OData.UriParser;
 
@@ -24,16 +23,6 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         /// </returns>
         internal static SelectControllerResult SelectControllerImpl(ODataPath odataPath, IWebApiRequestMessage request)
         {
-            if (odataPath == null)
-            {
-                throw Error.ArgumentNull("odataPath");
-            }
-
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
             // entity set
             EntitySetSegment entitySetSegment = odataPath.Segments.FirstOrDefault() as EntitySetSegment;
             if (entitySetSegment != null)

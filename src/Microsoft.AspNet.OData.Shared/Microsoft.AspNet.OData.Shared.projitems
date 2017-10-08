@@ -223,8 +223,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataParameterValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\DefaultODataPathValidator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPathParameterBindingAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPathRouteConstraint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataPathSegmentExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataParameterHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataRoute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Routing\ODataVersionConstraint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Template\NavigationPropertyLinkSegmentTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Template\DynamicSegmentTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Routing\Template\OperationSegmentTemplate.cs" />

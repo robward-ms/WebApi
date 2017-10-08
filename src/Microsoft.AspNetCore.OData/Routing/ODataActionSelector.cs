@@ -1,25 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
-using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Extensions;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNet.OData.Routing;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OData.Routing.Conventions;
-using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNetCore.OData.Routing
 {
@@ -76,10 +70,6 @@ namespace Microsoft.AspNetCore.OData.Routing
                 }
             }
 
-            // TODO:
-            //throw new HttpResponseException(CreateErrorResponse(request, HttpStatusCode.NotFound,
-            //    Error.Format(SRResources.NoMatchingResource, controllerContext.Request.RequestUri),
-            //    Error.Format(SRResources.NoRoutingHandlerToSelectAction, odataPath.PathTemplate)));
             return null;
         }
 
