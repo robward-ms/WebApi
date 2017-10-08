@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OData.Formatter;
@@ -141,6 +144,97 @@ namespace Microsoft.AspNetCore.OData.Extensions
             }
 
             return request.GetRequestContainer().GetServices<IODataRoutingConvention>();
+        }
+
+        /// <summary>
+        /// Gets the OData <see cref="ETag"/> from the given request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="entityTagHeaderValue">The entity tag header value.</param>
+        /// <returns>The parsed <see cref="ETag"/>.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Relies on many ODataLib classes.")]
+        public static ETag GetETag(this HttpRequest request, EntityTagHeaderValue entityTagHeaderValue)
+        {
+            if (request == null)
+            {
+                throw Error.ArgumentNull("request");
+            }
+
+            if (entityTagHeaderValue != null)
+            {
+                if (entityTagHeaderValue.Equals(EntityTagHeaderValue.Any))
+                {
+                    return new ETag { IsAny = true };
+                }
+
+                // get the etag handler, and parse the etag
+                IETagHandler etagHandler = request.HttpContext.RequestServices.GetRequiredService<IETagHandler>();
+                IDictionary<string, object> properties = etagHandler.ParseETag(entityTagHeaderValue) ?? new Dictionary<string, object>();
+                IList<object> parsedETagValues = properties.Select(property => property.Value).AsList();
+
+                // get property names from request
+                ODataPath odataPath = request.ODataFeature().Path;
+                IEdmModel model = request.GetModel();
+                IEdmNavigationSource source = odataPath.NavigationSource;
+                if (model != null && source != null)
+                {
+                    IList<IEdmStructuralProperty> concurrencyProperties = model.GetConcurrencyProperties(source).ToList();
+                    IList<string> concurrencyPropertyNames = concurrencyProperties.OrderBy(c => c.Name).Select(c => c.Name).AsList();
+                    ETag etag = new ETag();
+
+                    if (parsedETagValues.Count != concurrencyPropertyNames.Count)
+                    {
+                        etag.IsWellFormed = false;
+                    }
+
+                    IEnumerable<KeyValuePair<string, object>> nameValues = concurrencyPropertyNames.Zip(
+                        parsedETagValues,
+                        (name, value) => new KeyValuePair<string, object>(name, value));
+                    foreach (var nameValue in nameValues)
+                    {
+                        IEdmStructuralProperty property = concurrencyProperties.SingleOrDefault(e => e.Name == nameValue.Key);
+                        Contract.Assert(property != null);
+
+                        Type clrType = EdmLibHelpers.GetClrType(property.Type, model);
+                        Contract.Assert(clrType != null);
+
+                        if (nameValue.Value != null)
+                        {
+                            Type valueType = nameValue.Value.GetType();
+                            etag[nameValue.Key] = valueType != clrType
+                                ? Convert.ChangeType(nameValue.Value, clrType, CultureInfo.InvariantCulture)
+                                : nameValue.Value;
+                        }
+                        else
+                        {
+                            etag[nameValue.Key] = nameValue.Value;
+                        }
+                    }
+
+                    return etag;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ETag{TEntity}"/> from the given request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="entityTagHeaderValue">The entity tag header value.</param>
+        /// <returns>The parsed <see cref="ETag{TEntity}"/>.</returns>
+        public static ETag<TEntity> GetETag<TEntity>(this HttpRequest request, EntityTagHeaderValue entityTagHeaderValue)
+        {
+            ETag etag = request.GetETag(entityTagHeaderValue);
+            return etag != null
+                ? new ETag<TEntity>
+                {
+                    ConcurrencyProperties = etag.ConcurrencyProperties,
+                    IsWellFormed = etag.IsWellFormed,
+                    IsAny = etag.IsAny,
+                }
+                : null;
         }
 
         /// <summary>

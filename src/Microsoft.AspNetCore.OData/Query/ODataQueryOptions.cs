@@ -2,11 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Diagnostics.Contracts;
-using System.Net.Http;
-using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.OData.Edm;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OData.Adapters;
+using Microsoft.AspNetCore.OData.Extensions;
 
 namespace Microsoft.AspNet.OData.Query
 {
@@ -23,8 +22,8 @@ namespace Microsoft.AspNet.OData.Query
         /// </summary>
         /// <param name="context">The <see cref="ODataQueryContext"/> which contains the <see cref="IEdmModel"/> and some type information.</param>
         /// <param name="request">The incoming request message.</param>
-        /// <remarks>This signature uses types that are AspNet-specific.</remarks>
-        public ODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
+        public ODataQueryOptions(ODataQueryContext context, HttpRequest request)
         {
             if (context == null)
             {
@@ -53,7 +52,7 @@ namespace Microsoft.AspNet.OData.Query
         /// <summary>
         /// Gets the request message associated with this instance.
         /// </summary>
-        /// <remarks>This signature uses types that are AspNet-specific.</remarks>
-        public HttpRequestMessage Request { get; private set; }
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
+        public HttpRequest Request { get; private set; }
     }
 }

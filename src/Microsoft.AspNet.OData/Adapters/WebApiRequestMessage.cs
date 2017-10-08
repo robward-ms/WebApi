@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using Microsoft.AspNet.OData.Batch;
@@ -143,6 +144,24 @@ namespace Microsoft.AspNet.OData.Adapters
             }
 
             return configuration.GetETagHandler().CreateETag(properties)?.ToString();
+        }
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag(etagHeaderValue);
+        }
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag<TEntity>(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag<TEntity>(etagHeaderValue);
         }
 
         /// <summary>

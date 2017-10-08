@@ -14,13 +14,12 @@ namespace Microsoft.AspNet.OData
     /// <summary>
     /// Defines a base class for OData controllers that support writing and reading data using the OData formats.
     /// </summary>
+    /// <remarks>These attributes and signature uses types that are AspNetCore-specific.</remarks>
     [ODataFormatting]
     [ODataRouting]
     [ApiExplorerSettings(IgnoreApi = true)]
     public abstract partial class ODataController : ControllerBase
     {
-        private static readonly Version _defaultEdmxVersion = new Version(4, 0);
-
         /// <summary>
         /// Creates an action result with the specified values that is a response to a POST operation with an entity
         /// to an entity set.
@@ -28,6 +27,7 @@ namespace Microsoft.AspNet.OData
         /// <typeparam name="TEntity">The created entity type.</typeparam>
         /// <param name="entity">The created entity.</param>
         /// <returns>A <see cref="CreatedODataResult{TEntity}"/> with the specified values.</returns>
+        /// <remarks>These function uses types that are AspNetCore-specific.</remarks>
         protected virtual CreatedODataResult<TEntity> Created<TEntity>(TEntity entity)
         {
             if (entity == null)
@@ -45,6 +45,7 @@ namespace Microsoft.AspNet.OData
         /// <typeparam name="TEntity">The updated entity type.</typeparam>
         /// <param name="entity">The updated entity.</param>
         /// <returns>An <see cref="UpdatedODataResult{TEntity}"/> with the specified values.</returns>
+        /// <remarks>These function uses types that are AspNetCore-specific.</remarks>
         protected virtual UpdatedODataResult<TEntity> Updated<TEntity>(TEntity entity)
         {
             if (entity == null)
@@ -54,21 +55,5 @@ namespace Microsoft.AspNet.OData
 
             return new UpdatedODataResult<TEntity>(entity);
         }
-
-        /// <summary>
-        /// Get the Edm model associated with the controller.
-        /// </summary>
-        /// <returns></returns>
-        //protected IEdmModel GetModel()
-        //{
-        //    IEdmModel model = GetModel();
-        //    if (model == null)
-        //    {
-        //        throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
-        //    }
-
-        //    model.SetEdmxVersion(_defaultEdmxVersion);
-        //    return model;
-        //}
     }
 }

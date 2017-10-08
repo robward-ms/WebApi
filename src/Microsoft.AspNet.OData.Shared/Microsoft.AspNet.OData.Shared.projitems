@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Serialization\ODataSerializerProviderProxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GetNextPageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPerRouteContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ODataNullValueMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerRouteContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RequestMethod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IWebApiActionDescriptor.cs" />

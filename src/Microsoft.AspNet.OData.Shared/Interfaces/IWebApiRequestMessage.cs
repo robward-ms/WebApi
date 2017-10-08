@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
@@ -62,6 +64,16 @@ namespace Microsoft.AspNet.OData.Interfaces
         /// <param name="properties">The input property names and values.</param>
         /// <returns>The generated ETag string.</returns>
         string CreateETag(IDictionary<string, object> properties);
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag.
+        /// </summary>
+        ETag GetETag(EntityTagHeaderValue etagHeaderValue);
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag.
+        /// </summary>
+        ETag GetETag<TEntity>(EntityTagHeaderValue etagHeaderValue);
 
         /// <summary>
         /// Get the next page link for a given page size.

@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
@@ -151,6 +153,24 @@ namespace Microsoft.AspNetCore.OData.Adapters
             }
 
             return this.innerRequest.ETagHandler().CreateETag(properties)?.ToString();
+        }
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag(etagHeaderValue);
+        }
+
+        /// <summary>
+        /// Gets the EntityTagHeaderValue ETag>.
+        /// </summary>
+        /// <remarks>This function uses types that are AspNet-specific.</remarks>
+        public ETag GetETag<TEntity>(EntityTagHeaderValue etagHeaderValue)
+        {
+            return this.innerRequest.GetETag<TEntity>(etagHeaderValue);
         }
 
         /// <summary>
