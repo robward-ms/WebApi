@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.OData.Edm;
 using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
 using Semantic = Microsoft.OData.UriParser;
+using CountSegment = Microsoft.OData.UriParser.CountSegment;
+using ValueSegment = Microsoft.OData.UriParser.ValueSegment;
 
 namespace Microsoft.AspNet.OData.Routing
 {
@@ -107,5 +109,15 @@ namespace Microsoft.AspNet.OData.Routing
         }
 
         internal Semantic.ODataPath ODLPath { get; set; }
+
+        internal bool IsCountRequest()
+        {
+            return _segments.LastOrDefault() is CountSegment;
+        }
+
+        internal bool IsRawValueRequest()
+        {
+            return _segments.LastOrDefault() is ValueSegment;
+        }
     }
 }

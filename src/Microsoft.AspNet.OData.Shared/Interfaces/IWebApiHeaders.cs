@@ -22,5 +22,11 @@ namespace Microsoft.AspNet.OData.Interfaces
         /// <param name="values">The specified header values.</param>
         /// <returns>true is the specified header name and values are stored in the collection; otherwise false.</returns>
         bool TryGetValues(string key, out IEnumerable<string> values);
+
+        /// <summary>
+        /// Return the headers as a dictionary of string keys and values.
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string, string> AsDictionary();
     }
 }

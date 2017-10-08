@@ -276,25 +276,12 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override bool CanWriteType(Type type)
         {
-            if (type == null)
-            {
-                throw Error.ArgumentNull("type");
-            }
-
             if (Request != null)
             {
-                ODataPayloadKind? payloadKind;
-
-                Type elementType;
-                if (typeof(IEdmObject).IsAssignableFrom(type) ||
-                    (TypeHelper.IsCollection(type, out elementType) && typeof(IEdmObject).IsAssignableFrom(elementType)))
-                {
-                    payloadKind = GetEdmObjectPayloadKind(type);
-                }
-                else
-                {
-                    payloadKind = GetClrObjectResponsePayloadKind(type);
-                }
+                ODataPayloadKind? payloadKind = ODataOutputFormatterHelper.GetPayloadKind(
+                    type,
+                    Request.ODataProperties().Path,
+                    () => GetClrObjectResponsePayloadKind(type));
 
                 return payloadKind == null ? false : _payloadKinds.Contains(payloadKind.Value);
             }
@@ -427,7 +414,24 @@ namespace Microsoft.AspNet.OData.Formatter
             HttpContentHeaders contentHeaders = content == null ? null : content.Headers;
             try
             {
-                WriteToStream(type, value, writeStream, content, contentHeaders);
+                IEdmModel model = Request.GetModel();
+                ODataPath path = Request.ODataProperties().Path;
+                UrlHelper urlHelper = Request.GetUrlHelper() ?? new UrlHelper(Request);
+                new WebApiRequestHeaders(Request.Headers)
+                    Request.GetRequestContainer()
+                SelectAndExpand = Request.ODataFeature().SelectExpandClause,
+                Apply = Request.ODataFeature().ApplyClause,
+                    ODataSerializerContext writeContext
+                    Request = Request,
+
+                HttpConfiguration configuration = Request.GetConfiguration();
+                if (configuration == null)
+                {
+                    throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
+                }
+
+
+                this._outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders);
                 return TaskHelpers.Completed();
             }
             catch (Exception ex)
@@ -436,95 +440,95 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
-        private void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders)
-        {
-            IEdmModel model = Request.GetModel();
-            if (model == null)
-            {
-                throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
-            }
+        //[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
+        //private void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders)
+        //{
+        //    IEdmModel model = Request.GetModel();
+        //    if (model == null)
+        //    {
+        //        throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
+        //    }
 
-            ODataSerializer serializer = GetSerializer(type, value, _serializerProvider);
+        //    ODataSerializer serializer = GetSerializer(type, value, _serializerProvider);
 
-            UrlHelper urlHelper = Request.GetUrlHelper() ?? new UrlHelper(Request);
+        //    UrlHelper urlHelper = Request.GetUrlHelper() ?? new UrlHelper(Request);
 
-            ODataPath path = Request.ODataProperties().Path;
-            IEdmNavigationSource targetNavigationSource = path == null ? null : path.NavigationSource;
+        //    ODataPath path = Request.ODataProperties().Path;
+        //    IEdmNavigationSource targetNavigationSource = path == null ? null : path.NavigationSource;
 
-            // serialize a response
-            HttpConfiguration configuration = Request.GetConfiguration();
-            if (configuration == null)
-            {
-                throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
-            }
+        //    // serialize a response
+        //    HttpConfiguration configuration = Request.GetConfiguration();
+        //    if (configuration == null)
+        //    {
+        //        throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
+        //    }
 
-            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(new WebApiRequestHeaders(Request.Headers));
-            string annotationFilter = null;
-            if (!String.IsNullOrEmpty(preferHeader))
-            {
-                ODataMessageWrapper messageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers);
-                messageWrapper.SetHeader(RequestPreferenceHelpers.PreferHeaderName, preferHeader);
-                annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
-            }
+        //    string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(new WebApiRequestHeaders(Request.Headers));
+        //    string annotationFilter = null;
+        //    if (!String.IsNullOrEmpty(preferHeader))
+        //    {
+        //        ODataMessageWrapper messageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers);
+        //        messageWrapper.SetHeader(RequestPreferenceHelpers.PreferHeaderName, preferHeader);
+        //        annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
+        //    }
 
-            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers, Request.GetRequestContainer());
-            IODataResponseMessage responseMessage = responseMessageWrapper;
-            if (annotationFilter != null)
-            {
-                responseMessage.PreferenceAppliedHeader().AnnotationFilter = annotationFilter;
-            }
+        //    ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers, Request.GetRequestContainer());
+        //    IODataResponseMessage responseMessage = responseMessageWrapper;
+        //    if (annotationFilter != null)
+        //    {
+        //        responseMessage.PreferenceAppliedHeader().AnnotationFilter = annotationFilter;
+        //    }
 
-            Uri baseAddress = GetBaseAddressInternal(Request);
-            ODataMessageWriterSettings writerSettings = Request.GetWriterSettings();
-            writerSettings.BaseUri = baseAddress;
-            writerSettings.Version = _version;
-            writerSettings.Validations = writerSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+        //    Uri baseAddress = GetBaseAddressInternal(Request);
+        //    ODataMessageWriterSettings writerSettings = Request.GetWriterSettings();
+        //    writerSettings.BaseUri = baseAddress;
+        //    writerSettings.Version = _version;
+        //    writerSettings.Validations = writerSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-            string metadataLink = urlHelper.CreateODataLink(MetadataSegment.Instance);
+        //    string metadataLink = urlHelper.CreateODataLink(MetadataSegment.Instance);
 
-            if (metadataLink == null)
-            {
-                throw new SerializationException(SRResources.UnableToDetermineMetadataUrl);
-            }
+        //    if (metadataLink == null)
+        //    {
+        //        throw new SerializationException(SRResources.UnableToDetermineMetadataUrl);
+        //    }
 
-            writerSettings.ODataUri = new ODataUri
-            {
-                ServiceRoot = baseAddress,
+        //    writerSettings.ODataUri = new ODataUri
+        //    {
+        //        ServiceRoot = baseAddress,
 
-                // TODO: 1604 Convert webapi.odata's ODataPath to ODL's ODataPath, or use ODL's ODataPath.
-                SelectAndExpand = Request.ODataProperties().SelectExpandClause,
-                Apply = Request.ODataProperties().ApplyClause,
-                Path = (path == null || IsOperationPath(path)) ? null : path.ODLPath,
-            };
+        //        // TODO: 1604 Convert webapi.odata's ODataPath to ODL's ODataPath, or use ODL's ODataPath.
+        //        SelectAndExpand = Request.ODataProperties().SelectExpandClause,
+        //        Apply = Request.ODataProperties().ApplyClause,
+        //        Path = (path == null || IsOperationPath(path)) ? null : path.ODLPath,
+        //    };
 
-            ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
-            if (contentHeaders != null && contentHeaders.ContentType != null)
-            {
-                MediaTypeHeaderValue contentType = contentHeaders.ContentType;
-                IEnumerable<KeyValuePair<string, string>> parameters =
-                    contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
-                metadataLevel = ODataMediaTypes.GetMetadataLevel(contentType.MediaType, parameters);
-            }
+        //    ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
+        //    if (contentHeaders != null && contentHeaders.ContentType != null)
+        //    {
+        //        MediaTypeHeaderValue contentType = contentHeaders.ContentType;
+        //        IEnumerable<KeyValuePair<string, string>> parameters =
+        //            contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
+        //        metadataLevel = ODataMediaTypes.GetMetadataLevel(contentType.MediaType, parameters);
+        //    }
 
-            using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
-            {
-                ODataSerializerContext writeContext = new ODataSerializerContext()
-                {
-                    Request = Request,
-                    Url = urlHelper,
-                    NavigationSource = targetNavigationSource,
-                    Model = model,
-                    RootElementName = GetRootElementName(path) ?? "root",
-                    SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet,
-                    Path = path,
-                    MetadataLevel = metadataLevel,
-                    SelectExpandClause = Request.ODataProperties().SelectExpandClause
-                };
+        //    using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
+        //    {
+        //        ODataSerializerContext writeContext = new ODataSerializerContext()
+        //        {
+        //            Request = Request,
+        //            Url = urlHelper,
+        //            NavigationSource = targetNavigationSource,
+        //            Model = model,
+        //            RootElementName = GetRootElementName(path) ?? "root",
+        //            SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet,
+        //            Path = path,
+        //            MetadataLevel = metadataLevel,
+        //            SelectExpandClause = Request.ODataProperties().SelectExpandClause
+        //        };
 
-                serializer.WriteObject(value, type, messageWriter, writeContext);
-            }
-        }
+        //        serializer.WriteObject(value, type, messageWriter, writeContext);
+        //    }
+        //}
 
         /// <summary>
         /// This method is to get payload kind for untyped scenario.

@@ -120,18 +120,6 @@ namespace Microsoft.AspNetCore.OData.Extensions
             return request.GetRequestContainer().GetRequiredService<ODataMessageWriterSettings>();
         }
 
-        internal static bool IsCountRequest(this HttpRequest request)
-        {
-            ODataPath path = request.ODataFeature().Path;
-            return path != null && path.Segments.LastOrDefault() is CountSegment;
-        }
-
-        internal static bool IsRawValueRequest(this HttpRequest request)
-        {
-            ODataPath path = request.ODataFeature().Path;
-            return path != null && path.Segments.LastOrDefault() is ValueSegment;
-        }
-
         /// <summary>
         /// Gets the set of <see cref="IODataRoutingConvention"/> from the request container.
         /// </summary>
