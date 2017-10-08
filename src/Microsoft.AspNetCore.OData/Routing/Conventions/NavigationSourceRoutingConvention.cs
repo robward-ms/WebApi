@@ -7,7 +7,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.OData.Adapters;
@@ -25,6 +24,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     public abstract partial class NavigationSourceRoutingConvention : IODataRoutingConvention
     {
         /// <inheritdoc/>
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
         public ControllerActionDescriptor SelectAction(RouteContext routeContext)
         {
             if (routeContext == null)
@@ -47,11 +47,14 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
                     .ActionDescriptors.Items.OfType<ControllerActionDescriptor>()
                     .Where(c => c.ControllerName == controllerResult.ControllerName);
 
-                string actionName = SelectAction(routeContext, controllerResult, actionDescriptors);
-                if (!String.IsNullOrEmpty(actionName))
+                if (actionDescriptors != null)
                 {
-                    return actionDescriptors.FirstOrDefault(
-                        c => String.Equals(c.ActionName, actionName, StringComparison.OrdinalIgnoreCase));
+                    string actionName = SelectAction(routeContext, controllerResult, actionDescriptors);
+                    if (!String.IsNullOrEmpty(actionName))
+                    {
+                        return actionDescriptors.FirstOrDefault(
+                            c => String.Equals(c.ActionName, actionName, StringComparison.OrdinalIgnoreCase));
+                    }
                 }
             }
 
@@ -66,7 +69,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         /// <returns>
         ///   <c>null</c> if the request isn't handled by this convention; otherwise, the action descriptor of the selected action.
         /// </returns>
-        /// TODO: Do I need this? All implmentations are identical.
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
         internal abstract string SelectAction(RouteContext routeContext, SelectControllerResult controllerResult, IEnumerable<ControllerActionDescriptor> actionDescriptors);
     }
 }

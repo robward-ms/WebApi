@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.OData.Adapters;
 using Microsoft.AspNetCore.OData.Extensions;
@@ -13,26 +12,12 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     /// <summary>
     /// An implementation of <see cref="IODataRoutingConvention"/> that handles operating on entities by key.
     /// </summary>
-    public partial class EntityRoutingConvention : NavigationSourceRoutingConvention
+    public partial class EntityRoutingConvention
     {
         /// <inheritdoc/>
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
         internal override string SelectAction(RouteContext routeContext, SelectControllerResult controllerResult, IEnumerable<ControllerActionDescriptor> actionDescriptors)
         {
-            if (routeContext == null)
-            {
-                throw Error.ArgumentNull("routeContext");
-            }
-
-            if (controllerResult == null)
-            {
-                throw Error.ArgumentNull("controllerResult");
-            }
-
-            if (actionDescriptors == null)
-            {
-                throw Error.ArgumentNull("actionDescriptors");
-            }
-
             return SelectActionImpl(
                 routeContext.HttpContext.ODataFeature().Path,
                 new WebApiControllerContext(routeContext, controllerResult),

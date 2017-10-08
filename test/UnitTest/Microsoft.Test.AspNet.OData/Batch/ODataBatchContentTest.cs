@@ -24,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             ODataBatchContent batchContent = CreateBatchContent(new ODataBatchResponseItem[0]);
             var contentType = batchContent.Headers.ContentType;
             var boundary = contentType.Parameters.FirstOrDefault(p => String.Equals(p.Name, "boundary", StringComparison.OrdinalIgnoreCase));
-            var odataVersion = batchContent.Headers.FirstOrDefault(h => String.Equals(h.Key, HttpRequestMessageProperties.ODataServiceVersionHeader, StringComparison.OrdinalIgnoreCase));
+            var odataVersion = batchContent.Headers.FirstOrDefault(h => String.Equals(h.Key, ODataVersionConstraint.ODataServiceVersionHeader, StringComparison.OrdinalIgnoreCase));
 
             Assert.NotNull(boundary);
             Assert.NotEmpty(boundary.Value);
@@ -44,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ODataVersionInWriterSetting_IsPropagatedToTheHeader()
         {
             ODataBatchContent batchContent = CreateBatchContent(new ODataBatchResponseItem[0]);
-            var odataVersion = batchContent.Headers.FirstOrDefault(h => String.Equals(h.Key, HttpRequestMessageProperties.ODataServiceVersionHeader, StringComparison.OrdinalIgnoreCase));
+            var odataVersion = batchContent.Headers.FirstOrDefault(h => String.Equals(h.Key, ODataVersionConstraint.ODataServiceVersionHeader, StringComparison.OrdinalIgnoreCase));
 
             Assert.Equal("4.0", odataVersion.Value.FirstOrDefault());
         }

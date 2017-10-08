@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -70,7 +71,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
 
             _serializerProvider = serializerProvider;
             _payloadKinds = payloadKinds;
-            _version = HttpRequestExtensions.DefaultODataVersion;
+            _version = ODataVersionConstraint.DefaultODataVersion;
         }
 
         /// <summary>
@@ -537,7 +538,7 @@ namespace Microsoft.AspNetCore.OData.Formatter
             // (V4).
             return request.ODataMaxServiceVersion() ??
                 request.ODataServiceVersion() ??
-                HttpRequestExtensions.DefaultODataVersion;
+                ODataVersionConstraint.DefaultODataVersion;
         }
 
         // This function is used to determine whether an OData path includes operation (import) path segments.
