@@ -224,5 +224,14 @@ namespace Microsoft.AspNetCore.OData.Adapters
         {
             get { return this.innerRequest.HttpContext.GetRouteData().Values; }
         }
+
+        /// <summary>
+        /// Gets the writer settings associated with the request.
+        /// </summary>
+        /// <returns></returns>
+        public ODataMessageWriterSettings WriterSettings
+        {
+            get { return this.innerRequest.GetWriterSettings(); }
+        }
     }
 }

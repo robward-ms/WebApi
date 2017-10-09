@@ -22,6 +22,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -59,16 +60,16 @@ namespace Microsoft.AspNet.OData.Formatter
         public Func<HttpRequestMessage, Uri> BaseAddressFactory { get; set; }
 
         /// <inheritdoc/>
-        public bool CanReadType(Type type, HttpRequestMessage request)
+        ///  request is used for serializer (can be factored out)
+        public bool CanReadType(Type type, IEdmModel model, ODataPath path, HttpRequestMessage request)
         {
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
 
-            IEdmModel model = request.GetModel();
             IEdmTypeReference expectedPayloadType;
-            ODataDeserializer deserializer = GetDeserializer(type, request, request.ODataProperties().Path, model,
+            ODataDeserializer deserializer = GetDeserializer(type, request, path, model,
                 _deserializerProvider, out expectedPayloadType);
             if (deserializer != null)
             {
@@ -78,8 +79,12 @@ namespace Microsoft.AspNet.OData.Formatter
             return false;
         }
 
+        // content only needed for content headers.
+        // factor out formatterLogger by try/catch outside.
+        // request is used for deserializer (can be factored out), base address (can be factored),
+        // registering for disposal, creating ODataDeserializerContext.
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "ODataMessageReader disposed later with request.")]
-        public object ReadFromStream(Type type, object defaultValue, Stream readStream, HttpContent content, IFormatterLogger formatterLogger, HttpRequestMessage request)
+        public object ReadFromStream(Type type, object defaultValue, Stream readStream, HttpContent content, IFormatterLogger formatterLogger, IEdmModel model, HttpRequestMessage request, IWebApiRequestMessage internalRequest)
         {
             object result;
 
@@ -92,9 +97,8 @@ namespace Microsoft.AspNet.OData.Formatter
             }
             else
             {
-                IEdmModel model = request.GetModel();
                 IEdmTypeReference expectedPayloadType;
-                ODataDeserializer deserializer = GetDeserializer(type, request, request.ODataProperties().Path, model, _deserializerProvider, out expectedPayloadType);
+                ODataDeserializer deserializer = GetDeserializer(type, request, internalRequest.Context.Path, model, _deserializerProvider, out expectedPayloadType);
                 if (deserializer == null)
                 {
                     throw Error.Argument("type", SRResources.FormatterReadIsNotSupportedForType, type.FullName, GetType().FullName);
@@ -102,15 +106,15 @@ namespace Microsoft.AspNet.OData.Formatter
 
                 try
                 {
-                    ODataMessageReaderSettings oDataReaderSettings = request.GetReaderSettings();
+                    ODataMessageReaderSettings oDataReaderSettings = internalRequest.ReaderSettings;
                     oDataReaderSettings.BaseUri = GetBaseAddressInternal(request);
                     oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, contentHeaders, request.GetODataContentIdMapping(), request.GetRequestContainer());
+                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, contentHeaders, internalRequest.ODataContentIdMapping, internalRequest.RequestContainer);
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
 
                     request.RegisterForDispose(oDataMessageReader);
-                    ODataPath path = request.ODataProperties().Path;
+                    ODataPath path = internalRequest.Context.Path;
                     ODataDeserializerContext readContext = new ODataDeserializerContext
                     {
                         Path = path,
@@ -137,13 +141,8 @@ namespace Microsoft.AspNet.OData.Formatter
             return result;
         }
 
-        /// <summary>
-        /// Internal method used for selecting the base address to be used with OData uris.
-        /// If the consumer has provided a delegate for overriding our default implementation,
-        /// we call that, otherwise we default to existing behavior below.
-        /// </summary>
-        /// <param name="request">The HttpRequestMessage object for the given request.</param>
-        /// <returns>The base address to be used as part of the service root; must terminate with a trailing '/'.</returns>
+        // To factor out request, just pass in a function to get base address. We'd get rid of
+        // BaseAddressFactory and request.
         private Uri GetBaseAddressInternal(HttpRequestMessage request)
         {
             if (BaseAddressFactory != null)
@@ -155,7 +154,10 @@ namespace Microsoft.AspNet.OData.Formatter
                 return ODataMediaTypeFormatter.GetDefaultBaseAddress(request);
             }
         }
-        
+
+        // To factor out request, provide function to call deserializerProvider.GetODataDeserializer.
+        // Also need function to deserializerProvider.GetEdmTypeDeserializer.
+        // That get's rid of request and deserializerProvider.
         private ODataDeserializer GetDeserializer(Type type, HttpRequestMessage request, ODataPath path, IEdmModel model,
             ODataDeserializerProvider deserializerProvider, out IEdmTypeReference expectedPayloadType)
         {
