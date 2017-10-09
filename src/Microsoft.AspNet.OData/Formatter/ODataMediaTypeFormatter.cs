@@ -22,6 +22,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -39,6 +40,8 @@ namespace Microsoft.AspNet.OData.Formatter
         private readonly ODataVersion _version;
 
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
+        private readonly ODataDeserializerProvider _deserializerProvider;
+        private readonly ODataSerializerProvider _serializerProvider;
 
         private readonly ODataMediaTypeInputFormatter _inputFormatter;
         private readonly ODataMediaTypeOutputFormatter _outputFormatter;
@@ -76,8 +79,10 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("payloadKinds");
             }
 
-            _inputFormatter = new ODataMediaTypeInputFormatter(deserializerProvider, payloadKinds);
-            _outputFormatter = new ODataMediaTypeOutputFormatter(serializerProvider, payloadKinds);
+            _inputFormatter = new ODataMediaTypeInputFormatter();
+            _outputFormatter = new ODataMediaTypeOutputFormatter();
+            _deserializerProvider = deserializerProvider;
+            _serializerProvider = serializerProvider;
             _payloadKinds = payloadKinds;
 
             _version = ODataVersionConstraint.DefaultODataVersion;
@@ -100,6 +105,8 @@ namespace Microsoft.AspNet.OData.Formatter
 
             Contract.Assert(formatter._inputFormatter != null);
             Contract.Assert(formatter._outputFormatter != null);
+            Contract.Assert(formatter._deserializerProvider != null);
+            Contract.Assert(formatter._serializerProvider != null);
             Contract.Assert(formatter._payloadKinds != null);
 
             // Parameter 1: formatter
@@ -110,6 +117,8 @@ namespace Microsoft.AspNet.OData.Formatter
             // Copy this class's private fields and internal properties.
             _inputFormatter = formatter._inputFormatter;
             _outputFormatter = formatter._outputFormatter;
+            _deserializerProvider = formatter._deserializerProvider;
+            _serializerProvider = formatter._serializerProvider;
             _payloadKinds = formatter._payloadKinds;
 
             // Parameter 2: version
@@ -126,7 +135,7 @@ namespace Microsoft.AspNet.OData.Formatter
         {
             get
             {
-                return _outputFormatter.SerializerProvider;
+                return _serializerProvider;
             }
         }
 
@@ -137,7 +146,7 @@ namespace Microsoft.AspNet.OData.Formatter
         {
             get
             {
-                return _inputFormatter.DeserializerProvider; ;
+                return _deserializerProvider;
             }
         }
 
@@ -145,18 +154,7 @@ namespace Microsoft.AspNet.OData.Formatter
         /// Gets or sets a method that allows consumers to provide an alternate base
         /// address for OData Uri.
         /// </summary>
-        public Func<HttpRequestMessage, Uri> BaseAddressFactory
-        {
-            get
-            {
-                return _outputFormatter.BaseAddressFactory;
-            }
-            set
-            {
-                _outputFormatter.BaseAddressFactory = value;
-                _inputFormatter.BaseAddressFactory = value;
-            }
-        }
+        public Func<HttpRequestMessage, Uri> BaseAddressFactory { get; set; }
 
         /// <summary>
         /// The request message associated with the per-request formatter instance.
@@ -212,7 +210,17 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return _inputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, Request);
+                Func<Type, ODataDeserializer> getODataPayloadDeserializer = (objectType) =>
+                {
+                    return _deserializerProvider.GetODataDeserializer(objectType, Request);
+                };
+
+                Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer = (objectType) =>
+                {
+                    return _deserializerProvider.GetEdmTypeDeserializer(objectType);
+                };
+
+                return _inputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, _payloadKinds, getEdmTypeDeserializer, getODataPayloadDeserializer);
             }
 
             return false;
@@ -228,7 +236,8 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return _outputFormatter.CanWriteType(type, Request, new WebApiRequestMessage(Request));
+                return _outputFormatter.CanWriteType(type, new WebApiRequestMessage(Request),
+                    _payloadKinds, (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request));
             }
 
             return false;
@@ -256,7 +265,27 @@ namespace Microsoft.AspNet.OData.Formatter
             try
             {
                 object defaultValue = GetDefaultValueForType(type);
-                return Task.FromResult(_inputFormatter.ReadFromStream(type, defaultValue, readStream, content, formatterLogger, Request.GetModel(), Request, new WebApiRequestMessage(Request)));
+                Uri baseAddress = GetBaseAddressInternal(Request);
+                Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer = (objectType) =>
+                {
+                    return _deserializerProvider.GetEdmTypeDeserializer(objectType);
+                };
+
+                Func<Type, ODataDeserializer> getODataPayloadDeserializer = (objectType) =>
+                {
+                    return _deserializerProvider.GetODataDeserializer(objectType, Request);
+                };
+                Func<ODataDeserializerContext> getODataDeserializerContext = () =>
+                {
+                    return new ODataDeserializerContext
+                    {
+                        Request = Request,
+                    };
+                };
+
+
+                return Task.FromResult(_inputFormatter.ReadFromStream(type, defaultValue, readStream, content, formatterLogger, Request.GetModel(),
+                    baseAddress, Request, new WebApiRequestMessage(Request), getEdmTypeDeserializer, getODataPayloadDeserializer, getODataDeserializerContext));
             }
             catch (Exception ex)
             {
@@ -295,12 +324,42 @@ namespace Microsoft.AspNet.OData.Formatter
                     throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
                 }
 
-                _outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), Request, _version, new WebApiRequestMessage(Request), new WebApiRequestHeaders(Request.Headers));
+                Uri baseAddress = GetBaseAddressInternal(Request);
+                UrlHelper urlHelper = Request.GetUrlHelper() ?? new UrlHelper(Request);
+
+                Func<ODataSerializerContext> getODataSerializerContext = () =>
+                {
+                    return new ODataSerializerContext()
+                    {
+                        Request = Request,
+                        Url = urlHelper,
+                    };
+                };
+
+                _outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), new WebApiUrlHelper(urlHelper),
+                    _version, new WebApiRequestMessage(Request), new WebApiRequestHeaders(Request.Headers), baseAddress,
+                    (edmType) => _serializerProvider.GetEdmTypeSerializer(edmType),
+                    (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request), getODataSerializerContext);
+
                 return TaskHelpers.Completed();
             }
             catch (Exception ex)
             {
                 return TaskHelpers.FromError(ex);
+            }
+        }
+
+        // To factor out request, just pass in a function to get base address. We'd get rid of
+        // BaseAddressFactory and request.
+        private Uri GetBaseAddressInternal(HttpRequestMessage request)
+        {
+            if (BaseAddressFactory != null)
+            {
+                return BaseAddressFactory(request);
+            }
+            else
+            {
+                return ODataMediaTypeFormatter.GetDefaultBaseAddress(request);
             }
         }
 
@@ -344,13 +403,13 @@ namespace Microsoft.AspNet.OData.Formatter
 
         private void EnsureRequestContainer(HttpRequestMessage request)
         {
-            ODataSerializerProviderProxy serializerProviderProxy = _outputFormatter.SerializerProvider as ODataSerializerProviderProxy;
+            ODataSerializerProviderProxy serializerProviderProxy = _serializerProvider as ODataSerializerProviderProxy;
             if (serializerProviderProxy != null && serializerProviderProxy.RequestContainer == null)
             {
                 serializerProviderProxy.RequestContainer = request.GetRequestContainer();
             }
 
-            ODataDeserializerProviderProxy deserializerProviderProxy = _inputFormatter.DeserializerProvider as ODataDeserializerProviderProxy;
+            ODataDeserializerProviderProxy deserializerProviderProxy = _deserializerProvider as ODataDeserializerProviderProxy;
             if (deserializerProviderProxy != null && deserializerProviderProxy.RequestContainer == null)
             {
                 deserializerProviderProxy.RequestContainer = request.GetRequestContainer();

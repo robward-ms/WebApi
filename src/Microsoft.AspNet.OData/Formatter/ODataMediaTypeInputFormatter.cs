@@ -33,35 +33,8 @@ namespace Microsoft.AspNet.OData.Formatter
 {
     internal class ODataMediaTypeInputFormatter
     {
-        private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
-        private readonly ODataDeserializerProvider _deserializerProvider;
-
-        public ODataMediaTypeInputFormatter(ODataDeserializerProvider deserializerProvider, IEnumerable<ODataPayloadKind> payloadKinds)
-        {
-            _deserializerProvider = deserializerProvider;
-            _payloadKinds = payloadKinds;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ODataDeserializerProvider"/> that will be used by this formatter instance.
-        /// </summary>
-        public ODataDeserializerProvider DeserializerProvider
-        {
-            get
-            {
-                return _deserializerProvider;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a method that allows consumers to provide an alternate base
-        /// address for OData Uri.
-        /// </summary>
-        public Func<HttpRequestMessage, Uri> BaseAddressFactory { get; set; }
-
         /// <inheritdoc/>
-        ///  request is used for serializer (can be factored out)
-        public bool CanReadType(Type type, IEdmModel model, ODataPath path, HttpRequestMessage request)
+        public bool CanReadType(Type type, IEdmModel model, ODataPath path, IEnumerable<ODataPayloadKind> payloadKinds, Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer)
         {
             if (type == null)
             {
@@ -69,11 +42,11 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             IEdmTypeReference expectedPayloadType;
-            ODataDeserializer deserializer = GetDeserializer(type, request, path, model,
-                _deserializerProvider, out expectedPayloadType);
+            ODataDeserializer deserializer = GetDeserializer(type, path, model,
+                getEdmTypeDeserializer, getODataPayloadDeserializer, out expectedPayloadType);
             if (deserializer != null)
             {
-                return _payloadKinds.Contains(deserializer.ODataPayloadKind);
+                return payloadKinds.Contains(deserializer.ODataPayloadKind);
             }
 
             return false;
@@ -81,10 +54,9 @@ namespace Microsoft.AspNet.OData.Formatter
 
         // content only needed for content headers.
         // factor out formatterLogger by try/catch outside.
-        // request is used for deserializer (can be factored out), base address (can be factored),
-        // registering for disposal, creating ODataDeserializerContext.
+        // request is used for registering for disposal
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "ODataMessageReader disposed later with request.")]
-        public object ReadFromStream(Type type, object defaultValue, Stream readStream, HttpContent content, IFormatterLogger formatterLogger, IEdmModel model, HttpRequestMessage request, IWebApiRequestMessage internalRequest)
+        public object ReadFromStream(Type type, object defaultValue, Stream readStream, HttpContent content, IFormatterLogger formatterLogger, IEdmModel model, Uri baseAddress, HttpRequestMessage request, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer, Func<ODataDeserializerContext> getODataDeserializerContext)
         {
             object result;
 
@@ -98,7 +70,7 @@ namespace Microsoft.AspNet.OData.Formatter
             else
             {
                 IEdmTypeReference expectedPayloadType;
-                ODataDeserializer deserializer = GetDeserializer(type, request, internalRequest.Context.Path, model, _deserializerProvider, out expectedPayloadType);
+                ODataDeserializer deserializer = GetDeserializer(type, internalRequest.Context.Path, model, getEdmTypeDeserializer, getODataPayloadDeserializer, out expectedPayloadType);
                 if (deserializer == null)
                 {
                     throw Error.Argument("type", SRResources.FormatterReadIsNotSupportedForType, type.FullName, GetType().FullName);
@@ -107,22 +79,19 @@ namespace Microsoft.AspNet.OData.Formatter
                 try
                 {
                     ODataMessageReaderSettings oDataReaderSettings = internalRequest.ReaderSettings;
-                    oDataReaderSettings.BaseUri = GetBaseAddressInternal(request);
+                    oDataReaderSettings.BaseUri = baseAddress;
                     oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
                     IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, contentHeaders, internalRequest.ODataContentIdMapping, internalRequest.RequestContainer);
                     ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
-
                     request.RegisterForDispose(oDataMessageReader);
+
                     ODataPath path = internalRequest.Context.Path;
-                    ODataDeserializerContext readContext = new ODataDeserializerContext
-                    {
-                        Path = path,
-                        Model = model,
-                        Request = request,
-                        ResourceType = type,
-                        ResourceEdmType = expectedPayloadType,
-                    };
+                    ODataDeserializerContext readContext = getODataDeserializerContext();
+                    readContext.Path = path;
+                    readContext.Model = model;
+                    readContext.ResourceType = type;
+                    readContext.ResourceEdmType = expectedPayloadType;
 
                     result = deserializer.Read(oDataMessageReader, type, readContext);
                 }
@@ -141,34 +110,17 @@ namespace Microsoft.AspNet.OData.Formatter
             return result;
         }
 
-        // To factor out request, just pass in a function to get base address. We'd get rid of
-        // BaseAddressFactory and request.
-        private Uri GetBaseAddressInternal(HttpRequestMessage request)
-        {
-            if (BaseAddressFactory != null)
-            {
-                return BaseAddressFactory(request);
-            }
-            else
-            {
-                return ODataMediaTypeFormatter.GetDefaultBaseAddress(request);
-            }
-        }
-
-        // To factor out request, provide function to call deserializerProvider.GetODataDeserializer.
-        // Also need function to deserializerProvider.GetEdmTypeDeserializer.
-        // That get's rid of request and deserializerProvider.
-        private ODataDeserializer GetDeserializer(Type type, HttpRequestMessage request, ODataPath path, IEdmModel model,
-            ODataDeserializerProvider deserializerProvider, out IEdmTypeReference expectedPayloadType)
+        private ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
+            Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer, out IEdmTypeReference expectedPayloadType)
         {
             expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);
 
             // Get the deserializer using the CLR type first from the deserializer provider.
-            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, request);
+            ODataDeserializer deserializer = getODataPayloadDeserializer(type);
             if (deserializer == null && expectedPayloadType != null)
             {
                 // we are in typeless mode, get the deserializer using the edm type from the path.
-                deserializer = deserializerProvider.GetEdmTypeDeserializer(expectedPayloadType);
+                deserializer = getEdmTypeDeserializer(expectedPayloadType);
             }
 
             return deserializer;

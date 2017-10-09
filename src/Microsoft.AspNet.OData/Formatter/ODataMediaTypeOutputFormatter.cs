@@ -28,34 +28,8 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
-    internal class ODataMediaTypeOutputFormatter
+    internal partial class ODataMediaTypeOutputFormatter
     {
-        private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
-        private readonly ODataSerializerProvider _serializerProvider;
-
-        public ODataMediaTypeOutputFormatter(ODataSerializerProvider serializerProvider, IEnumerable<ODataPayloadKind> payloadKinds)
-        {
-            _serializerProvider = serializerProvider;
-            _payloadKinds = payloadKinds;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ODataSerializerProvider"/> that will be used by this formatter instance.
-        /// </summary>
-        public ODataSerializerProvider SerializerProvider
-        {
-            get
-            {
-                return _serializerProvider;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a method that allows consumers to provide an alternate base
-        /// address for OData Uri.
-        /// </summary>
-        public Func<HttpRequestMessage, Uri> BaseAddressFactory { get; set; }
-
         /// <inheritdoc/>
         public bool SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         {
@@ -118,8 +92,7 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         /// <inheritdoc/>
-        ///  request is used for GetEdmObjectPayloadKind (can be factored out), GetClrObjectResponsePayloadKind (can be factored out)
-        public bool CanWriteType(Type type, HttpRequestMessage request, IWebApiRequestMessage internalRequest)
+        public bool CanWriteType(Type type,IWebApiRequestMessage internalRequest, IEnumerable<ODataPayloadKind> payloadKinds, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             if (type == null)
             {
@@ -136,28 +109,25 @@ namespace Microsoft.AspNet.OData.Formatter
             }
             else
             {
-                payloadKind = GetClrObjectResponsePayloadKind(type, request);
+                payloadKind = GetClrObjectResponsePayloadKind(type, getODataPayloadSerializer);
             }
 
-            return payloadKind == null ? false : _payloadKinds.Contains(payloadKind.Value);
+            return payloadKind == null ? false : payloadKinds.Contains(payloadKind.Value);
         }
 
         // content only needed for content headers.
         // contentHeaders is used for content type.
         // version is used for GetWriterSettings.
-        // request is used for urlhelper, configuration, serializer (can be factored out), base address (can be factored), creating ODataSerializerContext.
         // request headers used to get annotationFilter
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
-        public void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders, IEdmModel model, HttpRequestMessage request, ODataVersion version, IWebApiRequestMessage internalRequest, IWebApiHeaders requestHeaders)
+        public void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders, IEdmModel model, IWebApiUrlHelper urlHelper, ODataVersion version, IWebApiRequestMessage internalRequest, IWebApiHeaders requestHeaders, Uri baseAddress, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer, Func<ODataSerializerContext> getODataSerializerContext)
         {
             if (model == null)
             {
                 throw Error.InvalidOperation(SRResources.RequestMustHaveModel);
             }
 
-            ODataSerializer serializer = GetSerializer(type, value, _serializerProvider, request, internalRequest);
-
-            UrlHelper urlHelper = request.GetUrlHelper() ?? new UrlHelper(request);
+            ODataSerializer serializer = GetSerializer(type, value, internalRequest, getEdmTypeSerializer, getODataPayloadSerializer);
 
             ODataPath path = internalRequest.Context.Path;
             IEdmNavigationSource targetNavigationSource = path == null ? null : path.NavigationSource;
@@ -179,7 +149,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 responseMessage.PreferenceAppliedHeader().AnnotationFilter = annotationFilter;
             }
 
-            Uri baseAddress = GetBaseAddressInternal(request);
             ODataMessageWriterSettings writerSettings = internalRequest.WriterSettings;
             writerSettings.BaseUri = baseAddress;
             writerSettings.Version = version;
@@ -213,27 +182,21 @@ namespace Microsoft.AspNet.OData.Formatter
 
             using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
             {
-                ODataSerializerContext writeContext = new ODataSerializerContext()
-                {
-                    Request = request,
-                    Url = urlHelper,
-                    NavigationSource = targetNavigationSource,
-                    Model = model,
-                    RootElementName = GetRootElementName(path) ?? "root",
-                    SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet,
-                    Path = path,
-                    MetadataLevel = metadataLevel,
-                    SelectExpandClause = internalRequest.Context.SelectExpandClause,
-                };
+                ODataSerializerContext writeContext = getODataSerializerContext();
+                writeContext.NavigationSource = targetNavigationSource;
+                writeContext.Model = model;
+                writeContext.RootElementName = GetRootElementName(path) ?? "root";
+                writeContext.SkipExpensiveAvailabilityChecks = serializer.ODataPayloadKind == ODataPayloadKind.ResourceSet;
+                writeContext.Path = path;
+                writeContext.MetadataLevel = metadataLevel;
+                writeContext.SelectExpandClause = internalRequest.Context.SelectExpandClause;
 
                 serializer.WriteObject(value, type, messageWriter, writeContext);
             }
         }
 
-        // To factor out request, provide function to call serializerProvider.GetODataPayloadSerializer.
         // Also has AspNet-specific class, SingleResult. Could put that check in TypeHelper, which has #Ifdef already.
-        // Shoudl use typeHelper here anyway.
-        private ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, HttpRequestMessage request)
+        private ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             // SingleResult<T> should be serialized as T.
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
@@ -241,7 +204,7 @@ namespace Microsoft.AspNet.OData.Formatter
                 type = type.GetGenericArguments()[0];
             }
 
-            ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, request);
+            ODataSerializer serializer = getODataPayloadSerializer(type);
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;
         }
 
@@ -283,10 +246,7 @@ namespace Microsoft.AspNet.OData.Formatter
             return null;
         }
 
-        // To factor out request, provide function to call serializerProvider.GetODataPayloadSerializer and apply clause.
-        // Also need function to serializerProvider.GetEdmTypeDeserializer.
-        // That get's rid of request and serializerProvider.
-        private ODataSerializer GetSerializer(Type type, object value, ODataSerializerProvider serializerProvider, HttpRequestMessage request, IWebApiRequestMessage internalRequest)
+        private ODataSerializer GetSerializer(Type type, object value, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             ODataSerializer serializer;
 
@@ -300,7 +260,7 @@ namespace Microsoft.AspNet.OData.Formatter
                         edmObject.GetType().FullName, typeof(IEdmObject).Name));
                 }
 
-                serializer = serializerProvider.GetEdmTypeSerializer(edmType);
+                serializer = getEdmTypeSerializer(edmType);
                 if (serializer == null)
                 {
                     string message = Error.Format(SRResources.TypeCannotBeSerialized, edmType.ToTraceString());
@@ -316,7 +276,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     type = value == null ? type : value.GetType();
                 }
 
-                serializer = serializerProvider.GetODataPayloadSerializer(type, request);
+                serializer = getODataPayloadSerializer(type);
                 if (serializer == null)
                 {
                     string message = Error.Format(SRResources.TypeCannotBeSerialized, type.Name);
@@ -352,20 +312,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 }
             }
             return null;
-        }
-
-        // To factor out request, just pass in a function to get base address. We'd get rid of
-        // BaseAddressFactory and request.
-        private Uri GetBaseAddressInternal(HttpRequestMessage request)
-        {
-            if (BaseAddressFactory != null)
-            {
-                return BaseAddressFactory(request);
-            }
-            else
-            {
-                return ODataMediaTypeFormatter.GetDefaultBaseAddress(request);
-            }
         }
 
         // This function is used to determine whether an OData path includes operation (import) path segments.
