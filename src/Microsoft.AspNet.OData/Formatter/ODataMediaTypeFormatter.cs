@@ -212,7 +212,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return _inputFormatter.CanReadType(type, Request);
+                return _inputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, Request);
             }
 
             return false;
@@ -228,7 +228,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return _outputFormatter.CanWriteType(type, Request);
+                return _outputFormatter.CanWriteType(type, Request, new WebApiRequestMessage(Request));
             }
 
             return false;
@@ -256,7 +256,7 @@ namespace Microsoft.AspNet.OData.Formatter
             try
             {
                 object defaultValue = GetDefaultValueForType(type);
-                return Task.FromResult(_inputFormatter.ReadFromStream(type, defaultValue, readStream, content, formatterLogger, Request));
+                return Task.FromResult(_inputFormatter.ReadFromStream(type, defaultValue, readStream, content, formatterLogger, Request.GetModel(), Request, new WebApiRequestMessage(Request)));
             }
             catch (Exception ex)
             {
@@ -289,7 +289,13 @@ namespace Microsoft.AspNet.OData.Formatter
             HttpContentHeaders contentHeaders = content == null ? null : content.Headers;
             try
             {
-                _outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request, _version);
+                HttpConfiguration configuration = Request.GetConfiguration();
+                if (configuration == null)
+                {
+                    throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
+                }
+
+                _outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), Request, _version, new WebApiRequestMessage(Request), new WebApiRequestHeaders(Request.Headers));
                 return TaskHelpers.Completed();
             }
             catch (Exception ex)
