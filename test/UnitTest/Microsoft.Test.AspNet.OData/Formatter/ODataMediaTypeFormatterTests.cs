@@ -386,7 +386,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             string mediaType = string.Format("application/json; odata.metadata=minimal; charset={0}", encoding);
 
             // Act & assert
-            return ReadContentUsingCorrectCharacterEncodingHelper(
+            return ReadContentusingCorrectCharacterEncodingHelper(
                 formatter, content, formattedContent, mediaType, encoding, isDefaultEncoding);
         }
 
@@ -402,7 +402,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             string mediaType = string.Format("application/json; odata.metadata=minimal; charset={0}", encoding);
 
             // Act & assert
-            return WriteContentUsingCorrectCharacterEncodingHelper(
+            return WriteContentusingCorrectCharacterEncodingHelper(
                 formatter, content, formattedContent, mediaType, encoding, isDefaultEncoding);
         }
 
