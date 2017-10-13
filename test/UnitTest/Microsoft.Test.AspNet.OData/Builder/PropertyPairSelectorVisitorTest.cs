@@ -9,6 +9,8 @@ using System.Reflection;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -25,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                 PropertyPairSelectorVisitor.GetSelectedProperty(expr);
 
             // Assert
-            Assert.Equal(1, properties.Count);
+            Assert.Single(properties);
             Assert.Equal("ForeignKey1", properties.Keys.First().Name);
             Assert.Equal("PrincipalKey1", properties.Values.First().Name);
         }
@@ -90,7 +92,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             Expression<Func<Dependent, Principal, bool>> expr = (d, p) => d.ForeignKey1 == p.Field;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
+            ExceptionAssert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
                 string.Format("Member '{0}.Field' is not a property.", typeof(Principal).FullName));
         }
 
@@ -101,7 +103,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             Expression<Func<Dependent, int>> expr = d => d.ForeignKey1;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
+            ExceptionAssert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
                 SRResources.LambdaExpressionMustHaveExactlyTwoParameters);
         }
 
@@ -112,7 +114,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             Expression<Func<Dependent, Principal, bool>> expr = (d, p) => d.ForeignKey1 > p.PrincipalKey1;
 
             // Act & Assert
-            Assert.Throws<NotSupportedException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
+            ExceptionAssert.Throws<NotSupportedException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
                 "Unsupported Expression NodeType 'GreaterThan'.");
         }
 
@@ -124,7 +126,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                 (d, p) => new Dependent().ForeignKey1 == new Principal().PrincipalKey1;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
+            ExceptionAssert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
                 "MemberExpressions must be bound to the LambdaExpression parameter.");
         }
 
@@ -136,7 +138,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                 (d, p) => d.ForeignKey4 == p.PrincipalKey1;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
+            ExceptionAssert.Throws<InvalidOperationException>(() => PropertyPairSelectorVisitor.GetSelectedProperty(expr),
                 String.Format(SRResources.EqualExpressionsMustHaveSameTypes,
                     typeof(Dependent).FullName, "ForeignKey4", "System.Int16",
                     typeof(Principal).FullName, "PrincipalKey1", "System.Int32"));

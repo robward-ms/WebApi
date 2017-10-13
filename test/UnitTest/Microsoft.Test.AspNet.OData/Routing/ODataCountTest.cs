@@ -17,6 +17,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
@@ -75,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
 
         [Theory]
-        [PropertyData("DollarCountData")]
+        [MemberData(nameof(DollarCountData))]
         public void DollarCount_Works(string uri, int expectedCount)
         {
             // Arrange & Act

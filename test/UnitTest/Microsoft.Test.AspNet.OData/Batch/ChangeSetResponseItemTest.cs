@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -27,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Constructor_NullResponses_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ChangeSetResponseItem(null),
                 "responses");
         }
@@ -37,7 +38,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         {
             ChangeSetResponseItem responseItem = new ChangeSetResponseItem(new HttpResponseMessage[0]);
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => responseItem.WriteResponseAsync(null, CancellationToken.None).Wait(),
                 "writer");
         }

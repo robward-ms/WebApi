@@ -6,6 +6,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.Test.AspNet.OData

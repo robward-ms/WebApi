@@ -7,6 +7,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -33,7 +35,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             var serializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Unsupported) { CallBase = true };
 
-            Assert.Throws<NotSupportedException>(
+            ExceptionAssert.Throws<NotSupportedException>(
                 () => serializer.Object.WriteObjectInline(graph: null, expectedType: null, writer: null, writeContext: null),
                 "ODataEdmTypeSerializerProxy does not support WriteObjectInline.");
         }
@@ -44,7 +46,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             IEdmTypeReference edmType = new Mock<IEdmTypeReference>().Object;
             var serializer = new Mock<ODataEdmTypeSerializer>(ODataPayloadKind.Unsupported) { CallBase = true };
 
-            Assert.Throws<NotSupportedException>(
+            ExceptionAssert.Throws<NotSupportedException>(
                 () => serializer.Object.CreateODataValue(graph: null, expectedType: edmType, writeContext: null),
                 "ODataEdmTypeSerializerProxy does not support CreateODataValue.");
         }

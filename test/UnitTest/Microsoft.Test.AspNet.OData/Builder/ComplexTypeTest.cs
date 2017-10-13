@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -80,7 +82,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
 
             var zipCode = builder.ComplexType<RecursiveZipCode>();
 
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => zipCode.ComplexProperty(z => z.Recursive),
                 "propertyInfo",
                 "The complex type 'Microsoft.Test.AspNet.OData.Builder.TestModels.RecursiveZipCode' has a reference to itself through the property 'Recursive'. A recursive loop of complex types is not allowed.");
@@ -155,7 +157,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             builder.ComplexType<BadOpenComplexType>();
 
             // Act & Assert
-            Assert.ThrowsArgument(() => builder.GetEdmModel(),
+            ExceptionAssert.ThrowsArgument(() => builder.GetEdmModel(),
                 "propertyInfo",
                 "Found more than one dynamic property container in type 'BadOpenComplexType'. " +
                 "Each open type must have at most one dynamic property container.\r\n" +
@@ -247,7 +249,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             // Assert
             IEdmComplexType baseComplexType = model.AssertHasComplexType(typeof(BaseComplexType));
             Assert.Null(baseComplexType.BaseComplexType());
-            Assert.Equal(1, baseComplexType.Properties().Count());
+            Assert.Single(baseComplexType.Properties());
             baseComplexType.AssertHasPrimitiveProperty(model, "BaseProperty", EdmPrimitiveTypeKind.String, true);
 
             IEdmComplexType derivedComplexType = model.AssertHasComplexType(typeof(DerivedComplexType));
@@ -285,11 +287,11 @@ namespace Microsoft.Test.AspNet.OData.Builder
             // Assert
             IEdmComplexType baseComplex = model.AssertHasComplexType(typeof(BaseComplexType));
             Assert.Null(baseComplex.BaseComplexType());
-            Assert.Equal(0, baseComplex.Properties().Count());
+            Assert.Empty(baseComplex.Properties());
 
             IEdmComplexType derivedComplex = model.AssertHasComplexType(typeof(DerivedComplexType));
             Assert.Equal(baseComplex, derivedComplex.BaseComplexType());
-            Assert.Equal(1, derivedComplex.Properties().Count());
+            Assert.Single(derivedComplex.Properties());
             derivedComplex.AssertHasPrimitiveProperty(model, "BaseProperty", EdmPrimitiveTypeKind.String, true);
         }
 
@@ -301,7 +303,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             builder.ComplexType<BaseComplexType>().Property(v => v.BaseProperty);
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => builder.ComplexType<DerivedComplexType>().DerivesFrom<BaseComplexType>().Property(v => v.BaseProperty),
                 "propertyInfo",
                 "Cannot redefine property 'BaseProperty' already defined on the base type 'Microsoft.Test.AspNet.OData.Builder.BaseComplexType'.");
@@ -315,7 +317,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             builder.ComplexType<DerivedComplexType>().DerivesFrom<BaseComplexType>().Property(m => m.BaseProperty);
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => builder.ComplexType<BaseComplexType>().Property(v => v.BaseProperty),
                 "propertyInfo",
                 "Cannot define property 'BaseProperty' in the base type 'Microsoft.Test.AspNet.OData.Builder.BaseComplexType' " +
@@ -329,7 +331,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             ODataModelBuilder builder = new ODataModelBuilder();
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => builder.ComplexType<string>().DerivesFrom<BaseComplexType>(),
                 "baseType",
                 "'System.String' does not inherit from 'Microsoft.Test.AspNet.OData.Builder.BaseComplexType'.");
@@ -346,7 +348,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             derivedComplex.Property(m => m.BaseProperty);
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => derivedComplex.DerivesFrom<BaseComplexType>(),
                 "propertyInfo",
                 "Cannot redefine property 'BaseProperty' already defined on the base type 'Microsoft.Test.AspNet.OData.Builder.BaseComplexType'.");
@@ -362,7 +364,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             builder.ComplexType<SubDerivedComplexType>().DerivesFrom<DerivedComplexType>().Property(c => c.BaseProperty);
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => builder.ComplexType<DerivedComplexType>().DerivesFrom<BaseComplexType>(),
                 "propertyInfo",
                 "Cannot define property 'BaseProperty' in the base type 'Microsoft.Test.AspNet.OData.Builder.DerivedComplexType' as " +
@@ -376,7 +378,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             ODataModelBuilder builder = new ODataModelBuilder();
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => builder.EntityType<BaseComplexType>().DerivesFrom<BaseComplexType>(),
                 "baseType",
                 "'Microsoft.Test.AspNet.OData.Builder.BaseComplexType' does not inherit from 'Microsoft.Test.AspNet.OData.Builder.BaseComplexType'.");
@@ -457,7 +459,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             IEdmEntityType customerType = Assert.Single(model.SchemaElements.OfType<IEdmEntityType>());
             Assert.Equal("Microsoft.Test.AspNet.OData.Builder.TestModels.Customer", customerType.FullName());
             Assert.Equal("CustomerId", customerType.DeclaredKey.Single().Name);
-            Assert.Equal(1, customerType.DeclaredProperties.Count());
+            Assert.Single(customerType.DeclaredProperties);
             Assert.Empty(customerType.NavigationProperties());
 
             IEdmComplexType orderType = Assert.Single(model.SchemaElements.OfType<IEdmComplexType>());
@@ -487,7 +489,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             IEdmEntityType customerType = Assert.Single(model.SchemaElements.OfType<IEdmEntityType>());
             Assert.Equal("Microsoft.Test.AspNet.OData.Builder.TestModels.Customer", customerType.FullName());
             Assert.Equal("CustomerId", customerType.DeclaredKey.Single().Name);
-            Assert.Equal(1, customerType.DeclaredProperties.Count());
+            Assert.Single(customerType.DeclaredProperties);
             Assert.Empty(customerType.NavigationProperties());
 
             IEdmComplexType orderType = Assert.Single(model.SchemaElements.OfType<IEdmComplexType>());
@@ -517,7 +519,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             IEdmEntityType orderType = Assert.Single(model.SchemaElements.OfType<IEdmEntityType>());
             Assert.Equal("Microsoft.Test.AspNet.OData.Builder.TestModels.Order", orderType.FullName());
             Assert.Equal("OrderId", orderType.DeclaredKey.Single().Name);
-            Assert.Equal(1, orderType.DeclaredProperties.Count());
+            Assert.Single(orderType.DeclaredProperties);
             Assert.Empty(orderType.NavigationProperties());
 
             IEdmComplexType customerType = Assert.Single(model.SchemaElements.OfType<IEdmComplexType>());

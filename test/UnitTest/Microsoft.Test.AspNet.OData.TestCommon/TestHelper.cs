@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
 {

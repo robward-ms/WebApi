@@ -16,6 +16,8 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -55,7 +57,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             HttpResponseMessage response = _client.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JToken.Parse(response.Content.ReadAsStringAsync().Result);
 
@@ -75,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             JToken result = JToken.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.Equal(new[] { "Red", null, "Green" }, result["NullableColors"].Values<string>());
         }
@@ -89,7 +91,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             HttpResponseMessage response = _client.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JToken.Parse(response.Content.ReadAsStringAsync().Result);
             IEnumerable<JObject> complexCollection = result["ComplexCollection"].Values<JObject>();
@@ -112,7 +114,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             HttpResponseMessage response = _client.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
         }
 
         [Fact]
@@ -148,15 +150,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 Assert.NotNull(model.Vehicles);
                 Assert.Equal(3, model.Vehicles.Length);
 
-                Assert.IsType(typeof(Car), model.Vehicles[0]);
+                Assert.IsAssignableFrom<Car>(model.Vehicles[0]);
                 Assert.Equal(2009, model.Vehicles[0].Model);
                 Assert.Equal("Car", model.Vehicles[0].Name);
 
-                Assert.IsType(typeof(Motorcycle), model.Vehicles[1]);
+                Assert.IsAssignableFrom<Motorcycle>(model.Vehicles[1]);
                 Assert.Equal(2010, model.Vehicles[1].Model);
                 Assert.Equal("Motorcycle", model.Vehicles[1].Name);
 
-                Assert.IsType(typeof(SportBike), model.Vehicles[2]);
+                Assert.IsAssignableFrom<SportBike>(model.Vehicles[2]);
                 Assert.Equal(2012, model.Vehicles[2].Model);
                 Assert.Equal("SportBike", model.Vehicles[2].Name);
             }

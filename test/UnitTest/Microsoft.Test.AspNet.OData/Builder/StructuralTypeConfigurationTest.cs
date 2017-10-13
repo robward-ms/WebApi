@@ -5,6 +5,8 @@ using System;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -25,19 +27,19 @@ namespace Microsoft.Test.AspNet.OData.Builder
         [Fact]
         public void Property_Name_RoundTrips()
         {
-            Assert.Reflection.Property(_configuration, c => c.Name, "Name", allowNull: false, roundTripTestValue: _name);
+            ReflectionAssert.Property(_configuration, c => c.Name, "Name", allowNull: false, roundTripTestValue: _name);
         }
 
         [Fact]
         public void Property_Namespace_RoundTrips()
         {
-            Assert.Reflection.Property(_configuration, c => c.Namespace, "Namespace", allowNull: false, roundTripTestValue: _namespace);
+            ReflectionAssert.Property(_configuration, c => c.Namespace, "Namespace", allowNull: false, roundTripTestValue: _namespace);
         }
 
         [Fact]
         public void Property_AddedExplicitly_RoundTrips()
         {
-            Assert.Reflection.BooleanProperty(_configuration, c => c.AddedExplicitly, true);
+            ReflectionAssert.BooleanProperty(_configuration, c => c.AddedExplicitly, true);
         }
 
         [Fact]
@@ -49,7 +51,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             StructuralTypeConfiguration configuration = mock.Object;
 
             // Act & Assert
-            Assert.ThrowsArgument(() => configuration.AddDynamicPropertyDictionary(property),
+            ExceptionAssert.ThrowsArgument(() => configuration.AddDynamicPropertyDictionary(property),
                 "propertyInfo",
                 string.Format("The argument must be of type '{0}'.", "IDictionary<string, object>"));
         }

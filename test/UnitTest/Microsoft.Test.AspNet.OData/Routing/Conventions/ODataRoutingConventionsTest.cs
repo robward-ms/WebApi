@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Conventions
 {

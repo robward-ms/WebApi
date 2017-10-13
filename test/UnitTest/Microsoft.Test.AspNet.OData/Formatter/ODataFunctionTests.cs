@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -141,7 +142,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("BoundFunctionRouteData")]
+        [MemberData(nameof(BoundFunctionRouteData))]
         public void FunctionWorks_WithParameters_ForUnTyped(string odataPath)
         {
             // Arrange
@@ -151,14 +152,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             var response = _client.GetAsync(requestUri).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.True((bool)result["value"]);
         }
 
         [Theory]
-        [PropertyData("BoundFunctionRouteData")]
-        [PropertyData("UnboundFunctionRouteData")]
+        [MemberData(nameof(BoundFunctionRouteData))]
+        [MemberData(nameof(UnboundFunctionRouteData))]
         public void FunctionWorks_WithParameters_OnlyWithAttributeRouting_ForUnTyped(string odataPath)
         {
             // Arrange
@@ -172,7 +173,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             var response = _client.GetAsync(requestUri).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.True((bool)result["value"]);
         }

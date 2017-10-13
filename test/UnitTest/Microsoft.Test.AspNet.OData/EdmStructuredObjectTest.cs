@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -14,13 +16,13 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void Ctor_ThrowsArgumentNull_EdmTypeOfTypeIEdmStructuredType()
         {
-            Assert.ThrowsArgumentNull(() => new TestEdmStructuredObject((IEdmStructuredType)null), "edmType");
+            ExceptionAssert.ThrowsArgumentNull(() => new TestEdmStructuredObject((IEdmStructuredType)null), "edmType");
         }
 
         [Fact]
         public void Ctor_ThrowsArgumentNull_EdmTypeOfTypeIEdmStructuredTypeReference()
         {
-            Assert.ThrowsArgumentNull(() => new TestEdmStructuredObject((IEdmStructuredTypeReference)null), "type");
+            ExceptionAssert.ThrowsArgumentNull(() => new TestEdmStructuredObject((IEdmStructuredTypeReference)null), "type");
         }
 
         [Fact]
@@ -28,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             TestEdmStructuredObject edmObject = new TestEdmStructuredObject(new EdmComplexType("NS", "Complex"));
 
-            Assert.Reflection.BooleanProperty(edmObject, e => e.IsNullable, expectedDefaultValue: false);
+            ReflectionAssert.BooleanProperty(edmObject, e => e.IsNullable, expectedDefaultValue: false);
         }
 
         [Fact]
@@ -38,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData
             EdmEntityType edmDerivedType = new EdmEntityType("NS", "Derived", edmBaseType);
             TestEdmStructuredObject edmObject = new TestEdmStructuredObject(edmBaseType);
 
-            Assert.Reflection.Property(edmObject, o => o.ActualEdmType, edmBaseType, allowNull: false, roundTripTestValue: edmDerivedType);
+            ReflectionAssert.Property(edmObject, o => o.ActualEdmType, edmBaseType, allowNull: false, roundTripTestValue: edmDerivedType);
         }
 
         [Fact]
@@ -48,7 +50,7 @@ namespace Microsoft.Test.AspNet.OData
             EdmEntityType edmDerivedType = new EdmEntityType("NS", "Derived", edmBaseType);
             TestEdmStructuredObject edmObject = new TestEdmStructuredObject(edmDerivedType);
 
-            Assert.Reflection.Property(edmObject, o => o.ExpectedEdmType, edmDerivedType, allowNull: false, roundTripTestValue: edmBaseType);
+            ReflectionAssert.Property(edmObject, o => o.ExpectedEdmType, edmDerivedType, allowNull: false, roundTripTestValue: edmBaseType);
         }
 
         [Fact]
@@ -80,7 +82,7 @@ namespace Microsoft.Test.AspNet.OData
             EdmEntityType edmType2 = new EdmEntityType("NS", "Entity2");
             TestEdmStructuredObject edmObject = new TestEdmStructuredObject(edmType1);
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () =>
                 {
                     edmObject.ActualEdmType = edmType2;
@@ -95,7 +97,7 @@ namespace Microsoft.Test.AspNet.OData
             EdmEntityType edmType2 = new EdmEntityType("NS", "Entity2");
             TestEdmStructuredObject edmObject = new TestEdmStructuredObject(edmType1);
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () =>
                 {
                     edmObject.ExpectedEdmType = edmType2;
@@ -233,7 +235,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("GetDefaultValueTestData")]
+        [MemberData(nameof(GetDefaultValueTestData))]
         public void GetDefaultValue(IEdmTypeReference edmType, object expectedResult)
         {
             Assert.Equal(expectedResult, EdmStructuredObject.GetDefaultValue(edmType));
@@ -334,7 +336,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("GetClrTypeForUntypedDeltaTestData")]
+        [MemberData(nameof(GetClrTypeForUntypedDeltaTestData))]
         public void GetClrTypeForUntypedDelta(IEdmTypeReference edmType, Type expectedType)
         {
             Assert.Equal(expectedType, EdmStructuredObject.GetClrTypeForUntypedDelta(edmType));

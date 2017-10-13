@@ -6,6 +6,8 @@ using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Template
 {
@@ -15,7 +17,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Template
         public void Ctor_ThrowsArgumentNull_NavigationPropertyLinkSegment()
         {
             // Assert
-            Assert.ThrowsArgumentNull(() => new NavigationPropertySegmentTemplate(segment: null), "segment");
+            ExceptionAssert.ThrowsArgumentNull(() => new NavigationPropertySegmentTemplate(segment: null), "segment");
         }
 
         [Fact]

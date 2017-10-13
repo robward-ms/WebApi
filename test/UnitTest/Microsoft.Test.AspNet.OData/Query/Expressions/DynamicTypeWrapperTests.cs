@@ -3,6 +3,8 @@
 
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.OData.Query.Expressions
 {

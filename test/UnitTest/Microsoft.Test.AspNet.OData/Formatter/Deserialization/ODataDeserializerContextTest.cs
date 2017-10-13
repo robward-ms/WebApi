@@ -6,6 +6,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 {

@@ -12,6 +12,8 @@ using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -74,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
 
         [Theory]
-        [PropertyData("DateTimeTestData")]
+        [MemberData(nameof(DateTimeTestData))]
         public void SerializesDateTimeTypes(object value, DateTimeOffset expect)
         {
             // Arrange

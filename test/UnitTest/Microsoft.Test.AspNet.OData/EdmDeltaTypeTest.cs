@@ -4,6 +4,8 @@
 using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -12,7 +14,7 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void Ctor_ThrowsArgumentNull_EntityType()
         {
-            Assert.ThrowsArgumentNull(() => new EdmDeltaType((IEdmEntityType)null, EdmDeltaEntityKind.Entry), "entityType");
+            ExceptionAssert.ThrowsArgumentNull(() => new EdmDeltaType((IEdmEntityType)null, EdmDeltaEntityKind.Entry), "entityType");
         }
 
         [Fact]

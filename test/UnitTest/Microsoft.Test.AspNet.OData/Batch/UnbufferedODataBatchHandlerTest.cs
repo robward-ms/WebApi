@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -34,7 +35,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Constructor_Throws_IfHttpServerIsNull()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new UnbufferedODataBatchHandler(null),
                 "httpServer");
         }
@@ -45,7 +46,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
             HttpRequestMessage request = new HttpRequestMessage();
             request.EnableHttpDependencyInjectionSupport();
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.CreateResponseMessageAsync(null, request, CancellationToken.None).Wait(),
                 "responses");
         }
@@ -54,7 +55,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ProcessBatchAsync_Throws_IfRequestIsNull()
         {
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ProcessBatchAsync(null, CancellationToken.None).Wait(),
                 "request");
         }
@@ -172,7 +173,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             batchRequest.EnableHttpDependencyInjectionSupport();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => batchHandler.ProcessBatchAsync(batchRequest, CancellationToken.None).Result);
 
             Assert.Equal(2, responses.Count);
@@ -273,7 +274,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ValidateRequest_Throws_IfResponsesIsNull()
         {
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ValidateRequest(null),
                 "request");
         }
@@ -282,7 +283,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ExecuteChangeSet_Throws_IfReaderIsNull()
         {
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ExecuteChangeSetAsync(null, Guid.NewGuid(), new HttpRequestMessage(), CancellationToken.None).Wait(),
                 "batchReader");
         }
@@ -295,7 +296,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             var reader = httpContent.GetODataMessageReaderAsync(new ODataMessageReaderSettings(), CancellationToken.None).Result;
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ExecuteChangeSetAsync(reader.CreateODataBatchReader(), Guid.NewGuid(), null, CancellationToken.None).Wait(),
                 "originalRequest");
         }
@@ -380,7 +381,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             var response = batchHandler.ExecuteChangeSetAsync(batchReader, Guid.NewGuid(), batchRequest, CancellationToken.None).Result;
 
             var changesetResponse = Assert.IsType<ChangeSetResponseItem>(response);
-            Assert.Equal(1, changesetResponse.Responses.Count());
+            Assert.Single(changesetResponse.Responses);
             Assert.Equal(HttpStatusCode.BadRequest, changesetResponse.Responses.First().StatusCode);
         }
 
@@ -427,7 +428,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ExecuteOperation_Throws_IfReaderIsNull()
         {
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ExecuteOperationAsync(null, Guid.NewGuid(), new HttpRequestMessage(), CancellationToken.None).Wait(),
                 "batchReader");
         }
@@ -440,7 +441,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             var reader = httpContent.GetODataMessageReaderAsync(new ODataMessageReaderSettings(), CancellationToken.None).Result;
             UnbufferedODataBatchHandler batchHandler = new UnbufferedODataBatchHandler(new HttpServer());
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ExecuteOperationAsync(reader.CreateODataBatchReader(), Guid.NewGuid(), null, CancellationToken.None).Wait(),
                 "originalRequest");
         }

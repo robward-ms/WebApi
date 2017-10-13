@@ -24,6 +24,8 @@ using Microsoft.Test.AspNet.OData.Query.Controllers;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Query
@@ -62,7 +64,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Theory]
-        [PropertyData("GoodMethodNames")]
+        [MemberData(nameof(GoodMethodNames))]
         public void DifferentReturnTypeWorks(string methodName, Type entityClrType)
         {
             // Arrange
@@ -86,14 +88,14 @@ namespace Microsoft.Test.AspNet.OData.Query
             attribute.GetBinding(parameterDescriptor).ExecuteBindingAsync((ModelMetadataProvider)null, actionContext, CancellationToken.None).Wait();
 
             // Assert
-            Assert.Equal(1, actionContext.ActionArguments.Count);
+            Assert.Single(actionContext.ActionArguments);
             ODataQueryOptions options = actionContext.ActionArguments[parameterDescriptor.ParameterName] as ODataQueryOptions;
             Assert.NotNull(options);
             Assert.Equal(entityClrType, options.Context.ElementClrType);
         }
 
         [Theory]
-        [PropertyData("BadMethodNames")]
+        [MemberData(nameof(BadMethodNames))]
         public void BadReturnTypeThrows(string methodName)
         {
             // Arrange
@@ -114,7 +116,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpParameterBinding binding = attribute.GetBinding(parameterDescriptor);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => binding.ExecuteBindingAsync((ModelMetadataProvider)null, actionContext, CancellationToken.None).Wait(),
                 String.Format(
                         "Cannot create an EDM model as the action '{0}' on controller '{1}' has a return type '{2}' that does not implement IEnumerable<T>.",
@@ -142,7 +144,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpParameterBinding binding = attribute.GetBinding(parameterDescriptor);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => binding.ExecuteBindingAsync((ModelMetadataProvider)null, actionContext, CancellationToken.None).Wait(),
                 "Cannot create an EDM model as the action 'GetVoidReturn' on controller 'CustomerLowLevel' has a void return type.");
         }
@@ -179,7 +181,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Theory]
-        [PropertyData("GoodMethodNames")]
+        [MemberData(nameof(GoodMethodNames))]
         public void ExecuteBindingAsync_Works_WithPath(string methodName, Type entityClrType)
         {
             // Arrange
@@ -219,7 +221,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 .Wait();
 
             // Assert
-            Assert.Equal(1, actionContext.ActionArguments.Count);
+            Assert.Single(actionContext.ActionArguments);
             ODataQueryOptions options =
                 actionContext.ActionArguments[parameterDescriptor.ParameterName] as ODataQueryOptions;
             Assert.NotNull(options);

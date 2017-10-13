@@ -17,6 +17,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query.Expressions
 {
@@ -161,7 +163,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             Expression projection = _binder.ProjectAsWrapper(source, selectExpand, _model.Order, _model.Orders);
 
             // Assert
-            var e = Assert.Throws<TargetInvocationException>(
+            var e = ExceptionAssert.Throws<TargetInvocationException>(
                 () => Expression.Lambda(projection).Compile().DynamicInvoke());
             Assert.IsType<NullReferenceException>(e.InnerException);
         }
@@ -280,7 +282,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             Expression projection = _binder.ProjectAsWrapper(source, selectExpand, _model.Order, _model.Orders);
 
             // Assert
-            var e = Assert.Throws<TargetInvocationException>(
+            var e = ExceptionAssert.Throws<TargetInvocationException>(
                 () => Expression.Lambda(projection).Compile().DynamicInvoke());
             Assert.IsType<ArgumentNullException>(e.InnerException);
         }
@@ -430,7 +432,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             IEdmNavigationProperty specialOrdersProperty = _model.SpecialCustomer.DeclaredNavigationProperties().Single();
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _binder.CreatePropertyNameExpression(_model.Customer, specialOrdersProperty, customer),
                 "The provided mapping does not contain a resource for the resource type 'NS.SpecialCustomer'.");
         }
@@ -480,7 +482,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             IEdmNavigationProperty specialOrdersProperty = _model.SpecialCustomer.DeclaredNavigationProperties().Single();
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _binder.CreatePropertyValueExpression(_model.Customer, specialOrdersProperty, customer),
                 "The provided mapping does not contain a resource for the resource type 'NS.SpecialCustomer'.");
         }
@@ -551,7 +553,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             var filterCaluse = parser.ParseFilter();
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _binder.CreatePropertyValueExpressionWithFilter(_model.Customer, ordersProperty, customer, filterCaluse),
                 "The provided mapping does not contain a resource for the resource type 'NS.Order'.");
         }
@@ -657,7 +659,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             Expression source = Expression.Constant(42);
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => SelectExpandBinder.CreateTypeNameExpression(source, baseType, model),
                 "The provided mapping does not contain a resource for the resource type 'NS.DerivedType'.");
         }
@@ -687,8 +689,8 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             // Assert
             Assert.Equal(
-                result.ToString(),
-                @"IIF((42 Is AAA), ""NS.AAA"", IIF((42 Is AA), ""NS.AA"", IIF((42 Is B), ""NS.B"", IIF((42 Is A), ""NS.A"", ""NS.BaseType""))))");
+                @"IIF((42 Is AAA), ""NS.AAA"", IIF((42 Is AA), ""NS.AA"", IIF((42 Is B), ""NS.B"", IIF((42 Is A), ""NS.A"", ""NS.BaseType""))))",
+                result.ToString());
         }
 
         private class SpecialCustomer : Customer

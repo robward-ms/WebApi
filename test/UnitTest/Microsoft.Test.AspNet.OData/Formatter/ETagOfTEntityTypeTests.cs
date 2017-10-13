@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -124,7 +126,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IQueryable query = Enumerable.Empty<int>().AsQueryable();
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(
+            ExceptionAssert.Throws<ArgumentException>(
                 () => etagCustomer.ApplyTo(query),
                 "Cannot apply ETag of 'Microsoft.Test.AspNet.OData.Formatter.Serialization.Models.Customer' to IQueryable of " +
                 "'System.Int32'.\r\nParameter name: query");

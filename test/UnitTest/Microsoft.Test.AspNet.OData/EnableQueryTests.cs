@@ -14,6 +14,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -325,15 +327,15 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("LogicalOperatorsTestData")]
-        [PropertyData("ArithmeticOperatorsTestData")]
-        [PropertyData("StringFunctionsTestData")]
-        [PropertyData("MathFunctionsTestData")]
-        [PropertyData("SupportedDateTimeFunctionsTestData")]
-        [PropertyData("UnsupportedDateTimeFunctionsTestData")]
-        [PropertyData("AnyAndAllFunctionsTestData")]
-        [PropertyData("OtherQueryOptionsTestData")]
-        [PropertyData("OtherUnsupportedQueryOptionsTestData")]
+        [MemberData(nameof(LogicalOperatorsTestData))]
+        [MemberData(nameof(ArithmeticOperatorsTestData))]
+        [MemberData(nameof(StringFunctionsTestData))]
+        [MemberData(nameof(MathFunctionsTestData))]
+        [MemberData(nameof(SupportedDateTimeFunctionsTestData))]
+        [MemberData(nameof(UnsupportedDateTimeFunctionsTestData))]
+        [MemberData(nameof(AnyAndAllFunctionsTestData))]
+        [MemberData(nameof(OtherQueryOptionsTestData))]
+        [MemberData(nameof(OtherUnsupportedQueryOptionsTestData))]
         public void EnableQuery_Blocks_NotAllowedQueries(string queryString, string expectedElement)
         {
             // Arrange
@@ -352,13 +354,13 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("LogicalOperatorsTestData")]
-        [PropertyData("ArithmeticOperatorsTestData")]
-        [PropertyData("StringFunctionsTestData")]
-        [PropertyData("MathFunctionsTestData")]
-        [PropertyData("SupportedDateTimeFunctionsTestData")]
-        [PropertyData("UnsupportedDateTimeFunctionsTestData")]
-        [PropertyData("AnyAndAllFunctionsTestData")]
+        [MemberData(nameof(LogicalOperatorsTestData))]
+        [MemberData(nameof(ArithmeticOperatorsTestData))]
+        [MemberData(nameof(StringFunctionsTestData))]
+        [MemberData(nameof(MathFunctionsTestData))]
+        [MemberData(nameof(SupportedDateTimeFunctionsTestData))]
+        [MemberData(nameof(UnsupportedDateTimeFunctionsTestData))]
+        [MemberData(nameof(AnyAndAllFunctionsTestData))]
         public void EnableQuery_BlocksFilter_WhenNotAllowed(string queryString, string unused)
         {
             // Arrange
@@ -371,13 +373,14 @@ namespace Microsoft.Test.AspNet.OData
             string errorMessage = response.Content.ReadAsStringAsync().Result;
 
             // Assert
+            Assert.NotNull(unused);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("not allowed", errorMessage);
             Assert.Contains("Filter", errorMessage);
         }
 
         [Theory]
-        [PropertyData("OtherUnsupportedQueryOptionsTestData")]
+        [MemberData(nameof(OtherUnsupportedQueryOptionsTestData))]
         public void EnableQuery_ReturnsBadRequest_ForUnsupportedQueryOptions(string queryString, string expectedElement)
         {
             // Arrange
@@ -400,7 +403,7 @@ namespace Microsoft.Test.AspNet.OData
         // enable it in those tests and this test only makes sure it covers the case
         // when everything is disabled
         [Theory]
-        [PropertyData("EqualsOperatorTestData")]
+        [MemberData(nameof(EqualsOperatorTestData))]
         public void EnableQuery_BlocksEquals_WhenNotAllowed(string queryString, string expectedElement)
         {
             // Arrange
@@ -419,16 +422,16 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("LogicalOperatorsTestData")]
-        [PropertyData("ArithmeticOperatorsTestData")]
-        [PropertyData("EqualsOperatorTestData")]
-        [PropertyData("OtherQueryOptionsTestData")]
-        [PropertyData("StringFunctionsTestData")]
-        [PropertyData("MathFunctionsTestData")]
-        [PropertyData("SupportedDateTimeFunctionsTestData")]
-        [PropertyData("AnyAndAllFunctionsTestData")]
-        [PropertyData("CastFunctionTestData")]
-        [PropertyData("IsOfFunctionTestData")]
+        [MemberData(nameof(LogicalOperatorsTestData))]
+        [MemberData(nameof(ArithmeticOperatorsTestData))]
+        [MemberData(nameof(EqualsOperatorTestData))]
+        [MemberData(nameof(OtherQueryOptionsTestData))]
+        [MemberData(nameof(StringFunctionsTestData))]
+        [MemberData(nameof(MathFunctionsTestData))]
+        [MemberData(nameof(SupportedDateTimeFunctionsTestData))]
+        [MemberData(nameof(AnyAndAllFunctionsTestData))]
+        [MemberData(nameof(CastFunctionTestData))]
+        [MemberData(nameof(IsOfFunctionTestData))]
         public void EnableQuery_DoesNotBlockQueries_WhenEverythingIsAllowed(string queryString, string unused)
         {
             // Arrange
@@ -440,11 +443,12 @@ namespace Microsoft.Test.AspNet.OData
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
 
             // Assert
+            Assert.NotNull(unused);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Theory]
-        [PropertyData("AutoExpandedTestData")]
+        [MemberData(nameof(AutoExpandedTestData))]
         public void EnableQuery_Works_WithAutoExpanded(string queryString)
         {
             // Arrange
@@ -471,7 +475,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("UnsupportedDateTimeFunctionsTestData")]
+        [MemberData(nameof(UnsupportedDateTimeFunctionsTestData))]
         public void EnableQuery_ReturnsBadRequest_ForUnsupportedFunctions(string queryString, string expectedElement)
         {
             // Arrange
@@ -490,7 +494,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("NumericQueryLimitationsTestData")]
+        [MemberData(nameof(NumericQueryLimitationsTestData))]
         public void EnableQuery_BlocksQueries_WithOtherLimitations(string queryString, string expectedElement)
         {
             // Arrange

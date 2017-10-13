@@ -12,6 +12,8 @@ using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -174,7 +176,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("ToEdmTypeReferenceTestData")]
+        [MemberData(nameof(ToEdmTypeReferenceTestData))]
         public void ToEdmTypeReference_InstantiatesRightEdmTypeReference(IEdmType edmType, bool isNullable, Type expectedType)
         {
             IEdmTypeReference result = EdmLibHelpers.ToEdmTypeReference(edmType, isNullable);
@@ -219,7 +221,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("GetClrTypeTestData")]
+        [MemberData(nameof(GetClrTypeTestData))]
         public void GetClrType_ReturnsRightClrType(IEdmTypeReference edmTypeReference, Type expectedType)
         {
             Assert.Same(expectedType, EdmLibHelpers.GetClrType(edmTypeReference, GetEdmModel()));

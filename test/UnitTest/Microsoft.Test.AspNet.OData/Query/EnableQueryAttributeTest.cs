@@ -29,6 +29,8 @@ using Microsoft.Test.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Query
@@ -74,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void EnsureStableOrdering_Property_RoundTrips()
         {
-            Assert.Reflection.BooleanProperty<EnableQueryAttribute>(
+            ReflectionAssert.BooleanProperty<EnableQueryAttribute>(
                 new EnableQueryAttribute(),
                 o => o.EnsureStableOrdering,
                 true);
@@ -83,7 +85,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void HandleNullPropagation_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<EnableQueryAttribute, HandleNullPropagationOption>(
+            ReflectionAssert.EnumProperty<EnableQueryAttribute, HandleNullPropagationOption>(
                 new EnableQueryAttribute(),
                 o => o.HandleNullPropagation,
                 HandleNullPropagationOption.Default,
@@ -94,7 +96,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void AllowedArithmeticOperators_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<EnableQueryAttribute, AllowedArithmeticOperators>(
+            ReflectionAssert.EnumProperty<EnableQueryAttribute, AllowedArithmeticOperators>(
                 new EnableQueryAttribute(),
                 o => o.AllowedArithmeticOperators,
                 AllowedArithmeticOperators.All,
@@ -105,7 +107,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void AllowedFunctions_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<EnableQueryAttribute, AllowedFunctions>(
+            ReflectionAssert.EnumProperty<EnableQueryAttribute, AllowedFunctions>(
                 new EnableQueryAttribute(),
                 o => o.AllowedFunctions,
                 AllowedFunctions.AllFunctions,
@@ -116,7 +118,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void AllowedLogicalOperators_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<EnableQueryAttribute, AllowedLogicalOperators>(
+            ReflectionAssert.EnumProperty<EnableQueryAttribute, AllowedLogicalOperators>(
                 new EnableQueryAttribute(),
                 o => o.AllowedLogicalOperators,
                 AllowedLogicalOperators.All,
@@ -127,7 +129,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void EnableConstantParameterization_Property_RoundTrips()
         {
-            Assert.Reflection.BooleanProperty(
+            ReflectionAssert.BooleanProperty(
                 new EnableQueryAttribute(),
                 o => o.EnableConstantParameterization,
                 expectedDefaultValue: true);
@@ -136,7 +138,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void AllowedQueryOptions_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<EnableQueryAttribute, AllowedQueryOptions>(
+            ReflectionAssert.EnumProperty<EnableQueryAttribute, AllowedQueryOptions>(
                 new EnableQueryAttribute(),
                 o => o.AllowedQueryOptions,
                 AllowedQueryOptions.Supported,
@@ -147,7 +149,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void AllowedOrderByProperties_Property_RoundTrips()
         {
-            Assert.Reflection.StringProperty<EnableQueryAttribute>(
+            ReflectionAssert.StringProperty<EnableQueryAttribute>(
                 new EnableQueryAttribute(),
                 o => o.AllowedOrderByProperties,
                 expectedDefaultValue: null,
@@ -158,7 +160,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void MaxAnyAllExpressionDepth_Property_RoundTrips()
         {
-            Assert.Reflection.IntegerProperty<EnableQueryAttribute, int>(
+            ReflectionAssert.IntegerProperty<EnableQueryAttribute, int>(
                 new EnableQueryAttribute(),
                 o => o.MaxAnyAllExpressionDepth,
                 expectedDefaultValue: 1,
@@ -172,7 +174,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void MaxNodeCount_Property_RoundTrips()
         {
-            Assert.Reflection.IntegerProperty<EnableQueryAttribute, int>(
+            ReflectionAssert.IntegerProperty<EnableQueryAttribute, int>(
                 new EnableQueryAttribute(),
                 o => o.MaxNodeCount,
                 expectedDefaultValue: 100,
@@ -186,7 +188,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void PageSize_Property_RoundTrips()
         {
-            Assert.Reflection.IntegerProperty<EnableQueryAttribute, int>(
+            ReflectionAssert.IntegerProperty<EnableQueryAttribute, int>(
                 new EnableQueryAttribute(),
                 o => o.PageSize,
                 expectedDefaultValue: 0,
@@ -200,7 +202,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void MaxExpansionDepth_Property_RoundTrips()
         {
-            Assert.Reflection.IntegerProperty(
+            ReflectionAssert.IntegerProperty(
                 new EnableQueryAttribute(),
                 o => o.MaxExpansionDepth,
                 expectedDefaultValue: 2,
@@ -214,7 +216,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void MaxOrderByNodeCount_Property_RoundTrips()
         {
-            Assert.Reflection.IntegerProperty(
+            ReflectionAssert.IntegerProperty(
                 new EnableQueryAttribute(),
                 o => o.MaxOrderByNodeCount,
                 expectedDefaultValue: 5,
@@ -228,13 +230,13 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void OnActionExecuted_Throws_Null_Context()
         {
-            Assert.ThrowsArgumentNull(() => new EnableQueryAttribute().OnActionExecuted(null), "actionExecutedContext");
+            ExceptionAssert.ThrowsArgumentNull(() => new EnableQueryAttribute().OnActionExecuted(null), "actionExecutedContext");
         }
 
         [Fact]
         public void OnActionExecuted_Throws_Null_Request()
         {
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => new EnableQueryAttribute().OnActionExecuted(new HttpActionExecutedContext()),
                 "actionExecutedContext",
                 String.Format("The HttpExecutedActionContext.Request is null.{0}Parameter name: actionExecutedContext", Environment.NewLine));
@@ -253,14 +255,14 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpActionContext actionContext = new HttpActionContext(controllerContext, actionDescriptor);
             HttpActionExecutedContext context = new HttpActionExecutedContext(actionContext, null);
 
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => new EnableQueryAttribute().OnActionExecuted(context),
                 "actionExecutedContext",
                 String.Format("Request message does not contain an HttpConfiguration object.{0}Parameter name: actionExecutedContext", Environment.NewLine));
         }
 
         [Theory]
-        [PropertyData("DifferentReturnTypeWorksTestData")]
+        [MemberData(nameof(DifferentReturnTypeWorksTestData))]
         public void DifferentReturnTypeWorks(string methodName, object responseObject, bool isNoOp)
         {
             // Arrange
@@ -359,7 +361,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             context.Response.Content = new ObjectContent(typeof(IEnumerable<Customer>), new List<Customer>(), new JsonMediaTypeFormatter());
 
             // Act and Assert
-            HttpResponseException errorResponse = Assert.Throws<HttpResponseException>(() =>
+            HttpResponseException errorResponse = ExceptionAssert.Throws<HttpResponseException>(() =>
                 attribute.OnActionExecuted(context));
 
             Assert.Equal(HttpStatusCode.BadRequest, errorResponse.Response.StatusCode);
@@ -410,7 +412,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             context.Response.Content = new StreamContent(new MemoryStream());
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => attribute.OnActionExecuted(context),
                 "actionExecutedContext",
                 "Queries can not be applied to a response content of type 'System.Net.Http.StreamContent'. The response content must be an ObjectContent.");
@@ -442,7 +444,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             };
 
             // Act & Assert
-            Assert.DoesNotThrow(() => attribute.OnActionExecuted(context));
+            ExceptionAssert.DoesNotThrow(() => attribute.OnActionExecuted(context));
         }
 
         [Theory]
@@ -482,7 +484,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.AspNet.OData.Builder.TestModels.Customer)), request);
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => attribute.ValidateQuery(null, options), "request");
+            ExceptionAssert.ThrowsArgumentNull(() => attribute.ValidateQuery(null, options), "request");
         }
 
         [Fact]
@@ -492,7 +494,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             EnableQueryAttribute attribute = new EnableQueryAttribute();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => attribute.ValidateQuery(new HttpRequestMessage(), null), "queryOptions");
+            ExceptionAssert.ThrowsArgumentNull(() => attribute.ValidateQuery(new HttpRequestMessage(), null), "queryOptions");
         }
 
         [Theory]
@@ -516,7 +518,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var options = new ODataQueryOptions(context, request);
 
             // Act & Assert
-            Assert.DoesNotThrow(() => attribute.ValidateQuery(request, options));
+            ExceptionAssert.DoesNotThrow(() => attribute.ValidateQuery(request, options));
         }
 
         [Fact]
@@ -530,7 +532,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.AspNet.OData.Builder.TestModels.Customer)), request);
 
             // Act & Assert
-            HttpResponseException responseException = Assert.Throws<HttpResponseException>(
+            HttpResponseException responseException = ExceptionAssert.Throws<HttpResponseException>(
                                                                 () => attribute.ValidateQuery(request, options));
 
             Assert.Equal(HttpStatusCode.BadRequest, responseException.Response.StatusCode);
@@ -559,7 +561,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.AspNet.OData.Builder.TestModels.Customer)), message);
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => attribute.ApplyQuery(null, options), "queryable");
+            ExceptionAssert.ThrowsArgumentNull(() => attribute.ApplyQuery(null, options), "queryable");
         }
 
         [Fact]
@@ -569,7 +571,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             EnableQueryAttribute attribute = new EnableQueryAttribute();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => attribute.ApplyQuery(CustomerList.AsQueryable(), null), "queryOptions");
+            ExceptionAssert.ThrowsArgumentNull(() => attribute.ApplyQuery(CustomerList.AsQueryable(), null), "queryOptions");
         }
 
         [Theory]
@@ -587,7 +589,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.AspNet.OData.Builder.TestModels.Customer)), request);
 
             // Act & Assert
-            Assert.DoesNotThrow(() => attribute.ApplyQuery(new List<Microsoft.Test.AspNet.OData.Builder.TestModels.Customer>().AsQueryable(), options));
+            ExceptionAssert.DoesNotThrow(() => attribute.ApplyQuery(new List<Microsoft.Test.AspNet.OData.Builder.TestModels.Customer>().AsQueryable(), options));
         }
 
         [Fact]
@@ -622,7 +624,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             request.EnableHttpDependencyInjectionSupport();
             ODataQueryOptions queryOptions = new ODataQueryOptions(ValidationTestHelper.CreateCustomerContext(false), request);
 
-            Assert.Throws<ODataException>(() => attribute.ValidateQuery(request, queryOptions),
+            ExceptionAssert.Throws<ODataException>(() => attribute.ValidateQuery(request, queryOptions),
                 "Order by 'Name' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
 
@@ -646,7 +648,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             ODataQueryContext context = ValidationTestHelper.CreateCustomerContext(false);
             ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
 
-            Assert.DoesNotThrow(() => attribute.ValidateQuery(request, queryOptions));
+            ExceptionAssert.DoesNotThrow(() => attribute.ValidateQuery(request, queryOptions));
         }
 
         [Fact]
@@ -728,7 +730,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 "http://localhost:8080/QueryCompositionCustomer?$orderby=Name desc&$unknown=12",
                 QueryCompositionCustomerController.CustomerList.AsQueryable());
 
-            var exception = Assert.Throws<HttpResponseException>(() => attribute.OnActionExecuted(actionExecutedContext));
+            var exception = ExceptionAssert.Throws<HttpResponseException>(() => attribute.OnActionExecuted(actionExecutedContext));
 
             // EnableQueryAttribute will validate and throws
             Assert.Equal(HttpStatusCode.BadRequest, exception.Response.StatusCode);
@@ -772,7 +774,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             EnableQueryAttribute attribute = new EnableQueryAttribute();
             ODataQueryOptions options = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), message);
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => attribute.ApplyQuery(entity: null, queryOptions: options),
                 "entity");
         }
@@ -782,7 +784,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             EnableQueryAttribute attribute = new EnableQueryAttribute();
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => attribute.ApplyQuery(entity: 42, queryOptions: null),
                 "queryOptions");
         }
@@ -819,7 +821,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Theory]
-        [PropertyData("GetElementTypeTestData")]
+        [MemberData(nameof(GetElementTypeTestData))]
         public void GetElementType_Returns_ExpectedElementType(object response, Type expectedElementType)
         {
             HttpActionDescriptor actionDescriptor = new Mock<HttpActionDescriptor>().Object;
@@ -860,7 +862,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 ControllerDescriptor = new HttpControllerDescriptor { ControllerName = "SomeName" }
             };
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => EnableQueryAttribute.SingleOrDefault(queryable, actionDescriptor),
                 "The action 'SomeAction' on controller 'SomeName' returned a SingleResult containing more than one element. " +
                 "SingleResult must have zero or one elements.");
@@ -921,6 +923,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             disposable.Verify();
         }
 
+        [Fact]
         public void SingleOrDefault_DisposeCalled_MultipleElementsInSequence()
         {
             // Arrange
@@ -1051,7 +1054,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             ODataQueryContext context = new ODataQueryContext(model.Model, typeof(Customer));
             ODataQueryOptions queryOptions = new ODataQueryOptions(context, request);
 
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => EnableQueryAttribute.ValidateSelectExpandOnly(queryOptions),
                 "The requested resource is not a collection. Query options $filter, $orderby, $count, $skip, and $top can be applied only on collections.");
         }
