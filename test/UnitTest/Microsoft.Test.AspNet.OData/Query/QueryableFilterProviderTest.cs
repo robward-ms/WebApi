@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
-using Microsoft.Test.AspNet.OData.TestCommon;
-using Microsoft.Test.AspNet.OData.TestCommon.Models;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
@@ -30,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             FilterInfo[] filters = new QueryFilterProvider(new EnableQueryAttribute()).GetFilters(config, actionDescriptor).ToArray();
 
-            Assert.Equal(1, filters.Length);
+            Assert.Single(filters);
             Assert.Equal(FilterScope.Global, filters[0].Scope);
             EnableQueryAttribute filter = Assert.IsType<EnableQueryAttribute>(filters[0].Instance);
         }
@@ -53,20 +51,6 @@ namespace Microsoft.Test.AspNet.OData.Query
             FilterInfo[] filters = new QueryFilterProvider(new EnableQueryAttribute()).GetFilters(config, actionDescriptor).ToArray();
 
             Assert.Empty(filters);
-        }
-
-        [Theory]
-        [InlineData(typeof(IEnumerable), false)]
-        [InlineData(typeof(IQueryable), true)]
-        [InlineData(typeof(IEnumerable<Customer>), false)]
-        [InlineData(typeof(IQueryable<Customer>), true)]
-        [InlineData(typeof(object), false)]
-        [InlineData(typeof(string), false)]
-        [InlineData(typeof(List<Customer>), false)]
-        [InlineData(typeof(Customer[]), false)]
-        public void IsIQueryable_ReturnsWhetherTypeIsIQueryable(Type type, bool isIQueryable)
-        {
-            Assert.Equal(isIQueryable, QueryFilterProvider.IsIQueryable(type));
         }
     }
 

@@ -15,8 +15,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
@@ -228,7 +228,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             Assert.Equal(2, baseEntities.Count());
             // Level 1
             AssertEntity(baseEntities[0], 1);
-            Assert.Equal(1, baseEntities[0]["BaseEntities"].Count());
+            Assert.Single(baseEntities[0]["BaseEntities"]);
             // Level 2
             AssertEntity(baseEntities[0]["BaseEntities"][0], 11);
             // No further expanding
@@ -260,7 +260,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // Level 1
             AssertDerivedEntity(derivedEntities[1], 4);
             // Level 2
-            Assert.Equal(1, derivedEntities[1]["DerivedAncestors"].Count());
+            Assert.Single(derivedEntities[1]["DerivedAncestors"]);
             AssertDerivedEntity(derivedEntities[1]["DerivedAncestors"][0], 2);
             // Level 3
             AssertDerivedEntity(derivedEntities[1]["DerivedAncestors"][0]["DerivedAncestors"][0], 4);
@@ -287,7 +287,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // Level 1
             AssertDerivedEntity(derivedEntities[1], 2);
             // Level 2
-            Assert.Equal(1, derivedEntities[1]["AncestorsInDerivedEntity"].Count());
+            Assert.Single(derivedEntities[1]["AncestorsInDerivedEntity"]);
             AssertEntity(derivedEntities[1]["AncestorsInDerivedEntity"][0], 1);
             // No further expanding.
             Assert.Null(derivedEntities[1]["AncestorsInDerivedEntity"][0]["AncestorsInDerivedEntity"]);
@@ -368,10 +368,10 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // No further expanding.
             Assert.Null(parent["DerivedAncestors"][1]["DerivedAncestors"][0]["DerivedAncestors"]);
             // Level 1
-            Assert.Equal(1, parent["Parent"]["DerivedAncestors"].Count());
+            Assert.Single(parent["Parent"]["DerivedAncestors"]);
             AssertDerivedEntity(parent["Parent"]["DerivedAncestors"][0], 2);
             // Level 2
-            Assert.Equal(1, parent["Parent"]["DerivedAncestors"][0]["DerivedAncestors"].Count());
+            Assert.Single(parent["Parent"]["DerivedAncestors"][0]["DerivedAncestors"]);
         }
 
         [Fact]
@@ -448,7 +448,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             JToken parent = result["Parent"];
 
             // Level 3
-            Assert.Equal(parent["Parent"]["Parent"]["ID"], 3);
+            Assert.Equal(3, parent["Parent"]["Parent"]["ID"]);
             Assert.Null(parent["Parent"]["Parent"]["Name"]);
             // No furthur expanding for "Parent"
             Assert.Null(parent["Parent"]["Parent"]["Parent"]);

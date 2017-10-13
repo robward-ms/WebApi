@@ -19,6 +19,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Query.Expressions
 {
@@ -198,9 +199,10 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             // There's currently a bug here. For now, the test checks for the presence of the bug (as a reminder to fix
             // the test once the bug is fixed).
             // The following assert shows the behavior with the bug and should be removed once the bug is fixed.
-            Assert.Throws<ODataException>(() => Bind("" + clause));
+            ExceptionAssert.Throws<ODataException>(() => Bind("" + clause));
 
             // TODO: Enable once ODataUriParser handles DateTimeOffsets
+            Assert.NotNull(expectedExpression);
             // The following call shows the behavior without the bug, and should be enabled once the bug is fixed.
             //VerifyQueryDeserialization<DataTypes>("" + clause, expectedExpression);
         }
@@ -298,10 +300,10 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [InlineData(null, true, true)] // This is an interesting cas for null propagation.
+        [InlineData(null, false, true)] // This is an interesting case for null propagation; not so much.
         [InlineData(true, false, false)]
         [InlineData(false, true, true)]
-        public void BoolNegation(bool discontinued, bool withNullPropagation, bool withoutNullPropagation)
+        public void BoolNegation(bool? discontinued, bool withNullPropagation, bool withoutNullPropagation)
         {
             var filters = VerifyQueryDeserialization(
                 "not Discontinued",
@@ -309,7 +311,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "$it => (Not($it.Discontinued) == True)");
 
             RunFilters(filters,
-                new Product { Discontinued = ToNullable<bool>(discontinued) },
+                new Product { Discontinued = discontinued },
                 new { WithNullPropagation = withNullPropagation, WithoutNullPropagation = withoutNullPropagation });
         }
 
@@ -1227,7 +1229,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         #endregion
 
         #region Math Functions
-        [Theory, PropertyData("MathRoundDecimal_DataSet")]
+        [Theory, MemberData(nameof(MathRoundDecimal_DataSet))]
         public void MathRoundDecimal(decimal? unitPrice, bool withNullPropagation, object withoutNullPropagation)
         {
             var filters = VerifyQueryDeserialization(
@@ -1272,7 +1274,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                new { WithNullPropagation = withNullPropagation, WithoutNullPropagation = withoutNullPropagation });
         }
 
-        [Theory, PropertyData("MathFloorDecimal_DataSet")]
+        [Theory, MemberData(nameof(MathFloorDecimal_DataSet))]
         public void MathFloorDecimal(decimal? unitPrice, bool withNullPropagation, object withoutNullPropagation)
         {
             var filters = VerifyQueryDeserialization(
@@ -1317,7 +1319,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                new { WithNullPropagation = withNullPropagation, WithoutNullPropagation = withoutNullPropagation });
         }
 
-        [Theory, PropertyData("MathCeilingDecimal_DataSet")]
+        [Theory, MemberData(nameof(MathCeilingDecimal_DataSet))]
         public void MathCeilingDecimal(object unitPrice, bool withNullPropagation, object withoutNullPropagation)
         {
             var filters = VerifyQueryDeserialization(
@@ -1439,7 +1441,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 string filter = String.Format("padright(ProductName, {0}) eq '{1}'", totalWidth, expectedProductName);
 
                 Action filterToExpression = () => VerifyQueryDeserialization(filter);
-                Assert.Throws(typeof(NotImplementedException),filterToExpression);
+                ExceptionAssert.Throws(typeof(NotImplementedException),filterToExpression);
             }
             finally
             {
@@ -1595,9 +1597,10 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             // There's currently a bug here. For now, the test checks for the presence of the bug (as a reminder to fix
             // the test once the bug is fixed).
             // The following assert shows the behavior with the bug and should be removed once the bug is fixed.
-            Assert.Throws<ODataException>(() => Bind("" + clause));
+            ExceptionAssert.Throws<ODataException>(() => Bind("" + clause));
 
             // TODO: No DateTimeOffset parsing in ODataUriParser
+            Assert.NotNull(expectedExpression);
             // The following call shows the behavior without the bug, and should be enabled once the bug is fixed.
             //VerifyQueryDeserialization<DataTypes>(
             //    "" + clause,
@@ -1768,7 +1771,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         [Fact]
         public void CastToNonDerivedType_Throws()
         {
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => VerifyQueryDeserialization<Product>("Microsoft.Test.AspNet.OData.Query.Expressions.DerivedCategory/CategoryID eq 123"),
                 "Encountered invalid type cast. 'Microsoft.Test.AspNet.OData.Query.Expressions.DerivedCategory' is not assignable from 'Microsoft.Test.AspNet.OData.Query.Expressions.Product'.");
         }
@@ -1779,7 +1782,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         //    "'ProductName' that isn't any of those. Please revise the query.")]
         public void CastToNonEntityType_Throws(string filter, string error)
         {
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => VerifyQueryDeserialization<Product>(filter), error);
         }
 
@@ -1789,7 +1792,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         [InlineData("Category/Products/Edm.NonExistentType eq 123")]
         public void CastToNonExistantType_Throws(string filter)
         {
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => VerifyQueryDeserialization<Product>(filter),
                 "The child type 'Edm.NonExistentType' in a cast was not an entity type. Casts can only be performed on entity types.");
         }
@@ -1828,7 +1831,6 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         [InlineData("cast(FlagsEnumProp,Edm.String) eq '123'", "$it => (Convert(Convert($it.FlagsEnumProp).ToString()) == \"123\")")]
         [InlineData("cast(LongEnumProp,Edm.String) eq '123'", "$it => (Convert(Convert($it.LongEnumProp).ToString()) == \"123\")")]
         [InlineData("cast(NullableIntProp,Edm.String) eq '123'", "$it => (Convert(IIF($it.NullableIntProp.HasValue, $it.NullableIntProp.Value.ToString(), null)) == \"123\")")]
-        [InlineData("cast(NullableIntProp,Edm.String) eq '123'", "$it => (Convert(IIF($it.NullableIntProp.HasValue, $it.NullableIntProp.Value.ToString(), null)) == \"123\")")]
         [InlineData("cast(NullableLongProp,Edm.String) eq '123'", "$it => (Convert(IIF($it.NullableLongProp.HasValue, $it.NullableLongProp.Value.ToString(), null)) == \"123\")")]
         [InlineData("cast(NullableSingleProp,Edm.String) eq '123'", "$it => (Convert(IIF($it.NullableSingleProp.HasValue, $it.NullableSingleProp.Value.ToString(), null)) == \"123\")")]
         [InlineData("cast(NullableDoubleProp,Edm.String) eq '123'", "$it => (Convert(IIF($it.NullableDoubleProp.HasValue, $it.NullableDoubleProp.Value.ToString(), null)) == \"123\")")]
@@ -1860,7 +1862,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public void Cast_UndefinedSource_ThrowsODataException(string filter, string errorMessage)
         {
             // Arrange & Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), errorMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), errorMessage);
         }
 
         public static TheoryDataSet<string, string> CastToUnquotedUndefinedTarget
@@ -1884,7 +1886,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         // Exception messages here and in CastQuotedUndefinedTarget_ThrowsODataException should be consistent.
         // Worse, this message is incorrect -- casts can be performed on most types but _not_ entity types.
         [Theory]
-        [PropertyData("CastToUnquotedUndefinedTarget")]
+        [MemberData(nameof(CastToUnquotedUndefinedTarget))]
         public void CastToUnquotedUndefinedTarget_ThrowsODataException(string filter, string typeName)
         {
             // Arrange
@@ -1893,7 +1895,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 typeName);
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string> CastToQuotedUndefinedTarget
@@ -1915,14 +1917,14 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("CastToQuotedUndefinedTarget")]
+        [MemberData(nameof(CastToQuotedUndefinedTarget))]
         public void CastToQuotedUndefinedTarget_ThrowsODataException(string filter)
         {
             // Arrange
             var expectedMessage = "Cast or IsOf Function must have a type in its arguments.";
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
         }
 
         [Theory]
@@ -1963,7 +1965,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             // Arrange & Act & Assert
             // TODO : 1824 Should not throw exception for invalid enum cast in query option.
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), "Enumeration type value can only be casted to or from string.");
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), "Enumeration type value can only be casted to or from string.");
         }
 
         [Theory]
@@ -1998,7 +2000,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             // Arrange & Act & Assert
             // TODO : 1827 Should not throw when the target type of cast is not primitive or enumeration type.
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectErrorMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectErrorMessage);
         }
 
         [Theory]
@@ -2117,7 +2119,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("CastToQuotedPrimitiveType")]
+        [MemberData(nameof(CastToQuotedPrimitiveType))]
         public void CastToQuotedPrimitiveType_Succeeds(string filter)
         {
             // Arrange
@@ -2159,7 +2161,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("CastToUnquotedComplexType")]
+        [MemberData(nameof(CastToUnquotedComplexType))]
         public void CastToUnquotedComplexType_ThrowsODataException(string filter)
         {
             // Arrange
@@ -2168,7 +2170,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "'Microsoft.Test.AspNet.OData.Query.Expressions.Address' is not assignable from 'Microsoft.Test.AspNet.OData.Query.Expressions.Product'.";
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string> CastToQuotedComplexType
@@ -2186,7 +2188,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("CastToQuotedComplexType")]
+        [MemberData(nameof(CastToQuotedComplexType))]
         public void CastToQuotedComplexType_Succeeds(string filter)
         {
             // Arrange
@@ -2228,11 +2230,11 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("CastToUnquotedEntityType")]
+        [MemberData(nameof(CastToUnquotedEntityType))]
         public void CastToUnquotedEntityType_ThrowsODataException(string filter, string expectedMessage)
         {
             // Arrange & Act & Assert
-            Assert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         // Demonstrates a bug in FilterBinder.
@@ -2249,7 +2251,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 typeof(object).FullName);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         [Theory]
@@ -2262,7 +2264,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "Instance property 'DerivedCategoryName' is not defined for type 'System.Object'";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         #endregion
@@ -2291,7 +2293,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public void Isof_WithNullTypeName_ThrowsArgumentNullException(string filter)
         {
             // Arrange & Act & Assert
-            Assert.Throws<ArgumentNullException>(() => Bind<Product>(filter),
+            ExceptionAssert.Throws<ArgumentNullException>(() => Bind<Product>(filter),
                 "Value cannot be null.\r\nParameter name: qualifiedName");
         }
 
@@ -2301,7 +2303,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public void IsOfUndefinedSource_ThrowsODataException(string filter, string errorMessage)
         {
             // Arrange & Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), errorMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), errorMessage);
         }
 
         [Theory]
@@ -2402,7 +2404,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         // Worse, this message is incorrect -- casts can be performed on most types but _not_ entity types and
         // isof can't be performed.
         [Theory]
-        [PropertyData("IsOfUndefinedTarget")]
+        [MemberData(nameof(IsOfUndefinedTarget))]
         public void IsOfUndefinedTarget_ThrowsODataException(string filter, string typeName)
         {
             // Arrange
@@ -2411,7 +2413,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 typeName);
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string> IsOfQuotedUndefinedTarget
@@ -2433,14 +2435,14 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("IsOfQuotedUndefinedTarget")]
+        [MemberData(nameof(IsOfQuotedUndefinedTarget))]
         public void IsOfQuotedUndefinedTarget_ThrowsODataException(string filter)
         {
             // Arrange
             var expectedMessage = "Cast or IsOf Function must have a type in its arguments.";
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<DataTypes>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string> IsOfUnquotedComplexType
@@ -2459,7 +2461,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("IsOfUnquotedComplexType")]
+        [MemberData(nameof(IsOfUnquotedComplexType))]
         public void IsOfUnquotedComplexType_ThrowsODataException(string filter)
         {
             // Arrange
@@ -2468,7 +2470,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "'Microsoft.Test.AspNet.OData.Query.Expressions.Address' is not assignable from 'Microsoft.Test.AspNet.OData.Query.Expressions.Product'.";
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string, string> IsOfUnquotedEntityType
@@ -2506,11 +2508,11 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("IsOfUnquotedEntityType")]
+        [MemberData(nameof(IsOfUnquotedEntityType))]
         public void IsOfUnquotedEntityType_ThrowsODataException(string filter, string expectedMessage)
         {
             // Arrange & Act & Assert
-            Assert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
+            ExceptionAssert.Throws<ODataException>(() => Bind<Product>(filter), expectedMessage);
         }
 
         public static TheoryDataSet<string> IsOfQuotedNonPrimitiveType
@@ -2529,7 +2531,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [PropertyData("IsOfQuotedNonPrimitiveType")]
+        [MemberData(nameof(IsOfQuotedNonPrimitiveType))]
         public void IsOfQuotedNonPrimitiveType_Succeeds(string filter)
         {
             // Arrange
@@ -2713,7 +2715,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 new Dictionary<string, string> { { "$filter", "IntProp eq #p" }, { "#p", "123" } });
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => parser.ParseFilter(),
                 "Syntax error: character '#' is not valid at position 11 in 'IntProp eq #p'.");
         }
@@ -2782,7 +2784,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         [InlineData("binary'AP8Q' div binary'AP8Q'", "Divide")]
         public void DisAllowed_ByteArrayComparisons(string filter, string op)
         {
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => Bind<DataTypes>(filter),
                 String.Format(CultureInfo.InvariantCulture, "A binary operator with incompatible types was detected. Found operand types 'Edm.Binary' and 'Edm.Binary' for operator kind '{0}'.", op));
         }
@@ -2833,7 +2835,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         [Fact]
         public void TypeMismatchInComparison()
         {
-            Assert.Throws<ODataException>(() => Bind("length(123) eq 12"));
+            ExceptionAssert.Throws<ODataException>(() => Bind("length(123) eq 12"));
         }
 
         #endregion
@@ -2893,7 +2895,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             var filterWithNullPropagation = filters.WithNullPropagation as Expression<Func<T, bool>>;
             if (expectedValue.WithNullPropagation is Type)
             {
-                Assert.Throws(expectedValue.WithNullPropagation as Type, () => RunFilter(filterWithNullPropagation, product));
+                ExceptionAssert.Throws(expectedValue.WithNullPropagation as Type, () => RunFilter(filterWithNullPropagation, product));
             }
             else
             {
@@ -2903,7 +2905,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             var filterWithoutNullPropagation = filters.WithoutNullPropagation as Expression<Func<T, bool>>;
             if (expectedValue.WithoutNullPropagation is Type)
             {
-                Assert.Throws(expectedValue.WithoutNullPropagation as Type, () => RunFilter(filterWithoutNullPropagation, product));
+                ExceptionAssert.Throws(expectedValue.WithoutNullPropagation as Type, () => RunFilter(filterWithoutNullPropagation, product));
             }
             else
             {

@@ -18,6 +18,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.Test.AspNet.OData.Query
@@ -39,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             HttpResponseMessage response = GetResponse(client, server.Configuration,
                 String.Format("http://localhost:8080/{0}?$filter=Id ge 22 and Address/City ne 'seattle'&$orderby=Name&$skip=0&$top=1", controllerName));
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             var customers = response.Content.ReadAsAsync<List<QueryCompositionCustomer>>().Result;
 
             Assert.Equal(new[] { 22 }, customers.Select(c => c.Id));
@@ -53,7 +54,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             HttpResponseMessage response = GetResponse(client, server.Configuration,
                 String.Format("http://localhost:8080/QueryCompositionCustomer?$filter=Id ge 22 and Address/City ne 'seattle'&$orderby=Name&$skip=0&$top=1", "QueryCompositionCustomer"));
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             var customers = response.Content.ReadAsAsync<List<QueryCompositionCustomer>>().Result;
 
             Assert.Equal(new[] { 22 }, customers.Select(c => c.Id));
@@ -107,7 +108,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             HttpResponseMessage response = GetResponse(client, server.Configuration,
                 "http://localhost:8080/QueryCompositionCustomerLowLevel_ODataQueryOptionsOfT/?$filter=Id ge 22");
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             int count = response.Content.ReadAsAsync<int>().Result;
             Assert.Equal(2, count);
         }
@@ -120,7 +121,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             HttpResponseMessage response = GetResponse(client, server.Configuration,
                 "http://localhost:8080/QueryCompositionAnonymousTypes/?$filter=Id ge 5");
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             Type anon_type = new { Id = default(int) }.GetType();
             dynamic result = response.Content.ReadAsAsync(anon_type.MakeArrayType()).Result;
@@ -169,7 +170,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             // skip = 1 is ok
             HttpResponseMessage response = GetResponse(client, server.Configuration,
                 "http://localhost:8080/QueryCompositionCustomerValidation/?$skip=1");
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             List<QueryCompositionCustomer> customers = response.Content.ReadAsAsync<List<QueryCompositionCustomer>>().Result;
             Assert.Equal(new[] { 11, 22, 33 }, customers.Select(customer => customer.Id));
@@ -180,7 +181,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.True(response.Content.ReadAsStringAsync().Result.Contains("The limit of '1' for Skip query has been exceeded. The value from the incoming request is '2'."));
+            Assert.Contains("The limit of '1' for Skip query has been exceeded. The value from the incoming request is '2'.", response.Content.ReadAsStringAsync().Result);
         }
 
         public static TheoryDataSet<string, IEnumerable<int>> PrimitiveTypesQueryCompositionData
@@ -201,7 +202,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Theory]
-        [PropertyData("PrimitiveTypesQueryCompositionData")]
+        [MemberData(nameof(PrimitiveTypesQueryCompositionData))]
         public virtual void PrimitiveTypesQueryComposition(string query, IEnumerable<int> expectedResults)
         {
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
@@ -214,7 +215,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(expectedResults, results);
         }
 
-        private static HttpConfiguration InitializeConfiguration(string controllerName, bool useCustomEdmModel, 
+        private static HttpConfiguration InitializeConfiguration(string controllerName, bool useCustomEdmModel,
             ODataUriResolver resolver = null)
         {
             var controllers = new[]

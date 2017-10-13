@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -29,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("CollectionTypesData")]
+        [MemberData(nameof(CollectionTypesData))]
         public void IsCollection_with_Collections(Type collectionType, Type elementType)
         {
             Type type;
@@ -38,7 +39,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("CollectionTypesData")]
+        [MemberData(nameof(CollectionTypesData))]
         public void GetInnerElementType(Type collectionType, Type elementType)
         {
             Assert.Equal(elementType, collectionType.GetInnerElementType());
