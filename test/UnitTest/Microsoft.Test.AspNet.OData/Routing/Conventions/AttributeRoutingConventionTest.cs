@@ -166,7 +166,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
 
             // Act & Assert
             ExceptionAssert.Throws<InvalidOperationException>(
-                () => new AttributeRoutingConvention(RouteName, new[] { controller }),
+                () => new AttributeRoutingConvention(RouteName, new[] { controller }, new DefaultODataPathHandler()),
                 "The path template 'Customers/Order' on the action 'GetCustomers' in controller 'TestController' is not " +
                 "a valid OData path template. The request URI is not valid. Since the segment 'Customers' refers to a " +
                 "collection, this must be the last segment in the request URI or it must be followed by an function or " +

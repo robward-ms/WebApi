@@ -64,12 +64,17 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             get
             {
-                DateTime dt = DateTime.UtcNow;
-                DateTimeOffset dto = new DateTimeOffset(dt).ToLocalTime();
+                // Using a fix DateTime to avoid generating a unique test case Id.
+                DateTime dt1 = new DateTime(2017, 1, 1, 12, 0, 0);
+                DateTimeOffset dto1 = new DateTimeOffset(dt1).ToLocalTime();
+
+                DateTime dt2 = new DateTime(2017, 10, 31, 23, 59, 59);
+                DateTimeOffset dto2 = new DateTimeOffset(dt2).ToLocalTime();
+
                 return new TheoryDataSet<object, DateTimeOffset>
                 {
-                    { dt, dto},
-                    { new DateTime?(dt), dto}
+                    { dt1, dto1},
+                    { new DateTime?(dt2), dto2}
                 };
             }
         }

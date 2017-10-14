@@ -48,7 +48,6 @@ namespace Microsoft.Test.AspNet.OData.Query
                     // but which we permit in $skip and $top
                     typeof(int?),
                     typeof(char),
-                    typeof(sbyte),
                     typeof(ushort),
                     typeof(uint),
                     typeof(ulong),
