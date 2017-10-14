@@ -300,10 +300,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         }
 
         [Theory]
-        [InlineData(null, false, true)] // This is an interesting case for null propagation; not so much.
         [InlineData(true, false, false)]
         [InlineData(false, true, true)]
-        public void BoolNegation(bool? discontinued, bool withNullPropagation, bool withoutNullPropagation)
+        public void BoolNegation(bool discontinued, bool withNullPropagation, bool withoutNullPropagation)
         {
             var filters = VerifyQueryDeserialization(
                 "not Discontinued",
@@ -311,7 +310,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "$it => (Not($it.Discontinued) == True)");
 
             RunFilters(filters,
-                new Product { Discontinued = discontinued },
+                new Product { Discontinued = ToNullable<bool>(discontinued) },
                 new { WithNullPropagation = withNullPropagation, WithoutNullPropagation = withoutNullPropagation });
         }
 

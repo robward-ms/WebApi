@@ -125,14 +125,23 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             // Arrange (this code path does not use ODataSerializerContext fields or properties)
             var context = new ODataSerializerContext();
-            Mock<IEdmObject> mock = new Mock<IEdmObject>(MockBehavior.Strict);
-            mock.Setup(edmObject => edmObject.GetEdmType()).Returns<IEdmTypeReference>(null).Verifiable();
+            NullEdmType edmObject = new NullEdmType();
 
             // Act & Assert
-            ExceptionAssert.Throws<InvalidOperationException>(() => context.GetEdmType(mock.Object, null),
-                exceptionMessage: "The EDM type of the object of type 'Castle.Proxies.ObjectProxy' is null. " +
-                "The EDM type of an IEdmObject cannot be null.");
-            mock.Verify();
+            ExceptionAssert.Throws<InvalidOperationException>(() => context.GetEdmType(edmObject, null),
+                exceptionMessage: "The EDM type of the object of type 'Microsoft.Test.AspNet.OData.Formatter.Serialization.ODataSerializerContextTest+NullEdmType'" +
+                " is null. The EDM type of an IEdmObject cannot be null.");
+        }
+
+        /// <summary>
+        /// An instance of IEdmObject with no EdmType.
+        /// </summary>
+        private class NullEdmType : IEdmObject
+        {
+            public IEdmTypeReference GetEdmType()
+            {
+                return null;
+            }
         }
     }
 }

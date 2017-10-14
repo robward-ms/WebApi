@@ -700,13 +700,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             var formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[0]);
             formatter.Request = request;
 
-            Mock<IEdmObject> edmObject = new Mock<IEdmObject>();
+            NullEdmType edmObject = new NullEdmType();
 
             ExceptionAssert.Throws<SerializationException>(
                 () => formatter
-                    .WriteToStreamAsync(typeof(int), edmObject.Object, new MemoryStream(), new Mock<HttpContent>().Object, transportContext: null)
+                    .WriteToStreamAsync(typeof(int), edmObject, new MemoryStream(), new Mock<HttpContent>().Object, transportContext: null)
                     .Wait(),
-                "The EDM type of the object of type 'Castle.Proxies.ObjectProxy' is null. The EDM type of an IEdmObject cannot be null.");
+                "The EDM type of the object of type 'Microsoft.Test.AspNet.OData.Formatter.ODataMediaTypeFormatterTests+NullEdmType'" +
+                " is null. The EDM type of an IEdmObject cannot be null.");
         }
 
         [Fact]
@@ -939,8 +940,22 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
+        /// <summary>
+        /// A class that is not part of the model.
+        /// </summary>
         private class TypeNotInModel
         {
+        }
+
+        /// <summary>
+        /// An instance of IEdmObject with no EdmType.
+        /// </summary>
+        private class NullEdmType : IEdmObject
+        {
+            public IEdmTypeReference GetEdmType()
+            {
+                return null;
+            }
         }
     }
 }
