@@ -16,7 +16,6 @@ using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 using Address = Microsoft.Test.AspNet.OData.Builder.TestModels.Address;
 
 namespace Microsoft.Test.AspNet.OData.OData.Query

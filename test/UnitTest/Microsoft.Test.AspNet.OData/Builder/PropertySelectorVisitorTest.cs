@@ -8,7 +8,6 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {

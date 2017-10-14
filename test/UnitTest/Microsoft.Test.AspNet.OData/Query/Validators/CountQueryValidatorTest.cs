@@ -12,7 +12,6 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query.Validators
 {

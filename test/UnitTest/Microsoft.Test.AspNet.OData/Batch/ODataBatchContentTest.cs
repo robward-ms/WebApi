@@ -8,10 +8,8 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 
 namespace Microsoft.Test.AspNet.OData.Batch

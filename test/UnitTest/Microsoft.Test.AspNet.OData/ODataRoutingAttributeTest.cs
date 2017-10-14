@@ -5,9 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {

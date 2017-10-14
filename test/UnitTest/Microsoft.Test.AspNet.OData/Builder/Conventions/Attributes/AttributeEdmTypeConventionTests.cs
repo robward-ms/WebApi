@@ -7,7 +7,6 @@ using System.Reflection;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Builder.Conventions;
 using Microsoft.AspNet.OData.Builder.Conventions.Attributes;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
 

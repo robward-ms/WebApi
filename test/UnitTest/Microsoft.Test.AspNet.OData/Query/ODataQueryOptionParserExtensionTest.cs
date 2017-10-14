@@ -10,10 +10,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Routing;
-using Microsoft.Test.AspNet.OData.TestCommon;
-using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 using Xunit;
-using Xunit.Extensions;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {

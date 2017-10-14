@@ -19,7 +19,6 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 using Address = Microsoft.Test.AspNet.OData.Builder.TestModels.Address;
 
 namespace Microsoft.Test.AspNet.OData.Query

@@ -11,7 +11,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Conventions

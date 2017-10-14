@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Linq;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Builder.Conventions.Attributes;
 using Microsoft.Test.AspNet.OData.TestCommon;

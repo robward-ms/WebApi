@@ -7,7 +7,6 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {

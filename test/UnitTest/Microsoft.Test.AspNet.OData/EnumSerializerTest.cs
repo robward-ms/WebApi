@@ -18,7 +18,6 @@ using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {

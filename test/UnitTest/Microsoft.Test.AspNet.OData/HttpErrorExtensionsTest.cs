@@ -6,9 +6,7 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {

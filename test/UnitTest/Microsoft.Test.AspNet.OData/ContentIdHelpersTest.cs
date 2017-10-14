@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
