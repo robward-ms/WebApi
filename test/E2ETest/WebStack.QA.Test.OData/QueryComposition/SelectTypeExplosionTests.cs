@@ -9,6 +9,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Nuwa;
 using WebStack.QA.Common.XUnit;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
@@ -179,7 +180,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         //}
 
         [Theory]
-        [PropertyData("Queries")]
+        [MemberData(nameof(Queries))]
         public void ServerDoesntCreateAnInfiniteAmmountOfTypes(string query)
         {
             string requestUrl = BaseAddress + "/TypeWithManyProperties?$select=" + query;

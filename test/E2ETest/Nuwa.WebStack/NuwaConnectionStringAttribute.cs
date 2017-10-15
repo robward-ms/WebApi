@@ -25,7 +25,7 @@ namespace Nuwa.WebStack
         {
             ITestDatabase db;
             string connectionString;
-            string prefix = context.TestType.TestTypeInfo.Type.Name;
+            string prefix = context.TestType.TestTypeInfo.Name;
             if (context.HostOptions is IISExpressHostOptions)
             {
                 connectionString = new ConnectionStringBuilder().UseLocalDB().UseRandomDBName(prefix).ToString();

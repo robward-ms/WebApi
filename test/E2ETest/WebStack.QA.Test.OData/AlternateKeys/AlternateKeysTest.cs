@@ -34,7 +34,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[]
             {
@@ -235,7 +235,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
         }
 
         [Theory]
-        [PropertyData("SingleAlternateKeysCases")]
+        [MemberData(nameof(SingleAlternateKeysCases))]
         public async Task EntityWithSingleAlternateKeys_ReturnsSame_WithPrimitiveKey(string declaredKeys, string alternatekeys)
         {
             // query with declared key

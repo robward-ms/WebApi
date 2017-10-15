@@ -429,7 +429,7 @@ namespace Nuwa.WebStack.Host
 
         private static IEnumerable<IWebHostConfiguration> GetWebConfigurations(TestTypeDescriptor descriptor)
         {
-            var type = descriptor.TestTypeInfo.Type;
+            var type = descriptor.TestTypeInfo.GetType();
 
             var retval = type.GetCustomAttributes()
                              .Where(one => one is IWebHostConfiguration)

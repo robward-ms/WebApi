@@ -336,7 +336,7 @@ namespace WebStack.QA.Test.OData.Formatter
 
             // ensure that the entity has been deleted
             var entitiesFinal = await GetEntities<T>(entitySetName);
-            Assert.Equal(0, entitiesFinal.ToList().Count());
+            Assert.Empty(entitiesFinal.ToList());
         }
 
         private async Task<DataServiceResponse> PostNewEntity<T>(T value, string entitySetName)

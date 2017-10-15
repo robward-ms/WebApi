@@ -53,7 +53,7 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -114,7 +114,7 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
         }
 
         [Theory]
-        [PropertyData("UntypedWorksForAllKindsOfDataTypesPropertyData")]
+        [MemberData(nameof(UntypedWorksForAllKindsOfDataTypesPropertyData))]
         public void UntypedWorksForAllKindsOfDataTypes(string actionName, JToken expectedPayload)
         {
             string url = "/untyped/UntypedCustomers/Default." + actionName;

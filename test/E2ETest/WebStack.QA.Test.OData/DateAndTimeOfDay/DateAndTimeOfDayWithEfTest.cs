@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(MetadataController), typeof(DateAndTimeOfDayModelsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -193,7 +193,6 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         [InlineData("?$filter=minute(EndTime) eq 06", "3")]
         [InlineData("?$filter=second(EndTime) eq 10", "5")]
         [InlineData("?$filter=EndTime eq null", "2,4")]
-        [InlineData("?$filter=EndTime ne null", "1,3,5")]
         [InlineData("?$filter=EndTime ge 02:03:05.0790000", "1,3,5")]
         public void CanFilter_OnDateAndTimeOfDayProperties(string filter, string expect)
         {

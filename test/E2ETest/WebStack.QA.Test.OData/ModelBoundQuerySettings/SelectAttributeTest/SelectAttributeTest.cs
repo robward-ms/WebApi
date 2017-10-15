@@ -26,7 +26,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
         private const string ModelBoundAutoSelectCustomerBaseUrl = "{0}/modelboundapi/AutoSelectCustomers";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),

@@ -188,7 +188,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("TypeData")]
+        [MemberData(nameof(TypeData))]
         public void RunQueryableOnAllPossibleTypes(Type type, string queryString)
         {
             int seed = RandomSeedGenerator.GetRandomSeed();

@@ -13,11 +13,11 @@ namespace Nuwa.Sdk
     /// it is not actually initialized until the first test command which requires 
     /// this RunFrame is executed. The lazy pattern ensure resources are reserved 
     /// when one test case is run individually. During creation, RunFrame accept a 
-    /// collection of RunFrameElements which describes the what needs to be initialied.
+    /// collection of RunFrameElements which describes the what needs to be initialized.
     /// The actual meanings of the elements are agnostics to the RunFrame, to which 
     /// only the life cycle is intended to be managed.
     /// 
-    /// Once a RunFrame is initialized, it wil be largely reused. But the Initialize 
+    /// Once a RunFrame is initialized, it will be largely reused. But the Initialize 
     /// still needs to be called so as to fill the value to the property in test class.
     /// RunFrame is disposed when the NTCC is running its ClassFinished method. All 
     /// elements are disposed by then.

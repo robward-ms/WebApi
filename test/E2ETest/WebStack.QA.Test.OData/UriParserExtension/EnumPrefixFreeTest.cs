@@ -32,13 +32,13 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);;
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
 
             configuration.Routes.Clear();
 
@@ -53,7 +53,7 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddRAMFAR(true);
         }
@@ -71,7 +71,7 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         }
 
         [Theory]
-        [PropertyData("EnumPrefixFreeCases")]
+        [MemberData(nameof(EnumPrefixFreeCases))]
         public async Task EnableEnumPrefixFreeTest(string prefix, string prefixFree, HttpStatusCode statusCode)
         {
             // Enum with prefix

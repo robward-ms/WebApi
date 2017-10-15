@@ -36,7 +36,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(ConventionCustomersController), 
@@ -88,12 +88,12 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             var typeOfConventionCustomer = typeof(ConventionCustomer);
             var function1 = edmModel.FindDeclaredOperations(typeOfConventionCustomer.Namespace + ".GetAllConventionCustomers").FirstOrDefault();
             Assert.Equal(string.Format("Collection({0})", typeOfConventionCustomer.FullName), function1.ReturnType.Definition.FullTypeName());
-            Assert.Equal(0, function1.Parameters.Count());
+            Assert.Empty(function1.Parameters);
 
             // Function GetConventionCustomerById
             var function2 = edmModel.FindDeclaredOperations(typeof(ConventionCustomer).Namespace + ".GetConventionCustomerById").FirstOrDefault();
             Assert.Equal(typeOfConventionCustomer.FullName, function2.ReturnType.Definition.FullTypeName());
-            Assert.Equal(1, function2.Parameters.Count());
+            Assert.Single(function2.Parameters);
 
             // Function GetConventionOrderByCustomerIdAndOrderName
             var typeOfConventionOrder = typeof(ConventionOrder);
@@ -111,10 +111,10 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Equal(2, functionImport1.Count());
 
             var functionImport2 = container.FindOperationImports("GetConventionCustomerById");
-            Assert.Equal(1, functionImport2.Count());
+            Assert.Single(functionImport2);
 
             var functionImport3 = container.FindOperationImports("GetConventionOrderByCustomerIdAndOrderName");
-            Assert.Equal(1, functionImport3.Count());
+            Assert.Single(functionImport3);
 
             #endregion
 
@@ -122,7 +122,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
 
             var action1 = edmModel.FindDeclaredOperations(typeOfConventionCustomer.Namespace + ".ResetDataSource").FirstOrDefault();
             Assert.Null(action1.ReturnType);
-            Assert.Equal(0, function1.Parameters.Count());
+            Assert.Empty(function1.Parameters);
 
             var action2 = edmModel.FindDeclaredOperations(typeOfConventionCustomer.Namespace + ".UpdateAddress").FirstOrDefault();
             Assert.Equal(string.Format("Collection({0})", typeOfConventionCustomer.FullName), action2.ReturnType.Definition.FullTypeName());
@@ -133,10 +133,10 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             #region action imports
 
             var actionImport1 = container.FindOperationImports("ResetDataSource");
-            Assert.Equal(1, actionImport1.Count());
+            Assert.Single(actionImport1);
 
             var actionImport2 = container.FindOperationImports("UpdateAddress");
-            Assert.Equal(1, actionImport2.Count());
+            Assert.Single(actionImport2);
 
             #endregion
         }
@@ -157,15 +157,15 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             var oDataWorkSpace = reader.ReadServiceDocument();
 
             var function1 = oDataWorkSpace.FunctionImports.Where(odataResourceCollectionInfo => odataResourceCollectionInfo.Name == "GetAllConventionCustomers");
-            Assert.Equal(1, function1.Count());
+            Assert.Single(function1);
             var function2 = oDataWorkSpace.FunctionImports.Where(odataResourceCollectionInfo => odataResourceCollectionInfo.Name == "GetConventionOrderByCustomerIdAndOrderName");
             // ODL spec says:
             // The edm:FunctionImport for a parameterless function MAY include the IncludeInServiceDocument attribute
             // whose Boolean value indicates whether the function import is advertised in the service document.
             // So the below 2 FunctionImports are not displayed in ServiceDocument.
-            Assert.Equal(0, function2.Count());
+            Assert.Empty(function2);
             var function3 = oDataWorkSpace.FunctionImports.Where(odataResourceCollectionInfo => odataResourceCollectionInfo.Name == "GetConventionCustomerById");
-            Assert.Equal(0, function3.Count());
+            Assert.Empty(function3);
         }
 
         #endregion
@@ -221,6 +221,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             var responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
+            Assert.NotNull(expectedCount);
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal("2", responseString);
         }

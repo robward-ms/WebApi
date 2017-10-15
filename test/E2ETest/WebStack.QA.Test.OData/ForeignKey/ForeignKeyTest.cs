@@ -33,7 +33,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(ForeignKeyCustomersController),
                 typeof(ForeignKeyOrdersController),

@@ -15,7 +15,7 @@ namespace Nuwa.Sdk
     /// </summary>
     public interface IRunElementPerceiver
     {
-        IEnumerable<IRunElement> Perceive(ITestClassCommand ntcc);
+        //IEnumerable<IRunElement> Perceive(ITestClassCommand ntcc);
     }
 
     /// <summary>

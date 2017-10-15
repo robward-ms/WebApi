@@ -37,7 +37,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -56,7 +56,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
         }
 
         [Theory]
-        [PropertyData("AutoExpandTestData")]
+        [MemberData(nameof(AutoExpandTestData))]
         public void QueryForAnEntryIncludeTheAutoExpandNavigationProperty(string url, int propCount)
         {
             // Arrange

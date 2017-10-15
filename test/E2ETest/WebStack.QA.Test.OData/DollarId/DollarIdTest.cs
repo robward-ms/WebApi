@@ -24,7 +24,7 @@ namespace WebStack.QA.Test.OData.DollarId
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -63,7 +63,7 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json["value"] as JArray;
-            Assert.Equal<int>(1, result.Count);
+            Assert.Single(result);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json["value"] as JArray;
-            Assert.Equal<int>(1, result.Count);
+            Assert.Single(result);
 
             response = await this.Client.DeleteAsync(string.Format(requestBaseUri + "/$ref?$id=../../Albums(5)/Sales(7)", this.BaseAddress));
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -89,7 +89,7 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json["value"] as JArray;
-            Assert.Equal<int>(0, result.Count);
+            Assert.Empty(result);
         }
 
         [Fact]

@@ -13,6 +13,7 @@ using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
 using WebStack.QA.Test.OData.Common.Models.Vehicle;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight
@@ -73,7 +74,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -93,7 +94,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [Theory]
-        [PropertyData("PostGetUpdateAndDeleteData")]
+        [MemberData(nameof(PostGetUpdateAndDeleteData))]
         public async Task PostGetUpdateAndDeleteJsonLight(Type entityType, string entitySetName, string acceptHeader)
         {
             AcceptHeader = acceptHeader;

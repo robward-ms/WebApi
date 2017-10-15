@@ -37,7 +37,7 @@ namespace WebStack.QA.Test.OData.Cast
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(ProductsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -96,7 +96,7 @@ namespace WebStack.QA.Test.OData.Cast
         }
 
         [Theory]
-        [PropertyData("Combinations")]
+        [MemberData(nameof(Combinations))]
         public async Task Query(string dataSourceMode, string dollarFormat, int expectedEntityCount)
         {
             // Arrange

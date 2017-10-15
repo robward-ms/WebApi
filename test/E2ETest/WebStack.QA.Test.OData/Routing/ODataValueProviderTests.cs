@@ -31,7 +31,7 @@ namespace WebStack.QA.Test.OData.Routing
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();

@@ -5,6 +5,7 @@ using System.Linq;
 using Autofac;
 using Nuwa.DI;
 using Nuwa.Sdk;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.Control
@@ -12,14 +13,16 @@ namespace Nuwa.Control
     /// <summary>
     /// Define the class level execution of Nuwa
     /// </summary>
-    public class NuwaTestClassCommand : DelegatingTestClassCommand
+    public class NuwaTestClassCommand : IDisposable
     {
         private Collection<RunFrame> _frames;
         private IRunFrameBuilder _frmBuilder;
+        private bool disposedValue = false; // To detect redundant calls
 
         public NuwaTestClassCommand()
-            : base(new TestClassCommand())
         {
+            ValidateTypeUnderTest();
+
             var resolver = DependencyResolver.Instance;
 
             // autowiring
@@ -28,121 +31,71 @@ namespace Nuwa.Control
                 new NamedParameter("testClass", this))
                 as IRunFrameBuilder;
 
-            _frames = new Collection<RunFrame>();
+            _frames = _frmBuilder.CreateFrames();
+
         }
 
-        public static NuwaFrameworkAttribute GetNuwaFrameworkAttr(ITestClassCommand cmd)
+        public void Dispose()
         {
-            return cmd.TypeUnderTest.GetFirstCustomAttribute<NuwaFrameworkAttribute>();
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
         }
 
-        /// <summary>
-        /// Act before any test method is executed. All host strategies requested are set up in this method.
-        /// </summary>
-        /// <returns>Returns exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassStart()
-        {
-            Exception exception = null;
 
-            try
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
             {
-                ValidateTypeUnderTest();
-
-                // execute the default class start, should any exception returned terminate the execution.
-                exception = Proxy.ClassStart();
-                if (exception != null)
+                if (disposing)
                 {
-                    // expected to be catched at upper level try clause
-                    throw new InvalidOperationException("Base class ClassStart failed", exception);
-                }
-
-                // create run frames
-                _frames = _frmBuilder.CreateFrames();
-            }
-            catch (Exception e)
-            {
-                exception = e;
-            }
-
-            return exception;
-        }
-
-        /// <summary>
-        /// Act after all test methods are executed. All host strategies are released in this method. 
-        /// </summary>
-        /// <returns>Returns aggregated exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassFinish()
-        {
-            Exception retException = null;
-
-            try
-            {
-                var exceptions = new List<Exception>();
-
-                // dispose all run frame
-                foreach (var rf in _frames)
-                {
-                    try
+                    // dispose all run frame
+                    foreach (var rf in _frames)
                     {
-                        rf.Cleanup();
+                        try
+                        {
+                            rf.Cleanup();
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        exceptions.Add(ex);
-                    }
-                }
 
-                // first release all the hosts
-                Exception baseException = Proxy.ClassFinish();
-                if (baseException != null)
-                {
-                    exceptions.Add(baseException);
-                }
-
-                if (exceptions.Count != 0)
-                {
-                    throw new AggregateException(exceptions);
-                }
-            }
-            catch (Exception e)
-            {
-                retException = e;
-            }
-
-            return retException;
-        }
-
-        public override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo testMethod)
-        {
-            /// TODO - Advanced feature:
-            /// 1. Frame filter, some cases can be filtered under some frame
-            var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
-                               from frame in _frames
-                               select new { TestCommand = test, RunFrame = frame };
-
-            foreach (var each in combinations)
-            {
-                var isSkipped =
-                    (each.TestCommand is DelegatingTestCommand) ?
-                    (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
-                    (each.TestCommand is SkipCommand);
-
-                if (isSkipped)
-                {
-                    yield return each.TestCommand;
-                }
-                else
-                {
-                    var testCommand = new NuwaTestCommand(each.TestCommand)
-                    {
-                        Frame = each.RunFrame,
-                        TestMethod = testMethod
-                    };
-
-                    yield return testCommand;
+                    disposedValue = true;
                 }
             }
         }
+
+        //    public override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo testMethod)
+        //    {
+        //        /// TODO - Advanced feature:
+        //        /// 1. Frame filter, some cases can be filtered under some frame
+        //        var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
+        //                           from frame in _frames
+        //                           select new { TestCommand = test, RunFrame = frame };
+
+        //        foreach (var each in combinations)
+        //        {
+        //            var isSkipped =
+        //                (each.TestCommand is DelegatingTestCommand) ?
+        //                (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
+        //                (each.TestCommand is SkipCommand);
+
+        //            if (isSkipped)
+        //            {
+        //                yield return each.TestCommand;
+        //            }
+        //            else
+        //            {
+        //                var testCommand = new NuwaTestCommand(each.TestCommand)
+        //                {
+        //                    Frame = each.RunFrame,
+        //                    TestMethod = testMethod
+        //                };
+
+        //                yield return testCommand;
+        //            }
+        //        }
+        //    }
 
         /// <summary>
         /// Validate the type under test before any actual operation is done. 

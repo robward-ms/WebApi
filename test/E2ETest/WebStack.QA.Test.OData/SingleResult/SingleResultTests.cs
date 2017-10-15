@@ -18,7 +18,7 @@ namespace WebStack.QA.Test.OData.SingleResultTest
         private const string BaseUrl = "{0}/singleresult/Customers";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),

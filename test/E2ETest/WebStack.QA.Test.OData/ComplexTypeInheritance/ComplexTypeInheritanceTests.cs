@@ -59,7 +59,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(WindowsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -141,7 +141,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         }
 
         // [Theory(Skip = "[Client] Client cant deserialize a property which is declared as abstract, but the payload is concrete.")]
-        // [PropertyData("MediaTypes")]
+        // [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)
         public async Task QuerySingleContainingEntity(string mode, string mime)
         {
@@ -151,11 +151,11 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Proxy.Window window = await container.Windows.ByKey(new Dictionary<string, object>() { { "Id", 1 } }).GetValueAsync();
             Proxy.Circle expectedShape = new Proxy.Circle() { Center = new Proxy.Point(), Radius = 2 };
             Assert.Equal(expectedShape, window.CurrentShape);
-            Assert.Equal(1, window.OptionalShapes.Count);
+            Assert.Single(window.OptionalShapes);
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$select=...&$orderby=...&$expand=...
         public async Task QueryCollectionContainingEntity(string mode, string mime)
         {
@@ -183,7 +183,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$filter=CurrentShape/HasBorder eq true
         public async Task QueryEntitiesFilteredByComplexType(string mode, string mime)
         {
@@ -319,7 +319,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         #region RUD on complex type
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape
         public async Task QueryComplexTypeProperty(string mode, string mime)
         {
@@ -388,7 +388,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/HasBorder
         public async Task QueryPropertyDefinedInComplexTypeProperty(string mode, string mime)
         {
@@ -410,7 +410,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle/Radius
         public async Task QueryComplexTypePropertyDefinedOnDerivedType(string mode, string mime)
         {

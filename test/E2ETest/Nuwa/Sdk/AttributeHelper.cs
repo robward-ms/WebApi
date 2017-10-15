@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.Sdk
@@ -21,7 +22,7 @@ namespace Nuwa.Sdk
                 break;
             }
 
-            return attrInfo != null ? attrInfo.GetInstance<T>() : null;
+            return /*attrInfo != null ? attrInfo.GetInstance<T>() :*/ null;
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Nuwa.Sdk
 
             if (attrInfo != null)
             {
-                return attrInfo.GetInstance<T>();
+                return null; //  attrInfo.GetInstance<T>();
             }
             else
             {
@@ -71,14 +72,14 @@ namespace Nuwa.Sdk
         {
             var retvals = new List<T>();
 
-            foreach (var a in me.GetCustomAttributes(typeof(T)))
-            {
-                var attr = a.GetInstance<T>();
-                if (attr != null)
-                {
-                    retvals.Add(attr);
-                }
-            }
+            //foreach (var a in me.GetCustomAttributes(typeof(T)))
+            //{
+            //    var attr = a.GetInstance<T>();
+            //    if (attr != null)
+            //    {
+            //        retvals.Add(attr);
+            //    }
+            //}
 
             return retvals.ToArray();
         }
@@ -93,13 +94,13 @@ namespace Nuwa.Sdk
         {
             var retval = new List<IMethodInfo>();
 
-            foreach (var m in me.GetMethods())
-            {
-                if (m.HasAttribute(attribute))
-                {
-                    retval.Add(m);
-                }
-            }
+            //foreach (var m in me.GetMethods())
+            //{
+            //    if (m.HasAttribute(attribute))
+            //    {
+            //        retval.Add(m);
+            //    }
+            //}
 
             return retval.ToArray();
         }

@@ -26,7 +26,7 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
         [NuwaHttpClient]
         public HttpClient Client { get; set; }
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(DynamicCustomersController),

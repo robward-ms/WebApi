@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -112,7 +112,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task MetadataIsCorrectForFeedsOfEntriesWithJustPrimitiveTypeProperties(
             string acceptHeader)
         {
@@ -140,7 +140,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypePropertiesData")]
+        [MemberData(nameof(MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypePropertiesData))]
         public async Task MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypeProperties(
             string acceptHeader,
             string propertyName,
@@ -181,7 +181,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task MetadataIsCorrectForAnEntryWithJustPrimitiveTypeProperties(string acceptHeader)
         {
             // Arrange

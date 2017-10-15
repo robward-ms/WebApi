@@ -101,19 +101,17 @@ namespace WebStack.QA.Test.OData.Formatter
             T entityBaseline = await PostNewEntityAsync<T>(entitySetName, rand);
 
             T entityBeforeUpdate = await ReadFirstEntityAsync<T>(entitySetName);
-            Assert.NotNull(entityBeforeUpdate);
             AssertExtension.PrimitiveEqual(entityBaseline, entityBeforeUpdate);
 
             DataServiceResponse responseUpdate = await UpdateEntityAsync<T>(entitySetName, entityBeforeUpdate, rand);
 
             T entityAfterUpdate = await ReadFirstEntityAsync<T>(entitySetName);
-            Assert.NotNull(entityAfterUpdate);
             AssertExtension.PrimitiveEqual(entityBeforeUpdate, entityAfterUpdate);
 
             DataServiceResponse responseDelete = await DeleteEntityAsync<T>(entitySetName, entityAfterUpdate);
 
             T[] entities = await ReadAllEntitiesAsync<T>(entitySetName);
-            Assert.Equal(0, entities.Length);
+            Assert.Empty(entities);
         }
 
         // post new entity to repository

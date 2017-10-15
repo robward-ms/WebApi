@@ -46,7 +46,7 @@ namespace WebStack.QA.Test.OData.OpenType
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(AccountsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -325,7 +325,7 @@ namespace WebStack.QA.Test.OData.OpenType
                     Assert.Equal("New Value", tags["Tag1"]);
                     JsonAssert.DoesNotContainProperty("OwnerGender", content);
                     Assert.Equal("jinfutan", content["OwnerAlias"]);
-                    Assert.Equal(0, ((JArray)content["ShipAddresses"]).Count);
+                    Assert.Empty(((JArray)content["ShipAddresses"]));
                 }
 
                 string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)?$format={1}", routing, format);
@@ -786,7 +786,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
                 Assert.Equal(TypedProxy.Gender.Female, accountList[0].OwnerGender);
                 Assert.Equal("jinfutan", accountList[0].OwnerAlias);
-                Assert.Equal(true, accountList[0].IsValid);
+                Assert.True(accountList[0].IsValid);
                 Assert.Equal(2, accountList[0].ShipAddresses.Count);
             }
         }
@@ -809,7 +809,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal(1, accountList[0].Id);
 
                 Assert.Null(accountList[0].OwnerAlias);
-                Assert.Equal(0, accountList[0].ShipAddresses.Count);
+                Assert.Empty(accountList[0].ShipAddresses);
             }
         }
 
@@ -837,7 +837,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
                 Assert.Equal(TypedProxy.Gender.Female, account.OwnerGender);
                 Assert.Equal("jinfutan", account.OwnerAlias);
-                Assert.Equal(true, account.IsValid);
+                Assert.True(account.IsValid);
                 Assert.Equal(2, account.ShipAddresses.Count);
             }
         }
@@ -866,7 +866,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
                 Assert.Equal(TypedProxy.Gender.Female, premiumAccount.OwnerGender);
                 Assert.Equal("jinfutan", premiumAccount.OwnerAlias);
-                Assert.Equal(true, premiumAccount.IsValid);
+                Assert.True(premiumAccount.IsValid);
                 Assert.Equal(2, premiumAccount.ShipAddresses.Count);
                 Assert.Equal(new DateTimeOffset(new DateTime(2014, 5, 22), TimeSpan.FromHours(8)), premiumAccount.Since);
             }
@@ -987,7 +987,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal("saxu", updatedAccount.OwnerAlias);
                 Assert.Equal(2, updatedAccount.ShipAddresses.Count);
                 Assert.Equal(2, updatedAccount.Emails.Count);
-                Assert.Equal(1, updatedAccount.LuckyNumbers.Count);
+                Assert.Single(updatedAccount.LuckyNumbers);
                 Assert.NotNull(updatedAccount.Emails.SingleOrDefault(e => e == "c@c.com"));
 
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
@@ -1050,8 +1050,8 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal("New Value", updatedAccount.Tags.Tag1);
 
                 Assert.Equal("saxu", updatedAccount.OwnerAlias);
-                Assert.Equal(0, updatedAccount.ShipAddresses.Count);
-                Assert.Equal(1, updatedAccount.LuckyNumbers.Count);
+                Assert.Empty(updatedAccount.ShipAddresses);
+                Assert.Single(updatedAccount.LuckyNumbers);
                 Assert.Equal(2, updatedAccount.Emails.Count);
                 Assert.NotNull(updatedAccount.Emails.SingleOrDefault(e => e == "c@c.com"));
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
@@ -1226,7 +1226,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal(2, accounts.Count);
 
                 var queryDeletedAccount = accounts.Where(a => a.Id == 1).ToList();
-                Assert.Equal(0, queryDeletedAccount.Count);
+                Assert.Empty(queryDeletedAccount);
             }
         }
 
@@ -1413,7 +1413,7 @@ namespace WebStack.QA.Test.OData.OpenType
             TypedProxy.Account account = employees.Single(e => e.Id == 1).Account;
             Assert.Equal(TypedProxy.Gender.Female, account.OwnerGender);
             Assert.Equal("jinfutan", account.OwnerAlias);
-            Assert.Equal(true, account.IsValid);
+            Assert.True(account.IsValid);
             Assert.Equal(2, account.ShipAddresses.Count);
         }
 

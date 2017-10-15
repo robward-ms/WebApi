@@ -209,7 +209,7 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -227,7 +227,7 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [TheoryAttribute]
-        [PropertyData("TestData")]
+        [MemberData(nameof(TestData))]
         public virtual void TestHttpErrorInAction(ErrorType errorType, HttpStatusCode code, string message, string header)
         {
             // Arrange
@@ -295,7 +295,7 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration2(HttpConfiguration configuration)
+        internal static void UpdateConfiguration2(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -305,7 +305,7 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("TestData2")]
+        [MemberData(nameof(TestData2))]
         public override void TestHttpErrorInAction(ErrorType errorType, HttpStatusCode code, string message, string header)
         {
             // Arrange

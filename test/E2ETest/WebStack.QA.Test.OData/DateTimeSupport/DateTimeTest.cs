@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(FilesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -171,7 +171,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryFileEntityTest(string mode, string mime)
         {
             await ResetDatasource();
@@ -282,7 +282,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             JObject content = await response.Content.ReadAsAsync<JObject>();
-            Assert.Equal(1, content["value"].Count());
+            Assert.Single(content["value"]);
 
             Assert.Equal(4, content["value"][0]["FileId"]);
             Assert.Equal("File #4", content["value"][0]["Name"]);

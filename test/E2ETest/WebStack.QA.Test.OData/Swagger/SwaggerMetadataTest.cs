@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.Swagger
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SwaggerController), typeof(MetadataController)};
 

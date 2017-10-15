@@ -25,7 +25,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class SelectExpandTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                   typeof(IAssembliesResolver),
@@ -348,9 +348,9 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
-            Assert.Equal(expandProp.Count, 2);
-            Assert.Equal(expandProp[0]["Id"], 1);
-            Assert.Equal(expandProp[1]["Id"], 2);
+            Assert.Equal(2, expandProp.Count);
+            Assert.Equal(1, expandProp[0]["Id"]);
+            Assert.Equal(2, expandProp[1]["Id"]);
         }
 
         [Fact]
@@ -412,13 +412,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
                 if (customerId == 0)
                 {
                     // the "SelectOrders" in the first customer is empty.
-                    Assert.Equal(0, orders.Count);
+                    Assert.Empty(orders);
                     Assert.Equal(0, (int)customer["SelectOrders@odata.count"]);
                 }
                 else
                 {
                     // the "SelectOrders" in other customers has only one entity, because the result is filtered by "Id" < 1.
-                    Assert.Equal(1, orders.Count);
+                    Assert.Single(orders);
                     Assert.Equal(1, (int)customer["SelectOrders@odata.count"]);
                 }
 
@@ -523,11 +523,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
             foreach (JObject customer in (IEnumerable<JToken>)customers)
             {
                 JArray orders = customer["SelectOrders"] as JArray;
-                Assert.Equal(1, orders.Count);
+                Assert.Single(orders);
                 foreach (JObject order in (IEnumerable<JToken>)orders)
                 {
                     JArray orderdetails = order["OrderDetails"] as JArray;
-                    Assert.Equal(1, orderdetails.Count());
+                    Assert.Single(orderdetails);
                 }
             }
         }
@@ -583,8 +583,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
-            Assert.Equal(expandProp.Count, 1);
-            Assert.Equal(expandProp[0]["Id"], 2);
+            Assert.Single(expandProp);
+            Assert.Equal(2, expandProp[0]["Id"]);
         }
 
         private void RestoreData()

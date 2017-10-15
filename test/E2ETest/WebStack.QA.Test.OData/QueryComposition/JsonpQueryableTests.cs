@@ -70,7 +70,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class JsonpQueryableTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var f = new JsonpMediaTypeFormatter();

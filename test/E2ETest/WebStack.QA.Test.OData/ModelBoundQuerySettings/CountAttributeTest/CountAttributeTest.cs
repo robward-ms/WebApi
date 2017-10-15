@@ -22,7 +22,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),

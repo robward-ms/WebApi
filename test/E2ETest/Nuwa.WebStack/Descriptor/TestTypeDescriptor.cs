@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nuwa.Sdk;
-using Xunit.Sdk;
+using Xunit.Abstractions;
 
 namespace Nuwa.WebStack.Descriptor
 {
@@ -91,13 +91,13 @@ namespace Nuwa.WebStack.Descriptor
         }
 
         /// <summary>
-        /// The assemly this test class belongs to
+        /// The assembly this test class belongs to
         /// </summary>
         public Assembly TestAssembly
         {
             get
             {
-                return this.TestTypeInfo.Type.Assembly;
+                return this.TestTypeInfo.GetType().Assembly;
             }
         }
 

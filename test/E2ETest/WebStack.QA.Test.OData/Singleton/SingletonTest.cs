@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.Singleton
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(UmbrellaController), typeof(MonstersIncController), typeof(MetadataController), typeof(PartnersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -193,7 +193,7 @@ namespace WebStack.QA.Test.OData.Singleton
             HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json.GetValue("value") as JArray;
-            Assert.Equal<int>(0, result.Count);
+            Assert.Empty(result);
 
             string navigationLinkUri = string.Format(requestUri + "/$ref");
 

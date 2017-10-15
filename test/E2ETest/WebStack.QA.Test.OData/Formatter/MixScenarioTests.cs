@@ -73,7 +73,7 @@ namespace WebStack.QA.Test.OData.Formatter
     public class MixScenarioTestsWebApi : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.EnableODataSupport(GetEdmModel(configuration), "odata");
@@ -165,7 +165,7 @@ namespace WebStack.QA.Test.OData.Formatter
             // delete entity
             await DeleteEntityAsync(uri, secondVersion, entitySetName);
             var entitiesFinal = await GetEntitiesAsync(uri, entitySetName);
-            Assert.Equal(0, entitiesFinal.ToList().Count());
+            Assert.Empty(entitiesFinal.ToList());
         }
 
         private async Task<DataServiceResponse> PostNewEntityAsync(Uri baseAddress, Vehicle entity, string entitySetName)

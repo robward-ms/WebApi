@@ -37,7 +37,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(DCustomersController), typeof(MetadataController), typeof(EfCustomersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -130,7 +130,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryDCustomerEntityTest(string mode, string mime)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers(2)?$format={2}", BaseAddress, mode, mime);
@@ -234,7 +234,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("FilterData")]
+        [MemberData(nameof(FilterData))]
         public async Task CanFilterDateAndTimeOfDayProperty(string mode, string filter, IList<int> expect)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers?{2}", BaseAddress, mode, filter);
@@ -298,7 +298,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("OrderByData")]
+        [MemberData(nameof(OrderByData))]
         public async Task CanOrderByDateAndTimeOfDayProperty(string mode, string orderby, string expect)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers?{2}", BaseAddress, mode, orderby);
@@ -345,7 +345,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("FunctionData")]
+        [MemberData(nameof(FunctionData))]
         public async Task CanCallFunctionWithDateAndTimeOfDayParameters(string mode, string function)
         {
             string parameter =
@@ -386,7 +386,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("ActionData")]
+        [MemberData(nameof(ActionData))]
         public async Task CanCallActionWithDateAndTimeOfDayParameters(string mode, string action)
         {
             string requestUri = string.Format("{0}/{1}/{2}", BaseAddress, mode, action);
@@ -530,7 +530,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("FilterDataForEf")]
+        [MemberData(nameof(FilterDataForEf))]
         public async Task CanFilterDateAndTimeOfDayPropertyOnEf(string filter, IList<int> expect)
         {
             await ResetDatasource("convention");
@@ -579,7 +579,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         }
 
         [Theory]
-        [PropertyData("OrderByDataEf")]
+        [MemberData(nameof(OrderByDataEf))]
         public async Task CanOrderByDateAndTimeOfDayPropertyOnEf(string orderby, string expect)
         {
             await ResetDatasource("convention");

@@ -33,7 +33,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Relationships", "Relationships", GetRelationshipsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -125,7 +125,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
             string acceptHeader)
         {
@@ -174,7 +174,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
         {
             //Arrange
@@ -201,7 +201,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -228,7 +228,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -255,7 +255,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -314,7 +314,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             //Assert
             foreach (var returnedChildEntityId in returnedChildrenIdentities)
             {
-                Assert.True(childEntities.Any(x => x.Id == returnedChildEntityId));
+                Assert.Contains(childEntities, (x) => x.Id == returnedChildEntityId);
             }
         }
     }

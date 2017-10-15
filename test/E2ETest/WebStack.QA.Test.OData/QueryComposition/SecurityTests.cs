@@ -8,6 +8,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
@@ -69,7 +70,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -77,7 +78,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("DoSAttackData")]
+        [MemberData(nameof(DoSAttackData))]
         public void TestDosAttack(string filter)
         {
             Console.WriteLine(filter);
@@ -86,7 +87,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("DoSAttackData")]
+        [MemberData(nameof(DoSAttackData))]
         public void TestDosAttackWithMultipleThreads(string filter)
         {
             Parallel.For(0, 3, i =>
@@ -96,7 +97,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("AnyAllDoSAttackData")]
+        [MemberData(nameof(AnyAllDoSAttackData))]
         public void TestAnyAllDosAttack(string filter)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
@@ -105,7 +106,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         //[Theory]
-        //[PropertyData("AnyAllDoSAttackData")]
+        //[MemberData(nameof(AnyAllDoSAttackData))]
         //public void TestAnyAllDosAttackWithMultipleThreads(string filter)
         //{
         //    Parallel.For(0, 10, i =>
@@ -115,7 +116,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         //}
 
         [Theory]
-        [PropertyData("InvalidUnicodeData")]
+        [MemberData(nameof(InvalidUnicodeData))]
         public void TestInvalidUnicodeAttack(string query)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProducts?" + query).Result;

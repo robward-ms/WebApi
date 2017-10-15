@@ -77,7 +77,7 @@ namespace Nuwa.Sdk.Elements
                 return;
             }
 
-            // check the network crediential
+            // check the network credential
             if (testCommand.TestMethod != null)
             {
                 var credAttr = testCommand.TestMethod.GetFirstCustomAttribute<NuwaNetworkCredentialAttribute>();
