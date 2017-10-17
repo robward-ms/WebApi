@@ -103,7 +103,6 @@
     <Compile Include="PortReserver.cs" />
     <Compile Include="ReplaceCultureAttribute.cs" />
     <Compile Include="RestoreThreadPrincipalAttribute.cs" />
-    <Compile Include="AppDomainUtils.cs" />
     <Compile Include="CultureReplacer.cs" />
     <Compile Include="DictionaryEqualityComparer.cs" />
     <Compile Include="ExceptionAssert.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="MediaTypeHeaderValueComparer.cs" />
     <Compile Include="ParsedMediaTypeHeaderValue.cs" />
     <Compile Include="RegexReplacement.cs" />
-    <Compile Include="RuntimeEnvironment.cs" />
     <Compile Include="StreamAssert.cs" />
     <Compile Include="TaskAssert.cs" />
     <Compile Include="DataSets\TestData.cs" />
@@ -137,7 +135,6 @@
     <Compile Include="TheoryDataSet.cs" />
     <Compile Include="ThreadPoolSyncContext.cs" />
     <Compile Include="VersionTestHelper.cs" />
-    <Compile Include="WebUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

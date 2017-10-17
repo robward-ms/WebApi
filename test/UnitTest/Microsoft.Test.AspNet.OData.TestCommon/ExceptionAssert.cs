@@ -378,22 +378,6 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         }
 
         /// <summary>
-        /// Verifies that the code throws an HttpException (or optionally any exception which derives from it).
-        /// </summary>
-        /// <param name="testCode">A delegate to the code to be tested</param>
-        /// <param name="exceptionMessage">The exception message to verify</param>
-        /// <param name="httpCode">The expected HTTP status code of the exception</param>
-        /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
-        /// <returns>The exception that was thrown, when successful</returns>
-        /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        public static HttpException ThrowsHttpException(Action testCode, string exceptionMessage, int httpCode, bool allowDerivedExceptions = false)
-        {
-            var ex = Throws<HttpException>(testCode, exceptionMessage, allowDerivedExceptions);
-            Assert.Equal(httpCode, ex.GetHttpCode());
-            return ex;
-        }
-
-        /// <summary>
         /// Verifies that the code throws an InvalidEnumArgumentException (or optionally any exception which derives from it).
         /// </summary>
         /// <param name="testCode">A delegate to the code to be tested</param>
