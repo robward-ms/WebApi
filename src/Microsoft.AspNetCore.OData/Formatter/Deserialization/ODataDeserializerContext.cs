@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OData.Adapters;
+using Microsoft.AspNet.OData.Adapters;
 
 namespace Microsoft.AspNet.OData.Formatter.Deserialization
 {

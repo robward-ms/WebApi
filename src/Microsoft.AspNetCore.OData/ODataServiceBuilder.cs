@@ -2,10 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNetCore.OData.Interfaces;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.AspNetCore.OData
+namespace Microsoft.AspNet.OData
 {
     /// <summary>
     /// Allows fine grained configuration of essential OData services.

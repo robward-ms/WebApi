@@ -9,7 +9,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace Microsoft.AspNetCore.OData.Interfaces
+namespace Microsoft.AspNet.OData.Interfaces
 {
     /// <summary>
     /// Provide the interface for the details of a given OData request.

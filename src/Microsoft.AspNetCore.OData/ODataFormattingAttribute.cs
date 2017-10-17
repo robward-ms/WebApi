@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.AspNetCore.OData
+namespace Microsoft.AspNet.OData
 {
     /// <summary>
     /// An attribute to be placed on controllers that enables the OData formatters.

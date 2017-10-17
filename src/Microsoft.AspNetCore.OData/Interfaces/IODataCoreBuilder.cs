@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.AspNetCore.OData.Interfaces
+namespace Microsoft.AspNet.OData.Interfaces
 {
     /// <summary>
     /// An interface for configuring essential OData services.

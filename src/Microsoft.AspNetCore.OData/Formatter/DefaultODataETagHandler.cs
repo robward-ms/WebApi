@@ -10,7 +10,7 @@ using Microsoft.AspNet.OData.Builder.Conventions;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.OData;
 
-namespace Microsoft.AspNetCore.OData.Formatter
+namespace Microsoft.AspNet.OData.Formatter
 {
     internal class DefaultODataETagHandler : IETagHandler
     {

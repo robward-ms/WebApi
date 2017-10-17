@@ -5,7 +5,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.OData;
 
-namespace Microsoft.AspNetCore.OData.Adapters
+namespace Microsoft.AspNet.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi options to OData WebApi.

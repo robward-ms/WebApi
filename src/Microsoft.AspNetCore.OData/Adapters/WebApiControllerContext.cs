@@ -8,7 +8,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Microsoft.AspNetCore.OData.Adapters
+namespace Microsoft.AspNet.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi controller context to OData WebApi.

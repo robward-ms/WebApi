@@ -4,12 +4,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.OData.Interfaces;
-using Microsoft.AspNetCore.OData.Interfaces;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace Microsoft.AspNetCore.OData.Adapters
+namespace Microsoft.AspNet.OData.Adapters
 {
     /// <summary>
     /// Adapter class to convert Asp.Net WebApi OData properties to OData WebApi.

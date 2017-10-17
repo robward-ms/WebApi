@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 
 namespace Microsoft.AspNet.OData.Formatter.Serialization

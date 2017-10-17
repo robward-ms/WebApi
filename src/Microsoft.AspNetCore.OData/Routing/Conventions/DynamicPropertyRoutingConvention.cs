@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.OData.Adapters;
-using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Routing;
 
 namespace Microsoft.AspNet.OData.Routing.Conventions

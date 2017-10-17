@@ -4,8 +4,8 @@
 using System.Collections;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OData.Adapters;
-using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNet.OData

@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.OData;
 
-namespace Microsoft.AspNetCore.OData.Formatter
+namespace Microsoft.AspNet.OData.Formatter
 {
     /// <summary>
     /// Factory for <see cref="ODataInputFormatter"/> classes to handle OData.

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 
-namespace Microsoft.AspNetCore.OData.Routing.Conventions
+namespace Microsoft.AspNet.OData.Routing.Conventions
 {
     /// <summary>
     /// Provides an abstraction for selecting a controller and an action for OData requests.

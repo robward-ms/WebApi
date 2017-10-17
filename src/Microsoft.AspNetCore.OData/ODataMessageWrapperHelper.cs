@@ -8,7 +8,7 @@ using System.Linq;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.AspNetCore.OData
+namespace Microsoft.AspNet.OData
 {
     internal static class ODataMessageWrapperHelper
     {

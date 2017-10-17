@@ -16,11 +16,11 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.AspNetCore.OData
+namespace Microsoft.AspNet.OData
 {
     /// <summary>
     /// This class defines an attribute that can be applied to an action to enable querying using the OData query

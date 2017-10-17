@@ -6,7 +6,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Routing;
 
-namespace Microsoft.AspNetCore.OData.Routing.Conventions
+namespace Microsoft.AspNet.OData.Routing.Conventions
 {
     /// <summary>
     /// Provides helper methods for creating routing conventions.

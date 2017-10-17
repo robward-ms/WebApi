@@ -8,7 +8,7 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData;
 
-namespace Microsoft.AspNetCore.OData.Extensions
+namespace Microsoft.AspNet.OData.Extensions
 {
     /// <summary>
     /// Provides extension methods for the <see cref="SerializableError"/> class.

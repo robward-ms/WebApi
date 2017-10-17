@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Adapters;
+using Microsoft.AspNet.OData.Adapters;
 
 namespace Microsoft.AspNet.OData.Formatter.Serialization
 {

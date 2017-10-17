@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Adapters;
+using Microsoft.AspNet.OData.Adapters;
 
 namespace Microsoft.AspNet.OData.Results
 {

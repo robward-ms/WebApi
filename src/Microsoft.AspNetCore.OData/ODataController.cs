@@ -5,7 +5,7 @@ using System;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Results;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData;
+using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 

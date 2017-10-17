@@ -4,8 +4,8 @@
 using System.Diagnostics.Contracts;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OData.Adapters;
-using Microsoft.AspNetCore.OData.Extensions;
+using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Extensions;
 
 namespace Microsoft.AspNet.OData.Query
 {

@@ -12,6 +12,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>Microsoft.AspNetCore.OData</AssemblyName>
     <RootNamespace>Microsoft.AspNetCore.OData</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\tools\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <!-- A seperate build task scans the obj folder and adds these items. -->

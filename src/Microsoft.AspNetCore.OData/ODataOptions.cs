@@ -2,10 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using Microsoft.AspNetCore.OData.Routing.Conventions;
+using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 
-namespace Microsoft.AspNetCore.OData
+namespace Microsoft.AspNet.OData
 {
     /// <summary>
     /// Provides programmatic configuration for the OData service.

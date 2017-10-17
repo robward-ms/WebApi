@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Microsoft.AspNetCore.OData.Query
+namespace Microsoft.AspNet.OData.Query
 {
     /// <summary>
     /// An implementation of <see cref="IFilterProvider" /> that applies an action filter to
