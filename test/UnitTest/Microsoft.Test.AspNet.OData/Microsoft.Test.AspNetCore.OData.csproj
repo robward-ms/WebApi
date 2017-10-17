@@ -4,6 +4,12 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <SignAssembly>true</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>..\..\..\tools\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -15,9 +21,98 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <Compile Remove="Batch\**" />
+    <Compile Remove="Builder\Conventions\Attributes\**" />
+    <Compile Remove="Formatter\**" />
+    <Compile Remove="Query\**" />
+    <Compile Remove="Results\**" />
+    <Compile Remove="Routing\**" />
+    <EmbeddedResource Remove="Batch\**" />
+    <EmbeddedResource Remove="Builder\**" />
+    <EmbeddedResource Remove="Formatter\**" />
+    <EmbeddedResource Remove="Query\**" />
+    <EmbeddedResource Remove="Results\**" />
+    <EmbeddedResource Remove="Routing\**" />
+    <None Remove="Batch\**" />
+    <None Remove="Formatter\**" />
+    <None Remove="Query\**" />
+    <None Remove="Results\**" />
+    <None Remove="Routing\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ContentIdHelpersTest.cs" />
+    <Compile Remove="ContextUtil.cs" />
+    <Compile Remove="DateAndTimeOfDayTest.cs" />
+    <Compile Remove="DateTimeTest.cs" />
+    <Compile Remove="DeltaTest.cs" />
+    <Compile Remove="DependencyInjectionHelper.cs" />
+    <Compile Remove="DependencyInjectionTests.cs" />
+    <Compile Remove="DollarFormatTest.cs" />
+    <Compile Remove="EdmDeltaCollectionTypeTest.cs" />
+    <Compile Remove="EdmDeltaTypeTest.cs" />
+    <Compile Remove="EdmModelExtensionsTest.cs" />
+    <Compile Remove="EdmStructuredObjectTest.cs" />
+    <Compile Remove="EdmTypeExtensionsTest.cs" />
+    <Compile Remove="EnableQueryTests.cs" />
+    <Compile Remove="EnumDeserializerTest.cs" />
+    <Compile Remove="EnumSerializerTest.cs" />
+    <Compile Remove="ETagMessageHandlerTest.cs" />
+    <Compile Remove="FastPropertyAccessorTest.cs" />
+    <Compile Remove="FromODataUriTest.cs" />
+    <Compile Remove="FunctionActionAdvertisedTest.cs" />
+    <Compile Remove="HttpConfigurationExtensions.cs" />
+    <Compile Remove="HttpConfigurationExtensionsTest.cs" />
+    <Compile Remove="HttpErrorExtensionsTest.cs" />
+    <Compile Remove="HttpRequestMessageExtensionsTest.cs" />
+    <Compile Remove="HttpRouteCollectionExtensionsTest.cs" />
+    <Compile Remove="MetadataControllerTest.cs" />
+    <Compile Remove="MockContainer.cs" />
+    <Compile Remove="ODataActionParametersTest.cs" />
+    <Compile Remove="ODataContainmentTest.cs" />
+    <Compile Remove="ODataFormattingAttributeTest.cs" />
+    <Compile Remove="ODataNullValueMessageHandlerTest.cs" />
+    <Compile Remove="ODataPathHandlerExtensions.cs" />
+    <Compile Remove="ODataRoutingAttributeTest.cs" />
+    <Compile Remove="ODataSingletonTest.cs" />
+    <Compile Remove="ODataSwaggerConverterTest.cs" />
+    <Compile Remove="ODataSwaggerUtilitiesTest.cs" />
+    <Compile Remove="ODataUriResolverExtensionTest.cs" />
+    <Compile Remove="OpenComplexTypeTest.cs" />
+    <Compile Remove="OpenEntityTypeTest.cs" />
+    <Compile Remove="PageResultOfTTest.cs" />
+    <Compile Remove="PerRequestActionValueBinderTest.cs" />
+    <Compile Remove="PerRequestContentNegotiatorTest.cs" />
+    <Compile Remove="PerRequestParameterBindingTest.cs" />
+    <Compile Remove="PublicApi\PublicApiTest.cs" />
+    <Compile Remove="QueryableLimitationTest.cs" />
+    <Compile Remove="ResourceContextTest.cs" />
+    <Compile Remove="Resources.cs" />
+    <Compile Remove="SelectExpandNestedDollarCountTest.cs" />
+    <Compile Remove="SelectExpandTest.cs" />
+    <Compile Remove="TypeExtensions.cs" />
+    <Compile Remove="TypeHelperTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="Microsoft.OData.Core" Version="7.3.1" />
+    <PackageReference Include="Moq" Version="4.7.137" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="xunit" Version="2.3.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.AspNetCore.OData\Microsoft.AspNetCore.OData.1x.csproj" />
+    <ProjectReference Include="..\Microsoft.Test.AspNet.OData.TestCommon\Microsoft.Test.AspNetCore.OData.TestCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Builder\Conventions\" />
   </ItemGroup>
 
 </Project>
