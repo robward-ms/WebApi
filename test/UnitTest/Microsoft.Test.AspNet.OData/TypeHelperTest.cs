@@ -306,10 +306,17 @@ namespace Microsoft.Test.AspNet.OData
 
             foreach (string  name in definedNames)
             {
+<<<<<<< HEAD
                 Assert.Contains(foundNames, s => s == name);
             }
 
             Assert.DoesNotContain(foundTypes, t => t == typeof(TypeHelperTest));
+=======
+                Assert.Contains(name, foundNames);
+            }
+
+            Assert.DoesNotContain(typeof(TypeHelperTest), foundTypes);
+>>>>>>> Squashed commit of the following:
         }
 
         /// <summary>

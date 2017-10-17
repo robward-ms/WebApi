@@ -22,7 +22,6 @@ using Microsoft.Test.AspNet.OData.Query;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.Test.AspNet.OData

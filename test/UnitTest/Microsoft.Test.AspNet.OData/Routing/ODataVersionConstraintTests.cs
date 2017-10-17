@@ -6,7 +6,6 @@ using System.Web.Http.Routing;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 using Xunit.Extensions;
 

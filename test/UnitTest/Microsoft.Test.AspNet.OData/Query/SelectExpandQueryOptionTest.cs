@@ -16,10 +16,9 @@ using Microsoft.Test.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
+using Xunit;
 using Customer = Microsoft.Test.AspNet.OData.Formatter.Serialization.Models.Customer;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
-using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {

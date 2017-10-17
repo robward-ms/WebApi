@@ -22,7 +22,6 @@ using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 {

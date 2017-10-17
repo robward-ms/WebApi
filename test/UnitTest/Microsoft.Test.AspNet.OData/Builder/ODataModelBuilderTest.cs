@@ -12,13 +12,11 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-//using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
-using BuilderTestModels = Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Xunit;
-using Xunit.Extensions;
+using BuilderTestModels = Microsoft.Test.AspNet.OData.Builder.TestModels;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Http.Headers;
 using Microsoft.AspNet.OData.Formatter;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.OData.WebApi.AspNet.Formatter
 {

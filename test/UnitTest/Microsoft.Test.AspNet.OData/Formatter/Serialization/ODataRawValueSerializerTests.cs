@@ -11,9 +11,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
-using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 using Xunit;
-using Xunit.Extensions;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -72,8 +71,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 DateTimeOffset dto = new DateTimeOffset(dt).ToLocalTime();
                 return new TheoryDataSet<object, DateTimeOffset>
                 {
-                    { dt, dto},
-                    { new DateTime?(dt), dto}
+                    { dt1, dto1},
+                    { new DateTime?(dt2), dto2}
                 };
             }
         }

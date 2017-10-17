@@ -52,11 +52,11 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="testCode">A delegate to the code to be tested</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public new static T Throws<T>(Func<object> testCode)
-        //    where T : Exception
-        //{
-        //    return (T)Throws(typeof(T), testCode);
-        //}
+        public static T Throws<T>(Func<object> testCode)
+            where T : Exception
+        {
+            return (T)Throws(typeof(T), testCode);
+        }
 
         /// <summary>
         /// Verifies that the exact exception is thrown (and not a derived exception type).
@@ -65,11 +65,11 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="testCode">A delegate to the code to be tested</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public new static Exception Throws(Type exceptionType, Action testCode)
-        //{
-        //    Exception exception = RecordException(testCode);
-        //    return VerifyException(exceptionType, exception);
-        //}
+        public static Exception Throws(Type exceptionType, Action testCode)
+        {
+            Exception exception = RecordException(testCode);
+            return VerifyException(exceptionType, exception);
+        }
 
         /// <summary>
         /// Verifies that the exact exception is thrown (and not a derived exception type).
@@ -79,10 +79,10 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="testCode">A delegate to the code to be tested</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public new static Exception Throws(Type exceptionType, Func<object> testCode)
-        //{
-        //    return Throws(exceptionType, () => { testCode(); });
-        //}
+        public static Exception Throws(Type exceptionType, Func<object> testCode)
+        {
+            return Throws(exceptionType, () => { testCode(); });
+        }
 
         /// <summary>
         /// Verifies that an exception of the given type (or optionally a derived type) is thrown.
@@ -92,31 +92,31 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static TException Throws<TException>(Action testCode, bool allowDerivedExceptions)
-        //    where TException : Exception
-        //{
-        //    Type exceptionType = typeof(TException);
-        //    Exception exception = RecordException(testCode);
+        public static TException Throws<TException>(Action testCode, bool allowDerivedExceptions)
+            where TException : Exception
+        {
+            Type exceptionType = typeof(TException);
+            Exception exception = RecordException(testCode);
 
-        //    TargetInvocationException tie = exception as TargetInvocationException;
-        //    if (tie != null)
-        //    {
-        //        exception = tie.InnerException;
-        //    }
+            TargetInvocationException tie = exception as TargetInvocationException;
+            if (tie != null)
+            {
+                exception = tie.InnerException;
+            }
 
-        //    if (exception == null)
-        //    {
-        //        throw new ThrowsException(exceptionType);
-        //    }
+            if (exception == null)
+            {
+                throw new ThrowsException(exceptionType);
+            }
 
-        //    var typedException = exception as TException;
-        //    if (typedException == null || (!allowDerivedExceptions && typedException.GetType() != typeof(TException)))
-        //    {
-        //        throw new ThrowsException(exceptionType, exception);
-        //    }
+            var typedException = exception as TException;
+            if (typedException == null || (!allowDerivedExceptions && typedException.GetType() != typeof(TException)))
+            {
+                throw new ThrowsException(exceptionType, exception);
+            }
 
-        //    return typedException;
-        //}
+            return typedException;
+        }
 
         /// <summary>
         /// Verifies that an exception of the given type (or optionally a derived type) is thrown.
@@ -127,11 +127,11 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static TException Throws<TException>(Func<object> testCode, bool allowDerivedExceptions)
-        //    where TException : Exception
-        //{
-        //    return Throws<TException>(() => { testCode(); }, allowDerivedExceptions);
-        //}
+        public static TException Throws<TException>(Func<object> testCode, bool allowDerivedExceptions)
+            where TException : Exception
+        {
+            return Throws<TException>(() => { testCode(); }, allowDerivedExceptions);
+        }
 
         /// <summary>
         /// Verifies that an exception of the given type (or optionally a derived type) is thrown.
@@ -161,11 +161,11 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static TException Throws<TException>(Func<object> testCode, string exceptionMessage, bool allowDerivedExceptions = false)
-        //    where TException : Exception
-        //{
-        //    return Throws<TException>(() => { testCode(); }, exceptionMessage, allowDerivedExceptions);
-        //}
+        public static TException Throws<TException>(Func<object> testCode, string exceptionMessage, bool allowDerivedExceptions = false)
+            where TException : Exception
+        {
+            return Throws<TException>(() => { testCode(); }, exceptionMessage, allowDerivedExceptions);
+        }
 
         /// <summary>
         /// Verifies that the code throws an <see cref="ArgumentException"/> (or optionally any exception which derives from it).
@@ -257,10 +257,10 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="paramName">The name of the parameter that should throw the exception</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentException ThrowsArgumentNullOrEmpty(Action testCode, string paramName)
-        //{
-        //    return Throws<ArgumentException>(testCode, "Value cannot be null or empty.\r\nParameter name: " + paramName, allowDerivedExceptions: false);
-        //}
+        public static ArgumentException ThrowsArgumentNullOrEmpty(Action testCode, string paramName)
+        {
+            return Throws<ArgumentException>(testCode, "Value cannot be null or empty.\r\nParameter name: " + paramName, allowDerivedExceptions: false);
+        }
 
         /// <summary>
         /// Verifies that the code throws an ArgumentNullException with the expected message that indicates that the value cannot
@@ -270,10 +270,10 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="paramName">The name of the parameter that should throw the exception</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentException ThrowsArgumentNullOrEmptyString(Action testCode, string paramName)
-        //{
-        //    return ThrowsArgument(testCode, paramName, "Value cannot be null or an empty string.", allowDerivedExceptions: true);
-        //}
+        public static ArgumentException ThrowsArgumentNullOrEmptyString(Action testCode, string paramName)
+        {
+            return ThrowsArgument(testCode, paramName, "Value cannot be null or an empty string.", allowDerivedExceptions: true);
+        }
 
         /// <summary>
         /// Verifies that the code throws an ArgumentOutOfRangeException (or optionally any exception which derives from it).
@@ -316,13 +316,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="value">The expected limit value.</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentOutOfRangeException ThrowsArgumentGreaterThan(Action testCode, string paramName, string value, object actualValue = null)
-        //{
-        //    return ThrowsArgumentOutOfRange(
-        //                testCode,
-        //                paramName,
-        //                String.Format(CultureReplacer.DefaultCulture, "Value must be greater than {0}.", value), false, actualValue);
-        //}
+        public static ArgumentOutOfRangeException ThrowsArgumentGreaterThan(Action testCode, string paramName, string value, object actualValue = null)
+        {
+            return ThrowsArgumentOutOfRange(
+                        testCode,
+                        paramName,
+                        String.Format(CultureReplacer.DefaultCulture, "Value must be greater than {0}.", value), false, actualValue);
+        }
 
         /// <summary>
         /// Verifies that the code throws an <see cref="ArgumentOutOfRangeException"/> with the expected message that indicates that
@@ -333,13 +333,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="value">The expected limit value.</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentOutOfRangeException ThrowsArgumentGreaterThanOrEqualTo(Action testCode, string paramName, string value, object actualValue = null)
-        //{
-        //    return ThrowsArgumentOutOfRange(
-        //                testCode,
-        //                paramName,
-        //                String.Format(CultureReplacer.DefaultCulture, "Value must be greater than or equal to {0}.", value), false, actualValue);
-        //}
+        public static ArgumentOutOfRangeException ThrowsArgumentGreaterThanOrEqualTo(Action testCode, string paramName, string value, object actualValue = null)
+        {
+            return ThrowsArgumentOutOfRange(
+                        testCode,
+                        paramName,
+                        String.Format(CultureReplacer.DefaultCulture, "Value must be greater than or equal to {0}.", value), false, actualValue);
+        }
 
         /// <summary>
         /// Verifies that the code throws an <see cref="ArgumentOutOfRangeException"/> with the expected message that indicates that
@@ -351,13 +351,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="maxValue">The expected limit value.</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentOutOfRangeException ThrowsArgumentLessThan(Action testCode, string paramName, string maxValue, object actualValue = null)
-        //{
-        //    return ThrowsArgumentOutOfRange(
-        //                testCode,
-        //                paramName,
-        //                String.Format(CultureReplacer.DefaultCulture, "Value must be less than {0}.", maxValue), false, actualValue);
-        //}
+        public static ArgumentOutOfRangeException ThrowsArgumentLessThan(Action testCode, string paramName, string maxValue, object actualValue = null)
+        {
+            return ThrowsArgumentOutOfRange(
+                        testCode,
+                        paramName,
+                        String.Format(CultureReplacer.DefaultCulture, "Value must be less than {0}.", maxValue), false, actualValue);
+        }
 
         /// <summary>
         /// Verifies that the code throws an <see cref="ArgumentOutOfRangeException"/> with the expected message that indicates that
@@ -369,13 +369,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="maxValue">The expected limit value.</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static ArgumentOutOfRangeException ThrowsArgumentLessThanOrEqualTo(Action testCode, string paramName, string maxValue, object actualValue = null)
-        //{
-        //    return ThrowsArgumentOutOfRange(
-        //                testCode,
-        //                paramName,
-        //                String.Format(CultureReplacer.DefaultCulture, "Value must be less than or equal to {0}.", maxValue), false, actualValue);
-        //}
+        public static ArgumentOutOfRangeException ThrowsArgumentLessThanOrEqualTo(Action testCode, string paramName, string maxValue, object actualValue = null)
+        {
+            return ThrowsArgumentOutOfRange(
+                        testCode,
+                        paramName,
+                        String.Format(CultureReplacer.DefaultCulture, "Value must be less than or equal to {0}.", maxValue), false, actualValue);
+        }
 
         /// <summary>
         /// Verifies that the code throws an HttpException (or optionally any exception which derives from it).
@@ -403,13 +403,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="allowDerivedExceptions">Pass true to allow exceptions which derive from TException; pass false, otherwise</param>
         /// <returns>The exception that was thrown, when successful</returns>
         /// <exception cref="ThrowsException">Thrown when an exception was not thrown, or when an exception of the incorrect type is thrown</exception>
-        //public static InvalidEnumArgumentException ThrowsInvalidEnumArgument(Action testCode, string paramName, int invalidValue, Type enumType, bool allowDerivedExceptions = false)
-        //{
-        //    string message = String.Format(CultureReplacer.DefaultCulture,
-        //                                   "The value of argument '{0}' ({1}) is invalid for Enum type '{2}'.{3}Parameter name: {0}",
-        //                                   paramName, invalidValue, enumType.Name, Environment.NewLine);
-        //    return Throws<InvalidEnumArgumentException>(testCode, message, allowDerivedExceptions);
-        //}
+        public static InvalidEnumArgumentException ThrowsInvalidEnumArgument(Action testCode, string paramName, int invalidValue, Type enumType, bool allowDerivedExceptions = false)
+        {
+            string message = String.Format(CultureReplacer.DefaultCulture,
+                                           "The value of argument '{0}' ({1}) is invalid for Enum type '{2}'.{3}Parameter name: {0}",
+                                           paramName, invalidValue, enumType.Name, Environment.NewLine);
+            return Throws<InvalidEnumArgumentException>(testCode, message, allowDerivedExceptions);
+        }
 
         /// <summary>
         /// Verifies that the code throws an HttpException (or optionally any exception which derives from it).
@@ -441,24 +441,24 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <remarks>
         /// Unlike other Throws* methods, this method does not enforce running the exception delegate with a known Thread Culture.
         /// </remarks>
-        //public new static async Task<TException> ThrowsAsync<TException>(Func<Task> testCode)
-        //    where TException : Exception
-        //{
-        //    Exception exception = null;
-        //    try
-        //    {
-        //        // The 'testCode' Task might execute asynchronously in a different thread making it hard to enforce the thread culture.
-        //        // The correct way to verify exception messages in such a scenario would be to run the task synchronously inside of a 
-        //        // culture enforced block.
-        //        await testCode();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        exception = ex;
-        //    }
-        //    VerifyException(typeof(TException), exception);
-        //    return (TException)exception;
-        //}
+        public static async Task<TException> ThrowsAsync<TException>(Func<Task> testCode)
+            where TException : Exception
+        {
+            Exception exception = null;
+            try
+            {
+                // The 'testCode' Task might execute asynchronously in a different thread making it hard to enforce the thread culture.
+                // The correct way to verify exception messages in such a scenario would be to run the task synchronously inside of a 
+                // culture enforced block.
+                await testCode();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            VerifyException(typeof(TException), exception);
+            return (TException)exception;
+        }
 
         // We've re-implemented all the xUnit.net Throws code so that we can get this 
         // updated implementation of RecordException which silently unwraps any instances

@@ -11,7 +11,6 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -111,17 +110,19 @@ namespace Microsoft.Test.AspNet.OData
         public void GetPropertyValue_ThrowsInvalidOperation_IfEdmObjectGetEdmTypeReturnsNull()
         {
             // Arrange
-            object outObject;
-            Mock<IEdmEntityObject> mock = new Mock<IEdmEntityObject>();
-            mock.Setup(o => o.TryGetPropertyValue(It.IsAny<string>(), out outObject)).Returns(false).Verifiable();
-            mock.Setup(o => o.GetEdmType()).Returns<IEdmTypeReference>(null).Verifiable();
+            NullEdmType edmObject = new NullEdmType();
             ResourceContext context = new ResourceContext();
-            context.EdmObject = mock.Object;
+            context.EdmObject = edmObject;
 
             // Act & Assert
             ExceptionAssert.Throws<InvalidOperationException>(() => context.GetPropertyValue("SomeProperty"),
+<<<<<<< HEAD
                 "The EDM type of an IEdmObject cannot be null.", partialMatch: true);
             mock.Verify();
+=======
+                exceptionMessage: "The EDM type of the object of type 'Microsoft.Test.AspNet.OData.ResourceContextTest+NullEdmType'" +
+                " is null. The EDM type of an IEdmObject cannot be null.");
+>>>>>>> Squashed commit of the following:
         }
 
         [Fact]
@@ -292,11 +293,31 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Same(instance, entityContext.ResourceInstance);
         }
 
+        /// <summary>
+        /// A simple class with a property and collection property.
+        /// </summary>
         private class TestEntity
         {
             public int Property { get; set; }
 
             public int[] CollectionProperty { get; set; }
+        }
+
+        /// <summary>
+        /// An instance of IEdmEntityObject with no EdmType.
+        /// </summary>
+        private class NullEdmType : IEdmEntityObject
+        {
+            public IEdmTypeReference GetEdmType()
+            {
+                return null;
+            }
+
+            public bool TryGetPropertyValue(string propertyName, out object value)
+            {
+                value = null;
+                return false;
+            }
         }
     }
 }

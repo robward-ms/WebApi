@@ -23,7 +23,6 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {

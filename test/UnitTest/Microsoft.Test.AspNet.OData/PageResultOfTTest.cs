@@ -7,7 +7,6 @@ using System.Net.Http.Formatting;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
