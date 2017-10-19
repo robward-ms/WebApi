@@ -15,6 +15,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
@@ -319,7 +320,7 @@ namespace Microsoft.Test.AspNet.OData
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Version", value } };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyEtagCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet customers = model.FindDeclaredEntitySet("Customers");
@@ -372,7 +373,7 @@ namespace Microsoft.Test.AspNet.OData
             };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyEtagOrder>("Orders");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet orders = model.FindDeclaredEntitySet("Orders");

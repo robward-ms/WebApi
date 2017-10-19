@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -196,7 +197,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel GetSampleModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<EnumComplex>();
 
             FunctionConfiguration function = builder.Function("NullableEnumFunction").Returns<bool>();

@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
@@ -54,7 +55,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DependencyInjectionModel>("DependencyInjectionModels");
             return builder.GetEdmModel();
         }

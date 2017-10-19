@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -192,7 +193,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private IEdmModel GetModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ContainerName = "Container";
             builder.Namespace = "org.odata";
             EntityTypeConfiguration<Customer> customer = builder.EntitySet<Customer>("Customers").EntityType;

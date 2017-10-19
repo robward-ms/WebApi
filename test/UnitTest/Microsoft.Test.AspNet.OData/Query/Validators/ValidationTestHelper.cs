@@ -6,6 +6,7 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Expressions;
 using Microsoft.Test.AspNet.OData.TestCommon;
 
@@ -48,7 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
         {
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(QueryCompositionCustomer)));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<QueryCompositionCustomer>("Customer");
             builder.EntityType<QueryCompositionCustomerBase>();
             return builder.GetEdmModel();
@@ -73,7 +74,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
         {
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Product)));
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<Product>("Product");
             return builder;
         }

@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -380,7 +381,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private IEdmModel GetModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             builder.Ignore<SelectExpandTestSpecialCustomer>();
@@ -390,7 +391,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private IEdmModel GetModelWithInheritance()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             return builder.GetEdmModel();
@@ -416,7 +417,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private IEdmModel GetModelWithOperations()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Player>("Players");
 
             // Actions

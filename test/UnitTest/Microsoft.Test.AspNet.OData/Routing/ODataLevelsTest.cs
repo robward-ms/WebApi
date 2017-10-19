@@ -9,12 +9,12 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -586,7 +586,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
         public static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<LevelsBaseEntity>("LevelsBaseEntities");
             builder.EntitySet<LevelsEntity>("LevelsEntities");
             builder.EntitySet<LevelsDerivedEntity>("LevelsDerivedEntities");

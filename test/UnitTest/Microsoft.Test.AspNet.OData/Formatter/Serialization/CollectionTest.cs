@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -242,7 +243,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
         private static IEdmModel GetSampleModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<Person>();
 
             // Employee is derived from Person. Employee has a property named manager it's Employee type.

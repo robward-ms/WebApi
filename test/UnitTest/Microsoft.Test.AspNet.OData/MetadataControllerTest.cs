@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Moq;
@@ -69,11 +70,11 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void DollarMetadata_Works_WithMultipleModels()
         {
-            ODataConventionModelBuilder builder1 = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder1 = ODataConventionModelBuilderFactory.Create();
             builder1.EntitySet<FormatterPerson>("People1");
             var model1 = builder1.GetEdmModel();
 
-            ODataConventionModelBuilder builder2 = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder2 = ODataConventionModelBuilderFactory.Create();
             builder2.EntitySet<FormatterPerson>("People2");
             var model2 = builder2.GetEdmModel();
 
@@ -91,7 +92,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_WithReferencialConstraint_IfForeignKeyAttributeOnNavigationProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ForeignCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -115,7 +116,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_ForNullableReferencialConstraint_WithfForeignKeyAttribute()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct>("Products");
             IEdmModel model = builder.GetEdmModel();
 
@@ -184,7 +185,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_ForNullableReferencialConstraint_WithForeignKeyAttributeAndRequiredAttribute()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct2>("Products");
             IEdmModel model = builder.GetEdmModel();
 
@@ -233,7 +234,7 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"FkSupplier3Id\" ReferencedProperty=\"Id\" />" +
                 "</NavigationProperty>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct3>("Products");
             IEdmModel model = builder.GetEdmModel();
 
@@ -257,7 +258,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_WithReferencialConstraint_IfForeignKeyAttributeOnForeignKeyProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ForeignCustomer2>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -388,7 +389,7 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"DerivedPrincipalEntityId\" ReferencedProperty=\"Id\" />" +
                 "</NavigationProperty>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DerivedPrincipalEntity>("Principals");
             builder.EntitySet<DependentEntity>("Dependents");
             IEdmModel model = builder.GetEdmModel();
@@ -463,7 +464,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_WithOpenComplexType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -486,7 +487,7 @@ namespace Microsoft.Test.AspNet.OData
         public void DollarMetadata_Works_WithInheritanceOpenComplexType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -526,7 +527,7 @@ namespace Microsoft.Test.AspNet.OData
                 "</Schema>" +
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<ComplexBaseType>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -564,7 +565,7 @@ namespace Microsoft.Test.AspNet.OData
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EntityTypeConfiguration<FormatterPerson> person = builder.EntityType<FormatterPerson>();
 
             ActionConfiguration action = person.Action("NullableAction").Returns<FormatterAddress>();
@@ -611,7 +612,7 @@ namespace Microsoft.Test.AspNet.OData
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EntityTypeConfiguration<FormatterPerson> person = builder.EntityType<FormatterPerson>();
 
             FunctionConfiguration function = person.Function("NullableFunction").Returns<FormatterAddress>();
@@ -759,7 +760,7 @@ namespace Microsoft.Test.AspNet.OData
                     "</Annotation>" +
                 "</EntitySet>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<CustomerWithConcurrencyAttribute>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -959,7 +960,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
             config.Routes.MapHttpRoute("Default", "{controller}/{action}");
-            config.MapODataServiceRoute(new ODataConventionModelBuilder().GetEdmModel());
+            config.MapODataServiceRoute(ODataConventionModelBuilderFactory.Create().GetEdmModel());
             config.EnsureInitialized();
             var explorer = config.Services.GetApiExplorer();
 
@@ -972,7 +973,7 @@ namespace Microsoft.Test.AspNet.OData
         public void RequiredAttribute_Works_OnComplexTypeProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FormatterAccount>("Accounts");
 
             var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
@@ -1099,7 +1100,7 @@ namespace Microsoft.Test.AspNet.OData
                   "<EntitySet Name=\"Cities\" EntityType=\"Microsoft.Test.AspNet.OData.Formatter.BindingCity\" />" +
               "</EntityContainer>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<BindingCustomer>("Customers");
             builder.EntitySet<BindingCity>("Cities");
 

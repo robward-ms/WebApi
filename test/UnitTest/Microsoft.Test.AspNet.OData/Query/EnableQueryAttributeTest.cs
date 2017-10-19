@@ -23,6 +23,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Controllers;
 using Microsoft.Test.AspNet.OData.Query.Validators;
 using Microsoft.Test.AspNet.OData.Routing;
@@ -670,7 +671,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void CreateQueryContext_ReturnsQueryContext_ForNonMatchingModelOnRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             var model = builder.GetEdmModel();
             var entityClrType = typeof(QueryCompositionCustomer);
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
@@ -689,7 +690,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void CreateQueryContext_ReturnsQueryContext_ForMatchingModelOnRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<QueryCompositionCustomer>("customers");
             var model = builder.GetEdmModel();
             var entityClrType = typeof(QueryCompositionCustomer);
@@ -744,7 +745,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 "http://localhost:8080/QueryCompositionCustomer/?$filter=Id eq 2",
                 QueryCompositionCustomerController.CustomerList.AsQueryable());
 
-            ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataModelBuilder modelBuilder = ODataConventionModelBuilderFactory.Create();
             modelBuilder.EntitySet<QueryCompositionCustomer>(typeof(QueryCompositionCustomer).Name);
             IEdmModel model = modelBuilder.GetEdmModel();
             model.SetAnnotationValue<ClrTypeAnnotation>(model.FindType("Microsoft.Test.AspNet.OData.Query.QueryCompositionCustomer"), null);

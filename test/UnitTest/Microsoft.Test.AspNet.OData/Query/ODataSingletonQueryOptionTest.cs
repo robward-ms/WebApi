@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetEdmModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.Singleton<Customer>("Me");
             builder.EntitySet<Order>("Orders");
             builder.EntitySet<Customer>("Customers");

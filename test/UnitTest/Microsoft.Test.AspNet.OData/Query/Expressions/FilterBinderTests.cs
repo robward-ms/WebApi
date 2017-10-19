@@ -18,6 +18,7 @@ using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -2010,7 +2011,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public void SingleQuotesOnTypeNameOfCast_WorksForNow(string filter)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DataTypes>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet entitySet = model.FindDeclaredEntitySet("Customers");
@@ -2027,7 +2028,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public void SingleQuotesOnEnumTypeNameOfCast_WorksForNow()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DataTypes>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet entitySet = model.FindDeclaredEntitySet("Customers");
@@ -2984,7 +2985,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             if (!_modelCache.TryGetValue(key, out value))
             {
-                ODataModelBuilder model = new ODataConventionModelBuilder();
+                ODataModelBuilder model = ODataConventionModelBuilderFactory.Create();
                 model.EntitySet<T>("Products");
                 if (key == typeof(Product))
                 {

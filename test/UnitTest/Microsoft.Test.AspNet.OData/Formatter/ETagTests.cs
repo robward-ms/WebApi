@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
@@ -220,7 +221,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             HttpRequestMessage request = new HttpRequestMessage();
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyETagCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntityType customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(e => e.Name == "MyEtagCustomer");
@@ -310,7 +311,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             HttpRequestMessage request = new HttpRequestMessage();
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyETagOrder>("Orders");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet orders = model.FindDeclaredEntitySet("Orders");

@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
@@ -92,7 +93,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void WriteToStreamAsyncReturnsODataRepresentation()
         {
             // Arrange
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = ODataConventionModelBuilderFactory.Create();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
 
@@ -122,7 +123,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [InlineData("{a}/{b}", "http://localhost/prefix/prefix2")]
         public void WriteToStreamAsync_ReturnsCorrectBaseUri(string routePrefix, string baseUri)
         {
-            IEdmModel model = new ODataConventionModelBuilder().GetEdmModel();
+            IEdmModel model = ODataConventionModelBuilderFactory.Create().GetEdmModel();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, baseUri);
             HttpConfiguration configuration = new HttpConfiguration();
             string routeName = "Route";
@@ -146,7 +147,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void WriteToStreamAsync_Throws_WhenBaseUriCannotBeGenerated()
         {
-            IEdmModel model = new ODataConventionModelBuilder().GetEdmModel();
+            IEdmModel model = ODataConventionModelBuilderFactory.Create().GetEdmModel();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/");
             request.EnableODataDependencyInjectionSupport();
             request.GetConfiguration().Routes.MapHttpRoute(HttpRouteCollectionExtensions.RouteName, "{param}");
@@ -408,7 +409,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void ReadFromStreamAsync_ThrowsInvalidOperation_WithoutRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 
@@ -420,7 +421,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void WriteToStreamAsync_ThrowsInvalidOperation_WithoutRequest()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 

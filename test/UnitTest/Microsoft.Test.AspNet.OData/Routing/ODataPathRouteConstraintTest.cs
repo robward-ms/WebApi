@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataPathRouteConstraintTest
     {
-        IEdmModel _model = new ODataConventionModelBuilder().GetEdmModel();
+        IEdmModel _model = ODataConventionModelBuilderFactory.Create().GetEdmModel();
         string _routeName = "name";
         IEnumerable<IODataRoutingConvention> _conventions = ODataRoutingConventions.CreateDefault();
         HttpRequestMessage _request = new HttpRequestMessage();

@@ -18,6 +18,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -178,7 +179,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 }
             };
 
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<SimpleOpenAddress>();
             IEdmModel model = builder.GetEdmModel();
             ODataSerializerContext writeContext = new ODataSerializerContext { Model = model };
@@ -650,7 +651,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             string expectedTarget = "aa://Target";
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FeedCustomer>("Customers");
             var function = builder.EntityType<FeedCustomer>().Collection.Function("MyFunction").Returns<int>();
             function.HasFeedFunctionLink(a => new Uri(expectedTarget), followConventions);

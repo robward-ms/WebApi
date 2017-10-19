@@ -22,6 +22,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -378,7 +379,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void EnumKeySimpleSerializerTest(string entitySet)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>(entitySet);
             builder.EntityType<EnumCustomer>().HasKey(c => c.Color);
             IEdmModel model = builder.GetEdmModel();
@@ -409,7 +410,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void EnumTypeRoundTripTest()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -477,7 +478,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private HttpResponseMessage GetEnumResponse(string acceptHeader)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
 
@@ -501,7 +502,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void EnumSerializer_HasMetadataType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -537,7 +538,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void RequestProperty_HasCorrectContextUrl()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -563,7 +564,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void ODataCollectionSerializer_SerializeIQueryableOfIEdmEntityObject()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<CollectionSerializerCustomer>("CollectionSerializerCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(CollectionSerializerCustomersController) };
@@ -598,7 +599,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
     ""Green""
   ]
 }";
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
@@ -760,7 +761,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private static IEdmModel GetKeyCustomerOrderModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
 
             builder.EntityType<KeyCustomer>().HasKey(c => c.Id);
             builder.EntityType<KeyOrder>().HasKey(c =>new { c.StringKey, c.DateKey, c.GuidKey});

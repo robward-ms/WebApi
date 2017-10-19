@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
@@ -27,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage();
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -58,7 +59,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -141,7 +142,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -160,7 +161,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -177,7 +178,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -194,7 +195,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -213,7 +214,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
@@ -230,7 +231,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
             message.EnableHttpDependencyInjectionSupport();
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));

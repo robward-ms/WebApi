@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
+using Microsoft.Test.AspNet.OData.Factories;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Query.Expressions
@@ -200,7 +201,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             if (!_modelCache.TryGetValue(key, out value))
             {
-                ODataModelBuilder model = new ODataConventionModelBuilder();
+                ODataModelBuilder model = ODataConventionModelBuilderFactory.Create();
                 model.EntitySet<T>("Products");
                 if (key == typeof(Product))
                 {

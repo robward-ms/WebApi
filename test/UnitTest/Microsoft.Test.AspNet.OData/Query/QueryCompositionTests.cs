@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
@@ -241,7 +242,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             {
                 if (_queryCompositionCustomerModel == null)
                 {
-                    ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+                    ODataModelBuilder modelBuilder = ODataConventionModelBuilderFactory.Create();
                     modelBuilder.EntitySet<QueryCompositionCustomer>(typeof(QueryCompositionCustomer).Name);
                     _queryCompositionCustomerModel = modelBuilder.GetEdmModel();
                 }

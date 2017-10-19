@@ -13,6 +13,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Expressions;
 using Microsoft.Test.AspNet.OData.Query.Validators;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -904,7 +905,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(EnumModel)));
-            var builder = new ODataConventionModelBuilder(config);
+            var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<EnumModel>("EnumModels");
             return builder.GetEdmModel();
         }
@@ -913,7 +914,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
-            var builder = new ODataConventionModelBuilder(config);
+            var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("CastModels");
             return builder.GetEdmModel();
         }
@@ -922,7 +923,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
-            var builder = new ODataConventionModelBuilder(config);
+            var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("ParameterAliasModels");
             return builder.GetEdmModel();
         }
@@ -931,7 +932,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(PropertyAlias)));
-            var builder = new ODataConventionModelBuilder(config) { ModelAliasingEnabled = true };
+            var builder = ODataConventionModelBuilderFactory.CreateWithModelAliasing(config, modelAliasing: true);
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             return builder.GetEdmModel();
         }

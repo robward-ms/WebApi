@@ -11,6 +11,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Validators;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -234,7 +235,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void ApplyToEnums_ReturnsCorrectQueryable()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<EnumModel>("EnumModels");
             var model = builder.GetEdmModel();
 

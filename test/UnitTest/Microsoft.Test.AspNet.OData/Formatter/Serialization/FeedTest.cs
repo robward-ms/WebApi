@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
@@ -65,7 +66,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
         private static IEdmModel GetSampleModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Employee>("employees");
             builder.EntitySet<WorkItem>("workitems");
             return builder.GetEdmModel();

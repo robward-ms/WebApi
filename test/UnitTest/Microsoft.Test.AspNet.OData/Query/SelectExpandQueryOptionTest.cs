@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
@@ -173,7 +174,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             // Arrange
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver());
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder(new HttpConfiguration(), isQueryCompositionMode: true);
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(new HttpConfiguration(), isQueryCompositionMode: true);
             builder.EntityType<Customer>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -706,7 +707,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private IEdmModel GetAutoExpandEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<AutoExpandCustomer>("AutoExpandCustomers");
             builder.EntitySet<AutoExpandOrder>("AutoExpandOrders");
             builder.EntitySet<AutoExpandChoiceOrder>("AutoExpandChoiceOrders");

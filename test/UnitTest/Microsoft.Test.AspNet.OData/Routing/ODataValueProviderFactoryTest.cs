@@ -9,6 +9,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             MockAssembly assembly = new MockAssembly(typeof(TestController));
             server.Configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(assembly));
 
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<TestClass>("Test");
             server.Configuration.MapODataServiceRoute("odata", "", builder.GetEdmModel());
             HttpClient client = new HttpClient(server);

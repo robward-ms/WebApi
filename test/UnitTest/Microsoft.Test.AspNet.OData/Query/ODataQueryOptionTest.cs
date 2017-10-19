@@ -18,6 +18,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Expressions;
 using Microsoft.Test.AspNet.OData.Query.Validators;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -959,7 +960,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost" + queryOption);
             request.EnableHttpDependencyInjectionSupport();
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
             ODataQueryOptions options = new ODataQueryOptions(context, request);
@@ -992,7 +993,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost" + queryOption);
             request.EnableHttpDependencyInjectionSupport();
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
             ODataQueryOptions options = new ODataQueryOptions(context, request);
@@ -1178,7 +1179,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                     typeof(EntityModelsController),
                     typeof(ProductsController)));
 
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ODataQueryOptionTest_EntityModel>("EntityModels");
             builder.EntitySet<MyProduct>("Products");
             builder.EntitySet<ODataQueryOptionTest_EntityModelMultipleKeys>("ODataQueryOptionTest_EntityModelMultipleKeys");

@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -137,7 +138,7 @@ namespace Microsoft.Test.AspNet.OData
         public void MapODataServiceRoute_ConfigEnsureInitialized_DoesNotThrowForValidPathTemplateWithAttributeRouting()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             IEdmModel model = builder.GetEdmModel();
             HttpConfiguration configuration = new[] { typeof(CustomersController) }.GetHttpConfiguration();
@@ -151,7 +152,7 @@ namespace Microsoft.Test.AspNet.OData
         public void MapODataServiceRoute_ConfigEnsureInitialized_DoesNotThrowForInvalidPathTemplateWithoutAttributeRouting()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers").EntityType.Ignore(c => c.Name);
             IEdmModel model = builder.GetEdmModel();
             HttpConfiguration configuration = new[] { typeof(CustomersController) }.GetHttpConfiguration();

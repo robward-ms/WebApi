@@ -15,6 +15,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -275,7 +276,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel BuildModel()
         {
-            var mb = new ODataConventionModelBuilder();
+            var mb = ODataConventionModelBuilderFactory.Create();
             mb.EntitySet<Customer>("Customers");
             mb.EntitySet<Navigation>("Navigations");
             mb.Singleton<Navigation>("BestNavigation");

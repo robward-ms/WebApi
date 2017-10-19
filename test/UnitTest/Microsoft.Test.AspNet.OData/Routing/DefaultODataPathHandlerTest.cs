@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Xunit;
@@ -1101,7 +1102,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void CanParseUndefinedEnumValue(Type enumerationType, string enumerationExpression)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EnumTypeConfiguration enumTypeConfiguration = builder.AddEnumType(enumerationType);
             FunctionConfiguration functionConfiguration = builder.Function("FunctionWithEnumParam");
             functionConfiguration.AddParameter("Enum", enumTypeConfiguration);
@@ -1121,7 +1122,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void CannotParseInvalidEnumValue(Type enumerationType, string enumerationExpression)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EnumTypeConfiguration enumTypeConfiguration = builder.AddEnumType(enumerationType);
             FunctionConfiguration functionConfiguration = builder.Function("FunctionWithEnumParam");
             functionConfiguration.AddParameter("Enum", enumTypeConfiguration);
@@ -1371,7 +1372,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void CanParse_FunctionParametersAlias_WithUnresolvedPathSegment()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ConventionCustomer>("Customers");
             FunctionConfiguration function = builder.Function("UnboundFunction");
             function.Parameter<int>("P1");
@@ -1399,7 +1400,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void CanParse_UntouchedFunctionParametersAlias_WithUnresolvedPathSegment()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ConventionCustomer>("Customers");
             FunctionConfiguration function = builder.Function("UnboundFunction");
             function.Parameter<int>("P1");
@@ -2077,7 +2078,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void DefaultODataPathHandler_Throws_NotNavigablePropertyInPath(string path)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             var customer = builder.EntitySet<ODataRoutingModel.RoutingCustomer>("Customers").EntityType;
             customer.HasMany(c => c.Products).IsNotNavigable();
             builder.EntitySet<ODataRoutingModel.Product>("Products");

@@ -67,12 +67,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
                 var people = model.EntitySet<FormatterPerson>("People");
 
-                people.HasFeedSelfLink(context => new Uri(context.Url.CreateODataLink(new EntitySetSegment(
+                people.HasFeedSelfLink(context => new Uri(context.InternalUrlHelper.CreateODataLink(new EntitySetSegment(
                     context.EntitySetBase as IEdmEntitySet))));
                 people.HasIdLink(context =>
                 {
                     var keys = new[] {new KeyValuePair<string, object>("PerId", context.GetPropertyValue("PerId"))};
-                        return new Uri(context.Url.CreateODataLink(
+                        return new Uri(context.InternalUrlHelper.CreateODataLink(
                             new EntitySetSegment(context.NavigationSource as IEdmEntitySet),
                             new KeySegment(keys, context.StructuredType as IEdmEntityType, context.NavigationSource)));
                     },
@@ -146,7 +146,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 var president = model.Singleton<FormatterPerson>("President");
                 president.HasIdLink(context =>
                     {
-                        return new Uri(context.Url.CreateODataLink(new SingletonSegment((IEdmSingleton)context.NavigationSource)));
+                        return new Uri(context.InternalUrlHelper.CreateODataLink(new SingletonSegment((IEdmSingleton)context.NavigationSource)));
                     },
                     followsConventions: false);
 

@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -170,7 +171,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void SelectAction_ReturnsNull_IfPostToNavigationPropertyBindingToNonCollectionValuedNavigationProperty(string path)
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Company>("Companies");
             builder.Singleton<Company>("MyCompany");
             builder.EntitySet<Employee>("Employees");

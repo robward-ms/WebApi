@@ -15,6 +15,7 @@ using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
@@ -695,7 +696,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
         {
             HttpConfiguration config = new HttpConfiguration();
             config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Customer)));
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create(config);
             builder.ContainerName = "C";
             builder.Namespace = "A.B";
             EntityTypeConfiguration<Customer> customer = builder.EntitySet<Customer>("Customers").EntityType;

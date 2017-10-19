@@ -15,6 +15,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -140,7 +141,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
         public static IEdmModel GetEdmModel()
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             var entityCollection = builder.EntitySet<DollarCountEntity>("DollarCountEntities").EntityType.Collection;
 
             // Add unbound functions that return collection.
