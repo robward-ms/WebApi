@@ -177,7 +177,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class InheritanceQueryableTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var types = new[] { 
                 typeof(InheritanceQueryable_Customer), 
@@ -242,12 +242,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetReadOnlyPropertyType?$filter=ReadOnlyProperty eq 8").Result;
             response.EnsureSuccessStatusCode();
             var actual = response.Content.ReadAsAsync<IEnumerable<ReadOnlyPropertyType>>().Result;
-            Assert.Equal(1, actual.Count());
+            Assert.Single(actual);
 
             response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetReadOnlyPropertyType?$filter=ReadOnlyProperty eq 7").Result;
             response.EnsureSuccessStatusCode();
             actual = response.Content.ReadAsAsync<IEnumerable<ReadOnlyPropertyType>>().Result;
-            Assert.Equal(0, actual.Count());
+            Assert.Empty(actual);
         }
     }
 }

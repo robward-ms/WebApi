@@ -31,7 +31,7 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -64,7 +64,7 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         }
 
         [Theory]
-        [PropertyData("UnqualifiedCallCases")]
+        [MemberData(nameof(UnqualifiedCallCases))]
         public async Task EnableUnqualifiedCallTest(string method, string caseSensitive, string caseInsensitive)
         {
             // Case sensitive

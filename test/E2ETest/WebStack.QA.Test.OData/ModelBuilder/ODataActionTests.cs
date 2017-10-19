@@ -26,7 +26,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     public class ODataActionTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -117,7 +117,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
                 new BodyOperationParameter("newRating", newRating)).Result.ToList();
 
             Assert.NotNull(products);
-            Assert.Equal(1, products.Count());
+            Assert.Single(products);
 
             foreach (ODataActionTests_Product prod in products)
             {

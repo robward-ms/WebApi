@@ -33,7 +33,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[]
             {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};
@@ -115,10 +115,10 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         }
 
         [Theory]
-        [PropertyData("PrimitivePropertyFilters")]
-        [PropertyData("EnumPropertyFilters")]
-        [PropertyData("ComplexPropertyFilters")]
-        [PropertyData("EntityPropertyFilters")]
+        [MemberData(nameof(PrimitivePropertyFilters))]
+        [MemberData(nameof(EnumPropertyFilters))]
+        [MemberData(nameof(ComplexPropertyFilters))]
+        [MemberData(nameof(EntityPropertyFilters))]
         [InlineData("?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", null)]
         public async Task QueryEntitySetUsingProperty_UsingInMemoryData(string filter, string expected)
         {
@@ -147,8 +147,8 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         }
 
         [Theory]
-        [PropertyData("PrimitivePropertyFilters")]
-        [PropertyData("EnumPropertyFilters")]
+        [MemberData(nameof(PrimitivePropertyFilters))]
+        [MemberData(nameof(EnumPropertyFilters))]
         public async Task QueryEntitySetUsingPropertyFailed_UsingEFDataForPrimitiveAndEnum(string filter, string expected)
         {
             // Arrange
@@ -158,6 +158,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             HttpResponseMessage response = await Client.GetAsync(requestUri);
 
             // Assert
+            Assert.DoesNotContain("unused", expected);
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
             Assert.Contains("Only entity types and complex types are supported in LINQ to Entities queries.",
@@ -165,7 +166,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         }
 
         [Theory]
-        [PropertyData("EntityPropertyFilters")]
+        [MemberData(nameof(EntityPropertyFilters))]
         [InlineData("?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3")]
         public async Task QueryEntitySetUsingProperty_UsingEFData(string filter, string expected)
         {
@@ -242,7 +243,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         }
 
         [Theory]
-        [PropertyData("IsOfFilterOnType")]
+        [MemberData(nameof(IsOfFilterOnType))]
         public async Task IsOfFilterQueryOnTypeWorks(string filter, string expected)
         {
             foreach (string dataSourceMode in DataSourceTypes)
@@ -287,7 +288,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
 
                 JArray value = responseString["value"] as JArray;
                 Assert.NotNull(value);
-                Assert.Equal(0, value.Count);
+                Assert.Empty(value);
 
                 Assert.Equal("", string.Join(",", value.Select(e => (int)e["Id"])));
             }

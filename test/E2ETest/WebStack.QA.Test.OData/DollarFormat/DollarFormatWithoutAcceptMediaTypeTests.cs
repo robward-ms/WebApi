@@ -118,7 +118,7 @@ namespace WebStack.QA.Test.OData.DollarFormat
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -135,7 +135,7 @@ namespace WebStack.QA.Test.OData.DollarFormat
         }
 
         [Theory]
-        [PropertyData("FeedMediaTypes")]
+        [MemberData(nameof(FeedMediaTypes))]
         public async Task QueryFeedWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string expand = "$expand=SpecialOrder($select=Detail)";
@@ -154,21 +154,21 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("type"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.metadata"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -177,16 +177,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("EntryMediaTypes")]
+        [MemberData(nameof(EntryMediaTypes))]
         public async Task QueryEntryWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$format={0}", dollarFormat);
@@ -200,21 +200,21 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("type"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.metadata"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -223,16 +223,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("BasicMediaTypes")]
+        [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryPropertyWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$select=Name&$format={0}", dollarFormat);
@@ -246,14 +246,14 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -262,16 +262,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("BasicMediaTypes")]
+        [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryNavigationPropertyWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$select=SpecialOrder&$expand=SpecialOrder&$format={0}", dollarFormat);
@@ -286,14 +286,14 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -302,16 +302,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("BasicMediaTypes")]
+        [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryCollectionWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$select=Orders&$expand=Orders&$format={0}", dollarFormat);
@@ -326,14 +326,14 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -342,16 +342,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("ServiceDocumentMediaTypes")]
+        [MemberData(nameof(ServiceDocumentMediaTypes))]
         public async Task QueryServiceDocumentWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$format={0}", dollarFormat);
@@ -366,14 +366,14 @@ namespace WebStack.QA.Test.OData.DollarFormat
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.metadata"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("odata.streaming"))
             {
                 var param = response.Content.Headers.ContentType.Parameters.FirstOrDefault(e => e.Name.Equals("odata.streaming"));
                 Assert.NotNull(param);
-                Assert.True(dollarFormat.ToLowerInvariant().Contains(param.Value));
+                Assert.Contains(param.Value, dollarFormat.ToLowerInvariant());
             }
 
             if (dollarFormat.ToLowerInvariant().Contains("atom"))
@@ -382,16 +382,16 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                Assert.DoesNotThrow(() => response.Content.ReadAsAsync<JObject>());
+                response.Content.ReadAsAsync<JObject>().RunSynchronously();
             }
         }
 
         [Theory]
-        [PropertyData("MetadataDocumentMediaTypes")]
+        [MemberData(nameof(MetadataDocumentMediaTypes))]
         public async Task QueryMetadataDocumentWithDollarFormatWithoutAcceptMediaTypeTests(string dollarFormat, string expectMediaType)
         {
             string query = string.Format("?$format={0}", dollarFormat);
@@ -401,7 +401,7 @@ namespace WebStack.QA.Test.OData.DollarFormat
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(expectMediaType, response.Content.Headers.ContentType.MediaType);
-            Assert.DoesNotThrow(() => XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+            XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class ComplextTypeCollectionTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
 

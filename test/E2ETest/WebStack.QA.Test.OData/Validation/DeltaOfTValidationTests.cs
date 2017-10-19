@@ -30,7 +30,7 @@ namespace WebStack.QA.Test.OData.Validation
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -57,7 +57,7 @@ namespace WebStack.QA.Test.OData.Validation
         }
 
         [Theory]
-        [PropertyData("CanValidatePatchesData")]
+        [MemberData(nameof(CanValidatePatchesData))]
         public void CanValidatePatches(object payload, HttpStatusCode expectedResponseCode, string message)
         {
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("PATCH"), BaseAddress + "/odata/PatchCustomers(5)");

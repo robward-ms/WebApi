@@ -7,6 +7,7 @@ using System.Web.Http;
 using Microsoft.OData.Client;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight
@@ -46,7 +47,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

@@ -170,7 +170,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class GlobalQueryableFilterWithoutResultLimitTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
@@ -189,7 +189,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
             var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
 
-            Assert.Equal(1, actual.Count());
+            Assert.Single(actual);
         }
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedOptions")]
@@ -236,7 +236,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class GlobalQueryableFilterWithResultLimitTests : GlobalQueryableFilterWithoutResultLimitTests
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration1(HttpConfiguration configuration)
+        internal static void UpdateConfiguration1(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
@@ -248,7 +248,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new DerivedQueryableAttribute());
@@ -257,7 +257,6 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedQAttrResultLimit")]

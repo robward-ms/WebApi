@@ -31,7 +31,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(MetadataController), typeof(InheritanceCustomersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

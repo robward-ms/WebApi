@@ -20,7 +20,7 @@ namespace WebStack.QA.Test.OData.Aggregation
         private const string AggregationTestBaseUrl = "{0}/pagedaggregation/Customers";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -57,7 +57,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
         }
     }
 }

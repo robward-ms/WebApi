@@ -46,7 +46,7 @@ namespace WebStack.QA.Test.OData.Routing
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -64,7 +64,7 @@ namespace WebStack.QA.Test.OData.Routing
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }

@@ -25,7 +25,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

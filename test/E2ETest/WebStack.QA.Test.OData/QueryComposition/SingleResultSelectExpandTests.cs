@@ -23,7 +23,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class SingleResultExpandTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -81,7 +81,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
             var json = await response.Content.ReadAsAsync<JObject>();
             Assert.NotNull(json);
-            Assert.True(json.Properties().Any(p => p.Name == "#Default.CreditRating"));
+            Assert.Contains(json.Properties(), (p) => p.Name == "#Default.CreditRating");
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
             var json = await response.Content.ReadAsAsync<JObject>();
             Assert.NotNull(json);
-            Assert.Equal(1, json.Properties().Count());
+            Assert.Single(json.Properties());
             Assert.Equal("Name", json.Properties().Single().Name);
         }
 

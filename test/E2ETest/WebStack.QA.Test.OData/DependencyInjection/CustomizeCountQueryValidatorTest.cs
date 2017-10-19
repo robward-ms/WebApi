@@ -25,7 +25,7 @@ namespace WebStack.QA.Test.OData.DependencyInjection
         private const string OrderBaseUrl = "{0}/dependencyinjection/Orders";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),

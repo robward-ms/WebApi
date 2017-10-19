@@ -49,7 +49,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -102,7 +102,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
             //     (Collection(Employee)).GetCount(String Name)
             var getCount = iEdmOperationsOfGetCount.Where(f => f.Parameters.Count() == 2);
-            Assert.Equal(1, getCount.Count());
+            Assert.Single(getCount);
 
             //     (Collection(Manager)).GetCount()
             foreach (var t in iEdmOperationsOfGetCount)
@@ -113,13 +113,13 @@ namespace WebStack.QA.Test.OData.BoundOperation
             getCount = iEdmOperationsOfGetCount.Where(f => f.Parameters.Count() == 1
                 && f.Parameters.First().Type.Definition.ToString()
                 .Equals(string.Format("Collection([{0} Nullable=True])", Manager)));
-            Assert.Equal(1, getCount.Count());
+            Assert.Single(getCount);
 
             //     (Collection(Employee)).GetCount()
             getCount = iEdmOperationsOfGetCount.Where(f => f.Parameters.Count() == 1
                 && f.Parameters.First().Type.Definition.ToString()
                 .Equals(string.Format("Collection([{0} Nullable=True])", Employee)));
-            Assert.Equal(1, getCount.Count());
+            Assert.Single(getCount);
 
             // Function GetEmailsCount()
             var iEdmOperationsOfGetEmailsCount = edmModel.FindDeclaredOperations("Default.GetEmailsCount");
@@ -128,12 +128,12 @@ namespace WebStack.QA.Test.OData.BoundOperation
             //     Empllyee.GetEmailCount()
             var getEmailsCount = iEdmOperationsOfGetEmailsCount.Where(f => f.Parameters.Count() == 1
                 && f.Parameters.First().Type.Definition.ToString().Equals(Employee));
-            Assert.Equal(1, getEmailsCount.Count());
+            Assert.Single(getEmailsCount);
 
             //     Manager.GetEmailCount()
             getEmailsCount = iEdmOperationsOfGetEmailsCount.Where(f => f.Parameters.Count() == 1
                 && f.Parameters.First().Type.Definition.ToString().Equals(Manager));
-            Assert.Equal(1, getEmailsCount.Count());
+            Assert.Single(getEmailsCount);
 
             // primitive & collection of primitive
             AssertPrimitiveOperation(edmModel, "Default.PrimitiveFunction");
@@ -190,7 +190,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             #endregion
 
             // ActionImport: ResetDataSource
-            Assert.Equal(1, edmModel.EntityContainer.OperationImports().Count());
+            Assert.Single(edmModel.EntityContainer.OperationImports());
 
         }
 
@@ -610,7 +610,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
         }
 
         [Theory]
-        [PropertyData("ComplexTestData")]
+        [MemberData(nameof(ComplexTestData))]
         public async Task BoundFunction_Works_WithComplex_And_CollectionOfComplexParameters(string route, string parameter, string expect)
         {
             // Arrange
@@ -696,7 +696,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
         }
 
         [Theory]
-        [PropertyData("EntityTestData")]
+        [MemberData(nameof(EntityTestData))]
         public async Task BoundFunction_Works_WithEntity_And_CollectionOfEntityParameters(string route, string parameter)
         {
             // Arrange

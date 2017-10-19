@@ -30,7 +30,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] {typeof (EfPeopleController)};
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

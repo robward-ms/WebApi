@@ -18,6 +18,7 @@ using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
 using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
@@ -46,7 +47,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -178,7 +179,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsGetAlwaysAdvertised(string acceptHeader)
         {
             // Arrange
@@ -216,7 +217,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedWithTheTargetWhenAvailable(string acceptHeader)
         {
             // Arrange
@@ -256,7 +257,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedWhenNotAvailable(string acceptHeader)
         {
             // Arrange
@@ -280,7 +281,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsInDerivedTypesGetAlwaysAdvertised(string acceptHeader)
         {
             // Arrange
@@ -332,7 +333,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedInDerivedTypesWithTheTargetWhenAvailable(string acceptHeader)
         {
             // Arrange
@@ -384,7 +385,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         }
 
         [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedInDerivedTypesWhenNotAvailable(string acceptHeader)
         {
             // Arrange

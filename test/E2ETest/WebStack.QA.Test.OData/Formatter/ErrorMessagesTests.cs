@@ -25,7 +25,7 @@ namespace WebStack.QA.Test.OData.Formatter
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

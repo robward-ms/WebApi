@@ -24,7 +24,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),

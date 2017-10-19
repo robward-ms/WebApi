@@ -103,7 +103,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -130,7 +130,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
@@ -162,7 +162,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
             var changedCustomers = await newClient.DefaultBatchCustomer.ExecuteAsync();
             List<DefaultBatchProxy.DefaultBatchCustomer> changedCustomersList = changedCustomers.ToList();
 
-            Assert.False(changedCustomersList.Any(x => x.Id == customerToDelete.Id));
+            Assert.DoesNotContain(changedCustomersList, (x) => x.Id == customerToDelete.Id);
             Assert.Equal(customerToUpdate.Name, changedCustomersList.Single(x => x.Id == customerToUpdate.Id).Name);
             Assert.Single(changedCustomersList, x => x.Id == 10);
         }
@@ -267,7 +267,7 @@ Content-Type: application/json;odata.metadata=minimal
         public string BaseAddress { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -296,7 +296,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
@@ -329,7 +329,7 @@ Content-Type: application/json;odata.metadata=minimal
                 }
                 if (response.Query.RequestUri == singleCustomerRequestUri)
                 {
-                    Assert.Equal(1, response.Cast<DefaultBatchProxy.DefaultBatchCustomer>().Count());
+                    Assert.Single(response.Cast<DefaultBatchProxy.DefaultBatchCustomer>());
                     continue;
                 }
             }
@@ -345,7 +345,7 @@ Content-Type: application/json;odata.metadata=minimal
         public string BaseAddress { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -376,7 +376,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
@@ -410,7 +410,7 @@ Content-Type: application/json;odata.metadata=minimal
             var exception = aggregate.InnerExceptions.Single() as DataServiceRequestException;
             Assert.NotNull(exception);
             Assert.Equal(200, exception.Response.BatchStatusCode);
-            Assert.Equal(1, exception.Response.Count());
+            Assert.Single(exception.Response);
         }
     }
 
@@ -423,7 +423,7 @@ Content-Type: application/json;odata.metadata=minimal
         public string BaseAddress { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -454,7 +454,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
@@ -490,7 +490,7 @@ Content-Type: application/json;odata.metadata=minimal
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -517,7 +517,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }

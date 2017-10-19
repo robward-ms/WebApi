@@ -213,7 +213,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -222,12 +222,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("SpecialCharacterData")]
-        [PropertyData("OperatorData")]
-        [PropertyData("StringFunctionData")]
-        //[PropertyData("MixQueries")] 1559
-        //[PropertyData("AdHocTests")]
-        [PropertyData("DateAndTimeOfDayData")]
+        [MemberData(nameof(SpecialCharacterData))]
+        [MemberData(nameof(OperatorData))]
+        [MemberData(nameof(StringFunctionData))]
+        //[MemberData(nameof(MixQueries))] 1559
+        //[MemberData(nameof(AdHocTests))]
+        [MemberData(nameof(DateAndTimeOfDayData))]
         public void TestFilters(string filter, IEnumerable<Product> expected)
         {
             var requestUri = this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter;
@@ -267,12 +267,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("SpecialCharacterData")]
-        [PropertyData("OperatorData")]
-        [PropertyData("StringFunctionData")]
-        //[PropertyData("MixQueries")] 1559
-        //[PropertyData("AdHocTests")]
-        [PropertyData("DateAndTimeOfDayData")]
+        [MemberData(nameof(SpecialCharacterData))]
+        [MemberData(nameof(OperatorData))]
+        [MemberData(nameof(StringFunctionData))]
+        //[MemberData(nameof(MixQueries))] 1559
+        //[MemberData(nameof(AdHocTests))]
+        [MemberData(nameof(DateAndTimeOfDayData))]
         public void TestFiltersWithXmlSerializer(string filter, IEnumerable<Product> expected)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter);
@@ -290,12 +290,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("SpecialCharacterData")]
-        [PropertyData("OperatorData")]
-        [PropertyData("StringFunctionData")]
-        // [PropertyData("MixQueries")] // 1559
-        // [PropertyData("AdHocTests")] // 396
-        [PropertyData("DateAndTimeOfDayData")]
+        [MemberData(nameof(SpecialCharacterData))]
+        [MemberData(nameof(OperatorData))]
+        [MemberData(nameof(StringFunctionData))]
+        // [MemberData(nameof(MixQueries))] // 1559
+        // [MemberData(nameof(AdHocTests))] // 396
+        [MemberData(nameof(DateAndTimeOfDayData))]
         public void TestFiltersOnHttpResponse(string filter, IEnumerable<Product> expected)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsHttpResponse?$filter=" + filter).Result;
@@ -311,12 +311,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("SpecialCharacterData")]
-        [PropertyData("OperatorData")]
-        [PropertyData("StringFunctionData")]
-        //[PropertyData("MixQueries")]// 1559
-        // [PropertyData("AdHocTests")] // 396
-        [PropertyData("DateAndTimeOfDayData")]
+        [MemberData(nameof(SpecialCharacterData))]
+        [MemberData(nameof(OperatorData))]
+        [MemberData(nameof(StringFunctionData))]
+        //[MemberData(nameof(MixQueries))]// 1559
+        // [MemberData(nameof(AdHocTests))] // 396
+        [MemberData(nameof(DateAndTimeOfDayData))]
         public void TestFiltersAsync(string filter, IEnumerable<Product> expected)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetAsyncProducts?$filter=" + filter).Result;
@@ -332,12 +332,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("SpecialCharacterData")]
-        [PropertyData("OperatorData")]
-        [PropertyData("StringFunctionData")]
-        //[PropertyData("MixQueries")] // 1559
-        // [PropertyData("AdHocTests")] // 396
-        [PropertyData("DateAndTimeOfDayData")]
+        [MemberData(nameof(SpecialCharacterData))]
+        [MemberData(nameof(OperatorData))]
+        [MemberData(nameof(StringFunctionData))]
+        //[MemberData(nameof(MixQueries))] // 1559
+        // [MemberData(nameof(AdHocTests))] // 396
+        [MemberData(nameof(DateAndTimeOfDayData))]
         public void TestFiltersOnAnonymousType(string filter, IEnumerable<Product> expected)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsAsAnonymousType?$filter=" + filter).Result;
@@ -353,7 +353,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("AnyAllData")]
+        [MemberData(nameof(AnyAllData))]
         public void TestAnyAll(string filter, IEnumerable<Movie> expected)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMovies?$filter=" + filter).Result;
@@ -368,11 +368,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         //[Theory(Skip="It is not stable, now disable it to prevent it from hiding other test failures.")]
-        //[PropertyData("SpecialCharacterData")]
-        //[PropertyData("OperatorData")]
-        //[PropertyData("StringFunctionData")]
-        //[PropertyData("MixQueries")] 1559
-        //[PropertyData("AdHocTests")]
+        //[MemberData(nameof(SpecialCharacterData))]
+        //[MemberData(nameof(OperatorData))]
+        //[MemberData(nameof(StringFunctionData))]
+        //[MemberData(nameof(MixQueries))] 1559
+        //[MemberData(nameof(AdHocTests))]
         public void TestFiltersWithMultipleThreads(string filter, IEnumerable<Product> expected)
         {
             Parallel.For(0, 10, i =>

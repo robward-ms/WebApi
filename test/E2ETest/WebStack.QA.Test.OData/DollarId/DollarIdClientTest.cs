@@ -24,7 +24,7 @@ namespace WebStack.QA.Test.OData.DollarId
         public string BaseAddress { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -79,7 +79,7 @@ namespace WebStack.QA.Test.OData.DollarId
             await clientContext.SaveChangesAsync();
 
             clientContext.LoadProperty(album, "Sales");
-            Assert.Equal(1, album.Sales.Count);
+            Assert.Single(album.Sales);
         }
 
         // [Fact(Skip = "Used to generate csdl file")]

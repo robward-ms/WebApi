@@ -32,7 +32,7 @@ namespace WebStack.QA.Test.OData.Routing
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(AddressesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

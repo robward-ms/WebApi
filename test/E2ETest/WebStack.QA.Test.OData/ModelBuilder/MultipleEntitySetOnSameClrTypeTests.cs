@@ -32,7 +32,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     public class MultipleEntitySetOnSameClrTypeTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var repo = MultipleEntitySetOnSameClrType_Products1Controller.Repository;
             repo.TryAdd(

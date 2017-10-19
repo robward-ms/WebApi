@@ -23,7 +23,7 @@ namespace WebStack.QA.Test.OData.Aggregation
         private const string AggregationTestBaseUrl = "{0}/aggregation/Customers";
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -176,7 +176,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
             Assert.Equal("4500", results[0]["TotalAmount"].ToString());
         }
 
@@ -232,10 +232,10 @@ namespace WebStack.QA.Test.OData.Aggregation
                 .ToDictionary(x => x.Name);
 
             dict.TryGetValue("Customer1", out responseObj);
-            Assert.Equal(responseObj.Count, 5);
+            Assert.Equal(5, responseObj.Count);
 
             dict.TryGetValue("Customer0", out responseObj);
-            Assert.Equal(responseObj.Count, 4);
+            Assert.Equal(4, responseObj.Count);
         }
 
 
@@ -300,7 +300,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
         }
 
         [Theory]
@@ -396,7 +396,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
             Assert.Equal(expectedResult, results[0]["Result"].ToString());
         }
     }

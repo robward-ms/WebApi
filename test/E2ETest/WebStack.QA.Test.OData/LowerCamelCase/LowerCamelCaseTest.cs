@@ -33,7 +33,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -103,7 +103,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySet(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees?$expand=WebStack.QA.Test.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
@@ -119,7 +119,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithDerivedType(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees/WebStack.QA.Test.OData.LowerCamelCase.Manager?$expand=directReports&$format=" + format;
@@ -138,14 +138,14 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(address);
 
             var directReports = manager["directReports"] as JArray;
-            Assert.Equal(1, directReports.Count);
+            Assert.Single(directReports);
 
             var employee = directReports[0] as JObject;
             AssertPropertyNamesAreCamelCase(employee);
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntity(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)?$expand=manager($levels=max;$select=id,name)&$format=" + format;
@@ -159,7 +159,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualZero(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)?$expand=manager($levels=0)&$format=" + format;
@@ -172,7 +172,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualNegativeOne(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)?$expand=manager($levels=-1)&$format=" + format;
@@ -186,7 +186,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsGreaterThanTheMaxExpansionDepth(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)?$expand=manager($levels=4)&$format=" + format;
@@ -202,7 +202,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualToTheMaxExpansionDepth(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)?$expand=manager($levels=3;$select=name)&$format=" + format;
@@ -221,7 +221,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpand(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees?$expand=WebStack.QA.Test.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
@@ -249,7 +249,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpandToSameType(string format)
         {
             // The context url is '@odata.context=http://jinfutan13:9123/odata/$metadata#Employees(id,name,next)', 
@@ -274,7 +274,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWhereCircularExists(string format)
         {
             // The context url is '@odata.context=http://jinfutan13:9123/odata/$metadata#Employees(id,name,next)', 
@@ -291,7 +291,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWithNestedExpand(string format)
         {
             // The context url is '@odata.context=http://jinfutan13:9123/odata/$metadata#Employees(id,name,next)', 
@@ -308,7 +308,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployee(string format)
         {
             string requestUri = this.BaseAddress +
@@ -332,7 +332,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
         
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployeeWithNestedExpand(string format)
         {
             string requestUri = this.BaseAddress +
@@ -351,7 +351,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromCollectionEmployeeToSingleManager(string format)
         {
             string requestUri = string.Format(
@@ -379,7 +379,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyInEntityType(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees(1)/name?$format=" + format;
@@ -398,7 +398,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyValueInEntityType(string format)
         {
             var requestUri = this.BaseAddress + "/odata/Employees(1)/name/$value?$format=" + format;
@@ -410,7 +410,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithFilter(string format)
         {
             string requestUri = string.Format("{0}/odata/Employees?$filter=startswith(name,'Name1')&$format={1}", this.BaseAddress, format);
@@ -427,7 +427,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithSelect(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees?$select=id,name,address&$format=" + format;
@@ -458,7 +458,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithOrderBy(string format)
         {
             string requestUri = this.BaseAddress + "/odata/Employees?$orderby=name desc&$format=" + format;

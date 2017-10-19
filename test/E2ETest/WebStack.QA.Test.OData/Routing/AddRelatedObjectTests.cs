@@ -29,7 +29,7 @@ namespace WebStack.QA.Test.OData.Routing
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -59,7 +59,7 @@ namespace WebStack.QA.Test.OData.Routing
         }
 
         [Theory]
-        [PropertyData("AddRelatedObjectConventionsWorkPropertyData")]
+        [MemberData(nameof(AddRelatedObjectConventionsWorkPropertyData))]
         public void AddRelatedObjectConventionsWork(string method, string url, object data)
         {
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), BaseAddress + url);

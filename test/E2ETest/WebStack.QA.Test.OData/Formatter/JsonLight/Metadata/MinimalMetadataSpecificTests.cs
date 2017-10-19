@@ -27,14 +27,14 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddRAMFAR(true);
         }

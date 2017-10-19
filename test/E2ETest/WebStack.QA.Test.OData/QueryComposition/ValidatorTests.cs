@@ -241,7 +241,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -281,7 +281,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("ValidateOptionsData")]
+        [MemberData(nameof(ValidateOptionsData))]
         public void VerifyValidateOptions(ODataValidationSettings settings, string query, bool success)
         {
             var response = this.Client.PostAsync(
@@ -298,7 +298,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [Theory]
-        [PropertyData("AllowedFunctionsData")]
+        [MemberData(nameof(AllowedFunctionsData))]
         public void VerifyAllowedFunctions(AllowedFunctions value1, AllowedFunctions value2)
         {
             Assert.Equal(value2, value1 & value2);

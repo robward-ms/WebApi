@@ -63,7 +63,7 @@ namespace WebStack.QA.Test.OData.Containment
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(AccountsController), typeof(AnonymousAccountController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -118,7 +118,7 @@ namespace WebStack.QA.Test.OData.Containment
             Assert.Equal(EdmMultiplicity.ZeroOrOne, statement.TargetMultiplicity());
 
             var premiumAccountType = edmModel.SchemaElements.OfType<IEdmEntityType>().Single(et => et.Name == "PremiumAccount");
-            Assert.Equal(1, premiumAccountType.DeclaredProperties.Count());
+            Assert.Single(premiumAccountType.DeclaredProperties);
             var giftCard = premiumAccountType.DeclaredProperties.Single() as IEdmNavigationProperty;
             Assert.True(giftCard.ContainsTarget, "PreminumAccountType.GiftCard");
             Assert.Equal(EdmMultiplicity.One, giftCard.TargetMultiplicity());
@@ -167,7 +167,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to expand the containment navigation properties(mutiplicity is optional and many) from the containing entity
         // GET ~/Accounts?$expand=PayinPIs,PayoutPI
         public async Task ExpandPayinPIsAndPayoutPIFromAcccounts(string mode, string mime)
@@ -300,7 +300,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test 
         //      1. it is able to expand containment navigation properties from an entity that derived from the containing entity.
         //      2. it is able to expand containment navigation peroperty that is defined on an derived entity.
@@ -354,7 +354,7 @@ namespace WebStack.QA.Test.OData.Containment
             var json = await response.Content.ReadAsAsync<JObject>();
 
             var results = json.GetValue("value") as JArray;
-            Assert.Equal<int>(1, results.Count);
+            Assert.Single(results);
             var premiumAccount = results[0];
             if (mime == "json" || mime.Contains("odata.metadata=minimal") || mime.Contains("odata.metadata=full"))
             {
@@ -505,7 +505,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query a containing navigation property of collection type.
         public async Task QueryPayinPIsFromAccount(string mode, string mime)
         {
@@ -525,7 +525,7 @@ namespace WebStack.QA.Test.OData.Containment
             }
 
             var results = json.GetValue("value") as JArray;
-            Assert.Equal<int>(1, results.Count);
+            Assert.Single(results);
 
             if (mime.Contains("odata.metadata=full"))
             {
@@ -542,7 +542,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query ONE entity of a collectiona containment navigation property
         // GET ~/Accounts(1)/PayinPIs(1)
         public async Task QueryOnePayinPI(string mode, string mime)
@@ -575,7 +575,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test is is able to query a nullable containment navigation property.
         // GET ~/Accounts(1)/PayoutPI
         public async Task QueryPayoutPI(string mode, string mime)
@@ -604,7 +604,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query a non-nullable containment navigation property defined on a derived entity.
         // GET ~/Accounts(1)/Namespace.PremiumAccount/GiftCard
         public async Task QueryContainmentNavigationOnDerivedEntity(string mode, string mime)
@@ -633,7 +633,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a non-nullable navigation property defined on a derived entity
         // GET ~/Accounts(1)/Namespace.PremiumAccount/GiftCard/$ref
         public async Task QueryAssociationLinkOfGiftCard(string mode, string mime)
@@ -662,7 +662,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a collection navigation property
         // GET ~/Accounts(1)/PayinPIs/$ref
         public async Task QueryAssociationLinkOfPayinPIs(string mode, string mime)
@@ -698,7 +698,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a single-valued navigation property
         // GET ~/Accounts(1)/PayoutPI/$ref
         public async Task QueryAssociationLinkOfPayoutPI(string mode, string mime)
@@ -858,7 +858,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         // To test it is able to query a contained entity which is navigated from a containment navigation property
         // GET ~/Accounts(1)/PayinPIs(101)/Statement
         public async Task GetStatement(string mode, string mime)
@@ -1035,7 +1035,7 @@ namespace WebStack.QA.Test.OData.Containment
 
         #region singleton
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task ExpandContainmentNavigationPropertyOnSingleton(string mode, string mime)
         {
             await ResetDatasource();
@@ -1082,7 +1082,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [Theory]
-        [PropertyData("MediaTypes")]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryNullableContainmentNavigationPropertyFromSingleton(string mode, string mime)
         {
             await ResetDatasource();
@@ -1150,14 +1150,14 @@ namespace WebStack.QA.Test.OData.Containment
             var changedAccounts = await newClient.Accounts.ExecuteAsync();
             List<Proxy.Account> changedAccountsList = changedAccounts.ToList();
 
-            Assert.False(changedAccountsList.Any(x => x.AccountID == accountToDelete.AccountID));
+            Assert.DoesNotContain(changedAccountsList, (x) => x.AccountID == accountToDelete.AccountID);
 
             Proxy.Account account = newClient.Accounts.Where(a => a.AccountID == 100).Single();
             newClient.LoadProperty(account, "PayinPIs");
             var payinPIList = account.PayinPIs.ToList();
 
-            Assert.False(payinPIList.Any(pi => pi.PaymentInstrumentID == 102));
-            Assert.True(payinPIList.Any(pi => pi.PaymentInstrumentID == 103));
+            Assert.DoesNotContain(payinPIList, (pi) => pi.PaymentInstrumentID == 102);
+            Assert.Contains(payinPIList, (pi) => pi.PaymentInstrumentID == 103);
 
             Assert.Equal("updatedName", payinPIList.Single(pi => pi.PaymentInstrumentID == 101).FriendlyName);
         }

@@ -35,7 +35,7 @@ namespace WebStack.QA.Test.OData.Enums
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -82,7 +82,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.True(like.Type.IsCollection());
 
             var employee = edmModel.SchemaElements.SingleOrDefault(e => e.Name == "Employee") as IEdmEntityType;
-            Assert.Equal(1, employee.Key().Count());
+            Assert.Single(employee.Key());
             Assert.Equal("ID", employee.Key().First().Name);
             Assert.Equal(6, employee.Properties().Count());
 
@@ -322,7 +322,7 @@ namespace WebStack.QA.Test.OData.Enums
                 var result = await response.Content.ReadAsAsync<JObject>();
                 var value = result.GetValue("value") as JArray;
                 Assert.NotNull(value);
-                Assert.Equal(1, value.Count);
+                Assert.Single(value);
             }
 
             using (var response = await this.Client.GetAsync(uriHas))

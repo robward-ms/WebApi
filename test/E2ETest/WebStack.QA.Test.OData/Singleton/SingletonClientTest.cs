@@ -24,7 +24,7 @@ namespace WebStack.QA.Test.OData.Singleton
         public string BaseAddress { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -110,7 +110,7 @@ namespace WebStack.QA.Test.OData.Singleton
             await ClientContext.SaveChangesAsync();
 
             umbrella = ClientContext.Umbrella.Expand(u => u.Partners).Single();
-            Assert.Equal(1, umbrella.Partners.Count);
+            Assert.Single(umbrella.Partners);
         }
 
         [Fact]

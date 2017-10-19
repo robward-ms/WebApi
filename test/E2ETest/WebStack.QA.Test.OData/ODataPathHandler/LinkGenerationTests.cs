@@ -74,7 +74,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
     public class LinkGenerationTests : ODataTestBase
     {
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var model1 = GetEdmModel1(configuration);
