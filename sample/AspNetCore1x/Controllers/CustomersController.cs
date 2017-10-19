@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.OData;
+    using Microsoft.AspNet.OData;
     using ODataSample.Web.Models;
-    using Microsoft.AspNetCore.OData.Routing;
     using Microsoft.AspNet.OData.Routing;
     using Microsoft.AspNet.OData;
 

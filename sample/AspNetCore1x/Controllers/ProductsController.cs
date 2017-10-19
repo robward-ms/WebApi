@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData;
+using Microsoft.AspNet.OData;
 using ODataSample.Web.Models;
 
 namespace ODataSample.Web.Controllers
