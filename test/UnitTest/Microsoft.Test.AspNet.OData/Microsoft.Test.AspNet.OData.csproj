@@ -120,6 +120,11 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\ODataConventionModelBuilderFactory.cs" />
+    <Compile Include="Factories\ODataSerializerContextFactory.cs" />
+    <Compile Include="Factories\RequestFactory.cs" />
+    <Compile Include="Factories\ResourceSetContextFactory.cs" />
+    <Compile Include="Factories\RoutingConfigurationFactory.cs" />
     <Compile Include="Formatter\MediaTypeFormatterTestBase.cs" />
     <Compile Include="ContextUtil.cs" />
     <Compile Include="EdmDeltaCollectionTypeTest.cs" />

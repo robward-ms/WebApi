@@ -1,0 +1,38 @@
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
+#if !NETCORE1x
+using System.Net.Http;
+using System.Web.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.OData.Edm;
+#else
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Http;
+using Microsoft.OData.Edm;
+#endif
+
+namespace Microsoft.Test.AspNet.OData.Factories
+{
+    /// <summary>
+    /// A class to create HttpRequest[Message].
+    /// </summary>
+    public class ResourceSetContextFactory
+    {
+        /// <summary>
+        /// Initializes a new instance of the routing configuration class.
+        /// </summary>
+        /// <returns>A new instance of the routing configuration class.</returns>
+#if !NETCORE1x
+        public static ResourceSetContext Create(IEdmEntitySet entitySetBase, HttpRequestMessage request)
+        {
+            return new ResourceSetContext { EntitySetBase = entitySetBase, Request = request, Url = request.GetUrlHelper() };
+        }
+#else
+        public static ResourceSetContext Create(IEdmEntitySet entitySetBase, HttpRequest request)
+        {
+            return new ResourceSetContext { EntitySetBase = entitySetBase, Request = request };
+        }
+#endif
+    }
+}
