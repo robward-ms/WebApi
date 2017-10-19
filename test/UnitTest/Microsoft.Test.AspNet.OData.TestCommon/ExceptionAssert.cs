@@ -5,7 +5,6 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
