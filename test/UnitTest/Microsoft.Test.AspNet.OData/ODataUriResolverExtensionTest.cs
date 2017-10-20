@@ -100,12 +100,12 @@ namespace Microsoft.Test.AspNet.OData
         private static HttpConfiguration GetConfiguration(bool caseInsensitive, bool unqualifiedNameCall)
         {
             IEdmModel model = ODataRoutingModel.GetModel();
-            HttpConfiguration config = new[]
+            HttpConfiguration config = RoutingConfigurationFactory.CreateFromControllers(new[]
             {
                 typeof(MetadataController),
                 typeof(ProductsController),
                 typeof(RoutingCustomersController),
-            }.GetHttpConfiguration();
+            });
 
             ODataUriResolver resolver = new ODataUriResolver();
             if (unqualifiedNameCall)
@@ -215,7 +215,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpConfiguration GetQueryOptionConfiguration(bool caseInsensitive)
         {
-            HttpConfiguration config = new[] { typeof(ParserExtenstionCustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (caseInsensitive)
             {
@@ -243,7 +243,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             IEdmModel model = GetEdmModel();
-            HttpConfiguration config = new[] { typeof(ParserExtenstionCustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (enableEnumPrefix)
             {
@@ -292,7 +292,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             IEdmModel model = GetEdmModel();
-            HttpConfiguration config = new[] { typeof(ParserExtenstionCustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (enableEnumPrefix)
             {
@@ -328,7 +328,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             IEdmModel model = GetEdmModel();
-            HttpConfiguration config = new[] { typeof(ParserExtenstionCustomers2Controller) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(ParserExtenstionCustomers2Controller) });
             config.MapODataServiceRoute("odata", "odata", model);
             HttpClient client = new HttpClient(new HttpServer(config));
 

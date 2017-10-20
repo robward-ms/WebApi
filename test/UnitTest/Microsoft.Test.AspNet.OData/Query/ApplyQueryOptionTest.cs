@@ -4,7 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+#if !NETCORE1x
 using System.Web.Http;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -13,6 +17,7 @@ using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -22,6 +27,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
 {
     public class ApplyQueryOptionTest
     {
+#if !NETCORE1x
         // Legal apply queries usable against CustomerApplyTestData.
         // Tuple is: apply, expected number
         public static TheoryDataSet<string, List<Dictionary<string, object>>> CustomerTestApplies
@@ -655,8 +661,9 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + filter);
-            request.EnableHttpDependencyInjectionSupport();
+
+            var configuration = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
 
             var options = new ODataQueryOptions(context, request);
 
@@ -698,8 +705,9 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + clause);
-            request.EnableHttpDependencyInjectionSupport();
+
+            var configuration = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + clause, configuration);
 
             var options = new ODataQueryOptions(context, request);
 
@@ -725,8 +733,9 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + filter);
-            request.EnableHttpDependencyInjectionSupport();
+
+            var configuration = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
 
             var options = new ODataQueryOptions(context, request);
 
@@ -797,8 +806,8 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            HttpConfiguration config =
-                new[] { typeof(MetadataController), typeof(CustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);
             var client = new HttpClient(new HttpServer(config));
@@ -834,8 +843,8 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            HttpConfiguration config =
-                new[] { typeof(MetadataController), typeof(CustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);
             var client = new HttpClient(new HttpServer(config));
@@ -886,9 +895,14 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [EnableQuery]
+#if !NETCORE1x
         public IHttpActionResult Get()
+#else
+        public IActionResult Get()
+#endif
         {
             return Ok(_customers);
         }
+#endif
     }
 }

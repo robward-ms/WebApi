@@ -148,7 +148,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(edmFunction);
 
             var configuration = RoutingConfigurationFactory.Create();
-            configuration.MapODataServiceRoute(model);
+            configuration.MapODataServiceRoute("IgnoredRouteName", null, model);
 
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost:123", configuration);
 

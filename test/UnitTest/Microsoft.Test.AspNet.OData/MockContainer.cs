@@ -4,10 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -22,32 +25,32 @@ namespace Microsoft.Test.AspNet.OData
 
         public MockContainer(IEdmModel model)
         {
-            InitializeConfiguration(b => b.AddService(ServiceLifetime.Singleton, sp => model));
+            InitializeConfiguration(b => b.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model));
         }
 
         public MockContainer(IEdmModel model, IEnumerable<IODataRoutingConvention> routingConventions)
         {
             InitializeConfiguration(builder =>
-                builder.AddService(ServiceLifetime.Singleton, sp => model)
-                       .AddService(ServiceLifetime.Singleton, sp => routingConventions.ToList().AsEnumerable()));
+                builder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)
+                       .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routingConventions.ToList().AsEnumerable()));
         }
-
-        public HttpConfiguration Configuration { get; private set; }
 
         public object GetService(Type serviceType)
         {
-            if (_rootContainer == null)
-            {
-                _rootContainer = Configuration.GetODataRootContainer();
-            }
-
             return _rootContainer.GetService(serviceType);
         }
 
         private void InitializeConfiguration(Action<IContainerBuilder> action)
         {
-            Configuration = new HttpConfiguration();
-            Configuration.EnableODataDependencyInjectionSupport(action);
+            var configuration = RoutingConfigurationFactory.Create();
+            string routeName = Microsoft.Test.AspNet.OData.Formatter.HttpRouteCollectionExtensions.RouteName;
+#if !NETCORE1x
+            _rootContainer = configuration.CreateODataRootContainer(routeName, action);
+#else
+            IPerRouteContainer perRouteContainer = configuration.ServiceProvider.GetRequiredService<IPerRouteContainer>();
+            Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(action);
+            _rootContainer = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
+#endif
         }
     }
 }

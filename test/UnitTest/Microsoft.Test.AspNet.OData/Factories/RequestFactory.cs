@@ -34,37 +34,69 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        public static HttpRequestMessage Create(HttpMethod method, string uri, HttpConfiguration config, string routeName = null)
+        public static HttpRequestMessage Create()
         {
-            var request = RequestFactory.Create(method, uri, config, routeName);;
-            request.SetConfiguration(config);
+            var request = new HttpRequestMessage();
+            request.EnableODataDependencyInjectionSupport();
+            return request;
+        }
+#else
+        public static HttpRequest Create()
+        {
+            HttpContext context = new DefaultHttpContext();
+            HttpRequest request = context.Request;
+            return request;
+        }
+#endif
+
+        /// <summary>
+        /// Initializes a new instance of the routing configuration class.
+        /// </summary>
+        /// <returns>A new instance of the routing configuration class.</returns>
+#if !NETCORE1x
+        public static HttpRequestMessage Create(HttpMethod method, string uri, HttpConfiguration config = null, string routeName = null)
+        {
+            var request = new HttpRequestMessage(method, uri);
+
+            if (config != null)
+            {
+                request.SetConfiguration(config);
+            }
 
             if (!string.IsNullOrEmpty(routeName))
             {
                 request.EnableODataDependencyInjectionSupport(routeName);
             }
+            else
+            {
+                request.EnableODataDependencyInjectionSupport();
+            }
 
             return request;
         }
 #else
-        public static HttpRequest Create(HttpMethod method, string uri, IRouteBuilder routeBuilder, string routeName = null)
+        public static HttpRequest Create(HttpMethod method, string uri, IRouteBuilder routeBuilder = null, string routeName = null)
         {
             Uri requestUri = new Uri(uri);
             HttpContext context = new DefaultHttpContext();
-            context.RequestServices = routeBuilder.ApplicationBuilder.ApplicationServices;
 
-            IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
-            RouteData routeData = new RouteData();
-            routeData.Routers.Add(defaultRoute);
+            if (routeBuilder != null)
+            {
+                context.RequestServices = routeBuilder.ApplicationBuilder.ApplicationServices;
 
-            var mockAction = new Mock<ActionDescriptor>();
-            ActionDescriptor actionDescriptor = mockAction.Object;
+                IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
+                RouteData routeData = new RouteData();
+                routeData.Routers.Add(defaultRoute);
 
-            RouteContext routeContext = new RouteContext(context);
-            ActionContext actionContext = new ActionContext(context, routeData, actionDescriptor);
+                var mockAction = new Mock<ActionDescriptor>();
+                ActionDescriptor actionDescriptor = mockAction.Object;
 
-            IActionContextAccessor actionContextAccessor = context.RequestServices.GetRequiredService<IActionContextAccessor>();
-            actionContextAccessor.ActionContext = actionContext;
+                RouteContext routeContext = new RouteContext(context);
+                ActionContext actionContext = new ActionContext(context, routeData, actionDescriptor);
+
+                IActionContextAccessor actionContextAccessor = context.RequestServices.GetRequiredService<IActionContextAccessor>();
+                actionContextAccessor.ActionContext = actionContext;
+            }
 
             HttpRequest request = context.Request;
             request.Method = method.ToString();

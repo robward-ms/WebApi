@@ -26,15 +26,24 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         public static T GetModelBuilderMock<T>() where T : ODataModelBuilder
         {
 #if NETCORE1x
-            ApplicationPartManager applicationPartManager = new ApplicationPartManager();
-            AssemblyPart part = new AssemblyPart(typeof(ODataModelBuilderMocks).Assembly);
-            applicationPartManager.ApplicationParts.Add(part);
+            Mock<T> mock;
+            if (typeof(T) == typeof(ODataConventionModelBuilder))
+            {
+                ApplicationPartManager applicationPartManager = new ApplicationPartManager();
+                AssemblyPart part = new AssemblyPart(typeof(ODataModelBuilderMocks).Assembly);
+                applicationPartManager.ApplicationParts.Add(part);
 
-            IContainerBuilder container = new DefaultContainerBuilder();
-            container.AddService(ServiceLifetime.Singleton, sp => applicationPartManager);
+                IContainerBuilder container = new DefaultContainerBuilder();
+                container.AddService(ServiceLifetime.Singleton, sp => applicationPartManager);
 
-            IServiceProvider serviceProvider = container.BuildContainer();
-            Mock<T> mock = new Mock<T>(serviceProvider);
+                IServiceProvider serviceProvider = container.BuildContainer();
+
+                mock = new Mock<T>(serviceProvider);
+            }
+            else
+            {
+                mock = new Mock<T>();
+            }
 #else
             Mock<T> mock = new Mock<T>();
 #endif
@@ -57,7 +66,15 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
 #else
         public static T GetModelBuilderMock<T>(IRouteBuilder routeBuilder) where T : ODataModelBuilder
         {
-            Mock<T> mock = new Mock<T>(routeBuilder.ApplicationBuilder.ApplicationServices);
+            Mock<T> mock;
+            if (typeof(T) == typeof(ODataModelBuilder))
+            {
+                mock = new Mock<T>(routeBuilder.ApplicationBuilder.ApplicationServices);
+            }
+            else
+            {
+                mock = new Mock<T>(routeBuilder.ApplicationBuilder.ApplicationServices);
+            }
             mock.Setup(b => b.ValidateModel(It.IsAny<IEdmModel>())).Callback(() => { });
             mock.CallBase = true;
             return mock.Object;

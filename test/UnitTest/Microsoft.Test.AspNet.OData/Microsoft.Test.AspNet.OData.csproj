@@ -125,6 +125,7 @@
     <Compile Include="Factories\RequestFactory.cs" />
     <Compile Include="Factories\ResourceSetContextFactory.cs" />
     <Compile Include="Factories\RoutingConfigurationFactory.cs" />
+    <Compile Include="Factories\WebApiAssembliesResolverFactory.cs" />
     <Compile Include="Formatter\MediaTypeFormatterTestBase.cs" />
     <Compile Include="ContextUtil.cs" />
     <Compile Include="EdmDeltaCollectionTypeTest.cs" />
@@ -397,6 +398,7 @@
     <Compile Include="Resources.cs" />
     <Compile Include="TestCommon\CustomersModelWithInheritance.cs" />
     <Compile Include="TestCommon\CaseInsensitiveResolver.cs" />
+    <Compile Include="TestCommon\TestControllerBase.cs" />
     <Compile Include="TestCommon\UnqualifiedCaseInsensitiveResolver.cs" />
     <Compile Include="TestCommon\SimpleOpenAddress.cs" />
     <Compile Include="TestCommon\ODataModelBuilderMocks.cs" />
@@ -482,7 +484,6 @@
     <Compile Include="TestCommon\ReferenceDepthContext.cs" />
     <Compile Include="TestCommon\SupportedTypes.cs" />
     <Compile Include="TestCommon\TypeInitializer.cs" />
-    <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>

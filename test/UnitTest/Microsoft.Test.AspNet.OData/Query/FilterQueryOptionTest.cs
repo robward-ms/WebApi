@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if !NETCORE1x
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
@@ -903,8 +905,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetEnumModel()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(EnumModel)));
+            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(EnumModel));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<EnumModel>("EnumModels");
             return builder.GetEdmModel();
@@ -912,8 +913,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetCastModel()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
+            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(DataTypes));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("CastModels");
             return builder.GetEdmModel();
@@ -921,8 +921,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetParameterAliasModel()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(DataTypes)));
+            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(DataTypes));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("ParameterAliasModels");
             return builder.GetEdmModel();
@@ -930,8 +929,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetPropertyAliasModel()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(PropertyAlias)));
+            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(PropertyAlias));
             var builder = ODataConventionModelBuilderFactory.CreateWithModelAliasing(config, modelAliasing: true);
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             return builder.GetEdmModel();

@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if !NETCORE1x
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
@@ -47,8 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
         private static IEdmModel GetCustomersModel()
         {
-            HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(QueryCompositionCustomer)));
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(typeof(QueryCompositionCustomer));
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<QueryCompositionCustomer>("Customer");
             builder.EntityType<QueryCompositionCustomerBase>();
@@ -72,8 +73,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
         private static ODataConventionModelBuilder GetProductsBuilder()
         {
-            HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Product)));
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(typeof(Product));
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<Product>("Product");
             return builder;

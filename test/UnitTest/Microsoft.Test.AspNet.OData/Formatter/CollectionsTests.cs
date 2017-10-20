@@ -32,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Vehicle>("vehicles");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration configuration = new[] { typeof(CollectionsTestsController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(CollectionsTestsController) });
             configuration.Formatters.Clear();
             configuration.Formatters.AddRange(ODataMediaTypeFormatters.Create());
             configuration.MapODataServiceRoute(model);

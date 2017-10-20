@@ -27,12 +27,12 @@ namespace Microsoft.Test.AspNet.OData
 
         public QueryableLimitationTest()
         {
-            _configuration = new[]
+            _configuration = RoutingConfigurationFactory.CreateFromControllers(new[]
             {
                 typeof(QueryLimitCustomersController),
                 typeof(OpenCustomersController),
                 typeof(MetadataController)
-            }.GetHttpConfiguration();
+            });
 
             _model = GetEdmModel();
 

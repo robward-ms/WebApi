@@ -24,17 +24,19 @@
 
   <ItemGroup>
     <Compile Remove="Batch\**" />
-    <Compile Remove="Query\**" />
     <Compile Remove="Results\**" />
     <Compile Remove="Routing\**" />
     <EmbeddedResource Remove="Batch\**" />
-    <EmbeddedResource Remove="Query\**" />
     <EmbeddedResource Remove="Results\**" />
     <EmbeddedResource Remove="Routing\**" />
     <None Remove="Batch\**" />
-    <None Remove="Query\**" />
     <None Remove="Results\**" />
     <None Remove="Routing\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Routing\ODataLevelsTest.cs" />
+    <Compile Include="Routing\ODataRoutingModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,7 +73,6 @@
     <Compile Remove="Formatter\EdmPrimitiveHelpersTest.cs" />
     <Compile Remove="Formatter\ETagTests.cs" />
     <Compile Remove="Formatter\HttpRequestMessageExtensions.cs" />
-    <Compile Remove="Formatter\HttpRouteCollectionExtensions.cs" />
     <Compile Remove="Formatter\InheritanceTests.cs" />
     <Compile Remove="Formatter\MediaTypeFormatterTestBase.cs" />
     <Compile Remove="Formatter\NullCollectionsTests.cs" />
@@ -110,12 +111,10 @@
     <Compile Remove="HttpRequestMessageExtensionsTest.cs" />
     <Compile Remove="HttpRouteCollectionExtensionsTest.cs" />
     <Compile Remove="MetadataControllerTest.cs" />
-    <Compile Remove="MockContainer.cs" />
     <Compile Remove="ODataActionParametersTest.cs" />
     <Compile Remove="ODataContainmentTest.cs" />
     <Compile Remove="ODataFormattingAttributeTest.cs" />
     <Compile Remove="ODataNullValueMessageHandlerTest.cs" />
-    <Compile Remove="ODataPathHandlerExtensions.cs" />
     <Compile Remove="ODataRoutingAttributeTest.cs" />
     <Compile Remove="ODataSingletonTest.cs" />
     <Compile Remove="ODataSwaggerConverterTest.cs" />
@@ -135,6 +134,61 @@
     <Compile Remove="SelectExpandTest.cs" />
     <Compile Remove="TypeExtensions.cs" />
     <Compile Remove="TypeHelperTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ArrayOfBoolean.json" />
+    <EmbeddedResource Include="Resources\ArrayOfByteFullMetadata.json" />
+    <EmbeddedResource Include="Resources\ArrayOfInt32.json" />
+    <EmbeddedResource Include="Resources\BooleanFullMetadata.json" />
+    <EmbeddedResource Include="Resources\ByteFullMetadata.json" />
+    <EmbeddedResource Include="Resources\CollectionOfPerson.json" />
+    <EmbeddedResource Include="Resources\DateTimeOffsetFullMetadata.json" />
+    <EmbeddedResource Include="Resources\DecimalFullMetadata.json" />
+    <EmbeddedResource Include="Resources\DoubleFullMetadata.json" />
+    <EmbeddedResource Include="Resources\EmployeeEntry.json" />
+    <EmbeddedResource Include="Resources\FeedOfEmployee.json" />
+    <EmbeddedResource Include="Resources\GuidFullMetadata.json" />
+    <EmbeddedResource Include="Resources\Int16FullMetadata.json" />
+    <EmbeddedResource Include="Resources\Int32FullMetadata.json" />
+    <EmbeddedResource Include="Resources\Int64FullMetadata.json" />
+    <EmbeddedResource Include="Resources\ListOfString.json" />
+    <EmbeddedResource Include="Resources\MainEntryFeedInJsonFullMetadata.json" />
+    <EmbeddedResource Include="Resources\MainEntryFeedInJsonNoMetadata.json" />
+    <EmbeddedResource Include="Resources\NullableBooleanFullMetadata.json" />
+    <EmbeddedResource Include="Resources\NullableInt32FullMetadata.json" />
+    <EmbeddedResource Include="Resources\NullableInt32NoMetadata.json" />
+    <EmbeddedResource Include="Resources\PersonComplexType.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInJsonFullMetadata.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInPlainOldJson.json" />
+    <EmbeddedResource Include="Resources\PersonRequestEntryInPlainOldJson.json" />
+    <EmbeddedResource Include="Resources\ProductRequestEntry.json" />
+    <EmbeddedResource Include="Resources\ProductsCsdl.xml" />
+    <EmbeddedResource Include="Resources\SByteFullMetadata.json" />
+    <EmbeddedResource Include="Resources\SingleFullMetadata.json" />
+    <EmbeddedResource Include="Resources\StringFullMetadata.json" />
+    <EmbeddedResource Include="Resources\StringNoMetadata.json" />
+    <EmbeddedResource Include="Resources\SupplierPatch.json" />
+    <EmbeddedResource Include="Resources\SupplierRequestEntry.json" />
+    <EmbeddedResource Include="Resources\TimeSpanFullMetadata.json" />
+    <EmbeddedResource Include="Resources\WorkItemEntry.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInJsonLightFullMetadata.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInJsonLightMinimalMetadata.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInJsonLightNoMetadata.json" />
+    <EmbeddedResource Include="Resources\PersonEntryInJsonLight.json" />
+    <EmbeddedResource Include="Resources\EntityNavigationToSingletonFullMetadata.json" />
+    <EmbeddedResource Include="Resources\SingletonNavigationToEntitysetFullMetadata.json" />
+    <EmbeddedResource Include="Resources\SingletonSelectAndExpand.json" />
+    <EmbeddedResource Include="Resources\PresidentInJsonLightNoMetadata.json" />
+    <EmbeddedResource Include="Resources\PresidentInJsonLightMinimalMetadata.json" />
+    <EmbeddedResource Include="Resources\PresidentInJsonLightFullMetadata.json" />
+    <EmbeddedResource Include="Resources\DateFullMetadata.json" />
+    <EmbeddedResource Include="Resources\TimeOfDayFullMetadata.json" />
+    <EmbeddedResource Include="Resources\PeopleWithAllAnnotations.json" />
+    <EmbeddedResource Include="Resources\PeopleWithMultipleAnnotations.json" />
+    <EmbeddedResource Include="Resources\PeopleWithoutAnnotations.json" />
+    <EmbeddedResource Include="Resources\PeopleWithSpecialAnnotations.json" />
+    <EmbeddedResource Include="PublicApi\Microsoft.AspNet.OData.PublicApi.bsl" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
@@ -84,7 +85,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             const string RequestUri = @"http://localhost/Customers(12)/NS.GetOrder(orderId=4)/Amount";
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
-            HttpConfiguration config = new[] { typeof(CustomersController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(CustomersController) });
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             config.MapODataServiceRoute("odata", "", model.Model);
 

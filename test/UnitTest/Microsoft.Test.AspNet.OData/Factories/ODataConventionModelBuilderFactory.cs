@@ -27,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         public static ODataConventionModelBuilder Create()
         {
 #if !NETCORE1x
-            return ODataConventionModelBuilderFactory.Create();
+            return new ODataConventionModelBuilder();
 #else
             ApplicationPartManager applicationPartManager = new ApplicationPartManager();
             AssemblyPart part = new AssemblyPart(typeof(ODataConventionModelBuilder).Assembly);
@@ -83,11 +83,9 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <returns>A new instance of the <see cref="ODataConventionModelBuilder"/> class.</returns>
         public static ODataConventionModelBuilder CreateWithModelAliasing(bool modelAliasing)
         {
-#if !NETCORE1x
-            return new ODataConventionModelBuilder() { ModelAliasingEnabled = modelAliasing };
-#else
-            return new ODataConventionModelBuilder((IServiceProvider)null) { ModelAliasingEnabled = modelAliasing };
-#endif
+            ODataConventionModelBuilder builder = Create();
+            builder.ModelAliasingEnabled = modelAliasing;
+            return builder;
         }
 
         /// <summary>
@@ -100,6 +98,11 @@ namespace Microsoft.Test.AspNet.OData.Factories
         public static ODataConventionModelBuilder CreateWithModelAliasing(HttpConfiguration configuration, bool modelAliasing)
         {
             return new ODataConventionModelBuilder(configuration) { ModelAliasingEnabled = modelAliasing };
+        }
+#else
+        public static ODataConventionModelBuilder CreateWithModelAliasing(IRouteBuilder routeBuilder, bool modelAliasing)
+        {
+            return new ODataConventionModelBuilder(routeBuilder.ServiceProvider) { ModelAliasingEnabled = modelAliasing };
         }
 #endif
     }

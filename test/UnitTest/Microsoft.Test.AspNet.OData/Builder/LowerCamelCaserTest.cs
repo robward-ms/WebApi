@@ -51,8 +51,13 @@ namespace Microsoft.Test.AspNet.OData.Builderer
             string nameResolvedByLowerCamelCaser = lowerCamelCaser.ToLowerCamelCase(propertyName);
             string nameResolveByJsonNet = camelCasePropertyNamesContractResolver.GetResolvedPropertyName(propertyName);
 
+            // Newtonsoft appears to have changed from v6 to v10 here. Some cases that used to pass 
+            // and were changed are:
+            // [InlineData("MyPI", "mypi")] => [InlineData("MyPI", "myPI")]
+            // [InlineData("U_ID", "u_id")] => [InlineData("U_ID", "u_ID")]
+            //Assert.Equal(nameResolveByJsonNet, nameResolvedByLowerCamelCaser);
+
             // Assert
-            Assert.Equal(nameResolveByJsonNet, nameResolvedByLowerCamelCaser);
             Assert.Equal(expectName, nameResolvedByLowerCamelCaser);
         }
 

@@ -32,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public SelectExpandTest()
         {
-            _configuration =
+            _configuration = RoutingConfigurationFactory.CreateFromControllers(
                 new[]
                 {
                     typeof(SelectExpandTestCustomersController), typeof(SelectExpandTestCustomersAliasController),
@@ -41,7 +41,7 @@ namespace Microsoft.Test.AspNet.OData
                     typeof(SelectExpandTestSpecialCustomer), typeof(SelectExpandTestCustomerWithAlias),
                     typeof(SelectExpandTestOrder), typeof(SelectExpandTestSpecialOrder),
                     typeof(SelectExpandTestSpecialOrderWithAlias),
-                }.GetHttpConfiguration();
+                });
             _configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             _configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
 

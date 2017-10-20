@@ -6,9 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+#if !NETCORE1x
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+#else
+using Microsoft.AspNetCore.Mvc.Filters;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -26,6 +30,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 {
     public class QueryCompositionTests
     {
+#if !NETCORE1x
         private static IEdmModel _queryCompositionCustomerModel;
 
         [Theory]
@@ -145,7 +150,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             builder2.EntitySet<FormatterPerson>("People").HasIdLink(p => new Uri("http://link/"), false);
             var model2 = builder2.GetEdmModel();
 
-            var config = new[] { typeof(PeopleController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(PeopleController) }); ;
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
 
@@ -206,8 +211,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [MemberData(nameof(PrimitiveTypesQueryCompositionData))]
         public virtual void PrimitiveTypesQueryComposition(string query, IEnumerable<int> expectedResults)
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
-            message.EnableHttpDependencyInjectionSupport();
+            var message = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + query);
 
             ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), message);
             var results = queryOptions.ApplyTo(Enumerable.Range(0, 100).AsQueryable()) as IQueryable<int>;
@@ -216,6 +220,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(expectedResults, results);
         }
 
+#if !NETCORE1x
         private static HttpConfiguration InitializeConfiguration(string controllerName, bool useCustomEdmModel,
             ODataUriResolver resolver = null)
         {
@@ -229,7 +234,8 @@ namespace Microsoft.Test.AspNet.OData.Query
                 typeof(QueryCompositionCustomerLowLevel_ODataQueryOptionsOfTController),
                 typeof(QueryCompositionCategoryController), typeof(QueryCompositionAnonymousTypesController)
             };
-            HttpConfiguration config = controllers.GetHttpConfiguration();
+
+            var config = RoutingConfigurationFactory.CreateFromControllers(controllers);
             config.Routes.MapHttpRoute("default", "{controller}/{key}", new { key = RouteParameter.Optional });
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -274,7 +280,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             request.EnableODataDependencyInjectionSupport("default");
             return client.SendAsync(request).Result;
         }
-
+#endif
         private static void AssertRespondsWithExpectedStatusCode(HttpClient client, string uri, HttpStatusCode expectedStatusCode)
         {
             using (HttpResponseMessage response = client.GetAsync(uri).Result)
@@ -292,10 +298,18 @@ namespace Microsoft.Test.AspNet.OData.Query
                 _model = model;
             }
 
+#if !NETCORE1x
             public override void OnActionExecuting(HttpActionContext actionContext)
             {
                 Assert.Equal(_model, actionContext.Request.GetModel());
             }
+#else
+            public override void OnActionExecuting(ActionExecutingContext actionContext)
+            {
+                Assert.Equal(_model, actionContext.HttpContext.Request.GetModel());
+            }
+#endif
         }
+#endif
     }
 }

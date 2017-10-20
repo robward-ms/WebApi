@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -51,8 +52,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public ODataFunctionTests()
         {
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
-            HttpConfiguration configuration =
-                new[] { typeof(MetadataController), typeof(FCustomersController) }.GetHttpConfiguration();
+            HttpConfiguration configuration = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(MetadataController), typeof(FCustomersController) });
             var model = GetUnTypedEdmModel();
 
             // without attribute routing

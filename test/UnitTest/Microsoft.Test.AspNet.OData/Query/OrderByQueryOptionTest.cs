@@ -260,7 +260,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void ApplyTo_PropertyAliased_IfEnabled(bool modelAliasing, string propertyName)
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder { ModelAliasingEnabled = modelAliasing };
+            var builder = ODataConventionModelBuilderFactory.CreateWithModelAliasing(modelAliasing);
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             var model = builder.GetEdmModel();
 

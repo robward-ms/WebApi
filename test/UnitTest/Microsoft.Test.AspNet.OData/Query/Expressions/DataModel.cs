@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+#if !NETCORE1x
 using System.Data.Linq;
+#endif
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.AspNet.OData.Query;
@@ -120,7 +122,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public char? NullableCharProp { get; set; }
 
         public char[] CharArrayProp { get; set; }
+#if !NETCORE1x
         public Binary BinaryProp { get; set; }
+#endif
         public XElement XElementProp { get; set; }
 
         public SimpleEnum SimpleEnumProp { get; set; }

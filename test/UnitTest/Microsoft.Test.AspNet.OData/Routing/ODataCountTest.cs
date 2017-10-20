@@ -29,7 +29,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public ODataCountTest()
         {
             IEdmModel model = GetEdmModel();
-            HttpConfiguration configuration = new[] { typeof(DollarCountEntitiesController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(DollarCountEntitiesController) });
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("odata", "odata", model);
             var server = new HttpServer(configuration);

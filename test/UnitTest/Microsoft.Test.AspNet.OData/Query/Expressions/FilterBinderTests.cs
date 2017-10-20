@@ -3,16 +3,21 @@
 
 using System;
 using System.Collections.Generic;
+#if !NETCORE1x
 using System.Data.Linq;
+#endif
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+#if !NETCORE1x
 using System.Web.Http.Dispatcher;
+#endif
 using System.Xml.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData;
@@ -71,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             }
         }
 
-        #region Inequalities
+#region Inequalities
         [Theory]
         [InlineData(null, true, true)]
         [InlineData("", false, false)]
@@ -220,9 +225,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 expectedExpression);
         }
 
-        #endregion
+#endregion
 
-        #region Logical Operators
+#region Logical Operators
 
         [Fact]
         [ReplaceCulture]
@@ -323,9 +328,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "$it => Convert(Not(Not(Not($it.Discontinued))))",
                 "$it => (Not(Not(Not($it.Discontinued))) == True)");
         }
-        #endregion
+#endregion
 
-        #region Arithmetic Operators
+#region Arithmetic Operators
         [Theory]
         [InlineData(null, false, false)]
         [InlineData(5.0, true, true)]
@@ -377,9 +382,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 String.Format(CultureInfo.InvariantCulture, "$it => (($it.UnitPrice % Convert({0:0.00})) < Convert({1:0.00}))", 1.0, 5.0),
                 NotTesting);
         }
-        #endregion
+#endregion
 
-        # region NULL  handling
+#region NULL  handling
         [Theory]
         [InlineData("UnitsInStock eq UnitsOnOrder", null, null, false, true)]
         [InlineData("UnitsInStock ne UnitsOnOrder", null, null, false, false)]
@@ -423,7 +428,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 NotTesting,
                 "$it => (IIF((($it.ProductName == null) OrElse (\"Abc\" == null)), null, Convert($it.ProductName.StartsWith(\"Abc\"))) == True)");
         }
-        #endregion
+#endregion
 
         [Theory]
         [InlineData("StringProp gt 'Middle'", "Middle", false)]
@@ -523,7 +528,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                new { WithNullPropagation = true, WithoutNullPropagation = true });
         }
 
-        #region Any/All
+#region Any/All
 
         [Fact]
         public void AnyOnNavigationEnumerableCollections()
@@ -796,9 +801,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                NotTesting);
         }
 
-        #endregion
+#endregion
 
-        #region String Functions
+#region String Functions
 
         [Theory]
         [InlineData("Abcd", -1, "Abcd", true, typeof(ArgumentOutOfRangeException))]
@@ -1024,9 +1029,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
               new { WithNullPropagation = false, WithoutNullPropagation = typeof(InvalidOperationException) });
         }
 
-        #endregion
+#endregion
 
-        #region Date Functions
+#region Date Functions
         [Fact]
         public void DateDay()
         {
@@ -1226,9 +1231,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             VerifyQueryDeserialization(filter, expression);
         }
 
-        #endregion
+#endregion
 
-        #region Math Functions
+#region Math Functions
         [Theory, MemberData(nameof(MathRoundDecimal_DataSet))]
         public void MathRoundDecimal(decimal? unitPrice, bool withNullPropagation, object withoutNullPropagation)
         {
@@ -1379,9 +1384,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             var filters = VerifyQueryDeserialization<DataTypes>(filter);
             RunFilters(filters, new DataTypes(), new { WithNullPropagation = true, WithoutNullPropagation = true });
         }
-        #endregion
+#endregion
 
-        #region Custom Functions
+#region Custom Functions
 
         [Fact]
         public void CustomMethod_InstanceMethodOfDeclaringType()
@@ -1554,9 +1559,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             }
         }
 
-        #endregion
+#endregion
 
-        #region Data Types
+#region Data Types
         [Fact]
         public void GuidExpression()
         {
@@ -1691,9 +1696,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 new { WithNullPropagation = true, WithoutNullPropagation = true });
         }
 
-        #endregion
+#endregion
 
-        #region Casts
+#region Casts
 
         [Fact]
         public void NSCast_OnEnumerableEntityCollection_GeneratesExpression_WithOfTypeOnEnumerable()
@@ -1796,9 +1801,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "The child type 'Edm.NonExistentType' in a cast was not an entity type. Casts can only be performed on entity types.");
         }
 
-        #endregion
+#endregion
 
-        #region cast in query option
+#region cast in query option
 
         [Theory]
         [InlineData("cast(null,Edm.Int16) eq null", "$it => (null == null)")]
@@ -2266,9 +2271,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
         }
 
-        #endregion
+#endregion
 
-        #region 'isof' in query option
+#region 'isof' in query option
 
         [Theory]
         [InlineData("isof(Edm.Int16)", "$it => IIF(($it Is System.Int16), True, False)")]
@@ -2570,9 +2575,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             RunFilters<Product>(filters, model, expectedValue: new { WithNullPropagation = false, WithoutNullPropagation = false });
         }
 
-        #endregion
+#endregion
 
-        #region parameter alias for filter query option
+#region parameter alias for filter query option
 
         [Theory]
         // Parameter alias value is not null.
@@ -2630,7 +2635,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
+                WebApiAssembliesResolverFactory.CreateFake(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2662,7 +2667,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
+                WebApiAssembliesResolverFactory.CreateFake(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2692,7 +2697,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                new WebApiAssembliesResolver(CreateFakeAssembliesResolver()),
+                WebApiAssembliesResolverFactory.CreateFake(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2719,8 +2724,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "Syntax error: character '#' is not valid at position 11 in 'IntProp eq #p'.");
         }
 
-        #endregion
+#endregion
 
+#if !NETCORE1x
         [Theory]
         [InlineData("UShortProp eq 12", "$it => (Convert($it.UShortProp) == 12)")]
         [InlineData("ULongProp eq 12L", "$it => (Convert($it.ULongProp) == 12)")]
@@ -2746,6 +2752,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 },
                 new { WithNullPropagation = true, WithoutNullPropagation = true });
         }
+#endif
 
         [Theory]
         [InlineData("BinaryProp eq binary'I6v/'", "$it => ($it.BinaryProp.ToArray() == System.Byte[])", true, true)]
@@ -2766,7 +2773,9 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             RunFilters(filters,
                 new DataTypes
                 {
+#if !NETCORE1x
                     BinaryProp = new Binary(new byte[] { 35, 171, 255 }),
+#endif
                     ByteArrayProp = new byte[] { 35, 171, 255 }
                 },
                 new { WithNullPropagation = withNullPropagation, WithoutNullPropagation = withoutNullPropagation });
@@ -2829,7 +2838,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "$it => (Convert(IIF((($it.ProductProperties != null) AndAlso $it.ProductProperties.ContainsKey(Token)), $it.ProductPropertiesToken, null)) == \"1\")");
         }
 
-        #region Negative Tests
+#region Negative Tests
 
         [Fact]
         public void TypeMismatchInComparison()
@@ -2837,7 +2846,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             ExceptionAssert.Throws<ODataException>(() => Bind("length(123) eq 12"));
         }
 
-        #endregion
+#endregion
 
         private Expression<Func<Product, bool>> Bind(string filter, ODataQuerySettings querySettings = null)
         {
@@ -2854,17 +2863,12 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 querySettings = CreateSettings();
             }
 
-            return Bind<T>(filterNode, model, CreateFakeAssembliesResolver(), querySettings);
+            return Bind<T>(filterNode, model, WebApiAssembliesResolverFactory.CreateFake(), querySettings);
         }
 
-        private static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterNode, IEdmModel model, IAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
+        private static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterNode, IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
         {
-            return FilterBinder.Bind<TEntityType>(filterNode, model, new WebApiAssembliesResolver(assembliesResolver), querySettings);
-        }
-
-        private IAssembliesResolver CreateFakeAssembliesResolver()
-        {
-            return new NoAssembliesResolver();
+            return FilterBinder.Bind<TEntityType>(filterNode, model, assembliesResolver, querySettings);
         }
 
         private FilterClause CreateFilterNode(string filter, IEdmModel model, Type entityType)
@@ -2926,7 +2930,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             IEdmModel model = GetModel<T>();
             FilterClause filterNode = CreateFilterNode(filter, model, typeof(T));
-            IAssembliesResolver assembliesResolver = CreateFakeAssembliesResolver();
+            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.CreateFake();
 
             Func<ODataQuerySettings, ODataQuerySettings> customizeSettings = (settings) =>
             {
@@ -3014,15 +3018,6 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             return str.PadRight(number);
         }
-
-        private class NoAssembliesResolver : IAssembliesResolver
-        {
-            public ICollection<Assembly> GetAssemblies()
-            {
-                return new Assembly[0];
-            }
-        }
-
     }
 
     // Used by Custom Method binder tests - by reflection

@@ -15,14 +15,14 @@ using Microsoft.OData.Edm;
 namespace Microsoft.Test.AspNet.OData.Factories
 {
     /// <summary>
-    /// A class to create HttpRequest[Message].
+    /// A class to create ResourceSetContextFactory.
     /// </summary>
     public class ResourceSetContextFactory
     {
         /// <summary>
-        /// Initializes a new instance of the routing configuration class.
+        /// Initializes a new instance of ResourceSetContext.
         /// </summary>
-        /// <returns>A new instance of the routing configuration class.</returns>
+        /// <returns>A new instance of ResourceSetContext.</returns>
 #if !NETCORE1x
         public static ResourceSetContext Create(IEdmEntitySet entitySetBase, HttpRequestMessage request)
         {

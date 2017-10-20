@@ -25,11 +25,11 @@ namespace Microsoft.Test.AspNet.OData
 
         public SelectExpandNestedDollarCountTest()
         {
-            _configuration =
+            _configuration = RoutingConfigurationFactory.CreateFromControllers(
                 new[]
                 {
                     typeof(MsCustomersController), typeof(MetadataController)
-                }.GetHttpConfiguration();
+                });
             _configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             _configuration.Count().OrderBy().Filter().Expand().MaxTop(null);

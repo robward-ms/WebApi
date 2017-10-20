@@ -25,8 +25,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void Ctor_Throws_Argument_IfContextIsofDifferentEntityType()
         {
-            HttpRequestMessage message = new HttpRequestMessage();
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create();
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
@@ -34,47 +33,46 @@ namespace Microsoft.Test.AspNet.OData.Query
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
             ExceptionAssert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, message),
+                () => new ODataQueryOptions<int>(context, request),
                 "context", "The entity type 'Microsoft.Test.AspNet.OData.TestCommon.Models.Customer' does not match the expected entity type 'System.Int32' as set on the query context.");
         }
 
         [Fact]
         public void Ctor_Throws_Argument_IfContextIsUnTyped()
         {
-            HttpRequestMessage message = new HttpRequestMessage();
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create();
 
             IEdmModel model = EdmCoreModel.Instance;
             IEdmType elementType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32);
             ODataQueryContext context = new ODataQueryContext(model, elementType);
 
             ExceptionAssert.ThrowsArgument(
-                () => new ODataQueryOptions<int>(context, message),
+                () => new ODataQueryOptions<int>(context, request),
                 "context", "The property 'ElementClrType' of ODataQueryContext cannot be null.");
         }
 
         [Fact]
         public void Ctor_SuccedsIfEntityTypesMatch()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
             Assert.Equal("10", query.Top.RawValue);
         }
 
+#if !NETCORE1x
         [Theory]
         [InlineData("IfMatch")]
         [InlineData("IfNoneMatch")]
         public void GetIfMatchOrNoneMatch_ReturnsETag_SetETagHeaderValue(string header)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
             if (header.Equals("IfMatch"))
@@ -112,6 +110,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal("Foo", result["Name"]);
             Assert.Equal("Foo", dynamicResult.Name);
         }
+#endif
 
         [Theory]
         [InlineData("IfMatch")]
@@ -119,8 +118,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void GetIfMatchOrNoneMatch_ETagIsNull_IfETagHeaderValueNotSet(string header)
         {
             // Arrange
-            HttpRequestMessage message = new HttpRequestMessage();
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create();
             ODataModelBuilder builder = new ODataModelBuilder();
             EntityTypeConfiguration<Customer> customer = builder.EntityType<Customer>();
             customer.HasKey(c => c.Id);
@@ -129,7 +127,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 
             // Act
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
             ETag result = header.Equals("IfMatch") ? query.IfMatch : query.IfNoneMatch;
 
             // Assert
@@ -139,15 +137,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_ThrowsArgument_If_QueryTypeDoesnotMatch()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable()),
@@ -158,15 +155,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_Succeeds_If_QueryTypeDerivesFromOptionsType()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable()));
@@ -175,15 +171,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_Succeeds_If_QueryTypeMatchesOptionsType()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable()));
@@ -192,15 +187,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_WithQuerySettings_ThrowsArgument_If_QueryTypeDoesnotMatch()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.ThrowsArgument(
                 () => query.ApplyTo(Enumerable.Empty<int>().AsQueryable(), new ODataQuerySettings()),
@@ -211,15 +205,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_WithQuerySettings_Succeeds_If_QueryTypeDerivesFromOptionsType()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<KirklandCustomer>().AsQueryable(), new ODataQuerySettings()));
@@ -228,15 +221,14 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void ApplyTo_WithQuerySettings_Succeeds_If_QueryTypeMatchesOptionsType()
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://server/?$top=10");
-            message.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://server/?$top=10");
 
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
 
             ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Customer));
 
-            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, message);
+            ODataQueryOptions<Customer> query = new ODataQueryOptions<Customer>(context, request);
 
             ExceptionAssert.DoesNotThrow(
                 () => query.ApplyTo(Enumerable.Empty<Customer>().AsQueryable(), new ODataQuerySettings()));

@@ -22,7 +22,7 @@ namespace Microsoft.Test.AspNet.OData
         public void AGet_Full()
         {
             // Arrange
-            var configuration = new[] { typeof(AccountsController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(AccountsController) });
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
 
@@ -40,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData
         public void AGet_Minimial()
         {
             // Arrange
-            var configuration = new[] { typeof(AccountsController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(AccountsController) });
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
 
             HttpClient client = new HttpClient(new HttpServer(configuration));

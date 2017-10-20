@@ -52,7 +52,8 @@ namespace Microsoft.AspNet.OData.Extensions
             }
 
             // Create an service provider for this route. Add the default services to the custom configuration actions.
-            IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, ConfigureDefaultServices(configureAction));
+            Action<IContainerBuilder> builderAction = ConfigureDefaultServices(configureAction);
+            IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
 
             // Resolve the path handler and set URI resolver to it.
             IODataPathHandler pathHandler = serviceProvider.GetRequiredService<IODataPathHandler>();
@@ -146,7 +147,7 @@ namespace Microsoft.AspNet.OData.Extensions
         /// </summary>
         /// <param name="configureAction"></param>
         /// <returns></returns>
-        private static Action<IContainerBuilder> ConfigureDefaultServices(Action<IContainerBuilder> configureAction)
+        internal static Action<IContainerBuilder> ConfigureDefaultServices(Action<IContainerBuilder> configureAction)
         {
             return (builder =>
             {

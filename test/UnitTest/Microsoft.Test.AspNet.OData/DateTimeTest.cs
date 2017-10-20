@@ -342,8 +342,8 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient(TimeZoneInfo timeZoneInfo)
         {
-            HttpConfiguration config =
-                new[] { typeof(MetadataController), typeof(DateTimeModelsController) }.GetHttpConfiguration();
+            HttpConfiguration config = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(MetadataController), typeof(DateTimeModelsController) });
             if (timeZoneInfo != null)
             {
                 config.SetTimeZoneInfo(timeZoneInfo);

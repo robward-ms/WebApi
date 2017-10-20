@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+#if !NETCORE1x
 using System.Web.Http.Dispatcher;
+#endif
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData.Edm;
@@ -134,7 +137,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             IEdmModel model = GetModel<T>();
             ApplyClause clause = CreateApplyNode(clauseString, model, typeof(T));
-            IAssembliesResolver assembliesResolver = CreateFakeAssembliesResolver();
+            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.CreateFake();
 
             Func<ODataQuerySettings, ODataQuerySettings> customizeSettings = (settings) =>
             {
@@ -148,7 +151,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             var binder = new AggregationBinder(
                 customizeSettings(new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False }),
-                new WebApiAssembliesResolver(assembliesResolver),
+                assembliesResolver,
                 typeof(T),
                 model,
                 clause.Transformations.First());
@@ -189,11 +192,6 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             return parser.ParseApply();
         }
 
-        private IAssembliesResolver CreateFakeAssembliesResolver()
-        {
-            return new NoAssembliesResolver();
-        }
-
         private IEdmModel GetModel<T>() where T : class
         {
             Type key = typeof(T);
@@ -212,14 +210,6 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 value = _modelCache[key] = model.GetEdmModel();
             }
             return value;
-        }
-
-        private class NoAssembliesResolver : IAssembliesResolver
-        {
-            public ICollection<Assembly> GetAssemblies()
-            {
-                return new Assembly[0];
-            }
         }
     }
 }

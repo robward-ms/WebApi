@@ -43,7 +43,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient(DependencyInjectionModel instance)
         {
-            HttpConfiguration config = new[] { typeof(DependencyInjectionModelsController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(DependencyInjectionModelsController) });
             IEdmModel model = GetEdmModel();
             config.MapODataServiceRoute("odata", "odata", builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => instance)

@@ -4,8 +4,10 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+#if !NETCORE1x
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
@@ -172,9 +174,8 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void SelectExpandClause_CanParse_ModelBuiltForQueryable(string select, string expand)
         {
             // Arrange
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver());
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(new HttpConfiguration(), isQueryCompositionMode: true);
+            var config = RoutingConfigurationFactory.Create();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(config, isQueryCompositionMode: true);
             builder.EntityType<Customer>();
             IEdmModel model = builder.GetEdmModel();
 
@@ -634,8 +635,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var context = new ODataQueryContext(
                 model,
                 model.FindDeclaredType("Microsoft.Test.AspNet.OData.TestCommon.Models.AutoExpandCustomer"));
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create(HttpMethod.Get, url);
             var queryOption = new ODataQueryOptions(context, request);
             queryOption.AddAutoSelectExpandProperties();
             var selectExpand = queryOption.SelectExpand;

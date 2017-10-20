@@ -6,8 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+#if !NETCORE1x
 using System.Web.Http;
 using System.Web.Http.Results;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
@@ -22,12 +26,13 @@ namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataLevelsTest
     {
+#if !NETCORE1x
         private HttpClient _client;
 
         public ODataLevelsTest()
         {
             IEdmModel model = GetEdmModel();
-            HttpConfiguration configuration = new[] { typeof(LevelsEntitiesController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(LevelsEntitiesController) });
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("odata", "odata", model);
             var server = new HttpServer(configuration);
@@ -565,7 +570,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // "Parent" => 1, "DerivedAncestors" => 2, max("BaseEntities") => 3
             Assert.Null(parent["DerivedAncestors"][1]["BaseEntities"][2]["BaseEntities"][1]["BaseEntities"][0]["BaseEntities"]);
         }
-
+#endif
         private void AssertEntity(JToken entity, int key)
         {
             Assert.Equal(key, entity["ID"]);
@@ -644,9 +649,10 @@ namespace Microsoft.Test.AspNet.OData.Routing
                     }
                 }
                 Entities[8].Parent = Entities[9];
-                Entities[1].DerivedAncestors = new LevelsDerivedEntity[] { (LevelsDerivedEntity)Entities[3] }; 
+                Entities[1].DerivedAncestors = new LevelsDerivedEntity[] { (LevelsDerivedEntity)Entities[3] };
             }
 
+#if !NETCORE1x
             public IHttpActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
             {
                 var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
@@ -667,18 +673,52 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 var result = queryOptions.ApplyTo(Entities.AsQueryable(), querySettings).AsQueryable();
                 return Ok(result, result.GetType());
             }
+#else
+            public IActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
+            {
+                var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
+
+                try
+                {
+                    queryOptions.Validate(validationSettings);
+                }
+                catch (ODataException e)
+                {
+                    var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    responseMessage.Content = new StringContent(
+                        Error.Format("The query specified in the URI is not valid. {0}", e.Message));
+                    return null; // ResponseMessage(responseMessage);
+                }
+
+                var querySettings = new ODataQuerySettings();
+                var result = queryOptions.ApplyTo(Entities.AsQueryable(), querySettings).AsQueryable();
+                return Ok(result, result.GetType());
+            }
+#endif
 
             [EnableQuery(MaxExpansionDepth = 5)]
+#if !NETCORE1x
             public IHttpActionResult Get(int key)
+#else
+            public IActionResult Get(int key)
+#endif
             {
                 return Ok(Entities.Single(e => e.ID == key));
             }
 
+#if !NETCORE1x
             private IHttpActionResult Ok(object content, Type type)
             {
                 var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
                 return Activator.CreateInstance(resultType, content, this) as IHttpActionResult;
             }
+#else
+            private IActionResult Ok(object content, Type type)
+            {
+                //var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
+                return null; // Activator.CreateInstance(resultType, content, this) as IActionResult;
+            }
+#endif
         }
 
         public class LevelsBaseEntity

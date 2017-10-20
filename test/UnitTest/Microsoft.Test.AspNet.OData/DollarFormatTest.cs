@@ -26,8 +26,8 @@ namespace Microsoft.Test.AspNet.OData
             MediaTypeHeaderValue expected = MediaTypeHeaderValue.Parse(mediaTypeFormat);
             string url = string.Format("http://localhost/{0}?$format={1}", path, mediaTypeFormat);
             IEdmModel model = GetEdmModel();
-            var configuration =
-                new[] { typeof(FormatCustomersController), typeof(ThisController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(FormatCustomersController), typeof(ThisController) });
             HttpServer server = new HttpServer(configuration);
             HttpClient client = new HttpClient(server);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);

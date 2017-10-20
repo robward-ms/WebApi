@@ -190,8 +190,8 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient()
         {
-            HttpConfiguration config =
-                new[] { typeof(MetadataController), typeof(DateAndTimeOfDayModelsController) }.GetHttpConfiguration();
+            HttpConfiguration config = RoutingConfigurationFactory.CreateFromControllers(
+                new[] { typeof(MetadataController), typeof(DateAndTimeOfDayModelsController) });
             config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
             config.MapODataServiceRoute("odata", "odata", GetEdmModel());
             return new HttpClient(new HttpServer(config));

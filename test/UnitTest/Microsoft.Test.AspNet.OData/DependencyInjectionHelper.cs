@@ -28,21 +28,6 @@ namespace Microsoft.Test.AspNet.OData
             return new MockContainer().GetRequiredService<ODataDeserializerProvider>();
         }
 
-        public static HttpConfiguration CreateConfigurationWithRootContainer()
-        {
-            return new MockContainer().Configuration;
-        }
-
-        public static HttpConfiguration CreateConfigurationWithRootContainer(IEdmModel model)
-        {
-            return new MockContainer(model).Configuration;
-        }
-
-        public static IServiceProvider GetODataRootContainer(this HttpConfiguration configuration)
-        {
-            return configuration.GetODataRootContainer(HttpRouteCollectionExtensions.RouteName);
-        }
-
         public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration)
         {
             configuration.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName);
@@ -85,12 +70,6 @@ namespace Microsoft.Test.AspNet.OData
             configuration.CreateODataRootContainer(routeName, builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => model)
                        .AddService(ServiceLifetime.Singleton, sp => pathHandler));
-        }
-
-        public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration,
-            Action<IContainerBuilder> action)
-        {
-            configuration.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName, action);
         }
 
         public static void EnableHttpDependencyInjectionSupport(this HttpRequestMessage request)

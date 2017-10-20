@@ -5,7 +5,11 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+#if !NETCORE1x
 using System.Web.Http;
+#else
+using Microsoft.AspNetCore.Mvc;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -20,17 +24,17 @@ namespace Microsoft.Test.AspNet.OData.Query
 {
     public class ODataSingletonQueryOptionTest
     {
-        private HttpConfiguration _configuration;
+#if !NETCORE1x
         private HttpClient _client;
 
         public ODataSingletonQueryOptionTest()
         {
             var controllers = new[] { typeof(MeController) };
-            _configuration = controllers.GetHttpConfiguration();
-            _configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
             
-            _configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
-            HttpServer server = new HttpServer(_configuration);
+            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            HttpServer server = new HttpServer(configuration);
             _client = new HttpClient(server);
         }
 
@@ -126,15 +130,24 @@ namespace Microsoft.Test.AspNet.OData.Query
         };
 
         [EnableQuery]
+#if !NETCORE1x
         public IHttpActionResult GetFromSpecialCustomer()
+#else
+        public IActionResult GetFromSpecialCustomer()
+#endif
         {
             return Ok((SpecialCustomer)me);
         }
 
         [EnableQuery]
+#if !NETCORE1x
         public IHttpActionResult Get()
+#else
+        public IActionResult Get()
+#endif
         {
             return Ok(me);
         }
+#endif
     }
 }
