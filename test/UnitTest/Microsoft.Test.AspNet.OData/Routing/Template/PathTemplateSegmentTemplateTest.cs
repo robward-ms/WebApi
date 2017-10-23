@@ -6,6 +6,8 @@ using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Template
 {
@@ -15,7 +17,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Template
         public void Ctor_ThrowsArgumentNull_PathTemplateSegment()
         {
             // Assert
-            Assert.ThrowsArgumentNull(() => new PathTemplateSegmentTemplate(segment: null), "segment");
+            ExceptionAssert.ThrowsArgumentNull(() => new PathTemplateSegmentTemplate(segment: null), "segment");
         }
 
         [Fact]
@@ -39,7 +41,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Template
             PathTemplateSegment segment = new PathTemplateSegment("{pName:dynamic:test}");
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => new PathTemplateSegmentTemplate(segment),
+            ExceptionAssert.Throws<ODataException>(() => new PathTemplateSegmentTemplate(segment),
                 string.Format("The attribute routing template contains invalid segment '{0}'.", "{pName:dynamic:test}"));
         }
 

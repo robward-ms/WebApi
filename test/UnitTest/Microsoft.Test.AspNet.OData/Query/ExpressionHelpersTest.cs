@@ -6,6 +6,8 @@ using System.Collections;
 using System.Linq.Expressions;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
@@ -26,8 +28,8 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             Expression result = ExpressionHelpers.ToNullable(expression);
 
-            Assert.Equal(result.NodeType, ExpressionType.Convert);
-            Assert.Equal(result.Type, typeof(int?));
+            Assert.Equal(ExpressionType.Convert, result.NodeType);
+            Assert.Equal(typeof(int?), result.Type);
         }
 
         public static TheoryDataSet<Type, object> DefaultValuesTestData
@@ -46,7 +48,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Theory]
-        [PropertyData("DefaultValuesTestData")]
+        [MemberData(nameof(DefaultValuesTestData))]
         public void Default_Returns_ConstantExpressionWithExpectedValue(Type type, object expectedValue)
         {
             Expression defaultExpression = ExpressionHelpers.Default(type);

@@ -10,6 +10,7 @@
     <RunCodeAnalysis>$(CodeAnalysis)</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI</DefineConstants>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.OData.Core, Version=7.3.1.10814, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

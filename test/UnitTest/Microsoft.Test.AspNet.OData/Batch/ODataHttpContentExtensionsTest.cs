@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -14,7 +15,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void GetODataMessageReaderAsync_NullContent_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataHttpContentExtensions.GetODataMessageReaderAsync(null, new ODataMessageReaderSettings(), CancellationToken.None)
                     .Wait(),
                 "content");

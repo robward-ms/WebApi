@@ -30,6 +30,8 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
@@ -44,7 +46,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void Ctor_ThrowsArgumentNull_PayloadKinds()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataMediaTypeFormatter(payloadKinds: null),
                 "payloadKinds");
         }
@@ -55,7 +57,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataSerializerProvider serializerProvider = _serializerProvider;
             ODataPayloadKind[] payloadKinds = new ODataPayloadKind[0];
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataMediaTypeFormatter(deserializerProvider: null, serializerProvider: serializerProvider, payloadKinds: payloadKinds),
                 "deserializerProvider");
         }
@@ -65,7 +67,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             ODataPayloadKind[] payloadKinds = new ODataPayloadKind[0];
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataMediaTypeFormatter(_deserializerProvider, serializerProvider: null, payloadKinds: payloadKinds),
                 "serializerProvider");
         }
@@ -74,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void CopyCtor_ThrowsArgumentNull_Request()
         {
             ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[0]);
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataMediaTypeFormatter(formatter, version: ODataVersion.V4, request: null),
                 "request");
         }
@@ -82,7 +84,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void CopyCtor_ThrowsArgumentNull_Formatter()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataMediaTypeFormatter(formatter: null, version: ODataVersion.V4, request: new HttpRequestMessage()),
                 "formatter");
         }
@@ -154,7 +156,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataMediaTypeFormatter formatter = CreateFormatter(model, request, ODataPayloadKind.ServiceDocument);
             var content = new ObjectContent<ODataServiceDocument>(new ODataServiceDocument(), formatter);
 
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => content.ReadAsStringAsync().Result,
                 "The ODataMediaTypeFormatter was unable to determine the base URI for the request. The request must be processed by an OData route for the OData formatter to serialize the response.");
         }
@@ -212,7 +214,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void GetDefaultBaseAddress_ThrowsWhenRequestIsNull()
         {
-            Assert.ThrowsArgumentNull(() => ODataMediaTypeFormatter.GetDefaultBaseAddress(null), "request");
+            ExceptionAssert.ThrowsArgumentNull(() => ODataMediaTypeFormatter.GetDefaultBaseAddress(null), "request");
         }
 
         [Fact]
@@ -366,7 +368,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 {
                     // Assert (OData formatter doesn't support writing nulls)
                     Assert.Equal(TaskStatus.Faulted, writeTask.Status);
-                    Assert.Throws<SerializationException>(() => writeTask.ThrowIfFaulted(), "Cannot serialize a null 'Resource'.");
+                    ExceptionAssert.Throws<SerializationException>(() => writeTask.ThrowIfFaulted(), "Cannot serialize a null 'Resource'.");
                     mockStream.Verify(s => s.Close(), Times.Never());
                     mockStream.Verify(s => s.BeginWrite(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AsyncCallback>(), It.IsAny<object>()), Times.Never());
                 });
@@ -375,7 +377,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Theory]
         [InlineData("Test content", "utf-8", true)]
         [InlineData("Test content", "utf-16", true)]
-        public override Task ReadFromStreamAsync_UsesCorrectCharacterEncoding(string content, string encoding, bool isDefaultEncoding)
+        public Task ReadFromStreamAsync_UsesCorrectCharacterEncoding(string content, string encoding, bool isDefaultEncoding)
         {
             // Arrange
             MediaTypeFormatter formatter = CreateFormatterWithRequest();
@@ -391,7 +393,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Theory]
         [InlineData("Test content", "utf-8", true)]
         [InlineData("Test content", "utf-16", true)]
-        public override Task WriteToStreamAsync_UsesCorrectCharacterEncoding(string content, string encoding, bool isDefaultEncoding)
+        public Task WriteToStreamAsync_UsesCorrectCharacterEncoding(string content, string encoding, bool isDefaultEncoding)
         {
             // Arrange
             MediaTypeFormatter formatter = CreateFormatterWithRequest();
@@ -411,7 +413,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => formatter.ReadFromStreamAsync(typeof(Customer), new MemoryStream(), content: null, formatterLogger: null),
                 "The OData formatter requires an attached request in order to deserialize. Controller classes must derive from ODataController or be marked with ODataFormattingAttribute. Custom parameter bindings must call GetPerRequestFormatterInstance on each formatter and use these per-request instances.");
         }
@@ -423,7 +425,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Customer>("Customers");
             var formatter = CreateFormatter(builder.GetEdmModel());
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => formatter.WriteToStreamAsync(typeof(Customer), new Customer(), new MemoryStream(), content: null, transportContext: null),
                 "The OData formatter does not support writing client requests. This formatter instance must have an associated request.");
         }
@@ -550,7 +552,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpContent content = new StringContent("{ 'Number' : '42' }");
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => formatter.ReadFromStreamAsync(typeof(int), content.ReadAsStreamAsync().Result, content, formatterLogger: null).Result,
                 "The maximum number of bytes allowed to be read from the stream has been exceeded. After the last read operation, a total of 19 bytes has been read from the stream; however a maximum of 1 bytes is allowed.");
         }
@@ -606,7 +608,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("CanReadTypeTypesTestData")]
+        [MemberData(nameof(CanReadTypeTypesTestData))]
         public void CanReadType_ForTypeless_ReturnsExpectedResult_DependingOnODataPathAndPayloadKind(ODataPath path, ODataPayloadKind payloadKind)
         {
             // Arrange
@@ -646,7 +648,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("CanWriteType_ReturnsExpectedResult_ForEdmObjects_TestData")]
+        [MemberData(nameof(CanWriteType_ReturnsExpectedResult_ForEdmObjects_TestData))]
         public void CanWriteType_ReturnsTrueForEdmObjects_WithRightPayload(ODataPayloadKind payloadKind, Type type)
         {
             // Arrange
@@ -677,7 +679,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("InvalidIEdmObjectImplementationTypes")]
+        [MemberData(nameof(InvalidIEdmObjectImplementationTypes))]
         public void CanWriteType_ReturnsFalse_ForInvalidIEdmObjectImplementations_NoMatterThePayload(Type type)
         {
             var model = CreateModel();
@@ -701,11 +703,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             Mock<IEdmObject> edmObject = new Mock<IEdmObject>();
 
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => formatter
                     .WriteToStreamAsync(typeof(int), edmObject.Object, new MemoryStream(), new Mock<HttpContent>().Object, transportContext: null)
                     .Wait(),
-                "The EDM type of the object of type 'Castle.Proxies.IEdmObjectProxy' is null. The EDM type of an IEdmObject cannot be null.");
+                "The EDM type of an IEdmObject cannot be null.", partialMatch: true);
         }
 
         [Fact]

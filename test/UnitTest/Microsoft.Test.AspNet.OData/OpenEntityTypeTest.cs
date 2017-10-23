@@ -15,6 +15,8 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -494,7 +496,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal("ChangedName", changedCustomer.Name);
             Assert.Null(changedCustomer.Address);
             Assert.Null(changedCustomer.Website);
-            Assert.Equal(1, changedCustomer.CustomerProperties.Count);
+            Assert.Single(changedCustomer.CustomerProperties);
             return Updated(changedCustomer); // Updated(customer);
         }
 

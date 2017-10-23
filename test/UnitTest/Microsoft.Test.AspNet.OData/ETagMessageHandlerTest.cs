@@ -19,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -31,7 +33,7 @@ namespace Microsoft.Test.AspNet.OData
             ETagMessageHandler handler = new ETagMessageHandler();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => { var result = handler.SendAsync(null).Result; }, "request");
+            ExceptionAssert.ThrowsArgumentNull(() => { var result = handler.SendAsync(null).Result; }, "request");
         }
 
         [Fact]
@@ -42,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://host/");
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => { var result = handler.SendAsync(request).Result; },
                 "Request message does not contain an HttpConfiguration object.");
         }

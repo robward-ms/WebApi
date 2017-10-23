@@ -11,6 +11,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
@@ -31,11 +33,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("ODataRawValueMediaTypeMappings")]
+        [MemberData(nameof(ODataRawValueMediaTypeMappings))]
         public void TryMatchMediaType_ThrowsArgumentNull_WhenRequestIsNull(ODataRawValueMediaTypeMapping mapping)
         {
             // Arrange, Act & Assert
-            Assert.ThrowsArgumentNull(() => { mapping.TryMatchMediaType(null); }, "request");
+            ExceptionAssert.ThrowsArgumentNull(() => { mapping.TryMatchMediaType(null); }, "request");
         }
 
         [Fact]
@@ -65,7 +67,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("ODataRawValueMediaTypeMappings")]
+        [MemberData(nameof(ODataRawValueMediaTypeMappings))]
         public void TryMatchMediaType_DoesntMatchRequest_WithNonODataRequest(ODataRawValueMediaTypeMapping mapping)
         {
             // Arrange

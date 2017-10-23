@@ -6,6 +6,8 @@ using System.IO;
 using System.Net.Http.Formatting;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -42,13 +44,13 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void EmptyPageResult_CanBeCreated()
         {
-            Assert.DoesNotThrow(() => new PageResult<string>(new string[] {}, null, 0));
+            ExceptionAssert.DoesNotThrow(() => new PageResult<string>(new string[] {}, null, 0));
         }
 
         [Fact]
         public void Ctor_Throws_OnNegativeCount()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(
+            ExceptionAssert.Throws<ArgumentOutOfRangeException>(
                 () => new PageResult<string>(new string[] { }, null, -1),
                 "Value must be greater than or equal to 0.\r\nParameter name: value\r\nActual value was -1.");
         }

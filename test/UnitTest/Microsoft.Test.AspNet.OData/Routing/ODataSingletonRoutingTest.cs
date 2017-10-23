@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
@@ -38,7 +39,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/VipCustomer")).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -69,7 +70,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/VipCustomer/NS.SpecialCustomer")).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -83,7 +84,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/VipCustomer/Orders")).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -100,7 +101,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             HttpResponseMessage response = _client.GetAsync("http://localhost/" + path).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -122,7 +123,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                  new HttpRequestMessage(new HttpMethod(httpMethod), "http://localhost/" + path)).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -135,7 +136,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             HttpResponseMessage response = _client.PostAsync("http://localhost/" + path, new StringContent("")).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
 
@@ -150,7 +151,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             HttpResponseMessage response = _client.GetAsync("http://localhost/" + path).Result;
 
             // Act & Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
         }
     }

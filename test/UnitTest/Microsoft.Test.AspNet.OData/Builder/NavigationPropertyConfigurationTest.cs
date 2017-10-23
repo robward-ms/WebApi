@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -17,7 +19,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
         [Fact]
         public void Ctor_Throws_ArgumentNull_Property()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new NavigationPropertyConfiguration(property: null, multiplicity: EdmMultiplicity.One, declaringType: new EntityTypeConfiguration()),
                 "property");
         }
@@ -27,7 +29,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
         {
             MockType mockEntity = new MockType().Property<int>("ID");
 
-            Assert.Throws<ArgumentException>(
+            ExceptionAssert.Throws<ArgumentException>(
                 () => new NavigationPropertyConfiguration(mockEntity.GetProperty("ID"), EdmMultiplicity.Many, new EntityTypeConfiguration()),
                 "The property 'ID' on the type 'T' is being configured as a Many-to-Many navigation property. Many to Many navigation properties must be collections.\r\nParameter name: property");
         }
@@ -75,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             NavigationPropertyConfiguration navigationProperty =
                 new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(int[]), "P"), EdmMultiplicity.Many, new EntityTypeConfiguration());
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.Required(),
                 "Cannot change multiplicity of the collection navigation property 'P'.");
         }
@@ -86,7 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             NavigationPropertyConfiguration navigationProperty =
                 new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(int[]), "P"), EdmMultiplicity.Many, new EntityTypeConfiguration());
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.Optional(),
                 "Cannot change multiplicity of the collection navigation property 'P'.");
         }
@@ -257,7 +259,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                     new EntityTypeConfiguration());
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => navigationProperty.HasConstraint(dependentPropertyInfo: null,
                     principalPropertyInfo: new MockPropertyInfo()),
                 "dependentPropertyInfo");
@@ -272,7 +274,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                     new EntityTypeConfiguration());
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => navigationProperty.HasConstraint(new MockPropertyInfo(), principalPropertyInfo: null),
                 "principalPropertyInfo");
         }
@@ -288,7 +290,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                 EdmMultiplicity.Many, entityType.Object);
 
             // Act & Assert
-            Assert.Throws<NotSupportedException>(
+            ExceptionAssert.Throws<NotSupportedException>(
                 () => navigationProperty.HasConstraint(new MockPropertyInfo(), new MockPropertyInfo()),
                 String.Format(SRResources.ReferentialConstraintOnManyNavigationPropertyNotSupported,
                 "Navigation", typeof(NavigationPropertyConfigurationTest).FullName));
@@ -312,7 +314,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             navigationProperty.HasConstraint(dependentPropertyInfo, principalPropertyInfo);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.HasConstraint(dependentPropertyInfo, otherPrincipalPropertyInfo),
                 String.Format(SRResources.ReferentialConstraintAlreadyConfigured,
                 "dependent", "DependentKey1", "principal", "PrincipalKey1"));
@@ -336,7 +338,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             navigationProperty.HasConstraint(dependentPropertyInfo, principalPropertyInfo);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.HasConstraint(otherPrincipalPropertyInfo, principalPropertyInfo),
                 String.Format(SRResources.ReferentialConstraintAlreadyConfigured,
                 "principal", "PrincipalKey1", "dependent", "DependentKey1"));
@@ -357,7 +359,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                     dependentEntity);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.HasConstraint(dependentPropertyInfo, principalPropertyInfo),
                 String.Format(SRResources.DependentAndPrincipalTypeNotMatch, "System.Int32", "System.String"));
         }
@@ -377,7 +379,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
                     dependentEntity);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => navigationProperty.HasConstraint(dependentPropertyInfo, principalPropertyInfo),
                 String.Format(SRResources.ReferentialConstraintPropertyTypeNotValid, "Microsoft.Test.AspNet.OData.TestCommon.MockType"));
         }

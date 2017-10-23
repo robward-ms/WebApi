@@ -4,6 +4,8 @@
 using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -13,7 +15,7 @@ namespace Microsoft.Test.AspNet.OData
         public void IsDeltaFeed_ThrowsArgumentNull_Type()
         {
             IEdmType type = null;
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => type.IsDeltaFeed(),
                 "type");
         }
@@ -42,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData
         public void IsDeltaObject_ThrowsArgumentNull_Type()
         {
             IEdmObject instance = null;
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => instance.IsDeltaResource(),
                 "resource");
         }

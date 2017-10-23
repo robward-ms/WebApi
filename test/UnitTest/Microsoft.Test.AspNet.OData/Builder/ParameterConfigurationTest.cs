@@ -7,6 +7,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -20,11 +22,11 @@ namespace Microsoft.Test.AspNet.OData.Builder
             builder.ComplexType<Address>();
 
             // Act & Assert
-            ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            ArgumentException exception = ExceptionAssert.Throws<ArgumentException>(() =>
             {
                 BindingParameterConfiguration configuration = new BindingParameterConfiguration("name", builder.GetTypeConfigurationOrNull(typeof(Address)));
             });
-            Assert.True(exception.Message.Contains(string.Format("'{0}'", typeof(Address).FullName)));
+            Assert.Contains(string.Format("'{0}'", typeof(Address).FullName), exception.Message);
             Assert.Equal("parameterType", exception.ParamName);
         }
 

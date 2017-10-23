@@ -20,6 +20,8 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 {
@@ -43,7 +45,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
         [Fact]
         public void Ctor_ThrowsArgumentNull_DeserializerProvider()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataResourceSetDeserializer(deserializerProvider: null),
                 "deserializerProvider");
         }
@@ -59,7 +61,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
         public void ReadInline_Throws_ArgumentMustBeOfType()
         {
             var deserializer = new ODataResourceSetDeserializer(_deserializerProvider);
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => deserializer.ReadInline(item: 42, edmType: _customersType, readContext: new ODataDeserializerContext()),
                 "item",
                 "The argument must be of type 'ODataResourceSetWrapper'.");
@@ -96,7 +98,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 
             deserializerProvider.Setup(p => p.GetEdmTypeDeserializer(_customerType)).Returns<ODataEdmTypeDeserializer>(null);
 
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => deserializer.ReadResourceSet(feedWrapper, _customerType, readContext).GetEnumerator().MoveNext(),
                 "'Microsoft.Test.AspNet.OData.TestCommon.Models.Customer' cannot be deserialized using the ODataMediaTypeFormatter.");
         }

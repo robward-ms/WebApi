@@ -21,6 +21,8 @@ using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 {
@@ -31,7 +33,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
         [Fact]
         public void Ctor_ThrowsForNullConfiguration()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataConventionModelBuilder(configuration: null),
                 "configuration");
         }
@@ -171,7 +173,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 
             var product = model.AssertHasEntitySet(entitySetName: "Products", mappedEntityClrType: typeof(Product));
             Assert.Equal(6, product.StructuralProperties().Count());
-            Assert.Equal(1, product.NavigationProperties().Count());
+            Assert.Single(product.NavigationProperties());
             product.AssertHasKey(model, "ID", EdmPrimitiveTypeKind.Int32);
             product.AssertHasPrimitiveProperty(model, "ID", EdmPrimitiveTypeKind.Int32, isNullable: false);
             product.AssertHasPrimitiveProperty(model, "Name", EdmPrimitiveTypeKind.String, isNullable: true);
@@ -186,7 +188,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 
             var category = model.AssertHasEntityType(mappedEntityClrType: typeof(Category));
             Assert.Equal(2, category.StructuralProperties().Count());
-            Assert.Equal(1, category.NavigationProperties().Count());
+            Assert.Single(category.NavigationProperties());
             category.AssertHasKey(model, "ID", EdmPrimitiveTypeKind.String);
             category.AssertHasPrimitiveProperty(model, "ID", EdmPrimitiveTypeKind.String, isNullable: false);
             category.AssertHasPrimitiveProperty(model, "Name", EdmPrimitiveTypeKind.String, isNullable: true);
@@ -220,11 +222,11 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             modelBuilder.EntitySet<ProductWithKeyAttribute>("Products");
 
             var model = modelBuilder.GetEdmModel();
-            Assert.Equal(model.SchemaElements.OfType<IEdmSchemaType>().Count(), 3);
+            Assert.Equal(3, model.SchemaElements.OfType<IEdmSchemaType>().Count());
 
             var product = model.AssertHasEntitySet(entitySetName: "Products", mappedEntityClrType: typeof(ProductWithKeyAttribute));
             Assert.Equal(4, product.StructuralProperties().Count());
-            Assert.Equal(1, product.NavigationProperties().Count());
+            Assert.Single(product.NavigationProperties());
             product.AssertHasKey(model, "IdOfProduct", EdmPrimitiveTypeKind.Int32);
             product.AssertHasPrimitiveProperty(model, "IdOfProduct", EdmPrimitiveTypeKind.Int32, isNullable: false);
             product.AssertHasPrimitiveProperty(model, "Name", EdmPrimitiveTypeKind.String, isNullable: true);
@@ -235,7 +237,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 
             var category = model.AssertHasEntityType(mappedEntityClrType: typeof(CategoryWithKeyAttribute));
             Assert.Equal(2, category.StructuralProperties().Count());
-            Assert.Equal(1, category.NavigationProperties().Count());
+            Assert.Single(category.NavigationProperties());
             category.AssertHasKey(model, "IdOfCategory", EdmPrimitiveTypeKind.Guid);
             category.AssertHasPrimitiveProperty(model, "IdOfCategory", EdmPrimitiveTypeKind.Guid, isNullable: false);
             category.AssertHasPrimitiveProperty(model, "Name", EdmPrimitiveTypeKind.String, isNullable: true);
@@ -362,12 +364,12 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var model = modelBuilder.GetEdmModel();
 
             // Assert
-            Assert.Equal(model.SchemaElements.OfType<IEdmSchemaType>().Count(), 1);
+            Assert.Single(model.SchemaElements.OfType<IEdmSchemaType>());
 
             var product = model.AssertHasEntitySet(entitySetName: "Products",
                 mappedEntityClrType: typeof(ProductWithConcurrencyCheckAttribute));
             Assert.Equal(2, product.StructuralProperties().Count());
-            Assert.Equal(0, product.NavigationProperties().Count());
+            Assert.Empty(product.NavigationProperties());
             product.AssertHasKey(model, "ID", EdmPrimitiveTypeKind.Int32);
 
             IEdmStructuralProperty nameProperty =
@@ -392,7 +394,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var model = modelBuilder.GetEdmModel();
 
             // Assert
-            Assert.Equal(model.SchemaElements.OfType<IEdmSchemaType>().Count(), 1);
+            Assert.Single(model.SchemaElements.OfType<IEdmSchemaType>());
 
             var entitySet = model.FindDeclaredEntitySet("Products");
             Assert.NotNull(entitySet);
@@ -403,7 +405,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             IEdmCollectionExpression properties = concurrencyAnnotation.Value as IEdmCollectionExpression;
             Assert.NotNull(properties);
 
-            Assert.Equal(1, properties.Elements.Count());
+            Assert.Single(properties.Elements);
             var element = properties.Elements.First() as IEdmPathExpression;
             Assert.NotNull(element);
 
@@ -422,7 +424,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var model = modelBuilder.GetEdmModel();
 
             // Assert
-            Assert.Equal(model.SchemaElements.OfType<IEdmSchemaType>().Count(), 1);
+            Assert.Single(model.SchemaElements.OfType<IEdmSchemaType>());
             var product = model.AssertHasEntitySet(entitySetName: "Products", mappedEntityClrType: typeof(ProductWithTimestampAttribute));
             IEdmStructuralProperty nameProperty =
                 product.AssertHasPrimitiveProperty(model, "Name", EdmPrimitiveTypeKind.String, isNullable: true);
@@ -446,7 +448,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var model = modelBuilder.GetEdmModel();
 
             // Assert
-            Assert.Equal(model.SchemaElements.OfType<IEdmSchemaType>().Count(), 1);
+            Assert.Single(model.SchemaElements.OfType<IEdmSchemaType>());
 
             var entitySet = model.FindDeclaredEntitySet("Products");
             Assert.NotNull(entitySet);
@@ -457,7 +459,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             IEdmCollectionExpression properties = concurrencyAnnotation.Value as IEdmCollectionExpression;
             Assert.NotNull(properties);
 
-            Assert.Equal(1, properties.Elements.Count());
+            Assert.Single(properties.Elements);
             var element = properties.Elements.First() as IEdmPathExpression;
             Assert.NotNull(element);
 
@@ -554,7 +556,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 
             modelBuilder.AddEntityType(entityType);
 
-            Assert.DoesNotThrow(
+            ExceptionAssert.DoesNotThrow(
                () => modelBuilder.GetEdmModel());
         }
 
@@ -567,7 +569,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             IEdmModel model = builder.GetEdmModel();
 
             Assert.Equal(_totalExpectedSchemaTypesForVehiclesModel, model.SchemaElements.Count());
-            Assert.Equal(1, model.EntityContainer.EntitySets().Count());
+            Assert.Single(model.EntityContainer.EntitySets());
             model.AssertHasEntitySet("Vehicles", typeof(Vehicle));
 
             var vehicle = model.AssertHasEntityType(typeof(Vehicle));
@@ -624,7 +626,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
 
             // ignore motorcycle, sportbike and MotorcycleManufacturer
             Assert.Equal(_totalExpectedSchemaTypesForVehiclesModel - 3, model.SchemaElements.Count());
-            Assert.Equal(1, model.EntityContainer.EntitySets().Count());
+            Assert.Single(model.EntityContainer.EntitySets());
             model.AssertHasEntitySet("Vehicles", typeof(Vehicle));
 
             var vehicle = model.AssertHasEntityType(typeof(Vehicle));
@@ -653,7 +655,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             IEdmModel model = builder.GetEdmModel();
 
             Assert.Equal(_totalExpectedSchemaTypesForVehiclesModel - 1, model.SchemaElements.Count());
-            Assert.Equal(1, model.EntityContainer.EntitySets().Count());
+            Assert.Single(model.EntityContainer.EntitySets());
             model.AssertHasEntitySet("Vehicles", typeof(Vehicle));
 
             var vehicle = model.AssertHasEntityType(typeof(Vehicle));
@@ -691,7 +693,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.Equal(_totalExpectedSchemaTypesForVehiclesModel, model.SchemaElements.Count());
 
             var vehicle = model.AssertHasEntityType(typeof(Vehicle));
-            Assert.Equal(null, vehicle.BaseEntityType());
+            Assert.Null(vehicle.BaseEntityType());
 
             var motorcycle = model.AssertHasEntityType(typeof(Motorcycle));
             Assert.Equal(vehicle, motorcycle.BaseEntityType());
@@ -723,16 +725,16 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.Equal(_totalExpectedSchemaTypesForVehiclesModel, model.SchemaElements.Count());
 
             var vehicle = model.AssertHasEntityType(typeof(Vehicle));
-            Assert.Equal(null, vehicle.BaseEntityType());
+            Assert.Null(vehicle.BaseEntityType());
             Assert.Equal(2, vehicle.Key().Count());
 
             var motorcycle = model.AssertHasEntityType(typeof(Motorcycle));
-            Assert.Equal(null, motorcycle.BaseEntityType());
+            Assert.Null(motorcycle.BaseEntityType());
             Assert.Equal(2, motorcycle.Key().Count());
             Assert.Equal(5, motorcycle.Properties().Count());
 
             var car = model.AssertHasEntityType(typeof(Car));
-            Assert.Equal(null, car.BaseEntityType());
+            Assert.Null(car.BaseEntityType());
             Assert.Equal(2, car.Key().Count());
             Assert.Equal(5, car.Properties().Count());
 
@@ -1202,13 +1204,13 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(horseProperty);
             Assert.Equal(EdmPropertyKind.Structural, horseProperty.PropertyKind);
             Assert.IsType<EdmComplexType>(horseProperty.Type.Definition);
-            Assert.False(zooHorse.NavigationProperties().Any(c => c.Name == "Horse"));
+            Assert.DoesNotContain(zooHorse.NavigationProperties(), (c) => c.Name == "Horse");
 
             IEdmProperty animalProperty = zooHorse.FindProperty("Animal");
             Assert.NotNull(animalProperty);
             Assert.Equal(EdmPropertyKind.Structural, animalProperty.PropertyKind);
             Assert.IsType<EdmComplexType>(animalProperty.Type.Definition);
-            Assert.False(zooHorse.NavigationProperties().Any(c => c.Name == "Animal"));
+            Assert.DoesNotContain(zooHorse.NavigationProperties(), (c) => c.Name == "Animal");
         }
 
         [Fact]
@@ -1221,7 +1223,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntityType<Horse>();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => builder.GetEdmModel(),
+            ExceptionAssert.Throws<InvalidOperationException>(() => builder.GetEdmModel(),
                 "Cannot determine the Edm type for the CLR type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Animal' " +
                 "because the derived type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Horse' is configured as entity type and another " +
                 "derived type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Human' is configured as complex type.");
@@ -1252,14 +1254,14 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             model.AssertHasEntityType(typeof(Jasmine), typeof(Flower));
 
             // Verify other types not in the model
-            Assert.False(model.SchemaElements.OfType<IEdmStructuredType>()
-                .Any(t => model.GetEdmType(typeof(Plant)).IsEquivalentTo(t)));
+            Assert.DoesNotContain(model.SchemaElements.OfType<IEdmStructuredType>(),
+                (t) => model.GetEdmType(typeof(Plant)).IsEquivalentTo(t));
 
-            Assert.False(model.SchemaElements.OfType<IEdmStructuredType>()
-                .Any(t => model.GetEdmType(typeof(LandPlant)).IsEquivalentTo(t)));
+            Assert.DoesNotContain(model.SchemaElements.OfType<IEdmStructuredType>(),
+                (t) => model.GetEdmType(typeof(LandPlant)).IsEquivalentTo(t));
 
-            Assert.False(model.SchemaElements.OfType<IEdmStructuredType>()
-                .Any(t => model.GetEdmType(typeof(Tree)).IsEquivalentTo(t)));
+            Assert.DoesNotContain(model.SchemaElements.OfType<IEdmStructuredType>(),
+                (t) => model.GetEdmType(typeof(Tree)).IsEquivalentTo(t));
 
             // Verify the properties
             IEdmEntityType entityType = model.AssertHasEntityType(typeof(PlantParkWithOceanPlantAndJasmine));
@@ -1268,13 +1270,13 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(oceanProperty);
             Assert.Equal(EdmPropertyKind.Structural, oceanProperty.PropertyKind);
             Assert.IsType<EdmComplexType>(oceanProperty.Type.Definition);
-            Assert.False(entityType.NavigationProperties().Any(c => c.Name == "OceanPlant"));
+            Assert.DoesNotContain(entityType.NavigationProperties(), (c) => c.Name == "OceanPlant");
 
             IEdmProperty jaemineProperty = entityType.FindProperty("Jasmine");
             Assert.NotNull(jaemineProperty);
             Assert.Equal(EdmPropertyKind.Navigation, jaemineProperty.PropertyKind);
             Assert.IsType<EdmEntityType>(jaemineProperty.Type.Definition);
-            Assert.True(entityType.NavigationProperties().Any(c => c.Name == "Jasmine"));
+            Assert.Contains(entityType.NavigationProperties(), (c) => c.Name == "Jasmine");
         }
 
         [Fact]
@@ -1287,7 +1289,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntityType<Jasmine>();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => builder.GetEdmModel(),
+            ExceptionAssert.Throws<InvalidOperationException>(() => builder.GetEdmModel(),
                 "Cannot determine the Edm type for the CLR type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Plant' " +
                 "because the derived type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Jasmine' is configured as entity type and another " +
                 "derived type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Phycophyta' is configured as complex type.");
@@ -1839,7 +1841,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => builder.GetEdmModel(),
             "Cannot define keys on type 'DefaultNamespace.DerivedType' deriving from 'DefaultNamespace.BaseType'. " +
             "The base type in the entity inheritance hierarchy already contains keys.");
@@ -1902,7 +1904,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntityType<BaseAbstractEntityType2>();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => builder.GetEdmModel(),
             "Cannot define keys on type 'Microsoft.Test.AspNet.OData.Builder.Conventions.SubSubEntityTypeWithOwnKey' deriving from 'Microsoft.Test.AspNet.OData.Builder.Conventions.SubEntityTypeWithOwnKey'. " +
             "The base type in the entity inheritance hierarchy already contains keys.");
@@ -1916,7 +1918,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntitySet<AbstractEntityType>("entitySet");
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => builder.GetEdmModel(),
             "The entity set or singleton 'entitySet' is based on type 'Microsoft.Test.AspNet.OData.Builder.Conventions.AbstractEntityType' that has no keys defined.");
         }
@@ -2015,7 +2017,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.AddEntitySet("entities", builder.AddEntityType(entityType));
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => builder.GetEdmModel(),
             "Cannot define keys on type 'DefaultNamespace.DerivedComplexType' deriving from 'DefaultNamespace.BaseComplexType'. " +
             "The base type in the entity inheritance hierarchy already contains keys.");
@@ -2084,7 +2086,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
         }
 
         [Theory]
-        [PropertyData("ModelBuilder_PrunesUnReachableTypes_Data")]
+        [MemberData(nameof(ModelBuilder_PrunesUnReachableTypes_Data))]
         public void ModelBuilder_PrunesUnReachableTypes(MockType type)
         {
             var modelBuilder = new ODataConventionModelBuilder();
@@ -2222,7 +2224,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var collectionProperty = complexEdmType.DeclaredProperties.Where(p => p.Name == "CollectionProperty").SingleOrDefault();
             Assert.NotNull(collectionProperty);
             Assert.True(collectionProperty.Type.IsCollection());
-            Assert.Equal(collectionProperty.Type.AsCollection().ElementType().FullName(), "System.Version");
+            Assert.Equal("System.Version", collectionProperty.Type.AsCollection().ElementType().FullName());
         }
 
         [Fact]
@@ -2243,7 +2245,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var collectionProperty = entityEdmType.DeclaredProperties.Where(p => p.Name == "CollectionProperty").SingleOrDefault();
             Assert.NotNull(collectionProperty);
             Assert.True(collectionProperty.Type.IsCollection());
-            Assert.Equal(collectionProperty.Type.AsCollection().ElementType().FullName(), "System.Version");
+            Assert.Equal("System.Version", collectionProperty.Type.AsCollection().ElementType().FullName());
         }
 
         [Fact]
@@ -2270,7 +2272,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var collectionProperty = edmComplexType.DeclaredProperties.Where(p => p.Name == "ComplexCollectionProperty").SingleOrDefault();
             Assert.NotNull(collectionProperty);
             Assert.True(collectionProperty.Type.IsCollection());
-            Assert.Equal(collectionProperty.Type.AsCollection().ElementType().FullName(), "System.Version");
+            Assert.Equal("System.Version", collectionProperty.Type.AsCollection().ElementType().FullName());
         }
 
         [Fact]
@@ -2451,7 +2453,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.OnModelCreating = (modelBuilder) =>
                 {
                     var entityConfiguration = modelBuilder.StructuralTypes.OfType<EntityTypeConfiguration>().Single();
-                    Assert.Equal(1, entityConfiguration.Keys.Count());
+                    Assert.Single(entityConfiguration.Keys);
                     var key = entityConfiguration.Keys.Single();
                     Assert.Equal("ID", key.Name);
 
@@ -2574,7 +2576,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                     }
                 };
 
-            Assert.DoesNotThrow(() => builder.GetEdmModel());
+            ExceptionAssert.DoesNotThrow(() => builder.GetEdmModel());
         }
 
         [Fact]
@@ -2844,7 +2846,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntityType<BadOpenEntityType>();
 
             // Act & Assert
-            Assert.ThrowsArgument(() => builder.GetEdmModel(),
+            ExceptionAssert.ThrowsArgument(() => builder.GetEdmModel(),
                 "propertyInfo",
                 "Found more than one dynamic property container in type 'BadOpenEntityType'. " +
                 "Each open type must have at most one dynamic property container.\r\n" +
@@ -2859,7 +2861,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.EntityType<BadBaseOpenEntityType>();
 
             // Act & Assert
-            Assert.ThrowsArgument(() => builder.GetEdmModel(),
+            ExceptionAssert.ThrowsArgument(() => builder.GetEdmModel(),
                 "propertyInfo",
                 "Found more than one dynamic property container in type 'BadDerivedOpenEntityType'. " +
                 "Each open type must have at most one dynamic property container.\r\n" +
@@ -2998,7 +3000,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             builder.ComplexType<RecursiveEmployee>();
 
             // Act & Assert
-            Assert.ThrowsArgument(() => builder.GetEdmModel(),
+            ExceptionAssert.ThrowsArgument(() => builder.GetEdmModel(),
                 "propertyInfo",
                 "The complex type 'Microsoft.Test.AspNet.OData.Builder.Conventions.RecursiveEmployee' has a reference to itself " +
                 "through the property 'Manager'. A recursive loop of complex types is not allowed.");
@@ -3157,7 +3159,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(entityType);
 
             Assert.Equal(7, entityType.Properties().Count());
-            Assert.Equal(1, entityType.Key().Count());
+            Assert.Single(entityType.Key());
 
             // by default is Edm.DateTimeOffset
             IEdmProperty property = entityType.Properties().Single(p => p.Name == "NationalDay");
@@ -3212,11 +3214,11 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(byteProp);
             var nonLengthProp = entityType.Properties.Where(p => p.Name.Equals("NonLength")).First();
             Assert.NotNull(nonLengthProp);
-            Assert.Equal(((LengthPropertyConfiguration)nameProp).MaxLength, 3);
-            Assert.Equal(((LengthPropertyConfiguration)byteProp).MaxLength, 5);
-            Assert.Equal(((LengthPropertyConfiguration)nonLengthProp).MaxLength, null);
-            Assert.Equal(nameType.MaxLength, 3);
-            Assert.Equal(nonLengthType.MaxLength, null);
+            Assert.Equal(3, ((LengthPropertyConfiguration)nameProp).MaxLength);
+            Assert.Equal(5, ((LengthPropertyConfiguration)byteProp).MaxLength);
+            Assert.Null(((LengthPropertyConfiguration)nonLengthProp).MaxLength);
+            Assert.Equal(3, nameType.MaxLength);
+            Assert.Null(nonLengthType.MaxLength);
         }
     }
 

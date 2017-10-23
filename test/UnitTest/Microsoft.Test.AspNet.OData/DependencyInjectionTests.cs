@@ -14,6 +14,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.Test.AspNet.OData

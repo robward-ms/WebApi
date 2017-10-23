@@ -3,6 +3,7 @@
 
 using System;
 using System.Reflection;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
 {

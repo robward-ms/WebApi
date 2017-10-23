@@ -17,6 +17,8 @@ using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -49,7 +51,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataSerializerContext writeContext = new ODataSerializerContext();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () =>
                     new ODataEnumSerializer(_serializerProvider).WriteObject(graph, type, messageWriter,
                         writeContext),
@@ -68,7 +70,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataSerializerContext writeContext = null;
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataEnumSerializer(_serializerProvider).WriteObject(graph, type, messageWriter, writeContext),
                 "writeContext");
         }
@@ -85,7 +87,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataSerializerContext writeContext = new ODataSerializerContext();
 
             // Act & Assert
-            Assert.ThrowsArgument(
+            ExceptionAssert.ThrowsArgument(
                 () => new ODataEnumSerializer(_serializerProvider).WriteObject(graph, type, messageWriter, writeContext),
                 "writeContext",
                 "The 'RootElementName' property is required on 'ODataSerializerContext'.");
@@ -100,7 +102,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataSerializerContext writeContext = new ODataSerializerContext();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => new ODataEnumSerializer(_serializerProvider).CreateODataValue(graph, expectedType, writeContext),
                 "ODataEnumSerializer cannot write an object of type 'Edm.Int32'.");
         }

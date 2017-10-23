@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -351,7 +352,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         private void ValidateAddresses(IList<ODataActionTests.Address> addresses)
         {
             Assert.NotNull(addresses);
-            Assert.Equal(1, addresses.Count);
+            Assert.Single(addresses);
             ValidateAddress(addresses[0]);
         }
 

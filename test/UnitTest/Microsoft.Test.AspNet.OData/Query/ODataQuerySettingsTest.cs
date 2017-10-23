@@ -3,6 +3,8 @@
 
 using Microsoft.AspNet.OData.Query;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
@@ -22,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void EnsureStableOrdering_Property_RoundTrips()
         {
-            Assert.Reflection.BooleanProperty<ODataQuerySettings>(
+            ReflectionAssert.BooleanProperty<ODataQuerySettings>(
                 new ODataQuerySettings(),
                 o => o.EnsureStableOrdering,
                 true);
@@ -31,7 +33,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void HandleNullPropagation_Property_RoundTrips()
         {
-            Assert.Reflection.EnumProperty<ODataQuerySettings, HandleNullPropagationOption>(
+            ReflectionAssert.EnumProperty<ODataQuerySettings, HandleNullPropagationOption>(
                 new ODataQuerySettings(),
                 o => o.HandleNullPropagation,
                 HandleNullPropagationOption.Default,
@@ -42,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void PageSize_Property_RoundTrips()
         {
-            Assert.Reflection.NullableIntegerProperty<ODataQuerySettings, int>(
+            ReflectionAssert.NullableIntegerProperty<ODataQuerySettings, int>(
                 new ODataQuerySettings(),
                 o => o.PageSize,
                 expectedDefaultValue: null,
@@ -56,7 +58,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [Fact]
         public void EnableConstantParameterization_Property_RoundTrips()
         {
-            Assert.Reflection.BooleanProperty<ODataQuerySettings>(
+            ReflectionAssert.BooleanProperty<ODataQuerySettings>(
                 new ODataQuerySettings(),
                 o => o.EnableConstantParameterization,
                 expectedDefaultValue: true);

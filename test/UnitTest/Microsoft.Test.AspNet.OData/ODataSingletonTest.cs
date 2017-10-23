@@ -15,6 +15,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -74,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("NavigationPropertyToTest")]
+        [MemberData(nameof(NavigationPropertyToTest))]
         public async Task ODataSingleton_WorksOnNavigationProperty(string path, string expectedPayload)
         {
             // Remove indentation in expect string 

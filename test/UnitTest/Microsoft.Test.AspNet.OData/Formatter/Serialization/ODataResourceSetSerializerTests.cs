@@ -22,6 +22,8 @@ using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -68,7 +70,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         [Fact]
         public void Ctor_ThrowsArgumentNull_SerializerProvider()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataResourceSetSerializer(serializerProvider: null),
                 "serializerProvider");
         }
@@ -77,7 +79,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObject_ThrowsArgumentNull_MessageWriter()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => serializer.WriteObject(graph: null, type: null, messageWriter: null, writeContext: new ODataSerializerContext()),
                 "messageWriter");
         }
@@ -86,7 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObject_ThrowsArgumentNull_WriteContext()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => serializer.WriteObject(graph: null, type: null, messageWriter: ODataTestUtil.GetMockODataMessageWriter(), writeContext: null),
                 "writeContext");
         }
@@ -206,7 +208,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObjectInline_ThrowsArgumentNull_Writer()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => serializer.WriteObjectInline(graph: null, expectedType: null, writer: null, writeContext: new ODataSerializerContext()),
                 "writer");
         }
@@ -215,7 +217,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObjectInline_ThrowsArgumentNull_WriteContext()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => serializer.WriteObjectInline(graph: null, expectedType: null, writer: new Mock<ODataWriter>().Object, writeContext: null),
                 "writeContext");
         }
@@ -224,7 +226,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObjectInline_ThrowsSerializationException_CannotSerializerNull()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => serializer.WriteObjectInline(graph: null, expectedType: _customersType,
                     writer: new Mock<ODataWriter>().Object, writeContext: _writeContext),
                 "Cannot serialize a null 'ResourceSet'.");
@@ -234,7 +236,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObjectInline_ThrowsSerializationException_IfGraphIsNotEnumerable()
         {
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => serializer.WriteObjectInline(graph: 42, expectedType: _customersType,
                     writer: new Mock<ODataWriter>().Object, writeContext: _writeContext),
                 "ODataResourceSetSerializer cannot write an object of type 'System.Int32'.");
@@ -248,7 +250,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
 
             // Act & Assert
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => serializer.WriteObjectInline(instance, _customersType, new Mock<ODataWriter>().Object, _writeContext),
                 "Collections cannot contain null elements.");
         }
@@ -262,7 +264,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataSerializerContext writeContext = new ODataSerializerContext { NavigationSource = null, Model = _model };
 
             // Act & Assert
-            Assert.DoesNotThrow(() => serializer.WriteObjectInline(instance, _addressesType, new Mock<ODataWriter>().Object, writeContext));
+            ExceptionAssert.DoesNotThrow(() => serializer.WriteObjectInline(instance, _addressesType, new Mock<ODataWriter>().Object, writeContext));
         }
 
         [Fact]
@@ -276,7 +278,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(serializerProvider.Object);
 
             // Act & Assert
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => serializer.WriteObjectInline(instance, _customersType, new Mock<ODataWriter>().Object, _writeContext),
                 "'Default.Customer' cannot be serialized using the ODataMediaTypeFormatter.");
         }
@@ -308,7 +310,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataWriter writer = new Mock<ODataWriter>().Object;
 
             // Act & Assert
-            Assert.Throws<SerializationException>(
+            ExceptionAssert.Throws<SerializationException>(
                 () => serializer.Object.WriteObjectInline(instance, _customersType, writer, _writeContext),
                 "Cannot serialize a null 'ResourceSet'.");
         }
@@ -612,7 +614,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSet resourceSet = serializer.CreateResourceSet(result, customersType, context);
 
             // Assert
-            Assert.Equal(1, resourceSet.Actions.Count());
+            Assert.Single(resourceSet.Actions);
             Assert.Equal(2, resourceSet.Functions.Count());
         }
 

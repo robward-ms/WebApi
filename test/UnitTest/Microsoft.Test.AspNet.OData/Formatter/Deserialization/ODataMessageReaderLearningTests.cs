@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -25,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.Throws<ODataException>(() => reader.CreateODataCollectionReader());
+                ExceptionAssert.Throws<ODataException>(() => reader.CreateODataCollectionReader());
             }
         }
 
@@ -42,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataCollectionReader(expectedItemTypeReference));
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataCollectionReader(expectedItemTypeReference));
             }
         }
 
@@ -57,7 +59,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceReader());
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceReader());
             }
         }
 
@@ -73,7 +75,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.Throws<ODataException>(() => reader.CreateODataResourceReader(null, entityType));
+                ExceptionAssert.Throws<ODataException>(() => reader.CreateODataResourceReader(null, entityType));
             }
         }
 
@@ -89,7 +91,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceReader(null, complexType));
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceReader(null, complexType));
             }
         }
 
@@ -105,7 +107,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceReader(entitySet, null));
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceReader(entitySet, null));
             }
         }
 
@@ -120,7 +122,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceSetReader());
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceSetReader());
             }
         }
 
@@ -136,7 +138,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.Throws<ODataException>(() => reader.CreateODataResourceSetReader(entityType));
+                ExceptionAssert.Throws<ODataException>(() => reader.CreateODataResourceSetReader(entityType));
             }
         }
 
@@ -152,7 +154,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceSetReader(complexType));
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceSetReader(complexType));
             }
         }
 
@@ -168,7 +170,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.CreateODataResourceSetReader(entitySet, null));
+                ExceptionAssert.DoesNotThrow(() => reader.CreateODataResourceSetReader(entitySet, null));
             }
         }
 
@@ -183,7 +185,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.Throws<ODataException>(() => reader.ReadEntityReferenceLink());
+                ExceptionAssert.Throws<ODataException>(() => reader.ReadEntityReferenceLink());
             }
         }
 
@@ -198,7 +200,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.ReadEntityReferenceLink());
+                ExceptionAssert.DoesNotThrow(() => reader.ReadEntityReferenceLink());
             }
         }
 
@@ -213,7 +215,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.ReadProperty());
+                ExceptionAssert.DoesNotThrow(() => reader.ReadProperty());
             }
         }
 
@@ -229,7 +231,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.ReadProperty(property));
+                ExceptionAssert.DoesNotThrow(() => reader.ReadProperty(property));
             }
         }
 
@@ -246,7 +248,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageReader reader = new ODataMessageReader(request, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => reader.ReadProperty(expectedPropertyTypeReference));
+                ExceptionAssert.DoesNotThrow(() => reader.ReadProperty(expectedPropertyTypeReference));
             }
         }
 

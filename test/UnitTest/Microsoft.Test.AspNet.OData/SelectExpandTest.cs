@@ -17,6 +17,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -105,7 +106,7 @@ namespace Microsoft.Test.AspNet.OData
             var response = GetResponse(uri, AcceptJson);
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             var content = response.Content.ReadAsStringAsync().Result;
             dynamic result = JObject.Parse(content);
             var customer = result.value[0];
@@ -371,7 +372,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Null(customer["NameAlias"]);
             var orders = customer["OrdersAlias"] as JArray;
             Assert.NotNull(orders);
-            Assert.Equal(1, orders.Count);
+            Assert.Single(orders);
             var order = orders[0];
             Assert.Equal(24, order["ID"]);
             Assert.Equal(100, order["AmountAlias"]);

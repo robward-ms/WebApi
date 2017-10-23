@@ -15,6 +15,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 using Address = Microsoft.Test.AspNet.OData.Builder.TestModels.Address;
 
 namespace Microsoft.Test.AspNet.OData.OData.Query
@@ -598,7 +600,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [Theory]
-        [PropertyData("CustomerTestApplies")]
+        [MemberData(nameof(CustomerTestApplies))]
         public void ApplyTo_Returns_Correct_Queryable(string filter, List<Dictionary<string, object>> aggregation)
         {
             // Arrange
@@ -642,7 +644,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [Theory]
-        [PropertyData("CustomerTestAppliesMixedWithOthers")]
+        [MemberData(nameof(CustomerTestAppliesMixedWithOthers))]
         public void ClausesAfterApplyTo_Returns_Correct_Queryable(string filter, List<Dictionary<string, object>> aggregation)
         {
             // Arrange
@@ -685,7 +687,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [Theory]
-        [PropertyData("AppliesWithReferencesOnGroupedOut")]
+        [MemberData(nameof(AppliesWithReferencesOnGroupedOut))]
         public void ClausesWithGroupedOutReferences_Throw_ODataException(string clause)
         {
             // Arrange
@@ -705,14 +707,14 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             IEnumerable<Customer> customers = CustomerApplyTestData;
 
             // Act & Assert
-            Assert.Throws<ODataException>(() =>
+            ExceptionAssert.Throws<ODataException>(() =>
             {
                 IQueryable queryable = options.ApplyTo(customers.AsQueryable(), new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.True });
             });
         }
 
         [Theory]
-        [PropertyData("CustomerTestAppliesForPaging")]
+        [MemberData(nameof(CustomerTestAppliesForPaging))]
         public void StableSortingAndPagingApplyTo_Returns_Correct_Queryable(string filter, List<Dictionary<string, object>> aggregation)
         {
             // Arrange
@@ -754,7 +756,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [Theory]
-        [PropertyData("CustomerTestFilters")]
+        [MemberData(nameof(CustomerTestFilters))]
         public void ApplyTo_Returns_Correct_Queryable_ForFilter(string filter, int[] customerIds)
         {
             // Arrange

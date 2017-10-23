@@ -25,6 +25,7 @@ using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -430,7 +431,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                     using (HttpResponseMessage response = client.SendAsync(request).Result)
                     {
                         // Assert
-                        response.EnsureSuccessStatusCode();
+                        ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
                         var customer = response.Content.ReadAsAsync<JObject>().Result;
                         Assert.Equal(0, customer["ID"]);
                         Assert.Equal(Color.Green | Color.Blue, Enum.Parse(typeof(Color), customer["Color"].ToString()));
@@ -451,7 +452,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = GetEnumResponse(acceptHeader);
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             JObject customer = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal("#Microsoft.Test.AspNet.OData.Builder.TestModels.Color",
                 customer.GetValue("Color@odata.type"));
@@ -468,10 +469,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = GetEnumResponse(acceptHeader);
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             JObject customer = response.Content.ReadAsAsync<JObject>().Result;
-            Assert.False(customer.Values().Contains("Color@odata.type"));
-            Assert.False(customer.Values().Contains("Colors@odata.type"));
+            Assert.Contains("Color@odata.type", customer.Values());
+            Assert.Contains("Colors@odata.type", customer.Values());
         }
 
         private HttpResponseMessage GetEnumResponse(string acceptHeader)
@@ -522,7 +523,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                     using (HttpResponseMessage response = client.SendAsync(request).Result)
                     {
                         // Assert
-                        response.EnsureSuccessStatusCode();
+                        ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
                         dynamic payload = JToken.Parse(response.Content.ReadAsStringAsync().Result);
                         Assert.Equal("#Microsoft.Test.AspNet.OData.Formatter.EnumCustomer", payload["@odata.type"].Value);
                         Assert.Equal("#Microsoft.Test.AspNet.OData.Builder.TestModels.Color", payload["Color@odata.type"].Value);
@@ -551,7 +552,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 using (HttpResponseMessage response = client.GetAsync("http://localhost/EnumCustomers(5)/Color").Result)
                 {
                     // Assert
-                    response.EnsureSuccessStatusCode();
+                    ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
                     JObject payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
                     Assert.Equal("http://localhost/$metadata#EnumCustomers(5)/Color", payload.GetValue("@odata.context"));
                 }
@@ -578,7 +579,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                     using (HttpResponseMessage response = client.SendAsync(request).Result)
                     {
                         // Assert
-                        response.EnsureSuccessStatusCode();
+                        ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
                     }
                 }
             }
@@ -612,7 +613,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 using (HttpResponseMessage response = client.GetAsync("http://localhost/EnumCustomers(5)/Colors?$count=true").Result)
                 {
                     // Assert
-                    response.EnsureSuccessStatusCode();
+                    ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
                     JObject payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
                     Assert.Equal(expect, payload.ToString());
                 }

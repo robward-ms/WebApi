@@ -11,6 +11,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -19,7 +20,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void WriteMessageAsync_NullWriter_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchResponseItem.WriteMessageAsync(null, new HttpResponseMessage(), CancellationToken.None)
                     .Wait(),
                 "writer");
@@ -33,7 +34,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             IODataResponseMessage odataResponse = ODataMessageWrapperHelper.Create(new MemoryStream(), content.Headers);
             ODataMessageWriter messageWriter = new ODataMessageWriter(odataResponse);
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchResponseItem.WriteMessageAsync(messageWriter.CreateODataBatchWriter(), null, CancellationToken.None)
                     .Wait(),
                 "response");

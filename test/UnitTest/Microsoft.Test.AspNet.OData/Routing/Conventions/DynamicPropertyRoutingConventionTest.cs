@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Conventions
 {
@@ -25,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             ILookup<string, HttpActionDescriptor> emptyMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => _routingConvention.SelectAction(null, controllerContext.Object, emptyMap),
                 "odataPath");
         }
@@ -38,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             ILookup<string, HttpActionDescriptor> emptyMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => _routingConvention.SelectAction(odataPath, null, emptyMap),
                 "controllerContext");
         }
@@ -51,7 +53,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             Mock<HttpControllerContext> controllerContext = new Mock<HttpControllerContext>();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => _routingConvention.SelectAction(odataPath, controllerContext.Object, null),
                 "actionMap");
         }
