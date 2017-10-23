@@ -23,6 +23,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -141,7 +142,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             ODataModelBinderProvider binderProvider = new ODataModelBinderProvider();
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => binderProvider.GetBinder(configuration: null, modelType: typeof(int)),
                 "configuration");
         }
@@ -151,13 +152,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             ODataModelBinderProvider binderProvider = new ODataModelBinderProvider();
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => binderProvider.GetBinder(new HttpConfiguration(), modelType: null),
                 "modelType");
         }
 
         [Theory]
-        [PropertyData("ODataModelBinderProvider_Works_TestData")]
+        [MemberData(nameof(ODataModelBinderProvider_Works_TestData))]
         public void ODataModelBinderProvider_Works(object value, string action)
         {
             // Arrange
@@ -169,7 +170,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.GetAsync(url).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             Assert.Equal(
                 value,
@@ -177,7 +178,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("ODataModelBinderProvider_Works_NullableTestData")]
+        [MemberData(nameof(ODataModelBinderProvider_Works_NullableTestData))]
         public void ODataModelBinderProvider_Works_ForNullable(object value, Type type, string action)
         {
             // Arrange
@@ -188,7 +189,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.GetAsync(url).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             Assert.Equal(
                 value,
@@ -204,14 +205,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 "http://localhost/ODataModelBinderProviderTest/GetDateTime({0})",
                 Uri.EscapeDataString(ConventionsHelpers.GetUriRepresentationForValue(value)));
             HttpResponseMessage response = _client.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 value,
                 response.Content.ReadAsAsync(value.GetType(), _configuration.Formatters).Result);
         }
 
         [Theory]
-        [PropertyData("ODataModelBinderProvider_Throws_TestData")]
+        [MemberData(nameof(ODataModelBinderProvider_Throws_TestData))]
         public void ODataModelBinderProvider_Throws(object value, string action)
         {
             string url = String.Format(
@@ -225,13 +226,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         [Theory]
         [ReplaceCulture]
-        [PropertyData("ODataModelBinderProvider_ModelStateErrors_InvalidODataRepresentations_TestData")]
+        [MemberData(nameof(ODataModelBinderProvider_ModelStateErrors_InvalidODataRepresentations_TestData))]
         public void ODataModelBinderProvider_ModelStateErrors_InvalidODataRepresentations(string value, string action, string error)
         {
             string url = String.Format("http://localhost/ODataModelBinderProviderThrowsTest/{0}({1})", action, Uri.EscapeDataString(value));
             HttpResponseMessage response = _client.GetAsync(url).Result;
 
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 response.Content.ReadAsAsync<string[]>().Result,
                 new[] { error });
@@ -239,13 +240,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         [Theory]
         [ReplaceCulture]
-        [PropertyData("ODataModelBinderProvider_ModelStateErrors_InvalidConversions_TestData")]
+        [MemberData(nameof(ODataModelBinderProvider_ModelStateErrors_InvalidConversions_TestData))]
         public void ODataModelBinderProvider_ModelStateErrors_InvalidConversions(string value, string action, string error)
         {
             string url = String.Format("http://localhost/ODataModelBinderProviderThrowsTest/{0}({1})", action, Uri.EscapeDataString(value));
             HttpResponseMessage response = _client.GetAsync(url).Result;
 
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 response.Content.ReadAsAsync<string[]>().Result,
                 new[] { error });
@@ -261,7 +262,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             HttpResponseMessage response = _client.GetAsync(url).Result;
 
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 "name-2009",
                 response.Content.ReadAsAsync<string>().Result);
@@ -295,7 +296,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 value,
                 response.Content.ReadAsAsync(value.GetType(), configuration.Formatters).Result);
@@ -320,12 +321,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             // Act 
             string url = String.Format(
-                "http://localhost/GetNullableFlagsEnum(flagsEnum={0})", 
+                "http://localhost/GetNullableFlagsEnum(flagsEnum={0})",
                 value == null ? "null" : Uri.EscapeDataString(ConventionsHelpers.GetUriRepresentationForValue(value)));
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Assert.Equal(
                 expect,
                 response.Content.ReadAsAsync(typeof(bool), configuration.Formatters).Result);
@@ -381,7 +382,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
         }
 
         private IEdmModel GetEdmModel()

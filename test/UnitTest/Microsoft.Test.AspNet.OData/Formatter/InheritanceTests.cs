@@ -20,6 +20,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
@@ -57,7 +58,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateMotorcycle(result);
         }
@@ -72,7 +73,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateCar(result);
         }
@@ -87,7 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateSportbike(result);
         }
@@ -102,7 +103,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateMotorcycle(result.value[0]);
             ValidateCar(result.value[1]);
@@ -125,7 +126,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateMotorcycle(result);
@@ -145,7 +146,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.False((bool)result.CanDoAWheelie);
@@ -167,7 +168,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateMotorcycle(result);
@@ -189,7 +190,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             ValidateMotorcycle(result);
@@ -209,7 +210,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.False((bool)result.CanDoAWheelie);
@@ -229,7 +230,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
             dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.False((bool)result.CanDoAWheelie);
@@ -256,7 +257,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             context.Path = new ODataPath(new OperationImportSegment(new[] { action }, actionEntitySet, null));
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => new ODataResourceDeserializer(deserializerProvider).Read(reader, typeof(Car), context),
                 "An resource with type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Motorcycle' was found, " +
                 "but it is not assignable to the expected type 'Microsoft.Test.AspNet.OData.Builder.TestModels.Car'. " +
@@ -269,7 +270,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(contentType));
             AddRequestInfo(request);
             HttpResponseMessage response = _client.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             Stream stream = response.Content.ReadAsStreamAsync().Result;
 
             return stream;
@@ -281,7 +282,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Assert.Equal("sample motorcycle", (string)result.Name);
             Assert.Equal("2009", (string)result.Model);
             Assert.Equal(2, (int)result.WheelCount);
-            Assert.Equal(true, (bool)result.CanDoAWheelie);
+            Assert.True((bool)result.CanDoAWheelie);
         }
 
         private static void ValidateCar(dynamic result)
@@ -299,7 +300,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Assert.Equal("sample sportsbike", (string)result.Name);
             Assert.Equal("2009", (string)result.Model);
             Assert.Equal(2, (int)result.WheelCount);
-            Assert.Equal(true, (bool)result.CanDoAWheelie);
+            Assert.True((bool)result.CanDoAWheelie);
             Assert.Null(result.SportBikeProperty_NotVisible);
         }
 
@@ -382,7 +383,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         private static string GetODataPath(string url)
         {
             string serverBaseUri = "http://localhost/";
-            Assert.True(url.StartsWith(serverBaseUri)); // Guard
+            Assert.StartsWith(serverBaseUri, url); // Guard
             return url.Substring(serverBaseUri.Length);
         }
     }

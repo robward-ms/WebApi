@@ -17,6 +17,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -96,7 +98,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void Property_ODataPayloadKind()
         {
             var serializer = new ODataPrimitiveSerializer();
-            Assert.Equal(serializer.ODataPayloadKind, ODataPayloadKind.Property);
+            Assert.Equal(ODataPayloadKind.Property, serializer.ODataPayloadKind);
         }
 
         [Fact]
@@ -105,7 +107,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataSerializerContext writeContext = new ODataSerializerContext();
             ODataPrimitiveSerializer serializer = new ODataPrimitiveSerializer();
 
-            Assert.Throws<ArgumentException>(
+            ExceptionAssert.Throws<ArgumentException>(
                 () => serializer.WriteObject(42, typeof(int), ODataTestUtil.GetMockODataMessageWriter(), writeContext),
                 "The 'RootElementName' property is required on 'ODataSerializerContext'.\r\nParameter name: writeContext");
         }
@@ -134,7 +136,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             var odataValue = serializer.CreateODataValue(20, edmPrimitiveType, writeContext: null);
             Assert.NotNull(odataValue);
             ODataPrimitiveValue primitiveValue = Assert.IsType<ODataPrimitiveValue>(odataValue);
-            Assert.Equal(primitiveValue.Value, 20);
+            Assert.Equal(20, primitiveValue.Value);
         }
 
         [Fact]
@@ -224,7 +226,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
 
         [Theory]
-        [PropertyData("NonEdmPrimitiveConversionDateTime")]
+        [MemberData(nameof(NonEdmPrimitiveConversionDateTime))]
         public void CreateODataValue_ReturnsDateTimeOffset_ForDateTime_WithDifferentTimeZone(DateTime value, DateTimeOffset expect)
         {
             // Arrange
@@ -284,8 +286,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
 
         [Theory]
-        [PropertyData("EdmPrimitiveData")]
-        [PropertyData("NonEdmPrimitiveData")]
+        [MemberData(nameof(EdmPrimitiveData))]
+        [MemberData(nameof(NonEdmPrimitiveData))]
         public void WriteObject_EdmPrimitives(object graph, string type, string value)
         {
             // Arrange
@@ -370,16 +372,18 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
 
         [Theory]
-        [PropertyData("EdmPrimitiveData")]
+        [MemberData(nameof(EdmPrimitiveData))]
         public void ConvertUnsupportedPrimitives_DoesntChangeStandardEdmPrimitives(object graph, string type, string value)
         {
+            Assert.NotNull(type);
+            Assert.NotNull(value);
             Assert.Equal(
                 graph,
                 ODataPrimitiveSerializer.ConvertUnsupportedPrimitives(graph));
         }
 
         [Theory]
-        [PropertyData("NonEdmPrimitiveConversionData")]
+        [MemberData(nameof(NonEdmPrimitiveConversionData))]
         public void ConvertUnsupportedPrimitives_NonStandardEdmPrimitives(object graph, object result)
         {
             Assert.Equal(
@@ -388,7 +392,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
 
         [Theory]
-        [PropertyData("NonEdmPrimitiveConversionDateTime")]
+        [MemberData(nameof(NonEdmPrimitiveConversionDateTime))]
         public void ConvertUnsupportedDateTime_NonStandardEdmPrimitives(DateTime graph, DateTimeOffset result)
         {
             // Arrange & Act
@@ -398,10 +402,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Assert
             DateTimeOffset actual = Assert.IsType<DateTimeOffset>(value);
             Assert.Equal(new DateTimeOffset(graph), actual);
+            Assert.Equal(result, actual);
         }
 
         [Theory]
-        [PropertyData("NonEdmPrimitiveConversionDateTime")]
+        [MemberData(nameof(NonEdmPrimitiveConversionDateTime))]
         public void ConvertUnsupportedDateTime_NonStandardEdmPrimitives_TimeZone(DateTime graph, DateTimeOffset result)
         {
             // Arrange

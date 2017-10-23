@@ -13,17 +13,13 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
     /// </summary>
     public class StreamAssert
     {
-        private static StreamAssert singleton = new StreamAssert();
-
-        public static StreamAssert Singleton { get { return singleton; } }
-
         /// <summary>
         /// Creates a <see cref="MemoryStream"/>, invokes <paramref name="codeThatWrites"/> to write to it,
         /// rewinds the stream to the beginning and invokes <paramref name="codeThatReads"/>.
         /// </summary>
         /// <param name="codeThatWrites">Code to write to the stream.  It cannot be <c>null</c>.</param>
         /// <param name="codeThatReads">Code that reads from the stream.  It cannot be <c>null</c>.</param>
-        public void WriteAndRead(Action<MemoryStream> codeThatWrites, Action<Stream> codeThatReads)
+        public static void WriteAndRead(Action<MemoryStream> codeThatWrites, Action<Stream> codeThatReads)
         {
             if (codeThatWrites == null)
             {
@@ -89,7 +85,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
         /// <param name="codeThatWrites">Code to write to the stream.  It cannot be <c>null</c>.</param>
         /// <param name="codeThatReads">Code that reads from the stream and returns the result.  It cannot be <c>null</c>.</param>
         /// <returns>The value returned from <paramref name="codeThatReads"/>.</returns>
-        public T WriteAndReadResult<T>(Action<Stream> codeThatWrites, Func<Stream, object> codeThatReads)
+        public static T WriteAndReadResult<T>(Action<Stream> codeThatWrites, Func<Stream, object> codeThatReads)
         {
             return (T)WriteAndReadResult(codeThatWrites, codeThatReads);
         }

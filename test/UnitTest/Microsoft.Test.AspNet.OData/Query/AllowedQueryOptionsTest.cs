@@ -4,6 +4,8 @@
 using System;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
@@ -48,7 +50,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 }
             }
 
-            Assert.Equal(allQueryOptions, AllowedQueryOptions.All);
+            Assert.Equal(AllowedQueryOptions.All, allQueryOptions);
         }
     }
 }

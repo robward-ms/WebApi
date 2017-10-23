@@ -10,6 +10,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
@@ -19,7 +21,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void GetValueProvider_ThrowsArgumentNull_ActionContext()
         {
             ODataValueProviderFactory factory = new ODataValueProviderFactory();
-            Assert.ThrowsArgumentNull(() => factory.GetValueProvider(actionContext: null), "actionContext");
+            ExceptionAssert.ThrowsArgumentNull(() => factory.GetValueProvider(actionContext: null), "actionContext");
         }
 
         [Fact]

@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -16,7 +17,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void GetODataBatchId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.GetODataBatchId(null),
                 "request");
         }
@@ -24,7 +25,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SetODataBatchId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.SetODataBatchId(null, Guid.NewGuid()),
                 "request");
         }
@@ -42,7 +43,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void GetODataChangeSetId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.GetODataChangeSetId(null),
                 "request");
         }
@@ -50,7 +51,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SetODataChangeSetId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.SetODataChangeSetId(null, Guid.NewGuid()),
                 "request");
         }
@@ -68,7 +69,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void GetODataContentIdMapping_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.GetODataContentIdMapping(null),
                 "request");
         }
@@ -76,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SetODataContentIdMapping_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.SetODataContentIdMapping(null, new Dictionary<string, string>()),
                 "request");
         }
@@ -110,7 +111,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void GetODataContentId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.GetODataContentId(null),
                 "request");
         }
@@ -118,7 +119,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SetODataContentId_NullRequest_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchHttpRequestMessageExtensions.SetODataContentId(null, Guid.NewGuid().ToString()),
                 "request");
         }

@@ -15,6 +15,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -306,11 +308,9 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(3, origin.DynamicProperties.Count); // include the origin dynamic properties
 
             KeyValuePair<string, object> dynamicProperty = origin.DynamicProperties.FirstOrDefault(e => e.Key == "Token");
-            Assert.NotNull(dynamicProperty);
             Assert.Equal(new Guid("2E724E81-8462-4BA0-B920-DC87A61C8EA3"), dynamicProperty.Value);
 
             dynamicProperty = origin.DynamicProperties.FirstOrDefault(e => e.Key == "BirthDay");
-            Assert.NotNull(dynamicProperty);
             Assert.Equal(new Date(2016, 1, 29), dynamicProperty.Value);
 
             return Updated(customer);

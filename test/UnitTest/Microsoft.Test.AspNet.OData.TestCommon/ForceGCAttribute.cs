@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
 {
-    public class ForceGCAttribute : Xunit.BeforeAfterTestAttribute
+    public class ForceGCAttribute : Xunit.Sdk.BeforeAfterTestAttribute
     {
         public override void After(MethodInfo methodUnderTest)
         {

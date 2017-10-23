@@ -15,6 +15,8 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -397,7 +399,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(99, dt.Id);
             Assert.Equal(new DateTime(2098, 12, 31, 16, 1, 2, DateTimeKind.Unspecified), dt.BirthdayA);
             Assert.Equal(new DateTime(2099, 2, 1, 16, 1, 2), dt.BirthdayB);
-            Assert.Equal(1, dt.BirthdayC.Count);
+            Assert.Single(dt.BirthdayC);
             Assert.Equal(3, dt.BirthdayD.Count);
 
             return Created(dt);

@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Builder
 {
@@ -52,7 +54,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
         }
 
         [Theory]
-        [PropertyData("GetValidPropertiesAndElementTypes")]
+        [MemberData(nameof(GetValidPropertiesAndElementTypes))]
         public void HasCorrectKindPropertyInfoAndName(PropertyInfo property, Type elementType)
         {
             Mock<StructuralTypeConfiguration> structuralType = new Mock<StructuralTypeConfiguration>();
@@ -68,7 +70,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
         [Fact]
         public void HasCollectionException()
         {
-            ArgumentException exception = Assert.Throws<ArgumentException>(() =>
+            ArgumentException exception = ExceptionAssert.Throws<ArgumentException>(() =>
             {
                 PropertyInfo nonCollectionProperty = typeof(LotsOfCollectionProperties).GetProperty("NonCollectionProperty");
                 Mock<StructuralTypeConfiguration> structuralType = new Mock<StructuralTypeConfiguration>();
@@ -77,7 +79,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
         }
 
         [Theory]
-        [PropertyData("GetValidPropertiesAndElementTypes")]
+        [MemberData(nameof(GetValidPropertiesAndElementTypes))]
         public void CanCorrectlyDetectCollectionProperties(PropertyInfo property, Type elementType)
         {
             Mock<StructuralTypeConfiguration> structuralType = new Mock<StructuralTypeConfiguration>();

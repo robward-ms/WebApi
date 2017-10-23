@@ -13,7 +13,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -218,7 +218,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The query specified in the URI is not valid. The property 'Name' cannot be used in the $orderby query option.",
                 responseString);
         }
@@ -238,7 +238,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(
                 String.Format("The query specified in the URI is not valid. The property '{0}' cannot be used in the $orderby query option.", property),
                 responseString);
@@ -257,7 +257,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The query specified in the URI is not valid. The property 'Name' cannot be used in the $filter query option.",
                 responseString);
         }
@@ -278,7 +278,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(
                 String.Format(
                     "The query specified in the URI is not valid. The property '{0}' cannot be used in the $filter query option.",
@@ -299,7 +299,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.OK);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("\"Age\":31", responseString);
         }
 
@@ -316,7 +316,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The query specified in the URI is not valid. The property 'Orders' cannot be used for navigation.",
                 responseString);
         }
@@ -334,7 +334,7 @@ namespace Microsoft.Test.AspNet.OData
 
             // Assert
             Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The query specified in the URI is not valid. The property 'Orders' cannot be used in the $expand query option.",
                 responseString);
         }

@@ -12,6 +12,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -29,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Constructor_NullRequests_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ChangeSetRequestItem(null),
                 "requests");
         }
@@ -39,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         {
             ChangeSetRequestItem requestItem = new ChangeSetRequestItem(new HttpRequestMessage[0]);
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => requestItem.SendRequestAsync(null, CancellationToken.None).Wait(),
                 "invoker");
         }
@@ -92,7 +93,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             var response = requestItem.SendRequestAsync(invoker.Object, CancellationToken.None).Result;
 
             var changesetResponse = Assert.IsType<ChangeSetResponseItem>(response);
-            Assert.Equal(1, changesetResponse.Responses.Count());
+            Assert.Single(changesetResponse.Responses);
             Assert.Equal(HttpStatusCode.BadRequest, changesetResponse.Responses.First().StatusCode);
         }
 
@@ -119,7 +120,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
                     return Task.FromResult<HttpResponseMessage>(response);
                 });
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => requestItem.SendRequestAsync(invoker.Object, CancellationToken.None).Result);
 
             Assert.Equal(2, responses.Count);

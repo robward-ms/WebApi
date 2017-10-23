@@ -12,6 +12,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
@@ -21,7 +23,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         [Fact]
         public void EmptyCtor_DoesnotThrow()
         {
-            Assert.DoesNotThrow(() => new ODataSerializerContext());
+            ExceptionAssert.DoesNotThrow(() => new ODataSerializerContext());
         }
 
         [Fact]
@@ -32,7 +34,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             IEdmNavigationProperty navProp = new Mock<IEdmNavigationProperty>().Object;
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataSerializerContext(resource: null, selectExpandClause: selectExpand, edmProperty: navProp), "resource");
         }
 
@@ -128,9 +130,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             mock.Setup(edmObject => edmObject.GetEdmType()).Returns<IEdmTypeReference>(null).Verifiable();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => context.GetEdmType(mock.Object, null),
-                exceptionMessage: "The EDM type of the object of type 'Castle.Proxies.IEdmObjectProxy' is null. " +
-                "The EDM type of an IEdmObject cannot be null.");
+            ExceptionAssert.Throws<InvalidOperationException>(() => context.GetEdmType(mock.Object, null),
+                "The EDM type of an IEdmObject cannot be null.", partialMatch: true);
             mock.Verify();
         }
     }

@@ -17,6 +17,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Moq;
+using Xunit;
+
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
@@ -55,7 +57,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("PrimitiveTypesToTest")]
+        [MemberData(nameof(PrimitiveTypesToTest))]
         public void PrimitiveTypesSerializeAsOData(Type valueType, object value, MediaTypeHeaderValue mediaType,
             string resourceName)
         {
@@ -89,11 +91,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 }
             }
 
+            Assert.NotNull(valueType);
             JsonAssert.Equal(expectedEntity, actualEntity);
         }
 
         [Theory]
-        [PropertyData("PrimitiveTypesToTest")]
+        [MemberData(nameof(PrimitiveTypesToTest))]
         public void PrimitiveTypesDeserializeAsOData(Type valueType, object value, MediaTypeHeaderValue mediaType,
             string resourceName)
         {
@@ -150,13 +153,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("NullPrimitiveValueToTest")]
-        public void NullPrimitiveValueSerializeAsODataThrows(Type valueType, object value, MediaTypeHeaderValue mediaType, string notUsed)
+        [MemberData(nameof(NullPrimitiveValueToTest))]
+        public void NullPrimitiveValueSerializeAsODataThrows(Type valueType, object value, MediaTypeHeaderValue mediaType, string unused)
         {
+            Assert.NotNull(valueType);
+            Assert.NotNull(unused);
+
             ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntitySet<WorkItem>("WorkItems");
             IEdmModel model = modelBuilder.GetEdmModel();
-
 
             using (HttpConfiguration configuration = CreateConfiguration())
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
@@ -175,14 +180,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
                 using (ObjectContent content = new ObjectContent(type, value, formatter))
                 {
-                    Assert.Throws<ODataException>(() => content.ReadAsStringAsync().Result,
+                    ExceptionAssert.Throws<ODataException>(() => content.ReadAsStringAsync().Result,
                         "A null top-level property is not allowed to be serialized.");
                 }
             }
         }
 
         [Theory]
-        [PropertyData("NullPrimitiveValueToTest")]
+        [MemberData(nameof(NullPrimitiveValueToTest))]
         public void NullPrimitiveValueDeserializeAsOData(Type valueType, object value, MediaTypeHeaderValue mediaType,
             string resourceName)
         {

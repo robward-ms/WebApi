@@ -10,6 +10,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -27,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Constructor_NullRequests_Throws()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new OperationRequestItem(null),
                 "request");
         }
@@ -37,7 +38,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         {
             OperationRequestItem requestItem = new OperationRequestItem(new HttpRequestMessage());
 
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => requestItem.SendRequestAsync(null, CancellationToken.None).Wait(),
                 "invoker");
         }
@@ -72,7 +73,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
 
             var resourcesForDisposal = requestItem.GetResourcesForDisposal();
 
-            Assert.Equal(1, resourcesForDisposal.Count());
+            Assert.Single(resourcesForDisposal);
             Assert.Contains(disposeObject, resourcesForDisposal);
         }
 

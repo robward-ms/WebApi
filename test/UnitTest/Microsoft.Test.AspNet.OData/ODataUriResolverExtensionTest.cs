@@ -19,6 +19,8 @@ using Microsoft.Test.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Newtonsoft.Json.Linq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -30,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData
             {
                 return new TheoryDataSet<string, string, string>()
                 {
-                    { "GET", "$meTadata", null },
+                    { "GET", "$meTadata", "" },
                     { "GET", "rouTINGCustomers", "GetRoutingCustomers" },
                     { "GET", "rouTINGCustomers/Microsoft.Test.AspNet.OData.Routing.VIP", "GetRoutingCustomersFromVIP" },
                     { "GET", "proDucts(10)", "Get(10)" },
@@ -57,7 +59,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("PathSegmentIdentifierCaseInsensitiveCases")]
+        [MemberData(nameof(PathSegmentIdentifierCaseInsensitiveCases))]
         public void DefaultResolver_DoesnotWork_CaseInsensitive(string httpMethod, string odataPath, string expect)
         {
             // Arrange
@@ -71,10 +73,11 @@ namespace Microsoft.Test.AspNet.OData
             // Assert
             Assert.False(response.IsSuccessStatusCode);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.NotNull(expect);
         }
 
         [Theory]
-        [PropertyData("PathSegmentIdentifierCaseInsensitiveCases")]
+        [MemberData(nameof(PathSegmentIdentifierCaseInsensitiveCases))]
         public void ExtensionResolver_Works_CaseInsensitive(string httpMethod, string odataPath, string expect)
         {
             // Arrange
@@ -86,9 +89,9 @@ namespace Microsoft.Test.AspNet.OData
                 new HttpMethod(httpMethod), "http://localhost/odata/" + odataPath)).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
-            if (expect != null)
+            if (!string.IsNullOrEmpty(expect))
             {
                 Assert.Equal(expect, (response.Content as ObjectContent<string>).Value);
             }
@@ -155,7 +158,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [Theory]
-        [PropertyData("QueryOptionCaseInsensitiveCases")]
+        [MemberData(nameof(QueryOptionCaseInsensitiveCases))]
         public void DefaultResolver_DoesnotWork_ForQueryOption(string queryOption, string caseInsensitive)
         {
             // Arrange
@@ -166,12 +169,13 @@ namespace Microsoft.Test.AspNet.OData
                 HttpMethod.Get, "http://localhost/query/ParserExtenstionCustomers?" + caseInsensitive)).Result;
 
             // Assert
+            Assert.NotNull(queryOption);
             Assert.False(response.IsSuccessStatusCode);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Theory]
-        [PropertyData("QueryOptionCaseInsensitiveCases")]
+        [MemberData(nameof(QueryOptionCaseInsensitiveCases))]
         public void ExtensionResolver_Works_ForQueryOption(string queryOption, string caseInsensitive)
         {
             // Arrange
@@ -182,11 +186,12 @@ namespace Microsoft.Test.AspNet.OData
                 HttpMethod.Get, "http://localhost/query/ParserExtenstionCustomers?" + caseInsensitive)).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            Assert.NotNull(queryOption);
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
         }
 
         [Theory]
-        [PropertyData("QueryOptionCaseInsensitiveCases")]
+        [MemberData(nameof(QueryOptionCaseInsensitiveCases))]
         public void ExtensionResolver_ReturnsSameResult_ForCaseSensitiveAndCaseInsensitive(string queryOption, string caseInsensitive)
         {
             // Arrange
@@ -196,12 +201,12 @@ namespace Microsoft.Test.AspNet.OData
             // Act
             HttpResponseMessage response = caseSensitiveclient.SendAsync(new HttpRequestMessage(
                 HttpMethod.Get, "http://localhost/query/ParserExtenstionCustomers?" + queryOption)).Result;
-            response.EnsureSuccessStatusCode(); // Guard
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode()); // Guard
             string caseSensitivePayload = response.Content.ReadAsStringAsync().Result;
 
             response = caseInsensitiveclient.SendAsync(new HttpRequestMessage(
                 HttpMethod.Get, "http://localhost/query/ParserExtenstionCustomers?" + caseInsensitive)).Result;
-            response.EnsureSuccessStatusCode(); // Guard
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode()); // Guard
             string caseInsensitivePayload = response.Content.ReadAsStringAsync().Result;
 
             // Assert
@@ -333,7 +338,7 @@ namespace Microsoft.Test.AspNet.OData
                 "http://localhost/odata/ParserExtenstionCustomers2");
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => client.SendAsync(request).Result,
+            ExceptionAssertions.Throws<InvalidOperationException>(() => client.SendAsync(request).Result,
                 "The path template 'ParserExtenstionCustomers2/GetCustomerTitleById(id={id})' on the action 'GetCustomerByTitleVarN' " +
                 "in controller 'ParserExtenstionCustomers2' is not a valid OData path template. The request URI is not valid. Since the " +
                 "segment 'ParserExtenstionCustomers2' refers to a collection, this must be the last segment in the request URI or it must be " +

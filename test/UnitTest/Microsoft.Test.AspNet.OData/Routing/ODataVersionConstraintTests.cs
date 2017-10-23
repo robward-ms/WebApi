@@ -7,6 +7,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Test
 {
@@ -19,7 +21,6 @@ namespace Microsoft.Test.AspNet.OData.Routing.Test
             ODataVersionConstraint constraint = new ODataVersionConstraint();
 
             // Assert
-            Assert.NotNull(constraint.Version);
             Assert.Equal(ODataVersion.V4, constraint.Version);
         }
 

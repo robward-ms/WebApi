@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -24,7 +26,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataCollectionWriter());
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataCollectionWriter());
             }
         }
 
@@ -40,7 +42,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataCollectionWriter(itemTypeReference));
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataCollectionWriter(itemTypeReference));
             }
         }
 
@@ -55,7 +57,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataResourceWriter());
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataResourceWriter());
             }
         }
 
@@ -71,7 +73,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataResourceWriter(entitySet));
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataResourceWriter(entitySet));
             }
         }
 
@@ -86,7 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataResourceSetWriter());
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataResourceSetWriter());
             }
         }
 
@@ -102,7 +104,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.CreateODataResourceSetWriter(entitySet));
+                ExceptionAssert.DoesNotThrow(() => writer.CreateODataResourceSetWriter(entitySet));
             }
         }
 
@@ -121,7 +123,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
+                ExceptionAssert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
             }
         }
 
@@ -141,7 +143,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
+                ExceptionAssert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
             }
         }
 
@@ -165,7 +167,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             using (ODataMessageWriter writer = new ODataMessageWriter(response, settings, model))
             {
                 // Act & Assert
-                Assert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
+                ExceptionAssert.DoesNotThrow(() => writer.WriteEntityReferenceLink(link));
             }
         }
 

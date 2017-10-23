@@ -12,6 +12,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData.Routing.Conventions
@@ -190,6 +192,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             Assert.Null(actionName);
         }
 
+        [Theory]
         [InlineData("POST", "CreateRef")]
         [InlineData("GET", "GetRef")]
         public void SelectAction_SetsRouteData_ForGetOrCreateRefRequests(string method, string actionName)

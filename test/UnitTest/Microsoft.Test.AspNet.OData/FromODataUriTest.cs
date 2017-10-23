@@ -11,6 +11,8 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -44,7 +46,7 @@ namespace Microsoft.Test.AspNet.OData
             parameter.Configuration = config;
             parameter.ParameterInfo = parameterInfoMock.Object;
 
-            Assert.DoesNotThrow(() => new FromODataUriAttribute().GetBinding(parameter));
+            ExceptionAssert.DoesNotThrow(() => new FromODataUriAttribute().GetBinding(parameter));
         }
     }
 }

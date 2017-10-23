@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
 {
@@ -209,10 +210,10 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
 
             // Assert ArgumentOutOfRangeException is thrown for value one less than smallest
             // enum value, and one more than largest enum value
-            var targetException = Assert.Throws<TargetInvocationException>(() => propInfo.SetValue(instance, Convert.ToInt32(values[0]) - 1, null));
+            var targetException = ExceptionAssert.Throws<TargetInvocationException>(() => propInfo.SetValue(instance, Convert.ToInt32(values[0]) - 1, null));
             Assert.IsType<ArgumentOutOfRangeException>(targetException.InnerException);
 
-            targetException = Assert.Throws<TargetInvocationException>(() => propInfo.SetValue(instance, Convert.ToInt32(values[values.Length - 1]) + 1, null));
+            targetException = ExceptionAssert.Throws<TargetInvocationException>(() => propInfo.SetValue(instance, Convert.ToInt32(values[values.Length - 1]) + 1, null));
             Assert.IsType<ArgumentOutOfRangeException>(targetException.InnerException);
         }
 
@@ -292,7 +293,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
                     object originalParameter = parameters[parameterInfo.Position];
 
                     parameters[parameterInfo.Position] = null;
-                    Assert.ThrowsArgumentNullOrEmpty(
+                    ExceptionAssert.ThrowsArgumentNullOrEmpty(
                         delegate()
                         {
                             try
@@ -307,7 +308,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
                         parameterInfo.Name);
 
                     parameters[parameterInfo.Position] = String.Empty;
-                    Assert.ThrowsArgumentNullOrEmpty(
+                    ExceptionAssert.ThrowsArgumentNullOrEmpty(
                         delegate()
                         {
                             try
@@ -349,7 +350,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
             }
             else
             {
-                Assert.ThrowsArgumentNullOrEmpty(
+                ExceptionAssert.ThrowsArgumentNullOrEmpty(
                     delegate()
                     {
                         try
@@ -362,7 +363,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
                         }
                     },
                     "value");
-                Assert.ThrowsArgumentNullOrEmpty(
+                ExceptionAssert.ThrowsArgumentNullOrEmpty(
                     delegate()
                     {
                         try

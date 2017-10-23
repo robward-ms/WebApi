@@ -15,6 +15,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -54,16 +55,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Theory]
         // -- "NormalPass_FromEntity" -- ensure existing behavior has not changed when serializing 
         //                               properties off the base entity
-        [InlineData("Array", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("IEnumerable", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("ICollection", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("IList", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("List", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("Collection", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("CustomCollection", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("NullableColors", NullCollectionsTestMode.NormalPass_FromEntity)]
-        [InlineData("ComplexCollection", NullCollectionsTestMode.NormalPass_FromEntity)]
-        public void NullCollectionProperties_NormalPass_FromEntity(string propertyName, NullCollectionsTestMode testMode)
+        [InlineData("Array")]
+        [InlineData("IEnumerable")]
+        [InlineData("ICollection")]
+        [InlineData("IList")]
+        [InlineData("List")]
+        [InlineData("Collection")]
+        [InlineData("CustomCollection")]
+        [InlineData("NullableColors")]
+        [InlineData("ComplexCollection")]
+        public void NullCollectionProperties_NormalPass_FromEntity(string propertyName)
         {
             // Arrange
             NullCollectionsTestsController.TestObject = new NullCollectionsTestsModel();
@@ -73,7 +74,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             string responseJson = response.Content.ReadAsStringAsync().Result;
             dynamic result = JToken.Parse(responseJson);
             if (propertyName == "NullableColors")
@@ -95,16 +96,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Theory]
         // -- "SerializeAsEmpty_FromEntity" -- ensure null collections are serialized as if they were 
         //                                     empty collections when serializing properties off the base entity
-        [InlineData("Array", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("IEnumerable", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("ICollection", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("IList", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("List", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("Collection", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("CustomCollection", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("NullableColors", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        [InlineData("ComplexCollection", NullCollectionsTestMode.SerializeAsEmpty_FromEntity)]
-        public void NullCollectionProperties_SerializeAsEmpty_FromEntity(string propertyName, NullCollectionsTestMode testMode)
+        [InlineData("Array")]
+        [InlineData("IEnumerable")]
+        [InlineData("ICollection")]
+        [InlineData("IList")]
+        [InlineData("List")]
+        [InlineData("Collection")]
+        [InlineData("CustomCollection")]
+        [InlineData("NullableColors")]
+        [InlineData("ComplexCollection")]
+        public void NullCollectionProperties_SerializeAsEmpty_FromEntity(string propertyName)
         {
             // Arrange
             NullCollectionsTestsModel testObject = new NullCollectionsTestsModel();
@@ -116,7 +117,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             string responseJson = response.Content.ReadAsStringAsync().Result;
             dynamic result = JToken.Parse(responseJson);
             Assert.NotNull(result[propertyName]);
@@ -127,16 +128,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Theory]
         // -- "NormalPass_FromParentComplex" -- ensure existing behavior has not changed when serializing 
         //                                      properties off a complex attached to the entity
-        [InlineData("Array", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("IEnumerable", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("ICollection", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("IList", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("List", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("Collection", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("CustomCollection", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("NullableColors", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        [InlineData("ComplexCollection", NullCollectionsTestMode.NormalPass_FromParentComplex)]
-        public void NullCollectionProperties_NormalPass_FromParentComplex(string propertyName, NullCollectionsTestMode testMode)
+        [InlineData("Array")]
+        [InlineData("IEnumerable")]
+        [InlineData("ICollection")]
+        [InlineData("IList")]
+        [InlineData("List")]
+        [InlineData("Collection")]
+        [InlineData("CustomCollection")]
+        [InlineData("NullableColors")]
+        [InlineData("ComplexCollection")]
+        public void NullCollectionProperties_NormalPass_FromParentComplex(string propertyName)
         {
             // Arrange
             NullCollectionsTestsController.TestObject = new NullCollectionsTestsModel();
@@ -146,7 +147,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             string responseJson = response.Content.ReadAsStringAsync().Result;
             dynamic result = JToken.Parse(responseJson);
             var parent = result["ParentComplex"];
@@ -170,16 +171,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         // -- "SerializeAsEmpty_FromParentComplex" -- ensure null collections are serialized as if they were empty 
         //                                            collections when serializing properties off a complex attached 
         //                                            to the entity
-        [InlineData("Array", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("IEnumerable", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("ICollection", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("IList", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("List", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("Collection", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("CustomCollection", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("NullableColors", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        [InlineData("ComplexCollection", NullCollectionsTestMode.SerializeAsEmpty_FromParentComplex)]
-        public void NullCollectionProperties_SerializeAsEmpty_FromParentComplex(string propertyName, NullCollectionsTestMode testMode)
+        [InlineData("Array")]
+        [InlineData("IEnumerable")]
+        [InlineData("ICollection")]
+        [InlineData("IList")]
+        [InlineData("List")]
+        [InlineData("Collection")]
+        [InlineData("CustomCollection")]
+        [InlineData("NullableColors")]
+        [InlineData("ComplexCollection")]
+        public void NullCollectionProperties_SerializeAsEmpty_FromParentComplex(string propertyName)
         {
             // Arrange
             NullCollectionsTestsModel testObject = new NullCollectionsTestsModel();
@@ -191,7 +192,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpResponseMessage response = _client.SendAsync(request).Result;
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
             string responseJson = response.Content.ReadAsStringAsync().Result;
             dynamic result = JToken.Parse(responseJson);
             var parent3 = result["ParentComplex"];

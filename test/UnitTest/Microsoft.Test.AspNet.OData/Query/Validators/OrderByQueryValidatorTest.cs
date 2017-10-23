@@ -12,6 +12,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query.Validators
 {
@@ -29,14 +31,14 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
         [Fact]
         public void ValidateThrowsOnNullOption()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            ExceptionAssert.Throws<ArgumentNullException>(() =>
                 _validator.Validate(null, new ODataValidationSettings()));
         }
 
         [Fact]
         public void ValidateThrowsOnNullSettings()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            ExceptionAssert.Throws<ArgumentNullException>(() =>
                 _validator.Validate(new OrderByQueryOption("Name eq 'abc'", _context), null));
         }
 
@@ -49,7 +51,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings();
 
             // Act & Assert
-            Assert.Throws<ODataException>(() =>
+            ExceptionAssert.Throws<ODataException>(() =>
                 _validator.Validate(
                     new OrderByQueryOption(String.Format("{0} asc", property), _context), settings),
                 String.Format("The property '{0}' cannot be used in the $orderby query option.", property));
@@ -75,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings();
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings));
         }
 
         [Fact]
@@ -86,7 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("Name");
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings));
         }
 
         [Theory]
@@ -99,7 +101,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("Name");
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _validator.Validate(
                     new OrderByQueryOption(String.Format("{0} asc", property), _context),
                     settings),
@@ -116,7 +118,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("Address");
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings),
+            ExceptionAssert.Throws<ODataException>(() => _validator.Validate(new OrderByQueryOption("Name asc", _context), settings),
                 "Order by 'Name' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
 
@@ -129,7 +131,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("Id");
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => _validator.Validate(option, settings),
+            ExceptionAssert.Throws<ODataException>(() => _validator.Validate(option, settings),
                 "Order by 'Name' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
 
@@ -139,13 +141,13 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             // Arrange
             OrderByQueryOption option = new OrderByQueryOption("Name desc, Id asc", _context);
             ODataValidationSettings settings = new ODataValidationSettings();
-            Assert.DoesNotThrow(() => _validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(option, settings));
 
             settings.AllowedOrderByProperties.Add("Address");
             settings.AllowedOrderByProperties.Add("Name");
 
             // Act & Assert
-            Assert.Throws<ODataException>(() => _validator.Validate(option, settings),
+            ExceptionAssert.Throws<ODataException>(() => _validator.Validate(option, settings),
                 "Order by 'Id' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
 
@@ -158,7 +160,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("Id");
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(option, settings));
         }
 
         [Fact]
@@ -169,7 +171,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings();
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(option, settings));
         }
 
         [Fact]
@@ -180,7 +182,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings { AllowedOrderByProperties = { "$it" } };
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(option, settings));
         }
 
         [Fact]
@@ -193,7 +195,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             settings.AllowedOrderByProperties.Add("dummy");
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _validator.Validate(option, settings),
                 "Order by '$it' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
@@ -206,7 +208,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings { MaxOrderByNodeCount = 1 };
 
             // Act & Assert
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => _validator.Validate(option, settings),
                 "The number of clauses in $orderby query option exceeded the maximum number allowed. The maximum number of $orderby clauses allowed is 1.");
         }
@@ -245,7 +247,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             {
                 EnableOrderBy = true
             });
-            Assert.Throws<ODataException>(() => validator.Validate(option, settings), message);
+            ExceptionAssert.Throws<ODataException>(() => validator.Validate(option, settings), message);
         }
 
         [Fact]
@@ -261,7 +263,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
             // Act & Assert
             OrderByQueryValidator validator = OrderByQueryValidator.GetOrderByQueryValidator(context);
-            Assert.DoesNotThrow(() => validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => validator.Validate(option, settings));
         }
 
         [Fact]
@@ -277,7 +279,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
             // Act & Assert
             OrderByQueryValidator validator = OrderByQueryValidator.GetOrderByQueryValidator(context);
-            Assert.Throws<ODataException>(() =>
+            ExceptionAssert.Throws<ODataException>(() =>
                 validator.Validate(option, settings),
                 "Order by 'Value' is not allowed. To allow it, set the 'AllowedOrderByProperties' property on EnableQueryAttribute or QueryValidationSettings.");
         }
@@ -303,7 +305,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
             ODataValidationSettings settings = new ODataValidationSettings();
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _validator.Validate(option, settings));
+            ExceptionAssert.DoesNotThrow(() => _validator.Validate(option, settings));
         }
 
         private static IEdmModel GetEdmModel()

@@ -6,6 +6,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Builder.Conventions.Attributes;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Builder.Conventions.Attributes
 {
@@ -23,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions.Attributes
             convention.Apply(entity, null, null);
 
             // Assert
-            Assert.Equal(0, entity.Keys.Count());
+            Assert.Empty(entity.Keys);
         }
 
         [Fact]
@@ -39,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions.Attributes
             convention.Apply(entity, null, null);
 
             // Assert
-            Assert.Equal(1, entity.Keys.Count());
+            Assert.Single(entity.Keys);
         }
 
         private static EntityTypeConfiguration CreateEntitytypeConfigurationMock()

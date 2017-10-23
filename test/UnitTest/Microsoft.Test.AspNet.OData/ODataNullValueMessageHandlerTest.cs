@@ -17,6 +17,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData
@@ -38,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler();
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => { HttpResponseMessage result = handler.SendAsync(null).Result; }, "request");
+            ExceptionAssert.ThrowsArgumentNull(() => { HttpResponseMessage result = handler.SendAsync(null).Result; }, "request");
         }
 
         [Fact]
@@ -247,7 +249,6 @@ namespace Microsoft.Test.AspNet.OData
         [InlineData("Customers(3)/NavigationProperty", HttpStatusCode.NoContent)]
         [InlineData("Customers(3)/CollectionNavigationProperty", null)]
         [InlineData("Customers(3)/CollectionNavigationProperty(3)", HttpStatusCode.NoContent)]
-        [InlineData("Customers(3)", HttpStatusCode.NotFound)]
         [InlineData("Navigations/Test.SpecialNavigation", null)]
         [InlineData("Navigations(3)/Test.SpecialNavigation", HttpStatusCode.NotFound)]
         [InlineData("Navigations/Test.SpecialNavigation(3)", HttpStatusCode.NotFound)]

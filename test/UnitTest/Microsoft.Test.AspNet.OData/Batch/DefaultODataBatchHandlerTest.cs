@@ -13,6 +13,7 @@ using System.Web.Http.Routing;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -31,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Constructor_Throws_IfHttpServerIsNull()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new DefaultODataBatchHandler(null),
                 "httpServer");
         }
@@ -42,7 +43,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
             HttpRequestMessage request = new HttpRequestMessage();
             request.EnableHttpDependencyInjectionSupport();
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.CreateResponseMessageAsync(null, request, CancellationToken.None).Wait(),
                 "responses");
         }
@@ -51,7 +52,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void CreateResponseMessageAsync_Throws_IfRequestIsNull()
         {
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.CreateResponseMessageAsync(new ODataBatchResponseItem[0], null, CancellationToken.None).Wait(),
                 "request");
         }
@@ -70,14 +71,14 @@ namespace Microsoft.Test.AspNet.OData.Batch
             HttpResponseMessage response = batchHandler.CreateResponseMessageAsync(responses, request, CancellationToken.None).Result;
 
             var batchContent = Assert.IsType<ODataBatchContent>(response.Content);
-            Assert.Equal(1, batchContent.Responses.Count());
+            Assert.Single(batchContent.Responses);
         }
 
         [Fact]
         public void ProcessBatchAsync_Throws_IfRequestIsNull()
         {
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ProcessBatchAsync(null, CancellationToken.None).Wait(),
                 "request");
         }
@@ -260,7 +261,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 new OperationRequestItem(new HttpRequestMessage(HttpMethod.Put, "http://example.com/")),
             };
 
-            Assert.Throws<InvalidOperationException>(
+            ExceptionAssert.Throws<InvalidOperationException>(
                 () => batchHandler.ExecuteRequestMessagesAsync(requests, CancellationToken.None).Result);
 
             Assert.Equal(2, responses.Count);
@@ -274,7 +275,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ExecuteRequestMessagesAsync_Throws_IfRequestsIsNull()
         {
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ExecuteRequestMessagesAsync(null, CancellationToken.None).Wait(),
                 "requests");
         }
@@ -283,7 +284,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ParseBatchRequestsAsync_Throws_IfRequestIsNull()
         {
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ParseBatchRequestsAsync(null, CancellationToken.None).Wait(),
                 "request");
         }
@@ -363,7 +364,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         public void ValidateRequest_Throws_IfResponsesIsNull()
         {
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => batchHandler.ValidateRequest(null),
                 "request");
         }
@@ -374,7 +375,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
             HttpRequestMessage request = new HttpRequestMessage();
 
-            HttpResponseException errorResponse = Assert.Throws<HttpResponseException>(
+            HttpResponseException errorResponse = ExceptionAssert.Throws<HttpResponseException>(
                 () => batchHandler.ValidateRequest(request));
             Assert.Equal(HttpStatusCode.BadRequest, errorResponse.Response.StatusCode);
             Assert.Equal("The 'Content' property on the batch request cannot be null.",
@@ -389,7 +390,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             request.Content = new StringContent(String.Empty);
             request.Content.Headers.ContentType = null;
 
-            HttpResponseException errorResponse = Assert.Throws<HttpResponseException>(
+            HttpResponseException errorResponse = ExceptionAssert.Throws<HttpResponseException>(
                 () => batchHandler.ValidateRequest(request));
             Assert.Equal(HttpStatusCode.BadRequest, errorResponse.Response.StatusCode);
             Assert.Equal("The batch request must have a \"Content-Type\" header.",
@@ -404,7 +405,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             request.Content = new StringContent(String.Empty);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("text/json");
 
-            HttpResponseException errorResponse = Assert.Throws<HttpResponseException>(
+            HttpResponseException errorResponse = ExceptionAssert.Throws<HttpResponseException>(
                 () => batchHandler.ValidateRequest(request));
             Assert.Equal(HttpStatusCode.BadRequest, errorResponse.Response.StatusCode);
             Assert.Equal("The batch request must have 'multipart/mixed' as the media type.",
@@ -419,7 +420,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             request.Content = new StringContent(String.Empty);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("multipart/mixed");
 
-            HttpResponseException errorResponse = Assert.Throws<HttpResponseException>(
+            HttpResponseException errorResponse = ExceptionAssert.Throws<HttpResponseException>(
                 () => batchHandler.ValidateRequest(request));
             Assert.Equal(HttpStatusCode.BadRequest, errorResponse.Response.StatusCode);
             Assert.Equal("The batch request must have a boundary specification in the \"Content-Type\" header.",

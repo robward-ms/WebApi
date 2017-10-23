@@ -10,6 +10,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -19,7 +21,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObject_ThrowsArgumentNull_MessageWriter()
         {
             ODataMetadataSerializer serializer = new ODataMetadataSerializer();
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => serializer.WriteObject(42, typeof(IEdmModel), messageWriter: null, writeContext: null),
                 "messageWriter");
         }

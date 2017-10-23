@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -39,7 +41,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 
         [Theory]
-        [PropertyData("CreateAndParseETagForValue_DataSet")]
+        [MemberData(nameof(CreateAndParseETagForValue_DataSet))]
         public void DefaultODataETagHandler_RoundTrips(object value)
         {
             // Arrange
@@ -52,7 +54,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             // Assert
             Assert.True(etagHeaderValue.IsWeak);
-            Assert.Equal(1, values.Count);
+            Assert.Single(values);
             Assert.Equal(value, values[0]);
         }
 
@@ -75,7 +77,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             // Assert
             Assert.True(etagHeaderValue.IsWeak);
-            Assert.Equal(1, values.Count);
+            Assert.Single(values);
             DateTimeOffset result = Assert.IsType<DateTimeOffset>(values[0]);
 
             Assert.Equal(TimeZoneInfo.ConvertTime(new DateTimeOffset(value), TimeZoneInfoHelper.TimeZone), result);
@@ -98,6 +100,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IList<object> results = handler.ParseETag(etagHeaderValue).Select(p => p.Value).ToList();
 
             // Assert
+            Assert.NotNull(notUsed);
             Assert.True(etagHeaderValue.IsWeak);
             Assert.Equal(values.Length, results.Count);
             for (int i = 0; i < values.Length; i++)

@@ -10,6 +10,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -20,7 +22,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         [Fact]
         public void Ctor_ThrowsArgumentNull_EntityType()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new SelectExpandNode(selectExpandClause: null, structuredType: null, model: EdmCoreModel.Instance),
                 "structuredType");
         }
@@ -28,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         [Fact]
         public void Ctor_ThrowsArgumentNull_Model()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => new SelectExpandNode(
                     selectExpandClause: null,
                     structuredType: new Mock<IEdmEntityType>().Object,
@@ -207,7 +209,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             SelectExpandClause selectExpandClause = new SelectExpandClause(new SelectItem[] { new Mock<SelectItem>().Object }, allSelected: false);
             IEdmEntityType entityType = _model.Customer;
 
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => new SelectExpandNode(selectExpandClause, entityType, _model.Model),
                 "$select does not support selections of type 'SelectItemProxy'.");
         }
@@ -217,7 +219,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             ODataPath path = new ODataPath(new ValueSegment(previousType: null));
 
-            Assert.Throws<ODataException>(
+            ExceptionAssert.Throws<ODataException>(
                 () => SelectExpandNode.ValidatePathIsSupported(path),
                 "A path within the select or expand query option is not supported.");
         }

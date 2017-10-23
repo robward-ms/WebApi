@@ -17,6 +17,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
+using Xunit;
+using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.AspNet.OData
@@ -87,7 +89,7 @@ namespace Microsoft.Test.AspNet.OData
         public void ODataProperties_ThrowsArgumentNull_RequestNull()
         {
             HttpRequestMessage request = null;
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => request.ODataProperties(),
                 "request");
         }
@@ -96,7 +98,7 @@ namespace Microsoft.Test.AspNet.OData
         public void SelectExpandClauseSetter_ThrowsArgumentNull()
         {
             HttpRequestMessage request = new HttpRequestMessage();
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => request.ODataProperties().SelectExpandClause = null,
                 "value");
         }
@@ -162,7 +164,7 @@ namespace Microsoft.Test.AspNet.OData
             EntityTagHeaderValue headerValue = new EntityTagHeaderValue("\"any\"");
 
             // Act & Assert
-            Assert.ThrowsArgumentNull(() => request.GetETag(headerValue), "request");
+            ExceptionAssert.ThrowsArgumentNull(() => request.GetETag(headerValue), "request");
         }
 
         [Fact]
@@ -173,7 +175,7 @@ namespace Microsoft.Test.AspNet.OData
             EntityTagHeaderValue headerValue = new EntityTagHeaderValue("\"any\"");
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => request.GetETag(headerValue),
+            ExceptionAssert.Throws<InvalidOperationException>(() => request.GetETag(headerValue),
                 "Request message does not contain an HttpConfiguration object.");
         }
 
@@ -288,10 +290,10 @@ namespace Microsoft.Test.AspNet.OData
         public void GetNextPageLink_WithNullRequestOrUri_Throws()
         {
             HttpRequestMessage nullRequest = null;
-            Assert.Throws<ArgumentNullException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(nullRequest, 10); });
+            ExceptionAssert.Throws<ArgumentNullException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(nullRequest, 10); });
 
             HttpRequestMessage requestWithNullUri = new HttpRequestMessage() { RequestUri = null };
-            Assert.Throws<ArgumentNullException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithNullUri, 10); });
+            ExceptionAssert.Throws<ArgumentNullException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithNullUri, 10); });
         }
 
         [Fact]
@@ -299,7 +301,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             Uri relativeUri = new Uri("/test", UriKind.Relative);
             HttpRequestMessage requestWithRelativeUri = new HttpRequestMessage() { RequestUri = relativeUri };
-            Assert.Throws<ArgumentException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithRelativeUri, 10); });
+            ExceptionAssert.Throws<ArgumentException>(() => { Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions.GetNextPageLink(requestWithRelativeUri, 10); });
         }
 
         [Theory]
@@ -424,7 +426,7 @@ namespace Microsoft.Test.AspNet.OData
             Action action = () => request.GetRequestContainer();
 
             // Assert
-            Assert.Throws<InvalidOperationException>(action);
+            ExceptionAssert.Throws<InvalidOperationException>(action);
         }
     }
 }

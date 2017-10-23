@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
@@ -13,6 +14,8 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
@@ -164,7 +167,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
 
         [Theory]
-        [PropertyData("PrefixStrings")]
+        [MemberData(nameof(PrefixStrings))]
         public void Match_DeterminesExpectedServiceRoot_ForMetadata(string prefixString)
         {
             // Arrange
@@ -202,7 +205,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
 
         [Theory]
-        [PropertyData("PrefixStrings")]
+        [MemberData(nameof(PrefixStrings))]
         public void Match_DeterminesExpectedServiceRoot_ForMetadataWithEscapedSeparator(string prefixString)
         {
             // Arrange
@@ -241,7 +244,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
 
         [Theory]
-        [PropertyData("PrefixAndODataStrings")]
+        [MemberData(nameof(PrefixAndODataStrings))]
         public void Match_DeterminesExpectedServiceRoot_ForFunctionCall(string prefixString, string oDataString)
         {
             // Arrange
@@ -284,7 +287,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
 
         [Theory]
-        [PropertyData("PrefixAndODataStrings")]
+        [MemberData(nameof(PrefixAndODataStrings))]
         public void Match_DeterminesExpectedServiceRoot_ForFunctionCallWithEscapedSeparator(
             string prefixString,
             string oDataString)

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -15,7 +16,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SendMessageAsync_Throws_WhenInvokerIsNull()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchRequestItem.SendMessageAsync(null, new HttpRequestMessage(), CancellationToken.None, null).Wait(),
                 "invoker");
         }
@@ -23,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void SendMessageAsync_Throws_WhenRequestIsNull()
         {
-            Assert.ThrowsArgumentNull(
+            ExceptionAssert.ThrowsArgumentNull(
                 () => ODataBatchRequestItem.SendMessageAsync(new HttpMessageInvoker(new HttpServer()), null, CancellationToken.None, null).Wait(),
                 "request");
         }
