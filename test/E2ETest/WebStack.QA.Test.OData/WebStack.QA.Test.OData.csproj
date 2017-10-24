@@ -225,6 +225,9 @@
     <Compile Include="ETags\ETagsOtherTypesTest.cs" />
     <Compile Include="ETags\ETagsUntypedTests.cs" />
     <Compile Include="Formatter\ODataFeedSerializeWithoutNavigationSourceTests.cs" />
+    <Compile Include="NuwaClassFixture.cs" />
+    <Compile Include="NuwaTestBaseClass.cs" />
+    <Compile Include="NuwaTestCaseDiscoverer.cs" />
     <Compile Include="ODataCountTest\CountController.cs" />
     <Compile Include="ODataCountTest\CountDataModel.cs" />
     <Compile Include="ODataCountTest\CountEdmModel.cs" />

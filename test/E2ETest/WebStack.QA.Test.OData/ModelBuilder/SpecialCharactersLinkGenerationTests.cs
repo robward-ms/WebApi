@@ -107,7 +107,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
     // Skip webhost as it denies most of the special characters
     [NuwaFramework]
-    [NwHost(HostType.KatanaSelf)]
+    [NuwaHost(HostType.KatanaSelf)]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class SpecialCharactersLinkGenerationTests

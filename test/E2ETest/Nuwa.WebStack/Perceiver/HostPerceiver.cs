@@ -8,7 +8,7 @@ using Nuwa.WebStack.Descriptor;
 using Nuwa.WebStack.Host;
 using Nuwa.WebStack.Route;
 using WebStack.QA.Common.WebHost;
-using Xunit.Sdk;
+using Xunit.Abstractions;
 
 namespace Nuwa.Perceiver
 {
@@ -27,12 +27,12 @@ namespace Nuwa.Perceiver
             _dirProvider = dirProvider;
         }
 
-        public IEnumerable<IRunElement> Perceive(ITestClassCommand ntcc)
+        public IEnumerable<IRunElement> Perceive(ITypeInfo typeUnderTest)
         {
-            var descriptor = new TestTypeDescriptor(ntcc.TypeUnderTest);
+            var descriptor = new TestTypeDescriptor(typeUnderTest);
 
             var attrs = new HashSet<HostType>(
-                ntcc.TypeUnderTest.GetCustomAttributes<NwHostAttribute>().Select(a => a.HostType));
+                typeUnderTest.GetCustomAttributes(typeof(NuwaHostAttribute)).Select(a => (HostType)a.GetConstructorArguments().First()));
 
             if (attrs.Count() == 0)
             {

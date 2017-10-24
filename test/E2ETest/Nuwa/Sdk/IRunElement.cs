@@ -1,4 +1,6 @@
-﻿namespace Nuwa.Sdk
+﻿using System;
+
+namespace Nuwa.Sdk
 {
     /// <summary>
     /// IRunElement defines a factor in RunFrame. The factory could be host strategy, 
@@ -6,24 +8,24 @@
     /// 
     /// IRunElement is created by IRunElementPerceiver from Attributes or other clues
     /// regarding to test run configuration. IRunElements are shared between RunFrame
-    /// which means the should NOT contains any life cycle sensitve instance, because
+    /// which means the should NOT contains any life cycle sensitive instance, because
     /// it will be initialized multiple times.
     /// 
     /// IRunElement is initialized only once by RunFrame when the first corresponding
     /// test method is about to run. The common pattern of the initialization is a 
-    /// run element initialize an object and save the objhect in the given RunFrame.
+    /// run element initialize an object and save the object in the given RunFrame.
     /// 
     /// After initialized, for every test method run the Recovery of IRunElement will
     /// be called to recover the test scene, meaning set value back to the test class's
     /// properties.
     /// 
     /// When RunFrame request cleanup, it retrieve the objects from RunFrame and 
-    /// uninitialize base on them
+    /// uninitialized base on them
     /// </summary>
     public interface IRunElement
     {
         /// <summary>
-        /// Discription of this RunFrameElement
+        /// Description of this RunFrameElement
         /// </summary>
         string Name { get; }
 
@@ -35,7 +37,7 @@
         /// <summary>
         /// Recover test scene
         /// </summary>
-        void Recover(object testClass, NuwaTestCommand testCommand);
+        void Recover(Type testClassType, NuwaTestCase testCommand);
 
         /// <summary>
         /// Clean up the test command and run frame.

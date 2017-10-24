@@ -17,7 +17,7 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class ActionRoutingConventionTests
     {
         [NuwaBaseAddress]

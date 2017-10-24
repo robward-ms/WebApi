@@ -22,7 +22,7 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    [NwHost(HostType.KatanaSelf)]
+    [NuwaHost(HostType.KatanaSelf)]
     public class UnqualifiedNameCallRoutingTests
     {
         [NuwaBaseAddress]

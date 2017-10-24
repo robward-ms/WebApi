@@ -1,7 +1,9 @@
-﻿namespace Nuwa.Sdk
+﻿using System;
+
+namespace Nuwa.Sdk
 {
     /// <summary>
-    /// A default implmenetation of IRunElement.
+    /// A default implementation of IRunElement.
     /// 
     /// This class is supposed to help reducing duplicate codes of empty 
     /// override method. DO NOT put common logic here, because it is not
@@ -19,7 +21,7 @@
         {
         }
 
-        public virtual void Recover(object testClass, NuwaTestCommand testCommand)
+        public virtual void Recover(Type testClassType, NuwaTestCase testCommand)
         {
         }
 

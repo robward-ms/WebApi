@@ -48,7 +48,7 @@ namespace Nuwa.Sdk.Elements
             // load test assemly into sandbox
             if (sandbox != null && TypeDescriptor.TestAssembly != null)
             {
-                sandbox.Load(TypeDescriptor.TestAssembly.GetName());
+                sandbox.Load(TypeDescriptor.TestAssembly.Name);
             }
 
             // setup security strategy and base address
@@ -90,7 +90,7 @@ namespace Nuwa.Sdk.Elements
             }
 
             // set up the server
-            serverInitiator.Setup(baseAddress, TypeDescriptor.ConfigureMethod, traceType, GetDefaultRouteTemplate());
+            serverInitiator.Setup(baseAddress, TypeDescriptor.ConfigureMethod.ToRuntimeMethod(), traceType, GetDefaultRouteTemplate());
 
             frame.SetState(KeyReservedPort, port);
             frame.SetState(KeyBaseAddresss, baseAddress);
@@ -124,9 +124,9 @@ namespace Nuwa.Sdk.Elements
             }
         }
 
-        public override void Recover(object testClass, NuwaTestCommand testCommand)
+        public override void Recover(Type testClassType, NuwaTestCase testCommand)
         {
-            base.Recover(testClass, testCommand);
+            base.Recover(testClassType, testCommand);
         }
 
         private static void SetupSecureEnvironment(X509Certificate2 certificate, string port)

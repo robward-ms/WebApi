@@ -20,7 +20,7 @@ using Xunit;
 namespace WebStack.QA.Test.OData.Formatter
 {
     [NuwaFramework]
-    [NwHost(HostType.WcfSelf)]
+    [NuwaHost(HostType.WcfSelf)]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class RandomModelTests : IODataTestBase, IODataFormatterTestBase

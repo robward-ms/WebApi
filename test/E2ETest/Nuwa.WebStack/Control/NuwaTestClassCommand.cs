@@ -5,143 +5,103 @@ using System.Linq;
 using Autofac;
 using Nuwa.DI;
 using Nuwa.Sdk;
-using Xunit.Sdk;
+using Xunit.Abstractions;
 
 namespace Nuwa.Control
 {
     /// <summary>
     /// Define the class level execution of Nuwa
     /// </summary>
-    public class NuwaTestClassCommand : DelegatingTestClassCommand
+    public class NuwaTestClassCommand
     {
         private Collection<RunFrame> _frames;
-        private IRunFrameBuilder _frmBuilder;
 
         public NuwaTestClassCommand()
-            : base(new TestClassCommand())
         {
-            var resolver = DependencyResolver.Instance;
-
-            // autowiring
-            _frmBuilder = resolver.Container.Resolve(
-                typeof(IRunFrameBuilder),
-                new NamedParameter("testClass", this))
-                as IRunFrameBuilder;
-
-            _frames = new Collection<RunFrame>();
         }
 
-        public static NuwaFrameworkAttribute GetNuwaFrameworkAttr(ITestClassCommand cmd)
+        public static IAttributeInfo GetNuwaFrameworkAttr(ITypeInfo typeUnderTest)
         {
-            return cmd.TypeUnderTest.GetFirstCustomAttribute<NuwaFrameworkAttribute>();
+            return typeUnderTest.GetCustomAttributes<NuwaFrameworkAttribute>().FirstOrDefault();
         }
 
         /// <summary>
         /// Act before any test method is executed. All host strategies requested are set up in this method.
         /// </summary>
         /// <returns>Returns exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassStart()
+        public void ClassStart(ITypeInfo typeUnderTest)
         {
-            Exception exception = null;
+            ValidateTypeUnderTest(typeUnderTest);
 
-            try
-            {
-                ValidateTypeUnderTest();
+            // create run frames
+            var resolver = DependencyResolver.Instance;
 
-                // execute the default class start, should any exception returned terminate the execution.
-                exception = Proxy.ClassStart();
-                if (exception != null)
-                {
-                    // expected to be catched at upper level try clause
-                    throw new InvalidOperationException("Base class ClassStart failed", exception);
-                }
+            // autowiring
+            var frmBuilder = resolver.Container.Resolve(
+                typeof(IRunFrameBuilder),
+                new NamedParameter("testClass", this))
+                as IRunFrameBuilder;
 
-                // create run frames
-                _frames = _frmBuilder.CreateFrames();
-            }
-            catch (Exception e)
-            {
-                exception = e;
-            }
-
-            return exception;
+            _frames = frmBuilder.CreateFrames();
         }
 
         /// <summary>
         /// Act after all test methods are executed. All host strategies are released in this method. 
         /// </summary>
         /// <returns>Returns aggregated exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassFinish()
+        public void ClassFinish(ITypeInfo typeUnderTest)
         {
-            Exception retException = null;
+            var exceptions = new List<Exception>();
 
-            try
+            // dispose all run frame
+            foreach (var rf in _frames)
             {
-                var exceptions = new List<Exception>();
-
-                // dispose all run frame
-                foreach (var rf in _frames)
+                try
                 {
-                    try
-                    {
-                        rf.Cleanup();
-                    }
-                    catch (Exception ex)
-                    {
-                        exceptions.Add(ex);
-                    }
+                    rf.Cleanup();
                 }
-
-                // first release all the hosts
-                Exception baseException = Proxy.ClassFinish();
-                if (baseException != null)
+                catch (Exception ex)
                 {
-                    exceptions.Add(baseException);
-                }
-
-                if (exceptions.Count != 0)
-                {
-                    throw new AggregateException(exceptions);
+                    exceptions.Add(ex);
                 }
             }
-            catch (Exception e)
-            {
-                retException = e;
-            }
 
-            return retException;
+            if (exceptions.Count != 0)
+            {
+                throw new AggregateException(exceptions);
+            }
         }
 
-        public override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo testMethod)
+        public IEnumerable<ITestCase> EnumerateTestCommands(ITestMethod testMethod)
         {
-            /// TODO - Advanced feature:
-            /// 1. Frame filter, some cases can be filtered under some frame
-            var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
-                               from frame in _frames
-                               select new { TestCommand = test, RunFrame = frame };
+            ///// TODO - Advanced feature:
+            ///// 1. Frame filter, some cases can be filtered under some frame
+            //var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
+            //                   from frame in _frames
+            //                   select new { TestCommand = test, RunFrame = frame };
 
-            foreach (var each in combinations)
-            {
-                var isSkipped =
-                    (each.TestCommand is DelegatingTestCommand) ?
-                    (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
-                    (each.TestCommand is SkipCommand);
+            //foreach (var each in combinations)
+            //{
+            //    var isSkipped =
+            //        (each.TestCommand is DelegatingTestCommand) ?
+            //        (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
+            //        (each.TestCommand is SkipCommand);
 
-                if (isSkipped)
-                {
-                    yield return each.TestCommand;
-                }
-                else
-                {
-                    var testCommand = new NuwaTestCommand(each.TestCommand)
-                    {
-                        Frame = each.RunFrame,
-                        TestMethod = testMethod
-                    };
+            //    if (isSkipped)
+            //    {
+            //        yield return each.TestCommand;
+            //    }
+            //    else
+            //    {
+            //        var testCommand = new NuwaTestCase(each.TestCommand)
+            //        {
+            //            Frame = each.RunFrame,
+            //            TestMethod = testMethod
+            //        };
 
-                    yield return testCommand;
-                }
-            }
+            //        yield return testCommand;
+            //    }
+            //}
         }
 
         /// <summary>
@@ -150,10 +110,10 @@ namespace Nuwa.Control
         /// Exception will be thrown if the validation failed. The thrown exception
         /// is expected be caught in external frame.
         /// </summary>
-        private void ValidateTypeUnderTest()
+        private void ValidateTypeUnderTest(ITypeInfo typeUnderTest)
         {
             // check framework attribute
-            if (NuwaTestClassCommand.GetNuwaFrameworkAttr(this) == null)
+            if (NuwaTestClassCommand.GetNuwaFrameworkAttr(typeUnderTest) == null)
             {
                 throw new InvalidOperationException(
                     string.Format(
@@ -162,7 +122,7 @@ namespace Nuwa.Control
             }
 
             // check configuration method attribute
-            var configMethodAttr = TypeUnderTest.GetCustomAttributes<NuwaConfigurationAttribute>();
+            var configMethodAttr = typeUnderTest.GetCustomAttributes<NuwaConfigurationAttribute>();
             if (configMethodAttr.Length > 1)
             {
                 throw new InvalidOperationException(

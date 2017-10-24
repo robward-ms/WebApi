@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Nuwa.Client;
 
 namespace Nuwa.Sdk.Elements
@@ -32,11 +33,11 @@ namespace Nuwa.Sdk.Elements
         public override void Initialize(RunFrame frame)
         {
             /// Create a client strategy which is associated with this host strategy.
-            /// Client strategy is rather a component relatively indepdent from 
+            /// Client strategy is rather a component relatively independent from 
             /// host strategy is because not like host strategy, the client
             /// strategy can be different on test method basis. For example the
             /// security credential could be different. So a HttpClient is created
-            /// on basis of eacy test method (in the domain of xunit, is every 
+            /// on basis of each test method (in the domain of xunit, is every 
             /// TestCommand).
             var clientStrategy = new DefaultClientStrategy
             {
@@ -47,19 +48,17 @@ namespace Nuwa.Sdk.Elements
             frame.SetState(KeyClientStrategy, clientStrategy);
         }
 
-        public override void Recover(object testClass, NuwaTestCommand testCommand)
+        public override void Recover(Type testClassType, NuwaTestCase testCommand)
         {
-            SetHttpclient(testClass, testCommand);
+            SetHttpclient(testClassType, testCommand);
         }
 
         /// <summary>
         /// Create an http client according to configuration and host strategy
         /// </summary>
         /// <param name="testClass">the test class under test</param>
-        protected void SetHttpclient(object testClass, NuwaTestCommand testCommand)
+        protected void SetHttpclient(Type testClassType, NuwaTestCase testCommand)
         {
-            Type testClassType = testClass.GetType();
-
             // set the HttpClient if necessary
             var clientPrpt = testClassType.GetProperties()
                 .Where(prop => { return prop.GetCustomAttributes(typeof(NuwaHttpClientAttribute), false).Length == 1; })
@@ -77,13 +76,13 @@ namespace Nuwa.Sdk.Elements
                 return;
             }
 
-            // check the network crediential
-            if (testCommand.TestMethod != null)
+            // check the network credential
+            if (testCommand.Method != null)
             {
-                var credAttr = testCommand.TestMethod.GetFirstCustomAttribute<NuwaNetworkCredentialAttribute>();
+                var credAttr = testCommand.Method.GetCustomAttributes(typeof(NuwaNetworkCredentialAttribute)).FirstOrDefault();
                 if (credAttr != null)
                 {
-                    strategy.Credentials = credAttr.Credential;
+                    strategy.Credentials = credAttr.GetNamedArgument<NetworkCredential>("Credential");
                 }
             }
 

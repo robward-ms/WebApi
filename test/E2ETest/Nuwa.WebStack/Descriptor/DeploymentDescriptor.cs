@@ -1,5 +1,6 @@
 ﻿using System;
 using Nuwa.Sdk;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.WebStack.Descriptor
@@ -15,9 +16,9 @@ namespace Nuwa.WebStack.Descriptor
             var scopeAttr = testClassType.GetFirstCustomAttribute<NuwaWebDeploymentScopeAttribute>();
             if (scopeAttr != null)
             {
-                this.DeploymentType = scopeAttr.DeploymentType;
-                ScopePath = scopeAttr.ScopePath;
-                ScopeResourceType = scopeAttr.ResourceType;
+                this.DeploymentType = scopeAttr.GetNamedArgument< DeploymentType>("DeploymentType");
+                ScopePath = scopeAttr.GetNamedArgument<string>("ScopePath");
+                ScopeResourceType = scopeAttr.GetNamedArgument<Type>("ResourceType");
             }
         }
 

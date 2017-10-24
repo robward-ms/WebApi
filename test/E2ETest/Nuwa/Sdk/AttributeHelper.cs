@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xunit.Sdk;
+using System.Linq;
+using Xunit.Abstractions;
 
 namespace Nuwa.Sdk
 {
@@ -11,7 +12,7 @@ namespace Nuwa.Sdk
         /// </summary>
         /// <param name="attributeType">type of the custom attribute</param>
         /// <returns>the first found custom attribute; or null none is found</returns>
-        public static T GetFirstCustomAttribute<T>(this IMethodInfo me) where T : Attribute
+        public static IAttributeInfo GetFirstCustomAttribute<T>(this IMethodInfo me) where T : Attribute
         {
             IAttributeInfo attrInfo = null;
 
@@ -21,7 +22,7 @@ namespace Nuwa.Sdk
                 break;
             }
 
-            return attrInfo != null ? attrInfo.GetInstance<T>() : null;
+            return attrInfo;
         }
 
         /// <summary>
@@ -45,9 +46,9 @@ namespace Nuwa.Sdk
         /// <summary>
         /// Return the first found custom attribute
         /// </summary>
-        /// <param name="attributeType">type of the custome attribute</param>
+        /// <param name="attributeType">type of the custom attribute</param>
         /// <returns>the first found custom attribute; or null none is found</returns>
-        public static T GetFirstCustomAttribute<T>(this ITypeInfo me) where T : Attribute
+        public static IAttributeInfo GetFirstCustomAttribute<T>(this ITypeInfo me) where T : Attribute
         {
             IAttributeInfo attrInfo = null;
 
@@ -59,7 +60,7 @@ namespace Nuwa.Sdk
 
             if (attrInfo != null)
             {
-                return attrInfo.GetInstance<T>();
+                return attrInfo;
             }
             else
             {
@@ -67,13 +68,12 @@ namespace Nuwa.Sdk
             }
         }
 
-        public static T[] GetCustomAttributes<T>(this ITypeInfo me) where T : Attribute
+        public static IAttributeInfo[] GetCustomAttributes<T>(this ITypeInfo me) where T : Attribute
         {
-            var retvals = new List<T>();
+            var retvals = new List<IAttributeInfo>();
 
-            foreach (var a in me.GetCustomAttributes(typeof(T)))
+            foreach (var attr in me.GetCustomAttributes(typeof(T)))
             {
-                var attr = a.GetInstance<T>();
                 if (attr != null)
                 {
                     retvals.Add(attr);
@@ -93,9 +93,9 @@ namespace Nuwa.Sdk
         {
             var retval = new List<IMethodInfo>();
 
-            foreach (var m in me.GetMethods())
+            foreach (var m in me.GetMethods(includePrivateMethods: true))
             {
-                if (m.HasAttribute(attribute))
+                if (m.GetCustomAttributes(attribute).Any())
                 {
                     retval.Add(m);
                 }

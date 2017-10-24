@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Nuwa.Sdk;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.WebStack.Descriptor
@@ -34,7 +35,7 @@ namespace Nuwa.WebStack.Descriptor
         /// <summary>
         /// The method marked by <paramref name="NuwaConfigurationAttribute"/>
         /// </summary>
-        public MethodInfo ConfigureMethod
+        public IMethodInfo ConfigureMethod
         {
             get
             {
@@ -45,7 +46,7 @@ namespace Nuwa.WebStack.Descriptor
         /// <summary>
         /// The method marked by <paramref name="NuwaWebConfigAttribute"/>
         /// </summary>
-        public MethodInfo WebConfigMethod
+        public IMethodInfo WebConfigMethod
         {
             get
             {
@@ -56,7 +57,7 @@ namespace Nuwa.WebStack.Descriptor
         /// <summary>
         /// The method marked by <paramref name="NuwaWebDeploymentConfigurationAttribute"/>
         /// </summary>
-        public MethodInfo WebDeployConfigMethod
+        public IMethodInfo WebDeployConfigMethod
         {
             get
             {
@@ -73,8 +74,8 @@ namespace Nuwa.WebStack.Descriptor
             {
                 if (_testControllerTypes == null)
                 {
-                    var types = _testClassType.GetCustomAttributes<NuwaTestControllerAttribute>()
-                                                        .Select(one => one.ControllerType);
+                    var types = _testClassType.GetCustomAttributes(typeof(NuwaTestControllerAttribute))
+                                                        .Select(one => one.GetNamedArgument<Type>("ControllerType"));
 
                     if (types != null && types.Any())
                     {
@@ -91,30 +92,31 @@ namespace Nuwa.WebStack.Descriptor
         }
 
         /// <summary>
-        /// The assemly this test class belongs to
+        /// The assembly this test class belongs to
         /// </summary>
-        public Assembly TestAssembly
+        public IAssemblyInfo TestAssembly
         {
             get
             {
-                return this.TestTypeInfo.Type.Assembly;
+                return this.TestTypeInfo.Assembly;
             }
         }
 
         /// <summary>
         /// Get the reflect method info based on it's attribute
         /// </summary>
-        public MethodInfo GetDesignatedMethod<T>() where T : Attribute
+        public IMethodInfo GetDesignatedMethod<T>() where T : Attribute
         {
-            var markedMethod = this.TestTypeInfo.GetMethodMarkedByAttribute(typeof(T));
+            var markedMethod = this.TestTypeInfo.GetMethods(includePrivateMethods: true)
+                .Where(m => m.GetCustomAttributes(typeof(T)).FirstOrDefault() != null);
 
             if (!markedMethod.Any())
             {
                 return null;
             }
-            else if (markedMethod.Length == 1)
+            else if (markedMethod.Count() == 1)
             {
-                return markedMethod.First().MethodInfo;
+                return markedMethod.First();
             }
             else
             {

@@ -295,7 +295,7 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class PutDeltaOfTTests
     {
         [NuwaBaseAddress]
@@ -338,7 +338,7 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class PatchtDeltaOfTTests
     {
         [NuwaBaseAddress]

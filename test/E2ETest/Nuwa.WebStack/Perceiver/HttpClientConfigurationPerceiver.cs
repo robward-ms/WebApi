@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nuwa.Sdk;
 using Nuwa.Sdk.Elements;
-using Xunit.Sdk;
+using Xunit.Abstractions;
 
 namespace Nuwa.Perceiver
 {
     internal class HttpClientConfigurationPerceiver : IRunElementPerceiver
     {
-        public IEnumerable<IRunElement> Perceive(ITestClassCommand ntcc)
+        public IEnumerable<IRunElement> Perceive(ITypeInfo typeUnderTest)
         {
-            var attr = ntcc.TypeUnderTest.GetFirstCustomAttribute<NuwaHttpClientConfigurationAttribute>();
+            var attr = typeUnderTest.GetCustomAttributes(typeof(NuwaHttpClientConfigurationAttribute)).SingleOrDefault();
 
             if (attr != null)
             {
                 yield return new ClientConfigurationElement()
                 {
-                    MessageLog = attr.MessageLog,
-                    UseProxy = attr.UseProxy
+                    MessageLog = attr.GetNamedArgument<bool>("MessageLog"),
+                    UseProxy = attr.GetNamedArgument<bool>("UseProxy"),
                 };
             }
             else

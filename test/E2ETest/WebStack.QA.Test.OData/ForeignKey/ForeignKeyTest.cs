@@ -22,7 +22,7 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.ForeignKey
 {
     [NuwaFramework]
-    [NwHost(HostType.KatanaSelf)]
+    [NuwaHost(HostType.KatanaSelf)]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ForeignKeyTest
     {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.Sdk
@@ -15,7 +16,7 @@ namespace Nuwa.Sdk
     /// </summary>
     public interface IRunElementPerceiver
     {
-        IEnumerable<IRunElement> Perceive(ITestClassCommand ntcc);
+        IEnumerable<IRunElement> Perceive(ITypeInfo typeUnderTest);
     }
 
     /// <summary>
