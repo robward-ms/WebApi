@@ -56,7 +56,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         [Fact]
         public void CtorTakingModelAndConfigurationAndPathHandler_ThrowsArgumentNull_PathTemplateHandler()
         {
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer();
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
 
             ExceptionAssert.ThrowsArgumentNull(
                 () => new AttributeRoutingConvention(configuration: configuration,
@@ -98,7 +98,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void CtorTakingHttpConfiguration_InitializesAttributeMappings_OnFirstSelectControllerCall()
         {
             // Arrange
-            var config = RoutingConfigurationFactory.CreateWithRootContainer();
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
 
             ODataPathTemplate pathTemplate = new ODataPathTemplate();
             Mock<IODataPathTemplateHandler> pathTemplateHandler = new Mock<IODataPathTemplateHandler>();
@@ -137,7 +137,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             string expectedPathTemplate, string expectedActionName)
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer();
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
             HttpControllerDescriptor controller = new HttpControllerDescriptor(configuration, "TestController",
                 controllerType);
 
@@ -165,7 +165,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(RouteName,
                 (b => b.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model.Model)));
 
             HttpControllerDescriptor controller = new HttpControllerDescriptor(configuration,
@@ -184,7 +184,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void AttributeMappingsInitialization_ThrowsInvalidOperation_IfNoConfigEnsureInitialized()
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer();
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
             AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, configuration);
 
             // Act & Assert

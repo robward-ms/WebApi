@@ -11,13 +11,16 @@ using Microsoft.Test.AspNet.OData;
 using System;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Moq;
 #endif
@@ -43,7 +46,16 @@ namespace Microsoft.Test.AspNet.OData.Factories
 #else
         public static HttpRequest Create()
         {
+            IContainerBuilder builder = new DefaultContainerBuilder();
+            builder.AddService<ODataOptions, ODataOptions>(Microsoft.OData.ServiceLifetime.Singleton);
+            builder.AddService<DefaultQuerySettings, DefaultQuerySettings>(Microsoft.OData.ServiceLifetime.Singleton);
+
             HttpContext context = new DefaultHttpContext();
+
+            IServiceProvider provider = builder.BuildContainer();
+            context.ODataFeature().RequestContainer = provider;
+            context.RequestServices = provider;
+
             HttpRequest request = context.Request;
             return request;
         }
@@ -54,54 +66,62 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        public static HttpRequestMessage Create(HttpMethod method, string uri, HttpConfiguration config = null, string routeName = null)
+        public static HttpRequestMessage Create(HttpMethod method, string uri)
         {
             var request = new HttpRequestMessage(method, uri);
-
-            if (config != null)
-            {
-                request.SetConfiguration(config);
-            }
-
-            if (!string.IsNullOrEmpty(routeName))
-            {
-                request.EnableODataDependencyInjectionSupport(routeName);
-            }
-            else
-            {
-                request.EnableODataDependencyInjectionSupport();
-            }
-
+            request.EnableODataDependencyInjectionSupport();
             return request;
         }
 #else
-        public static HttpRequest Create(HttpMethod method, string uri, IRouteBuilder routeBuilder = null, string routeName = null)
+        public static HttpRequest Create(HttpMethod method, string uri)
         {
             Uri requestUri = new Uri(uri);
             HttpContext context = new DefaultHttpContext();
-
-            if (routeBuilder != null)
-            {
-                context.RequestServices = routeBuilder.ApplicationBuilder.ApplicationServices;
-
-                IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
-                RouteData routeData = new RouteData();
-                routeData.Routers.Add(defaultRoute);
-
-                var mockAction = new Mock<ActionDescriptor>();
-                ActionDescriptor actionDescriptor = mockAction.Object;
-
-                RouteContext routeContext = new RouteContext(context);
-                ActionContext actionContext = new ActionContext(context, routeData, actionDescriptor);
-
-                IActionContextAccessor actionContextAccessor = context.RequestServices.GetRequiredService<IActionContextAccessor>();
-                actionContextAccessor.ActionContext = actionContext;
-            }
 
             HttpRequest request = context.Request;
             request.Method = method.ToString();
             request.Host = new HostString(requestUri.Host, requestUri.Port);
             request.Scheme = requestUri.Scheme;
+
+            return request;
+        }
+#endif
+
+        /// <summary>
+        /// Initializes a new instance of the routing configuration class.
+        /// </summary>
+        /// <returns>A new instance of the routing configuration class.</returns>
+#if !NETCORE1x
+        public static HttpRequestMessage Create(HttpMethod method, string uri, HttpConfiguration config, string routeName = null)
+        {
+            var request = new HttpRequestMessage(method, uri);
+            request.SetConfiguration(config);
+
+            if (!string.IsNullOrEmpty(routeName))
+            {
+                request.EnableODataDependencyInjectionSupport(routeName);
+            }
+
+            return request;
+        }
+#else
+        public static HttpRequest Create(HttpMethod method, string uri, IRouteBuilder routeBuilder, string routeName = null)
+        {
+            HttpRequest request = RequestFactory.Create(method, uri);
+            request.HttpContext.RequestServices = routeBuilder.ApplicationBuilder.ApplicationServices;
+
+            IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
+            RouteData routeData = new RouteData();
+            routeData.Routers.Add(defaultRoute);
+
+            var mockAction = new Mock<ActionDescriptor>();
+            ActionDescriptor actionDescriptor = mockAction.Object;
+
+            RouteContext routeContext = new RouteContext(request.HttpContext);
+            ActionContext actionContext = new ActionContext(request.HttpContext, routeData, actionDescriptor);
+
+            IActionContextAccessor actionContextAccessor = request.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>();
+            actionContextAccessor.ActionContext = actionContext;
 
             if (!string.IsNullOrEmpty(routeName))
             {
@@ -112,6 +132,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
             return request;
         }
 #endif
+
         /// <summary>
         /// Initializes a new instance of the routing configuration class.
         /// </summary>

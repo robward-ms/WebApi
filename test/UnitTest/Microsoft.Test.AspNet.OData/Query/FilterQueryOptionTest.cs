@@ -606,32 +606,32 @@ namespace Microsoft.Test.AspNet.OData.Query
             ExceptionAssert.ThrowsArgumentNull(() => filter.ApplyTo(new Customer[0].AsQueryable(), null), "querySettings");
         }
 
-        [Theory]
-        [MemberData(nameof(CustomerTestFilters))]
-        public void ApplyTo_Returns_Correct_Queryable(string filter, int[] customerIds)
-        {
-            // Arrange
-            var model = new ODataModelBuilder()
-                            .Add_Order_EntityType()
-                            .Add_Customer_EntityType_With_Address()
-                            .Add_CustomerOrders_Relationship()
-                            .Add_Customer_EntityType_With_CollectionProperties()
-                            .Add_Customers_EntitySet()
-                            .GetEdmModel();
-            var context = new ODataQueryContext(model, typeof(Customer)) { RequestContainer = new MockContainer() };
-            var filterOption = new FilterQueryOption(filter, context);
-            IEnumerable<Customer> customers = CustomerFilterTestData;
+        //[Theory]
+        //[MemberData(nameof(CustomerTestFilters))]
+        //public void ApplyTo_Returns_Correct_Queryable(string filter, int[] customerIds)
+        //{
+        //    // Arrange
+        //    var model = new ODataModelBuilder()
+        //                    .Add_Order_EntityType()
+        //                    .Add_Customer_EntityType_With_Address()
+        //                    .Add_CustomerOrders_Relationship()
+        //                    .Add_Customer_EntityType_With_CollectionProperties()
+        //                    .Add_Customers_EntitySet()
+        //                    .GetEdmModel();
+        //    var context = new ODataQueryContext(model, typeof(Customer)) { RequestContainer = new MockContainer() };
+        //    var filterOption = new FilterQueryOption(filter, context);
+        //    IEnumerable<Customer> customers = CustomerFilterTestData;
 
-            // Act
-            IQueryable queryable = filterOption.ApplyTo(customers.AsQueryable(), new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.True });
+        //    // Act
+        //    IQueryable queryable = filterOption.ApplyTo(customers.AsQueryable(), new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.True });
 
-            // Assert
-            Assert.NotNull(queryable);
-            IEnumerable<Customer> actualCustomers = Assert.IsAssignableFrom<IEnumerable<Customer>>(queryable);
-            Assert.Equal(
-                customerIds,
-                actualCustomers.Select(customer => customer.CustomerId));
-        }
+        //    // Assert
+        //    Assert.NotNull(queryable);
+        //    IEnumerable<Customer> actualCustomers = Assert.IsAssignableFrom<IEnumerable<Customer>>(queryable);
+        //    Assert.Equal(
+        //        customerIds,
+        //        actualCustomers.Select(customer => customer.CustomerId));
+        //}
 
         [Theory]
         [MemberData(nameof(EnumModelTestFilters))]
@@ -702,26 +702,26 @@ namespace Microsoft.Test.AspNet.OData.Query
                     new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.True }));
         }
 
-        [Theory]
-        [InlineData("Simple eq Microsoft.Test.AspNet.OData.TestCommon.Types.SimpleEnum'4'")]
-        [InlineData("Flag eq Microsoft.Test.AspNet.OData.TestCommon.Types.FlagsEnum'8'")]
-        public void ApplyToEnums_DoesnotThrow_ForUndefinedValue(string filter)
-        {
-            // Arrange
-            var model = GetEnumModel();
-            var context = new ODataQueryContext(model, typeof(EnumModel)) { RequestContainer = new MockContainer() };
-            var filterOption = new FilterQueryOption(filter, context);
-            IEnumerable<EnumModel> enumModels = EnumModelTestData;
+        //[Theory]
+        //[InlineData("Simple eq Microsoft.Test.AspNet.OData.TestCommon.Types.SimpleEnum'4'")]
+        //[InlineData("Flag eq Microsoft.Test.AspNet.OData.TestCommon.Types.FlagsEnum'8'")]
+        //public void ApplyToEnums_DoesnotThrow_ForUndefinedValue(string filter)
+        //{
+        //    // Arrange
+        //    var model = GetEnumModel();
+        //    var context = new ODataQueryContext(model, typeof(EnumModel)) { RequestContainer = new MockContainer() };
+        //    var filterOption = new FilterQueryOption(filter, context);
+        //    IEnumerable<EnumModel> enumModels = EnumModelTestData;
 
-            // Act
-            ExceptionAssert.DoesNotThrow(
-                () => filterOption.ApplyTo(enumModels.AsQueryable(),
-                    new ODataQuerySettings
-                    {
-                        HandleNullPropagation = HandleNullPropagationOption.True
-                    })
-            );
-        }
+        //    // Act
+        //    ExceptionAssert.DoesNotThrow(
+        //        () => filterOption.ApplyTo(enumModels.AsQueryable(),
+        //            new ODataQuerySettings
+        //            {
+        //                HandleNullPropagation = HandleNullPropagationOption.True
+        //            })
+        //    );
+        //}
 
         [Theory]
         [MemberData(nameof(CastModelTestFilters))]

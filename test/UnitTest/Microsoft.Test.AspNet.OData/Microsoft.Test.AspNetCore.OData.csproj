@@ -24,19 +24,8 @@
 
   <ItemGroup>
     <Compile Remove="Batch\**" />
-    <Compile Remove="Results\**" />
-    <Compile Remove="Routing\**" />
     <EmbeddedResource Remove="Batch\**" />
-    <EmbeddedResource Remove="Results\**" />
-    <EmbeddedResource Remove="Routing\**" />
     <None Remove="Batch\**" />
-    <None Remove="Results\**" />
-    <None Remove="Routing\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Routing\ODataLevelsTest.cs" />
-    <Compile Include="Routing\ODataRoutingModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -192,9 +181,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="Microsoft.OData.Core" Version="7.3.1" />
     <PackageReference Include="Moq" Version="4.7.137" />
@@ -204,7 +193,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.AspNetCore.OData\Microsoft.AspNetCore.OData.1x.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.AspNetCore.OData\Microsoft.AspNetCore.OData.csproj" />
     <ProjectReference Include="..\Microsoft.Test.AspNet.OData.TestCommon\Microsoft.Test.AspNetCore.OData.TestCommon.csproj" />
   </ItemGroup>
 

@@ -3,17 +3,8 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Formatter;
-using Microsoft.AspNet.OData.Formatter.Deserialization;
-using Microsoft.AspNet.OData.Formatter.Serialization;
-using Microsoft.AspNet.OData.Query;
-using Microsoft.AspNet.OData.Query.Expressions;
-using Microsoft.AspNet.OData.Query.Validators;
-using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
-using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
 namespace Microsoft.AspNet.OData
 {
@@ -22,7 +13,7 @@ namespace Microsoft.AspNet.OData
         private ConcurrentDictionary<string, IServiceProvider> _perRouteContainers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ODataSerializerContext"/> class.
+        /// Initializes a new instance of the <see cref="PerRouteContainer"/> class.
         /// </summary>
         public PerRouteContainer()
         {

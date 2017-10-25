@@ -147,10 +147,11 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var edmFunction = model.SchemaElements.OfType<IEdmFunction>().Single(f => f.Name == "MyFunction");
             Assert.NotNull(edmFunction);
 
+            string routeName = "OData";
             var configuration = RoutingConfigurationFactory.Create();
-            configuration.MapODataServiceRoute("IgnoredRouteName", null, model);
+            configuration.MapODataServiceRoute(routeName, null, model);
 
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost:123", configuration);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost:123", configuration, routeName);
 
             OperationLinkBuilder fuinctionLinkBuilder = model.GetOperationLinkBuilder(edmFunction);
 

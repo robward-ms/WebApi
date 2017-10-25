@@ -72,7 +72,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void GetIfMatchOrNoneMatch_ReturnsETag_SetETagHeaderValue(string header)
         {
             // Arrange
-            var request = RequestFactory.Create();
+            HttpRequestMessage request = new HttpRequestMessage();
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
             if (header.Equals("IfMatch"))

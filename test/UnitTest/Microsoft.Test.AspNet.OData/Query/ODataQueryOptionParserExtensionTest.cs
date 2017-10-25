@@ -101,7 +101,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 EnableCaseInsensitive = true
             };
 
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(b => b.AddService(ServiceLifetime.Singleton, sp => resolver));
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(null, b => b.AddService(ServiceLifetime.Singleton, sp => resolver));
             var request = RequestFactory.Create(HttpMethod.Get, uri, configuration);
 
             IEdmModel model = ODataRoutingModel.GetModel();

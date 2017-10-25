@@ -15,7 +15,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         private Func<HttpRequestMessage, Task<HttpResponseMessage>> _action;
 
         public MockHttpServer(Func<HttpRequestMessage, HttpResponseMessage> action)
-            : base(RoutingConfigurationFactory.CreateWithRootContainer())
+            : base(RoutingConfigurationFactory.CreateWithRootContainer("OData"))
         {
             _action = request =>
             {
@@ -24,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
         }
 
         public MockHttpServer(Func<HttpRequestMessage, Task<HttpResponseMessage>> action)
-            : base(RoutingConfigurationFactory.CreateWithRootContainer())
+            : base(RoutingConfigurationFactory.CreateWithRootContainer("OData"))
         {
             _action = action;
         }

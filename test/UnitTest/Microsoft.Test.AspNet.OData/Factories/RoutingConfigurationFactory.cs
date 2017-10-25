@@ -94,21 +94,24 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        internal static HttpConfiguration CreateWithRootContainer(Action<IContainerBuilder> configureAction = null)
+        internal static HttpConfiguration CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
         {
             HttpConfiguration configuration = Create();
-
-            string routeName = Microsoft.Test.AspNet.OData.Formatter.HttpRouteCollectionExtensions.RouteName;
-            configuration.CreateODataRootContainer(routeName, configureAction);
+            if (!string.IsNullOrEmpty(routeName))
+            {
+                configuration.CreateODataRootContainer(routeName, configureAction);
+            }
+            else
+            {
+                configuration.EnableDependencyInjection(configureAction);
+            }
 
             return configuration;
         }
 #else
-        internal static IRouteBuilder CreateWithRootContainer(Action<IContainerBuilder> configureAction)
+        internal static IRouteBuilder CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
         {
             IRouteBuilder builder = Create();
-
-            string routeName = Microsoft.Test.AspNet.OData.Formatter.HttpRouteCollectionExtensions.RouteName;
 
             return builder;
         }

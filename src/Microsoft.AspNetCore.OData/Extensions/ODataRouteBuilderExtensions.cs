@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Routing;
@@ -158,6 +159,11 @@ namespace Microsoft.AspNet.OData.Extensions
                 builder.AddService<IODataPathTemplateHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
                 // TODO:
                 // builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
+
+                // Temp?
+                builder.AddService<ODataOptions, ODataOptions>(ServiceLifetime.Singleton);
+                builder.AddService<DefaultQuerySettings, DefaultQuerySettings>(ServiceLifetime.Singleton);
+
 
                 // Add the default webApi services.
                 builder.AddDefaultWebApiServices();
