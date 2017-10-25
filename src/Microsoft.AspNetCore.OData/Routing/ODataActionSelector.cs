@@ -4,14 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
@@ -29,14 +28,15 @@ namespace Microsoft.AspNet.OData.Routing
         /// Initializes a new instance of the <see cref="ODataActionSelector" /> class.
         /// </summary>
         /// <param name="serviceProvider">IServiceProvider instance from dependency injection.</param>
-        /// <param name="decisionTreeProvider">IActionSelectorDecisionTreeProvider instance from dependency injection.</param>
+        /// <param name="actionDescriptorCollectionProvider">IActionDescriptorCollectionProvider instance from dependency injection.</param>
         /// <param name="actionConstraintProviders">ActionConstraintCache instance from dependency injection.</param>
         /// <param name="loggerFactory">ILoggerFactory instance from dependency injection.</param>
-        public ODataActionSelector(IActionSelectorDecisionTreeProvider decisionTreeProvider,
+        public ODataActionSelector(
+            IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
             ActionConstraintCache actionConstraintProviders,
             ILoggerFactory loggerFactory)
         {
-            _innerSelector = new ActionSelector(decisionTreeProvider, actionConstraintProviders, loggerFactory);
+            _innerSelector = new ActionSelector(actionDescriptorCollectionProvider, actionConstraintProviders, loggerFactory);
         }
 
         /// <inheritdoc />
