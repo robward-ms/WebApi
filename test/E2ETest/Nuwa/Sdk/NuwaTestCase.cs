@@ -30,7 +30,7 @@ namespace Nuwa.Sdk
         {
             get
             {
-                throw new NotImplementedException();
+                return _innerTestCase.DisplayName;
             }
         }
 
@@ -107,6 +107,7 @@ namespace Nuwa.Sdk
 
         public Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
         {
+
             Frame.Initialize(TestMethod.TestClass.Class.ToRuntimeType(), this);
             return _innerTestCase.RunAsync(diagnosticMessageSink, messageBus, constructorArguments, aggregator, cancellationTokenSource);
         }

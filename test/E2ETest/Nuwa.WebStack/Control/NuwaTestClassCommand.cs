@@ -6,20 +6,15 @@ using Autofac;
 using Nuwa.DI;
 using Nuwa.Sdk;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Nuwa.Control
 {
     /// <summary>
     /// Define the class level execution of Nuwa
     /// </summary>
-    public class NuwaTestClassCommand
+    public static class NuwaTestClassCommand
     {
-        private Collection<RunFrame> _frames;
-
-        public NuwaTestClassCommand()
-        {
-        }
-
         public static IAttributeInfo GetNuwaFrameworkAttr(ITypeInfo typeUnderTest)
         {
             return typeUnderTest.GetCustomAttributes<NuwaFrameworkAttribute>().FirstOrDefault();
@@ -29,7 +24,7 @@ namespace Nuwa.Control
         /// Act before any test method is executed. All host strategies requested are set up in this method.
         /// </summary>
         /// <returns>Returns exception thrown during execution; null, otherwise.</returns>
-        public void ClassStart(ITypeInfo typeUnderTest)
+        public static Collection<RunFrame> CreateFrames(ITypeInfo typeUnderTest)
         {
             ValidateTypeUnderTest(typeUnderTest);
 
@@ -39,10 +34,10 @@ namespace Nuwa.Control
             // autowiring
             var frmBuilder = resolver.Container.Resolve(
                 typeof(IRunFrameBuilder),
-                new NamedParameter("testClass", this))
+                new NamedParameter("testClass", typeUnderTest))
                 as IRunFrameBuilder;
 
-            _frames = frmBuilder.CreateFrames();
+            return frmBuilder.CreateFrames();
         }
 
         /// <summary>
@@ -72,36 +67,30 @@ namespace Nuwa.Control
             }
         }
 
-        public IEnumerable<ITestCase> EnumerateTestCommands(ITestMethod testMethod)
+        public static IEnumerable<IXunitTestCase> EnumerateTestCommands(ITypeInfo typeUnderTest, IEnumerable<IXunitTestCase> discoveredTestCases)
         {
-            ///// TODO - Advanced feature:
-            ///// 1. Frame filter, some cases can be filtered under some frame
-            //var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
-            //                   from frame in _frames
-            //                   select new { TestCommand = test, RunFrame = frame };
+            /// TODO - Advanced feature:
+            /// 1. Frame filter, some cases can be filtered under some frame
+            var combinations = from test in discoveredTestCases
+                               from frame in CreateFrames(typeUnderTest)
+                               select new { TestCommand = test, RunFrame = frame };
 
-            //foreach (var each in combinations)
-            //{
-            //    var isSkipped =
-            //        (each.TestCommand is DelegatingTestCommand) ?
-            //        (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
-            //        (each.TestCommand is SkipCommand);
+            foreach (var each in combinations)
+            {
+                if (!string.IsNullOrEmpty(each.TestCommand.SkipReason))
+                {
+                    yield return each.TestCommand;
+                }
+                else
+                {
+                    var testCommand = new NuwaTestCase(each.TestCommand)
+                    {
+                        Frame = each.RunFrame,
+                    };
 
-            //    if (isSkipped)
-            //    {
-            //        yield return each.TestCommand;
-            //    }
-            //    else
-            //    {
-            //        var testCommand = new NuwaTestCase(each.TestCommand)
-            //        {
-            //            Frame = each.RunFrame,
-            //            TestMethod = testMethod
-            //        };
-
-            //        yield return testCommand;
-            //    }
-            //}
+                    yield return testCommand;
+                }
+            }
         }
 
         /// <summary>
@@ -110,7 +99,7 @@ namespace Nuwa.Control
         /// Exception will be thrown if the validation failed. The thrown exception
         /// is expected be caught in external frame.
         /// </summary>
-        private void ValidateTypeUnderTest(ITypeInfo typeUnderTest)
+        private static void ValidateTypeUnderTest(ITypeInfo typeUnderTest)
         {
             // check framework attribute
             if (NuwaTestClassCommand.GetNuwaFrameworkAttr(typeUnderTest) == null)

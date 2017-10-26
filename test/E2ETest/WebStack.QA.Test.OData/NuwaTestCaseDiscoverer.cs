@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Nuwa.Control;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -26,10 +27,8 @@ namespace WebStack.QA.Test.OData
             // Connect to NuwaTestClassCommand
             IEnumerable<IXunitTestCase> testCases = base.Discover(discoveryOptions, testMethod, factAttribute);
 
-            //testMethod.TestClass
-
-            // Wrap each test in a NuwaTestCase wrapper.
-            return testCases;
+            // Return tests cases.
+            return NuwaTestClassCommand.EnumerateTestCommands(testMethod.TestClass.Class, testCases);
         }
     }
 }
