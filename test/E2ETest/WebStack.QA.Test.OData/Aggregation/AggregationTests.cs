@@ -36,7 +36,7 @@ namespace WebStack.QA.Test.OData.Aggregation
                 AggregationEdmModel.GetEdmModel(configuration));
         }
 
-        [Fact]
+        [NuwaFact]
         public void AggregateNavigationPropertyWorks()
         {
             // Arrange
@@ -66,7 +66,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Customer1", results[2]["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByNavigationPropertyWorks()
         {
             // Arrange
@@ -94,7 +94,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Order1", order1["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByComplexPropertyWorks()
         {
             // Arrange
@@ -122,7 +122,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("City1", address1["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByMultipleNestedPropertiesWorks()
         {
             // Arrange

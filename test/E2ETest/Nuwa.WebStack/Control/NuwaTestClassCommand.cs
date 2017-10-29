@@ -26,30 +26,33 @@ namespace Nuwa.Control
         /// <returns>Returns exception thrown during execution; null, otherwise.</returns>
         public static Collection<RunFrame> CreateFrames(ITypeInfo typeUnderTest)
         {
-            ValidateTypeUnderTest(typeUnderTest);
+            if (ValidateTypeUnderTest(typeUnderTest))
+            {
+                // create run frames
+                var resolver = DependencyResolver.Instance;
 
-            // create run frames
-            var resolver = DependencyResolver.Instance;
+                // autowiring
+                var frmBuilder = resolver.Container.Resolve(
+                    typeof(IRunFrameBuilder),
+                    new NamedParameter("testClass", typeUnderTest))
+                    as IRunFrameBuilder;
 
-            // autowiring
-            var frmBuilder = resolver.Container.Resolve(
-                typeof(IRunFrameBuilder),
-                new NamedParameter("testClass", typeUnderTest))
-                as IRunFrameBuilder;
+                return frmBuilder.CreateFrames();
+            }
 
-            return frmBuilder.CreateFrames();
+            return new Collection<RunFrame>();
         }
 
         /// <summary>
         /// Act after all test methods are executed. All host strategies are released in this method. 
         /// </summary>
         /// <returns>Returns aggregated exception thrown during execution; null, otherwise.</returns>
-        public void ClassFinish(ITypeInfo typeUnderTest)
+        public static void ClassFinish(Collection<RunFrame> frames)
         {
             var exceptions = new List<Exception>();
 
             // dispose all run frame
-            foreach (var rf in _frames)
+            foreach (var rf in frames)
             {
                 try
                 {
@@ -69,6 +72,10 @@ namespace Nuwa.Control
 
         public static IEnumerable<IXunitTestCase> EnumerateTestCommands(ITypeInfo typeUnderTest, IEnumerable<IXunitTestCase> discoveredTestCases)
         {
+            // If framework attribute, get frames.
+            // If frames but no fixture, fail test case or skip.
+            // Otherwise, base class discover only.
+
             /// TODO - Advanced feature:
             /// 1. Frame filter, some cases can be filtered under some frame
             var combinations = from test in discoveredTestCases
@@ -99,15 +106,12 @@ namespace Nuwa.Control
         /// Exception will be thrown if the validation failed. The thrown exception
         /// is expected be caught in external frame.
         /// </summary>
-        private static void ValidateTypeUnderTest(ITypeInfo typeUnderTest)
+        private static bool ValidateTypeUnderTest(ITypeInfo typeUnderTest)
         {
             // check framework attribute
             if (NuwaTestClassCommand.GetNuwaFrameworkAttr(typeUnderTest) == null)
             {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "The test class must be marked by {0}.",
-                        typeof(NuwaFrameworkAttribute).Name));
+                return false;
             }
 
             // check configuration method attribute
@@ -117,6 +121,8 @@ namespace Nuwa.Control
                 throw new InvalidOperationException(
                     string.Format("More than two methods are marked by {0}.", typeof(NuwaConfigurationAttribute).Name));
             }
+
+            return true;
         }
     }
 }
