@@ -94,7 +94,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        internal static HttpConfiguration CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
+        internal static HttpConfiguration CreateWithRootContainer(string routeName = null, Action<IContainerBuilder> configureAction = null)
         {
             HttpConfiguration configuration = Create();
             if (!string.IsNullOrEmpty(routeName))

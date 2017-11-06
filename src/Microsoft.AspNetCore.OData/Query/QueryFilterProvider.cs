@@ -79,7 +79,7 @@ namespace Microsoft.AspNet.OData.Query
             {
                 Type returnType = controllerActionDescriptor.MethodInfo.ReturnType;
 
-                if ((TypeHelper.IsIQueryable(returnType) /* TODO: || TypeHelper.IsTypeAssignableFrom(typeof(SingleResult), returnType)*/) &&
+                if ((TypeHelper.IsIQueryable(returnType) || TypeHelper.IsTypeAssignableFrom(typeof(SingleResult), returnType)) &&
                     !controllerActionDescriptor.Parameters.Any(parameter => TypeHelper.IsTypeAssignableFrom(typeof(ODataQueryOptions), parameter.ParameterType)))
                 {
                     context.Results.Add(new FilterItem(new FilterDescriptor(QueryFilter, FilterScope.Global)));

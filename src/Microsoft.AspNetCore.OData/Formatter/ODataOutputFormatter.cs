@@ -256,10 +256,10 @@ namespace Microsoft.AspNet.OData.Formatter
         private ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type)
         {
             // SingleResult<T> should be serialized as T.
-            //if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
-            //{
-            //    type = type.GetGenericArguments()[0];
-            //}
+            if (TypeHelper.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
+            {
+                type = type.GetGenericArguments()[0];
+            }
 
             ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(type, Request);
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;

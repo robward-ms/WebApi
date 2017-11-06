@@ -1111,8 +1111,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             string uri = "http://server/service/Customers?$top=10&test=1&test=2";
             var request = RequestFactory.Create(
                 HttpMethod.Get,
-                uri
-                );
+                uri);
             request.EnableHttpDependencyInjectionSupport();
 
             // Act

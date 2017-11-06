@@ -163,10 +163,9 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void Constructor_ThrowsInvalidOperation_IfFailsToParsePathTemplate()
         {
             // Arrange
-            CustomersModelWithInheritance model = new CustomersModelWithInheritance();
-
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(RouteName,
-                (b => b.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model.Model)));
+            IEdmModel model = new CustomersModelWithInheritance().Model;
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData",
+                (b => b.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)));
 
             HttpControllerDescriptor controller = new HttpControllerDescriptor(configuration,
                 "TestController", typeof(InvalidPathTemplateController));

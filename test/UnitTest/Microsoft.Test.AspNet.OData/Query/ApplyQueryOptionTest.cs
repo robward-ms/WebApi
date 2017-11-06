@@ -662,7 +662,8 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
 
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter);
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
 
             var options = new ODataQueryOptions(context, request);
 
@@ -705,7 +706,8 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
 
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + clause);
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + clause, configuration);
 
             var options = new ODataQueryOptions(context, request);
 
@@ -732,7 +734,8 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .GetEdmModel();
             var context = new ODataQueryContext(model, typeof(Customer));
 
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter);
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
 
             var options = new ODataQueryOptions(context, request);
 

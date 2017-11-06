@@ -21,6 +21,7 @@ using System.Web.Http.Filters;
 using System.Web.Http.Routing;
 #endif
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
@@ -832,7 +833,8 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void GetElementType_Returns_ExpectedElementType(object response, Type expectedElementType)
         {
             HttpActionDescriptor actionDescriptor = new Mock<HttpActionDescriptor>().Object;
-            Assert.Equal(expectedElementType, EnableQueryAttribute.GetElementType(response, actionDescriptor));
+            IQueryable collection = (response as SingleResult)?.Queryable;
+            Assert.Equal(expectedElementType, EnableQueryAttribute.GetElementType(response, collection, new WebApiActionDescriptor(actionDescriptor)));
         }
 
         [Fact]
@@ -842,7 +844,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             IQueryable<Customer> queryable = new[] { customer }.AsQueryable();
             HttpActionDescriptor actionDescriptor = new Mock<HttpActionDescriptor>().Object;
 
-            var result = EnableQueryAttribute.SingleOrDefault(queryable, actionDescriptor);
+            var result = EnableQueryAttribute.SingleOrDefault(queryable, new WebApiActionDescriptor(actionDescriptor));
 
             Assert.Same(customer, result);
         }
@@ -853,7 +855,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             IQueryable<Customer> queryable = Enumerable.Empty<Customer>().AsQueryable();
             HttpActionDescriptor actionDescriptor = new Mock<HttpActionDescriptor>().Object;
 
-            var result = EnableQueryAttribute.SingleOrDefault(queryable, actionDescriptor);
+            var result = EnableQueryAttribute.SingleOrDefault(queryable, new WebApiActionDescriptor(actionDescriptor));
 
             Assert.Null(result);
         }
@@ -870,7 +872,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             };
 
             ExceptionAssert.Throws<InvalidOperationException>(
-                () => EnableQueryAttribute.SingleOrDefault(queryable, actionDescriptor),
+                () => EnableQueryAttribute.SingleOrDefault(queryable, new WebApiActionDescriptor(actionDescriptor)),
                 "The action 'SomeAction' on controller 'SomeName' returned a SingleResult containing more than one element. " +
                 "SingleResult must have zero or one elements.");
         }
@@ -896,7 +898,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             };
 
             // Act
-            EnableQueryAttribute.SingleOrDefault(queryable.Object, actionDescriptor);
+            EnableQueryAttribute.SingleOrDefault(queryable.Object, new WebApiActionDescriptor(actionDescriptor));
 
             // Assert
             disposable.Verify();
@@ -924,7 +926,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             };
 
             // Act
-            EnableQueryAttribute.SingleOrDefault(queryable.Object, actionDescriptor);
+            EnableQueryAttribute.SingleOrDefault(queryable.Object, new WebApiActionDescriptor(actionDescriptor));
 
             // Assert
             disposable.Verify();
@@ -954,7 +956,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             // Act (will throw)
             try
             {
-                EnableQueryAttribute.SingleOrDefault(queryable.Object, actionDescriptor);
+                EnableQueryAttribute.SingleOrDefault(queryable.Object, new WebApiActionDescriptor(actionDescriptor));
             }
             catch
             {

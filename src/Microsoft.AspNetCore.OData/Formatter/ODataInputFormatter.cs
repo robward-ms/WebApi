@@ -80,7 +80,6 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <param name="request">The <see cref="HttpRequest"/> for the per-request formatter instance.</param>
         /// <remarks>This is a copy constructor to be used in <see cref="GetPerRequestFormatterInstance"/>.</remarks>
         internal ODataInputFormatter(ODataInputFormatter formatter, ODataVersion version, HttpRequest request)
-            //: base(formatter)
         {
             if (request == null)
             {
@@ -92,7 +91,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
             // Parameter 1: formatter
 
-            // Execept for the other two parameters, this constructor is a copy constructor, and we need to copy
+            // Except for the other two parameters, this constructor is a copy constructor, and we need to copy
             // everything on the other instance.
 
             // Copy this class's private fields and internal properties.

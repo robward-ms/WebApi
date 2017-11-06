@@ -148,7 +148,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.NotNull(edmFunction);
 
             string routeName = "OData";
-            var configuration = RoutingConfigurationFactory.Create();
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer();
             configuration.MapODataServiceRoute(routeName, null, model);
 
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost:123", configuration, routeName);

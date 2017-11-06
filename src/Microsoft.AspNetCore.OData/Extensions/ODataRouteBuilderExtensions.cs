@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
@@ -157,8 +158,7 @@ namespace Microsoft.AspNet.OData.Extensions
                 // is transient and instantiated from ApplicationPartManager by DI.
                 builder.AddService<IWebApiAssembliesResolver, WebApiAssembliesResolver>(ServiceLifetime.Transient);
                 builder.AddService<IODataPathTemplateHandler, DefaultODataPathHandler>(ServiceLifetime.Singleton);
-                // TODO:
-                // builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
+                builder.AddService<IETagHandler, DefaultODataETagHandler>(ServiceLifetime.Singleton);
 
                 // Temp?
                 builder.AddService<ODataOptions, ODataOptions>(ServiceLifetime.Singleton);

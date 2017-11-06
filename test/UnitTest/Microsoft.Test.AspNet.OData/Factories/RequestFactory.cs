@@ -101,6 +101,10 @@ namespace Microsoft.Test.AspNet.OData.Factories
             {
                 request.EnableODataDependencyInjectionSupport(routeName);
             }
+            else
+            {
+                request.EnableODataDependencyInjectionSupport("OData");
+            }
 
             return request;
         }

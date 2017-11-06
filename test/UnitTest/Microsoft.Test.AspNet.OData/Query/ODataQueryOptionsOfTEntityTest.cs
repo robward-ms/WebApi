@@ -72,18 +72,6 @@ namespace Microsoft.Test.AspNet.OData.Query
         public void GetIfMatchOrNoneMatch_ReturnsETag_SetETagHeaderValue(string header)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
-            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
-            if (header.Equals("IfMatch"))
-            {
-                request.Headers.IfMatch.Add(etagHeaderValue);
-            }
-            else
-            {
-                request.Headers.IfNoneMatch.Add(etagHeaderValue);
-            }
-
             ODataModelBuilder builder = new ODataModelBuilder();
             EntityTypeConfiguration<Customer> customer = builder.EntityType<Customer>();
             customer.HasKey(c => c.Id);
@@ -94,10 +82,22 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             var customers = model.FindDeclaredEntitySet("Customers");
 
+            var request = RequestFactory.CreateFromModel(model);
+
             EntitySetSegment entitySetSegment = new EntitySetSegment(customers);
             ODataPath odataPath = new ODataPath(new[] { entitySetSegment });
             request.ODataProperties().Path = odataPath;
-            request.EnableHttpDependencyInjectionSupport(model);
+
+            Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
+            EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
+            if (header.Equals("IfMatch"))
+            {
+                request.Headers.IfMatch.Add(etagHeaderValue);
+            }
+            else
+            {
+                request.Headers.IfNoneMatch.Add(etagHeaderValue);
+            }
 
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
 

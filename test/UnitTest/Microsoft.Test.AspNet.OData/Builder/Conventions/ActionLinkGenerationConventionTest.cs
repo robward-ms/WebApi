@@ -142,8 +142,9 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var edmAction = model.SchemaElements.OfType<IEdmAction>().First(a => a.Name == "Paint");
             Assert.NotNull(edmAction);
 
-            var configuration = RoutingConfigurationFactory.Create();
-            configuration.MapODataServiceRoute("IgnoredRouteName", null, model);
+            string routeName = "OData";
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(routeName);
+            configuration.MapODataServiceRoute(routeName, null, model);
 
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost", configuration);
 

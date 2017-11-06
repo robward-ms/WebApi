@@ -14,7 +14,7 @@ namespace Microsoft.AspNet.OData.Formatter
 {
     internal class DefaultODataETagHandler : IETagHandler
     {
-        /// <summary>null liternal that needs to be return in ETag value when the value is null</summary>
+        /// <summary>null literal that needs to be return in ETag value when the value is null</summary>
         private const string NullLiteralInETag = "null";
 
         private const char Separator = ',';

@@ -44,6 +44,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\BindingPathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomAggregateMethodAnnotation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EdmDeltaComplexObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnableQueryAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ETagMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ContainerBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Deserialization\ODataDeserializerContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Formatter\Deserialization\ODataDeserializerProviderProxy.cs" />

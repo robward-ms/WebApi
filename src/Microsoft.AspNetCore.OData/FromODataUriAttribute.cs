@@ -3,6 +3,8 @@
 
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Microsoft.AspNet.OData
 {
@@ -13,6 +15,8 @@ namespace Microsoft.AspNet.OData
     public sealed class FromODataUriAttribute : ModelBinderAttribute
     {
         //private static readonly ModelBinderProvider _provider = new ODataModelBinderProvider();
+
+        //public virtual BindingSource BindingSource { get; protected set; }
 
         ///// <summary>
         ///// Gets the binding for a parameter.
