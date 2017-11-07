@@ -70,7 +70,7 @@ namespace Microsoft.AspNet.OData.Routing
                 }
             }
 
-            return null;
+            return _innerSelector.SelectCandidates(context);
         }
 
         /// <inheritdoc />

@@ -1,11 +1,9 @@
 ﻿namespace ODataSample.Web.Controllers
 {
     using System.Collections.Generic;
+    using Microsoft.AspNet.OData;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNet.OData;
     using ODataSample.Web.Models;
-    using Microsoft.AspNet.OData.Routing;
-    using Microsoft.AspNet.OData;
 
     public class CustomersController : ODataController
     {

@@ -51,12 +51,11 @@ namespace Microsoft.AspNet.OData.Routing
                     StringBuilder requestLeftPartBuilder = new StringBuilder(request.Scheme);
                     requestLeftPartBuilder.Append("://");
                     requestLeftPartBuilder.Append(request.Host);
-                    requestLeftPartBuilder.Append("/");
                     requestLeftPartBuilder.Append(request.Path);
 
                     string queryString = request.QueryString.HasValue ? request.QueryString.ToString() : null;
 
-                    path = GetODataPath(values, requestLeftPartBuilder.ToString(), queryString, () => request.CreateRequestContainer(RouteName));
+                    path = GetODataPath(oDataPathValue, requestLeftPartBuilder.ToString(), queryString, () => request.CreateRequestContainer(RouteName));
                 }
 
                 if (path != null)

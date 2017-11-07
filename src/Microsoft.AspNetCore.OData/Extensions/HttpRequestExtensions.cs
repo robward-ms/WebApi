@@ -52,7 +52,8 @@ namespace Microsoft.AspNet.OData.Extensions
                 throw Error.ArgumentNull("request");
             }
 
-            return request.HttpContext.ETagHandler();
+            return request.GetRequestContainer().GetRequiredService<IETagHandler>();
+            //return request.HttpContext.ETagHandler();
         }
 
         /// <summary>
