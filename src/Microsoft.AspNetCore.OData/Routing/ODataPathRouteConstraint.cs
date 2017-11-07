@@ -55,7 +55,7 @@ namespace Microsoft.AspNet.OData.Routing
 
                     string queryString = request.QueryString.HasValue ? request.QueryString.ToString() : null;
 
-                    path = GetODataPath(oDataPathValue, requestLeftPartBuilder.ToString(), queryString, () => request.CreateRequestContainer(RouteName));
+                    path = GetODataPath(oDataPathValue as string, requestLeftPartBuilder.ToString(), queryString, () => request.CreateRequestContainer(RouteName));
                 }
 
                 if (path != null)

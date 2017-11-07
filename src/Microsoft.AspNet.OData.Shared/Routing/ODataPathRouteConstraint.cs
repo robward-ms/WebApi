@@ -48,11 +48,9 @@ namespace Microsoft.AspNet.OData.Routing
         /// <param name="queryString">The Uri from the query string to the end, i.e. the right portion.</param>
         /// <param name="requestContainerFactory">The request container factory.</param>
         /// <returns>The OData path.</returns>
-        private ODataPath GetODataPath(object oDataPathValue, string uriPathString, string queryString, Func<IServiceProvider> requestContainerFactory)
+        private ODataPath GetODataPath(string oDataPathString, string uriPathString, string queryString, Func<IServiceProvider> requestContainerFactory)
         {
             ODataPath path = null;
-
-            string oDataPathString = oDataPathValue as string;
 
             try
             {
