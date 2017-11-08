@@ -386,7 +386,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             string mediaType = string.Format("application/json; odata.metadata=minimal; charset={0}", encoding);
 
             // Act & assert
-            return ReadContentusingCorrectCharacterEncodingHelper(
+            return ReadContentUsingCorrectCharacterEncodingHelper(
                 formatter, content, formattedContent, mediaType, encoding, isDefaultEncoding);
         }
 
@@ -402,7 +402,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             string mediaType = string.Format("application/json; odata.metadata=minimal; charset={0}", encoding);
 
             // Act & assert
-            return WriteContentusingCorrectCharacterEncodingHelper(
+            return WriteContentUsingCorrectCharacterEncodingHelper(
                 formatter, content, formattedContent, mediaType, encoding, isDefaultEncoding);
         }
 
@@ -707,12 +707,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 () => formatter
                     .WriteToStreamAsync(typeof(int), edmObject, new MemoryStream(), new Mock<HttpContent>().Object, transportContext: null)
                     .Wait(),
-<<<<<<< HEAD
                 "The EDM type of an IEdmObject cannot be null.", partialMatch: true);
-=======
-                "The EDM type of the object of type 'Microsoft.Test.AspNet.OData.Formatter.ODataMediaTypeFormatterTests+NullEdmType'" +
-                " is null. The EDM type of an IEdmObject cannot be null.");
->>>>>>> Squashed commit of the following:
         }
 
         [Fact]

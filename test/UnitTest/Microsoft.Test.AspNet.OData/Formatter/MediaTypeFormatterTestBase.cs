@@ -484,10 +484,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             byte[] sourceData = enc.GetBytes(formattedContent);
 
             // Further Arrange, Act & Assert
-            return ReadContentusingCorrectCharacterEncodingHelper(formatter, content, sourceData, mediaType);
+            return ReadContentUsingCorrectCharacterEncodingHelper(formatter, content, sourceData, mediaType);
         }
 
-        protected static Task ReadContentusingCorrectCharacterEncodingHelper(MediaTypeFormatter formatter, string content, byte[] sourceData, string mediaType)
+        protected static Task ReadContentUsingCorrectCharacterEncodingHelper(MediaTypeFormatter formatter, string content, byte[] sourceData, string mediaType)
         {
             // Arrange
             MemoryStream memStream = new MemoryStream(sourceData);
@@ -524,10 +524,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Buffer.BlockCopy(data, 0, expectedData, preamble.Length, data.Length);
 
             // Further Arrange, Act & Assert
-            return WriteContentusingCorrectCharacterEncodingHelper(formatter, content, expectedData, mediaType);
+            return WriteContentUsingCorrectCharacterEncodingHelper(formatter, content, expectedData, mediaType);
         }
 
-        protected static Task WriteContentusingCorrectCharacterEncodingHelper(MediaTypeFormatter formatter, string content, byte[] expectedData, string mediaType)
+        protected static Task WriteContentUsingCorrectCharacterEncodingHelper(MediaTypeFormatter formatter, string content, byte[] expectedData, string mediaType)
         {
             // Arrange
             MemoryStream memStream = new MemoryStream();

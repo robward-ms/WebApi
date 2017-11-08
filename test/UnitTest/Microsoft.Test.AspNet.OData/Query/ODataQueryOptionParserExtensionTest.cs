@@ -4,7 +4,6 @@
 using System.Linq;
 using System.Net.Http;
 #if !NETCORE1x
-using System.Web.Http;
 #endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
@@ -15,8 +14,6 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Routing;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
-using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {

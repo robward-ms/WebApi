@@ -43,7 +43,7 @@ namespace Microsoft.AspNet.OData.Routing
         /// <summary>
         /// Get the OData path from the url and query string.
         /// </summary>
-        /// <param name="oDataPathValue">The ODataPath from the route values.</param>
+        /// <param name="oDataPathString">The ODataPath from the route values.</param>
         /// <param name="uriPathString">The Uri from start to end of path, i.e. the left portion.</param>
         /// <param name="queryString">The Uri from the query string to the end, i.e. the right portion.</param>
         /// <param name="requestContainerFactory">The request container factory.</param>

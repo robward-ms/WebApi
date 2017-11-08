@@ -71,8 +71,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 DateTimeOffset dto = new DateTimeOffset(dt).ToLocalTime();
                 return new TheoryDataSet<object, DateTimeOffset>
                 {
-                    { dt1, dto1},
-                    { new DateTime?(dt2), dto2}
+                    { dt, dto},
+                    { new DateTime?(dt), dto}
                 };
             }
         }

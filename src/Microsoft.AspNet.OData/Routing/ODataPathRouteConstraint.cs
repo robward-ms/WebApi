@@ -50,7 +50,7 @@ namespace Microsoft.AspNet.OData.Routing
                     string requestLeftPart = request.RequestUri.GetLeftPart(UriPartial.Path);
                     string queryString = request.RequestUri.Query;
 
-                    path = GetODataPath(oDataPathValue, requestLeftPart, queryString, () => request.CreateRequestContainer(RouteName));
+                    path = GetODataPath(oDataPathValue as string, requestLeftPart, queryString, () => request.CreateRequestContainer(RouteName));
                 }
 
                 if (path != null)

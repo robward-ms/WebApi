@@ -110,19 +110,17 @@ namespace Microsoft.Test.AspNet.OData
         public void GetPropertyValue_ThrowsInvalidOperation_IfEdmObjectGetEdmTypeReturnsNull()
         {
             // Arrange
-            NullEdmType edmObject = new NullEdmType();
+            object outObject;
+            Mock<IEdmEntityObject> mock = new Mock<IEdmEntityObject>();
+            mock.Setup(o => o.TryGetPropertyValue(It.IsAny<string>(), out outObject)).Returns(false).Verifiable();
+            mock.Setup(o => o.GetEdmType()).Returns<IEdmTypeReference>(null).Verifiable();
             ResourceContext context = new ResourceContext();
-            context.EdmObject = edmObject;
+            context.EdmObject = mock.Object;
 
             // Act & Assert
             ExceptionAssert.Throws<InvalidOperationException>(() => context.GetPropertyValue("SomeProperty"),
-<<<<<<< HEAD
                 "The EDM type of an IEdmObject cannot be null.", partialMatch: true);
             mock.Verify();
-=======
-                exceptionMessage: "The EDM type of the object of type 'Microsoft.Test.AspNet.OData.ResourceContextTest+NullEdmType'" +
-                " is null. The EDM type of an IEdmObject cannot be null.");
->>>>>>> Squashed commit of the following:
         }
 
         [Fact]
