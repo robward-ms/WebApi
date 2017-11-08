@@ -167,10 +167,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
                     .ActionDescriptors.Items.OfType<ControllerActionDescriptor>()
                     .Where(c => c.ControllerName == controllerResult.ControllerName);
 
-                    string actionName = SelectActionImpl(
-                        odataPath,
-                        new WebApiControllerContext(routeContext, controllerResult),
-                        new WebApiActionMap(actionDescriptors));
+                    string actionName = SelectActionImpl(new WebApiControllerContext(routeContext, controllerResult));
 
                 if (!String.IsNullOrEmpty(actionName))
                 {

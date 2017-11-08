@@ -70,7 +70,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// Determine if the Http method is a match.
         /// </summary>
-        public bool IsHttpMethodMatch(ODataRequestMethod method)
+        public bool IsHttpMethodSupported(ODataRequestMethod method)
         {
             // ControllerActionDescriptor no longer contains a SupportedHttpMethods
             // property so return true, allowing all methods to potentially match.
