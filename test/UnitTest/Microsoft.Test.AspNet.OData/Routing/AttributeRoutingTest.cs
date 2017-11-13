@@ -126,14 +126,14 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetCustomersFromSpecialCustomer";
             }
 
-            [HttpPost]
+            //[HttpPost]
             [ODataRoute("Customers/NS.SpecialCustomer")]
             public string PostCustomerFromSpecialCustomer()
             {
                 return "PostCustomerFromSpecialCustomer";
             }
 
-            [HttpPost]
+            //[HttpPost]
             [ODataRoute("Customers")]
             public string CreateCustomer()
             {
@@ -164,58 +164,58 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetCityOfACustomer_" + id;
             }
 
-            [HttpPost]
+            //[HttpPost]
             [ODataRoute("Customers({id})/NS.upgrade")]
             public string InvokeODataAction_Upgrade([FromODataUri]int id)
             {
                 return "InvokeODataAction_Upgrade_" + id;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/NS.IsUpgradedWithParam(city={city})")]
-            public string IsUpgradedWithParam([FromODataUri] int id, [FromODataUri]string city)
+            public string GetIsUpgradedWithParam([FromODataUri] int id, [FromODataUri]string city)
             {
                 return "IsUpgradedWithParam_" + city;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers/NS.IsAnyUpgraded()")]
-            public string IsAnyUpgraded()
+            public string GetIsAnyUpgraded()
             {
                 return "IsAnyUpgraded";
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/NS.SpecialCustomer/NS.IsSpecialUpgraded()")]
-            public string IsSpecialUpgraded([FromODataUri] int id)
+            public string GetIsSpecialUpgraded([FromODataUri] int id)
             {
                 return "IsSpecialUpgraded_" + id;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/NS.GetSalary()")]
             public string GetSalary([FromODataUri] int id)
             {
                 return "GetSalary_" + id;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/NS.SpecialCustomer/NS.GetSalary()")]
             public string GetSalaryFromSpecialCustomer([FromODataUri] int id)
             {
                 return "GetSalaryFromSpecialCustomer_" + id;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/NS.GetOrder(orderId={orderId})/Amount")]
-            public IHttpActionResult GetAmountFromOrder(int id, int orderId)
+            public int GetAmountFromOrder(int id, int orderId)
             {
-                return Ok(id + (orderId * 11));
+                return id + (orderId * 11);
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({key})/NS.GetCustomer(customer={customer})")]
-            public IHttpActionResult GetCustomer(int key, [FromODataUri]EdmEntityObject customer)
+            public string GetCustomer(int key, [FromODataUri]EdmEntityObject customer)
             {
                 Assert.NotNull(customer);
 
@@ -228,17 +228,17 @@ namespace Microsoft.Test.AspNet.OData.Routing
                     sb.Append(name + "=").Append(value).Append(",");
                 }
 
-                return Ok("GetCustomer(" + sb.ToString() + ")");
+                return "GetCustomer(" + sb.ToString() + ")";
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({id})/Account/{pName:dynamicproperty}")]
             public string GetDynamicPropertyFromAccount([FromODataUri] int id, [FromODataUri]string pName)
             {
                 return "GetDynamicPropertyFromAccount_" + id + "_" + pName;
             }
 
-            [HttpGet]
+            //[HttpGet]
             [ODataRoute("Customers({cId})/Orders({oId})/{pName:dynamicproperty}")]
             public string GetDynamicPropertyFromOrder([FromODataUri] int cId, [FromODataUri] int oId, [FromODataUri]string pName)
             {

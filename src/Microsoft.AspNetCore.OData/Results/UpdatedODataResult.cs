@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Diagnostics.Contracts;
+using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNet.OData.Adapters;
 
 namespace Microsoft.AspNet.OData.Results
 {
@@ -26,7 +26,11 @@ namespace Microsoft.AspNet.OData.Results
         /// <param name="controller">The controller from which to obtain the dependencies needed for execution.</param>
         public UpdatedODataResult(T entity)
         {
-            Contract.Assert(entity != null);
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
             this._innerResult = entity;
         }
 
@@ -34,7 +38,12 @@ namespace Microsoft.AspNet.OData.Results
         public virtual Task ExecuteResultAsync(ActionContext context)
         {
             HttpRequest request = context.HttpContext.Request;
+            IActionResult result = GetInnerActionResult(request);
+            return result.ExecuteResultAsync(context);
+        }
 
+        internal IActionResult GetInnerActionResult(HttpRequest request)
+        {
             if (RequestPreferenceHelpers.RequestPrefersReturnContent(new WebApiRequestHeaders(request.Headers)))
             {
                 ObjectResult objectResult = new ObjectResult(_innerResult)
@@ -42,11 +51,11 @@ namespace Microsoft.AspNet.OData.Results
                     StatusCode = StatusCodes.Status200OK
                 };
 
-                return objectResult.ExecuteResultAsync(context);
+                return objectResult;
             }
             else
             {
-                return Task.FromResult(new StatusCodeResult((int)HttpStatusCode.NoContent)); // TODO: , _innerResult.Request);
+                return new StatusCodeResult((int)HttpStatusCode.NoContent);
             }
         }
     }

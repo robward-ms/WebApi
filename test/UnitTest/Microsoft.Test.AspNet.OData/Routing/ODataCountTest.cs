@@ -33,6 +33,10 @@ namespace Microsoft.Test.AspNet.OData.Routing
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("odata", "odata", model);
             var server = new HttpServer(configuration);
+
+            // Or use WebHostBuilder, see main
+            // Or TestServer in GitHub / aspnet
+
             _client = new HttpClient(server);
         }
 

@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 #else
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,6 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
 {
     public class ApplyQueryOptionTest
     {
-#if !NETCORE1x
         // Legal apply queries usable against CustomerApplyTestData.
         // Tuple is: apply, expected number
         public static TheoryDataSet<string, List<Dictionary<string, object>>> CustomerTestApplies
@@ -795,6 +794,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                 actualCustomers.Select(customer => customer.CustomerId));
         }
 
+#if !NETCORE
         [Fact]
         public void ApplyToSerializationWorks()
         {
@@ -865,6 +865,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             var address0 = results[0]["Address"] as JObject;
             Assert.Equal("redmond", address0["City"].ToString());
         }
+#endif
 
         private object GetValue(DynamicTypeWrapper wrapper, string path)
         {
@@ -903,6 +904,5 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         {
             return Ok(_customers);
         }
-#endif
     }
 }

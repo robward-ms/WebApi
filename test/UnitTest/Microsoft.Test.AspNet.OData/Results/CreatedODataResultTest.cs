@@ -5,18 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+#if !NETCORE
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Results;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Results;
 using Microsoft.AspNet.OData.Routing;
+#if NETCORE
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+#endif
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -27,12 +34,24 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
     public class CreatedODataResultTest
     {
         private readonly TestEntity _entity = new TestEntity();
+#if !NETCORE
         private readonly HttpRequestMessage _request = new HttpRequestMessage();
         private readonly IContentNegotiator _contentNegotiator = new Mock<IContentNegotiator>().Object;
         private readonly IEnumerable<MediaTypeFormatter> _formatters = new MediaTypeFormatter[0];
         private readonly Uri _locationHeader = new Uri("http://location_header");
         private readonly TestController _controller = new TestController();
+#endif
 
+#if NETCORE
+        [Fact]
+        public void Ctor_ControllerDependency_ThrowsArgumentNull_Entity()
+        {
+            ExceptionAssert.ThrowsArgumentNull(
+                () => new CreatedODataResult<TestEntity>(entity: null), "entity");
+        }
+#endif
+
+#if !NETCORE
         [Fact]
         public void Ctor_ControllerDependency_ThrowsArgumentNull_Entity()
         {
@@ -131,17 +150,16 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
 
             Assert.Same(_locationHeader, result.LocationHeader);
         }
+#endif
 
         [Fact]
         public void GetInnerActionResult_ReturnsNegotiatedContentResult_IfRequestHasNoPreferenceHeader()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            CreatedODataResult<TestEntity> createdODataResult =
-                new CreatedODataResult<TestEntity>(_entity, _contentNegotiator, request, _formatters, _locationHeader);
+            var  request = CreateRequest();
 
             // Act
-            IHttpActionResult result = createdODataResult.GetInnerActionResult();
+            var result = CreateActionResult(request);
 
             // Assert
             NegotiatedContentResult<TestEntity> negotiatedResult = Assert.IsType<NegotiatedContentResult<TestEntity>>(result);
@@ -156,13 +174,10 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
         public void GetInnerActionResult_ReturnsNoContentStatusCodeResult_IfRequestAsksForNoContent()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.Headers.TryAddWithoutValidation("Prefer", "return=minimal");
-            CreatedODataResult<TestEntity> createdODataResult =
-                new CreatedODataResult<TestEntity>(_entity, _contentNegotiator, request, _formatters, _locationHeader);
+            var request = CreateRequest("return=minimal");
 
             // Act
-            IHttpActionResult result = createdODataResult.GetInnerActionResult();
+            var result = CreateActionResult(request);
 
             // Assert
             StatusCodeResult statusCodeResult = Assert.IsType<StatusCodeResult>(result);
@@ -174,13 +189,10 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
         public void GetInnerActionResult_ReturnsNegotiatedContentResult_IfRequestAsksForContent()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.Headers.TryAddWithoutValidation("Prefer", "return=representation");
-            CreatedODataResult<TestEntity> createdODataResult =
-                new CreatedODataResult<TestEntity>(_entity, _contentNegotiator, request, _formatters, _locationHeader);
+            var request = CreateRequest("return=representation");
 
             // Act
-            IHttpActionResult result = createdODataResult.GetInnerActionResult();
+            var result = CreateActionResult(request);
 
             // Assert
             NegotiatedContentResult<TestEntity> negotiatedResult = Assert.IsType<NegotiatedContentResult<TestEntity>>(result);
@@ -427,11 +439,50 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             return request;
         }
 
+#if NETCORE
+        private HttpRequest CreateRequest(string preferHeaderValue = null)
+        {
+            var request = RequestFactory.Create();
+            if (!string.IsNullOrEmpty(preferHeaderValue))
+            {
+                request.Headers.TryAdd("Prefer", new Extensions.Primitives.StringValues(preferHeaderValue));
+            }
+
+            return request;
+        }
+#else
+        private HttpRequestMessage CreateRequest(string preferHeaderValue = null)
+        {
+            var request = RequestFactory.Create();
+            if (!string.IsNullOrEmpty(preferHeaderValue))
+            {
+                request = new HttpRequestMessage();
+                request.Headers.TryAddWithoutValidation("Prefer", preferHeaderValue);
+            }
+
+            return request;
+        }
+#endif
+
+#if NETCORE
+        private IActionResult CreateActionResult(AspNetCore.Http.HttpRequest request)
+        {
+            CreatedODataResult<TestEntity> createdODataResult = new CreatedODataResult<TestEntity>(_entity);
+            return createdODataResult.GetInnerActionResult(request);
+        }
+#else
+        private IHttpActionResult CreateActionResult(HttpRequestMessage request)
+        {
+            CreatedODataResult<TestEntity> createdODataResult = new CreatedODataResult<TestEntity>(_entity, _contentNegotiator, request, _formatters, _locationHeader);
+            return createdODataResult.GetInnerActionResult();
+        }
+#endif
+
         private class TestEntity
         {
         }
 
-        private class TestController : ApiController
+        private class TestController : ODataController
         {
         }
     }
