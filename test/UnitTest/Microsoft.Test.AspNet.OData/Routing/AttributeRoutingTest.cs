@@ -1,6 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Formatter;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+#else
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -10,11 +24,11 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
-//using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {

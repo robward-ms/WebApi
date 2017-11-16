@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if !NETCORE
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
@@ -113,3 +114,4 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         }
     }
 }
+#endif

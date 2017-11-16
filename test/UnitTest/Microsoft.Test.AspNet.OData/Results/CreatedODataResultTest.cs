@@ -162,12 +162,18 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             var result = CreateActionResult(request);
 
             // Assert
+#if NETCORE
+            ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Same(typeof(TestEntity), objectResult.Value.GetType());
+            Assert.Equal(HttpStatusCode.Created, (HttpStatusCode)objectResult.StatusCode);
+#else
             NegotiatedContentResult<TestEntity> negotiatedResult = Assert.IsType<NegotiatedContentResult<TestEntity>>(result);
             Assert.Equal(HttpStatusCode.Created, negotiatedResult.StatusCode);
             Assert.Same(request, negotiatedResult.Request);
             Assert.Same(_contentNegotiator, negotiatedResult.ContentNegotiator);
             Assert.Same(_entity, negotiatedResult.Content);
             Assert.Same(_formatters, negotiatedResult.Formatters);
+#endif
         }
 
         [Fact]
@@ -180,9 +186,12 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             var result = CreateActionResult(request);
 
             // Assert
+
             StatusCodeResult statusCodeResult = Assert.IsType<StatusCodeResult>(result);
-            Assert.Equal(HttpStatusCode.NoContent, statusCodeResult.StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent, (HttpStatusCode)statusCodeResult.StatusCode);
+#if !NETCORE
             Assert.Same(request, statusCodeResult.Request);
+#endif
         }
 
         [Fact]
@@ -195,12 +204,18 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             var result = CreateActionResult(request);
 
             // Assert
+#if NETCORE
+            ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Same(typeof(TestEntity), objectResult.Value.GetType());
+            Assert.Equal(HttpStatusCode.Created, (HttpStatusCode)objectResult.StatusCode);
+#else
             NegotiatedContentResult<TestEntity> negotiatedResult = Assert.IsType<NegotiatedContentResult<TestEntity>>(result);
             Assert.Equal(HttpStatusCode.Created, negotiatedResult.StatusCode);
             Assert.Same(request, negotiatedResult.Request);
             Assert.Same(_contentNegotiator, negotiatedResult.ContentNegotiator);
             Assert.Same(_entity, negotiatedResult.Content);
             Assert.Same(_formatters, negotiatedResult.Formatters);
+#endif
         }
 
         [Fact]
@@ -468,7 +483,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
         private IActionResult CreateActionResult(AspNetCore.Http.HttpRequest request)
         {
             CreatedODataResult<TestEntity> createdODataResult = new CreatedODataResult<TestEntity>(_entity);
-            return createdODataResult.GetInnerActionResult(request);
+            return createdODataResult.ExecuteResultAsync .GetInnerActionResult(request);
         }
 #else
         private IHttpActionResult CreateActionResult(HttpRequestMessage request)

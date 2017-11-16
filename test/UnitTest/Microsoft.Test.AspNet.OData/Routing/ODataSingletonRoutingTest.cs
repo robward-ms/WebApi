@@ -1,6 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Xunit;
+#else
 using System;
 using System.Globalization;
 using System.Net;
@@ -10,7 +21,9 @@ using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
+#endif
 
+#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataSingletonRoutingTest
@@ -159,7 +172,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
     public class VipCustomerController : ODataController
     {
-        #region Singleton access
+#region Singleton access
         public string Get()
         {
             return "Get";
@@ -206,9 +219,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             return "PatchFromSpecialCustomer";
         }
-        #endregion
+#endregion
 
-        #region Navigation property
+#region Navigation property
         public string GetOrders()
         {
             return "GetOrders";
@@ -235,9 +248,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             return "DeleteOrders";
         }
 
-        #endregion
+#endregion
 
-        #region Property access
+#region Property access
         public string GetName()
         {
             return "GetName";
@@ -257,9 +270,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             return "GetSpecialAddress";
         }
-        #endregion
+#endregion
 
-        #region $ref
+#region $ref
         [AcceptVerbs("POST", "PUT")]
         public string CreateRef(string navigationProperty)
         {
@@ -275,9 +288,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             return String.Format(CultureInfo.InvariantCulture, "DeleteRef({0})ByKey({1})", navigationProperty, relatedKey);
         }
-        #endregion
+#endregion
 
-        #region actions
+#region actions
         public string upgrade()
         {
             return "Upgrade";
@@ -287,9 +300,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             return "SpecialUpgrade";
         }
-        #endregion
+#endregion
 
-        #region functions
+#region functions
         [HttpGet]
         public string IsUpgraded()
         {
@@ -313,6 +326,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             return "OrderByCityAndAmount(" + city + ", " + amount + ")";
         }
-        #endregion
+#endregion
     }
 }
+#endif

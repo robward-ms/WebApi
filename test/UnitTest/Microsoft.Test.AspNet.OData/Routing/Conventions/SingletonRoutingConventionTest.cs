@@ -1,6 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Linq;
+using System.Net.Http;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Xunit;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#else
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
@@ -12,6 +23,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Routing.Conventions
 {
