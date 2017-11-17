@@ -116,6 +116,7 @@
     <Compile Include="Factories\ODataSerializerContextFactory.cs" />
     <Compile Include="Factories\RequestFactory.cs" />
     <Compile Include="Factories\ResourceSetContextFactory.cs" />
+    <Compile Include="Factories\ResponseFactory.cs" />
     <Compile Include="Factories\RoutingConfigurationFactory.cs" />
     <Compile Include="Factories\ServerFactory.cs" />
     <Compile Include="Factories\WebApiAssembliesResolverFactory.cs" />

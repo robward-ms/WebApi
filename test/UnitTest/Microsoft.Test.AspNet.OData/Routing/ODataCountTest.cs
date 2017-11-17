@@ -50,15 +50,10 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public ODataCountTest()
         {
             IEdmModel model = GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(DollarCountEntitiesController) });
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
-            configuration.MapODataServiceRoute("odata", "odata", model);
-            var server = new HttpServer(configuration);
-
-            // Or use WebHostBuilder, see main
-            // Or TestServer in GitHub / aspnet
-
-            _client = new HttpClient(server);
+            var controllers = new[] { typeof(DollarCountEntitiesController) };
+            //configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
+            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            _client = TestServerFactory.CreateClient(server);
         }
 
         public static TheoryDataSet<string, int> DollarCountData

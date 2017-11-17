@@ -5,6 +5,7 @@
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData;
 #else
@@ -14,6 +15,7 @@ using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -141,15 +143,28 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        public static HttpRequestMessage CreateFromModel(IEdmModel model, string uri = "http://localhost", string routeName = "Route")
+#if NETCORE
+        public static HttpRequest CreateFromModel(IEdmModel model, string uri = "http://localhost", string routeName = "Route", ODataPath path = null)
 #else
-        public static HttpRequest CreateFromModel(IEdmModel model, string uri = "http://localhost", string routeName = "Route")
+        public static HttpRequestMessage CreateFromModel(IEdmModel model, string uri = "http://localhost", string routeName = "Route", ODataPath path = null)
 #endif
         {
             var configuration = RoutingConfigurationFactory.Create();
             configuration.MapODataServiceRoute(routeName, null, model);
-            return RequestFactory.Create(HttpMethod.Get, uri, configuration, routeName);
+
+            var request = RequestFactory.Create(HttpMethod.Get, uri, configuration, routeName);
+
+            if (path != null)
+            {
+
+            }
+#if NETCORE
+            request.ODataFeature().Path = path;
+#else
+            request.ODataProperties().Path = path;
+#endif
+
+            return request;
         }
     }
 }

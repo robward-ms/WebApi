@@ -269,9 +269,9 @@ namespace Microsoft.Test.AspNet.OData.Routing.Test
             request.Host = new AspNetCore.Http.HostString(requestUri.Host, requestUri.Port);
             request.Scheme = requestUri.Scheme;
 
-            AspNetCore.Routing.RouteDirection routeDirection = (direction == RouteDirection.Inbound)
+            AspNetCore.Routing.RouteDirection routeDirection = (direction == RouteDirection.UriResolution)
                 ? AspNetCore.Routing.RouteDirection.IncomingRequest
-                : AspNetCore.Routing.RouteDirection.UriGeneration;
+                : AspNetCore.Routing.RouteDirection.UrlGeneration;
 
             return constraint.Match(context, null, null, null, routeDirection);
 #else

@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 #else
 using System;
@@ -27,11 +27,19 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 namespace Microsoft.Test.AspNet.OData.Factories
 {
     /// <summary>
-    /// Factory for creating a TestServer
+    /// Factory for creating a test servers.
     /// </summary>
     public class TestServerFactory
     {
 #if NETCORE
+        /// <summary>
+        /// Create an TestServer.
+        /// </summary>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An TestServer.</returns>
         public static TestServer Create(
             string routeName,
             string routePrefix,
@@ -50,11 +58,28 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 });
             });
 
-            var server = new TestAspNetCoreServer(builder);
-            return new TestServer(server);
+            return new TestServer(builder);
+        }
+
+        /// <summary>
+        /// Create an HttpClient from a server.
+        /// </summary>
+        /// <param name="server">The TestServer.</param>
+        /// <returns>An HttpClient.</returns>
+        public static HttpClient CreateClient(TestServer server)
+        {
+            return server.CreateClient();
         }
 #else
-        public static TestServer Create(
+        /// <summary>
+        /// Create an HttpServer.
+        /// </summary>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An HttpServer.</returns>
+        public static HttpServer Create(
             string routeName,
             string routePrefix,
             Type[] controllers,
@@ -70,38 +95,17 @@ namespace Microsoft.Test.AspNet.OData.Factories
             HttpServer server = new HttpServer(configuration);
             configuration.EnsureInitialized();
 
-            return new TestServer(server);
-        }
-#endif
-    }
-
-    /// <summary>
-    /// An abstracted TestServer
-    /// </summary>
-    public class TestServer
-    {
-#if NETCORE
-        private TestAspNetCoreServer innerServer;
-
-        public TestServer(TestAspNetCoreServer innerServer)
-        {
+            return server;
         }
 
-        public HttpClient Client
+        /// <summary>
+        /// Create an HttpClient from a server.
+        /// </summary>
+        /// <param name="server">The HttpServer.</param>
+        /// <returns>An HttpClient.</returns>
+        public static HttpClient CreateClient(HttpServer server)
         {
-            get { return innerServer.CreateClient(); }
-        }
-#else
-        private HttpServer innerServer;
-
-        public TestServer(HttpServer innerServer)
-        {
-            this.innerServer = innerServer;
-        }
-
-        public HttpClient Client
-        {
-            get { return new HttpClient(innerServer); }
+            return new HttpClient(server);
         }
 #endif
     }

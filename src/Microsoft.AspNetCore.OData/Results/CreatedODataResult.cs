@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNet.OData.Adapters;
+using System;
 
 namespace Microsoft.AspNet.OData.Results
 {
@@ -19,6 +20,7 @@ namespace Microsoft.AspNet.OData.Results
     public class CreatedODataResult<T> : IActionResult
     {
         private readonly T _innerResult;
+        private Uri _entityIdHeader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatedODataResult{T}"/> class.
@@ -35,10 +37,18 @@ namespace Microsoft.AspNet.OData.Results
         {
             HttpRequest request = context.HttpContext.Request;
             HttpResponse response = context.HttpContext.Response;
+            IActionResult result = GetInnerActionResult(request);
+            response.Headers["Location"] = GenerateLocationHeader(request).ToString();
+            ResultHelpers.AddEntityId(response, () => GenerateEntityId(request));
+            return result.ExecuteResultAsync(context);
+        }
 
+        // internal just for unit test.
+        internal IActionResult GetInnerActionResult(HttpRequest request)
+        {
             if (RequestPreferenceHelpers.RequestPrefersReturnNoContent(new WebApiRequestHeaders(request.Headers)))
             {
-                return Task.FromResult(new StatusCodeResult((int)HttpStatusCode.NoContent)); // TODO: , Request);
+                return new StatusCodeResult((int)HttpStatusCode.NoContent);
             }
             else
             {
@@ -47,12 +57,20 @@ namespace Microsoft.AspNet.OData.Results
                     StatusCode = StatusCodes.Status200OK
                 };
 
-                response.Headers["Location"] = ResultHelpers.GenerateODataLink(request, _innerResult, isEntityId: false).ToString();
-                ResultHelpers.AddEntityId(response, () => ResultHelpers.GenerateODataLink(request, _innerResult, isEntityId: true));
-
-
-                return objectResult.ExecuteResultAsync(context);
+                return objectResult;
             }
+        }
+
+        // internal just for unit test.
+        internal Uri GenerateEntityId(HttpRequest request)
+        {
+            return ResultHelpers.GenerateODataLink(request, _innerResult, isEntityId: true);
+        }
+
+        // internal just for unit test.
+        internal Uri GenerateLocationHeader(HttpRequest request)
+        {
+            return ResultHelpers.GenerateODataLink(request, _innerResult, isEntityId: false);
         }
     }
 }

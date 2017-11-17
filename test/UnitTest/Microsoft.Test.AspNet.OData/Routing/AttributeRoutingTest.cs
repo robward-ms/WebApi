@@ -66,18 +66,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
             var controllers = new[] { typeof(CustomersController), typeof(MetadataAndServiceController), typeof(OrdersController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
+            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) => model.Model);
+            HttpClient client = TestServerFactory.CreateClient(server);
 
-            HttpConfiguration config = new HttpConfiguration();
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            config.MapODataServiceRoute("odata", "", model.Model);
-
-            HttpServer server = new HttpServer(config);
-            config.EnsureInitialized();
-
-            HttpClient client = new HttpClient(server);
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), requestUri);
             request.SetFakeODataRouteName();
 
@@ -100,14 +91,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             const string RequestUri = @"http://localhost/Customers(12)/NS.GetOrder(orderId=4)/Amount";
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(CustomersController) });
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.MapODataServiceRoute("odata", "", model.Model);
-
-            HttpServer server = new HttpServer(config);
-            config.EnsureInitialized();
-
-            HttpClient client = new HttpClient(server);
+            var controllers = new[] { typeof(CustomersController) };
+            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) => model.Model);
+            HttpClient client = TestServerFactory.CreateClient(server);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
             request.SetFakeODataRouteName();
 

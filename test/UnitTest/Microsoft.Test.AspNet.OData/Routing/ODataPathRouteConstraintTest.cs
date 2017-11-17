@@ -44,6 +44,12 @@ namespace Microsoft.Test.AspNet.OData.Routing
         IServiceProvider _rootContainer;
         IODataPathHandler _pathHandler;
 
+#if NETCORE
+        AspNetCore.Routing.RouteDirection UriGeneration = AspNetCore.Routing.RouteDirection.UrlGeneration;
+#else
+        System.Web.Http.Routing.HttpRouteDirection UriGeneration = System.Web.Http.Routing.HttpRouteDirection.UriGeneration;
+#endif
+
         private static IList<string> _stringsWithUnescapedSlashes = new List<string>
         {
             { "virtualRoot/odata" },
@@ -128,7 +134,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             var values = new Dictionary<string, object>();
 
             var constraint = CreatePathRouteConstraint();
-            Assert.True(constraint.Match(_request, null, null, values, HttpRouteDirection.UriGeneration));
+            Assert.True(constraint.Match(_request, null, null, values, UriGeneration));
         }
 
         [Fact]
@@ -137,7 +143,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             var values = new Dictionary<string, object>();
 
             var constraint = CreatePathRouteConstraint();
-            Assert.False(constraint.Match(_request, null, null, values, HttpRouteDirection.UriResolution));
+            Assert.False(constraint.Match(_request, null, null, values, UriResolution));
         }
 
         [Fact]
@@ -155,7 +161,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             var constraint = CreatePathRouteConstraint();
 
             // Act & Assert
-            Assert.False(constraint.Match(request, null, null, values, HttpRouteDirection.UriResolution));
+            Assert.False(constraint.Match(request, null, null, values, UriResolution));
         }
 
         [Fact]
@@ -174,7 +180,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             var constraint = CreatePathRouteConstraint();
 
             // Act & Assert
-            Assert.True(constraint.Match(request, null, null, values, HttpRouteDirection.UriResolution));
+            Assert.True(constraint.Match(request, null, null, values, UriResolution));
 
             Assert.Equal("Metadata", values["controller"]);
             Assert.Same(_model, request.GetModel());
@@ -339,7 +345,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             };
 
             // Act
-            var matched = constraint.Match(request, null, null, values, HttpRouteDirection.UriResolution);
+            var matched = ConstraintMatch(constraint.Match, request, values, RouteDirection.UriResolution);
 
             // Assert
             Assert.True(matched);
@@ -366,6 +372,74 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 ODataPath = odataPath;
                 return base.Parse(serviceRoot, odataPath, requestContainer);
             }
+        }
+
+        /// <summary>
+        /// Test class for abstracting the version request.
+        /// </summary>
+        private class TestVersionRequest
+        {
+            public TestVersionRequest(HttpMethod method, string uri)
+            {
+                this.Method = method;
+                this.Uri = uri;
+                this.Headers = new Dictionary<string, string>();
+            }
+
+            public HttpMethod Method { get; private set; }
+            public string Uri { get; private set; }
+            public Dictionary<string, string> Headers { get; private set; }
+        }
+
+        /// <summary>
+        /// Abstraction for route direction.
+        /// </summary>
+        private enum RouteDirection
+        {
+            UriResolution = 0,
+            UriGeneration
+        }
+
+        /// <summary>
+        /// Test method to call constraint.Match using the proper arguments for each platform.
+        /// </summary>
+        /// <param name="constraint">The constraint object.</param>
+        /// <param name="versionRequest">The abstracted request.</param>
+        /// <param name="direction">The abstracted route direction.</param>
+        /// <returns>Result from constraint.Match,</returns>
+        private bool ConstraintMatch(ODataPathRouteConstraint constraint, TestVersionRequest versionRequest, Dictionary<string, object> values, RouteDirection direction)
+        {
+#if NETCORE
+            AspNetCore.Http.HttpContext context = new AspNetCore.Http.DefaultHttpContext();
+            AspNetCore.Http.HttpRequest request = context.Request;
+            foreach (KeyValuePair<string, string> kvp in versionRequest.Headers)
+            {
+                request.Headers.Add(kvp.Key, kvp.Value);
+            }
+
+            System.Uri requestUri = new System.Uri(versionRequest.Uri);
+            request.Method = versionRequest.Method.ToString();
+            request.Host = new AspNetCore.Http.HostString(requestUri.Host, requestUri.Port);
+            request.Scheme = requestUri.Scheme;
+
+            AspNetCore.Routing.RouteDirection routeDirection = (direction == RouteDirection.UriResolution)
+                ? AspNetCore.Routing.RouteDirection.IncomingRequest
+                : AspNetCore.Routing.RouteDirection.UrlGeneration;
+
+            return constraint.Match(context, null, null, null, routeDirection);
+#else
+            HttpRequestMessage request = new HttpRequestMessage(versionRequest.Method, versionRequest.Uri);
+            foreach (KeyValuePair<string,string> kvp in versionRequest.Headers)
+            {
+                request.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
+            }
+
+            System.Web.Http.Routing.HttpRouteDirection routeDirection = (direction == RouteDirection.UriResolution)
+                ? System.Web.Http.Routing.HttpRouteDirection.UriResolution
+                : System.Web.Http.Routing.HttpRouteDirection.UriGeneration;
+
+            return constraint.Match(request, null, null, values, routeDirection);
+#endif
         }
     }
 }
