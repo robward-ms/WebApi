@@ -57,21 +57,6 @@ namespace Microsoft.Test.AspNet.OData
                 builder.AddService(ServiceLifetime.Singleton, sp => model));
         }
 
-        public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration, string routeName,
-            IODataPathHandler pathHandler)
-        {
-            configuration.CreateODataRootContainer(routeName, builder =>
-                builder.AddService(ServiceLifetime.Singleton, sp => pathHandler));
-        }
-
-        public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration, string routeName,
-            IEdmModel model, IODataPathHandler pathHandler)
-        {
-            configuration.CreateODataRootContainer(routeName, builder =>
-                builder.AddService(ServiceLifetime.Singleton, sp => model)
-                       .AddService(ServiceLifetime.Singleton, sp => pathHandler));
-        }
-
         public static void EnableHttpDependencyInjectionSupport(this HttpRequestMessage request)
         {
             request.EnableHttpDependencyInjectionSupport((Action<IContainerBuilder>)null);
