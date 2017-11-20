@@ -13,12 +13,18 @@ using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
 using WebStack.QA.Test.OData.Common.Models.Vehicle;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightInheritanceTests : InheritanceTests
     {
+        public JsonLightInheritanceTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public static TheoryDataSet<Type, string, string> PostGetUpdateAndDeleteData
@@ -73,7 +79,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -92,8 +98,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             configuration.AddODataQueryFilter();
         }
 
-        [Theory]
-        [PropertyData("PostGetUpdateAndDeleteData")]
+        [NuwaTheory]
+        [MemberData(nameof(PostGetUpdateAndDeleteData))]
         public async Task PostGetUpdateAndDeleteJsonLight(Type entityType, string entitySetName, string acceptHeader)
         {
             AcceptHeader = acceptHeader;
@@ -101,7 +107,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             await PostGetUpdateAndDelete(entityType, entitySetName);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -117,7 +123,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             AddAndRemoveBaseNavigationPropertyInDerivedType();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -133,7 +139,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             AddAndRemoveDerivedNavigationPropertyInDerivedType();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

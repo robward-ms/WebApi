@@ -19,8 +19,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class QueryFuzzingTests : ODataTestBase
+    public class QueryFuzzingTests : NuwaTestBase
     {
+        public QueryFuzzingTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string> FuzzingQueries
         {
             get
@@ -59,7 +64,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -73,8 +78,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Theory]
-        [PropertyData("FuzzingQueries")]
+        [NuwaTheory]
+        [MemberData(nameof(FuzzingQueries))]
         public void TestFuzzingQueries(string filter)
         {
             var handler = typeof(HttpMessageInvoker).GetField("handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this.Client) as HttpMessageHandler;
@@ -144,7 +149,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         //[Theory(Skip = "It is not stable, now disable it to prevent it from hiding other test failures.")]
-        //[PropertyData("FuzzingQueries")]
+        //[MemberData(nameof(FuzzingQueries))]
         public void TestFuzzingQueriesWithMultipleThreads(string filter)
         {
             Parallel.For(0, 3, i =>

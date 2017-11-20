@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.Sdk
@@ -11,11 +12,11 @@ namespace Nuwa.Sdk
     /// </summary>
     public class RunFrameBuilder : IRunFrameBuilder
     {
-        private ITestClassCommand _testClass;
+        private ITypeInfo _testClass;
         private IPerceiverList _perceivers;
         private AbstractRunFrameFactory _runFrameFactory;
 
-        public RunFrameBuilder(ITestClassCommand testClass, IPerceiverList perceivers, AbstractRunFrameFactory runFrameFactory)
+        public RunFrameBuilder(ITypeInfo testClass, IPerceiverList perceivers, AbstractRunFrameFactory runFrameFactory)
         {
             if (testClass == null)
             {
@@ -48,7 +49,7 @@ namespace Nuwa.Sdk
                 .ToArray();
 
             // if there is no elements involved, return an empty run frames collection
-            // it will cause no actuall test runs
+            // it will cause no actual test runs
             // TODO: warning the user
             if (!elementGroups.Any())
             {

@@ -174,10 +174,15 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class InheritanceQueryableTests : ODataTestBase
+    public class InheritanceQueryableTests : NuwaTestBase
     {
+        public InheritanceQueryableTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var types = new[] { 
                 typeof(InheritanceQueryable_Customer), 
@@ -201,7 +206,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Id eq 1")]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=WebStack.QA.Test.OData.Common.Models.Vehicle.MiniSportBike/CanDoAWheelie eq false")]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=WebStack.QA.Test.OData.Common.Models.Vehicle.MiniSportBike/TopSpeed gt 20")]
@@ -212,7 +217,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var actual = response.Content.ReadAsAsync<IEnumerable<Motorcycle>>().Result;
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryOnDerivedTypeWithAbstractBaseShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=WebStack.QA.Test.OData.QueryComposition.InheritanceQueryable_DerivedType/ID eq 1").Result;
@@ -236,18 +241,18 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(2, actual.Count());
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryOnReadOnlyPropertShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetReadOnlyPropertyType?$filter=ReadOnlyProperty eq 8").Result;
             response.EnsureSuccessStatusCode();
             var actual = response.Content.ReadAsAsync<IEnumerable<ReadOnlyPropertyType>>().Result;
-            Assert.Equal(1, actual.Count());
+            Assert.Single(actual);
 
             response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetReadOnlyPropertyType?$filter=ReadOnlyProperty eq 7").Result;
             response.EnsureSuccessStatusCode();
             actual = response.Content.ReadAsAsync<IEnumerable<ReadOnlyPropertyType>>().Result;
-            Assert.Equal(0, actual.Count());
+            Assert.Empty(actual);
         }
     }
 }

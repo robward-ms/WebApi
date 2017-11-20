@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Nuwa.WebStack.Descriptor;
 using Nuwa.WebStack.Route;
 
@@ -28,9 +29,9 @@ namespace Nuwa.Sdk.Elements
             ShutdownServer(frame);
         }
 
-        public override void Recover(object testClass, NuwaTestCommand testCommand)
+        public override void Recover(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
-            SetBaseAddress(testClass, testCommand.Frame);
+            SetBaseAddress(frame, testClassType, testClassInstance);
         }
 
         protected abstract bool InitializeServer(RunFrame frame);
@@ -41,10 +42,9 @@ namespace Nuwa.Sdk.Elements
         /// Assign base address uri to the property marked by <paramref name="NuwaBaseAddressAttribute"/>
         /// assuming that there are not more than 1 property is marked by the attribute
         /// </summary>
-        protected void SetBaseAddress(object testClass, RunFrame frame)
+        protected void SetBaseAddress(RunFrame frame, Type testClassType, object testClassInstance)
         {
             var baseAddress = frame.GetState(KeyBaseAddresss) as string;
-            var testClassType = testClass.GetType();
 
             /// TODO: 1. check the number of marked property in test class command
             /// TODO: 2. to complain of the property type is not correct
@@ -54,7 +54,7 @@ namespace Nuwa.Sdk.Elements
 
             if (baseAddressPrpt != null && NuwaBaseAddressAttribute.Verify(baseAddressPrpt))
             {
-                baseAddressPrpt.SetValue(testClass, baseAddress, null);
+                baseAddressPrpt.SetValue(testClassInstance, baseAddress, null);
             }
             else
             {

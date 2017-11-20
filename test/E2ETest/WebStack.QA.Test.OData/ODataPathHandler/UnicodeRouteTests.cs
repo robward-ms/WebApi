@@ -38,10 +38,15 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
         }
     }
 
-    public class UnicodeRouteTests : ODataTestBase
+    public class UnicodeRouteTests : NuwaTestBase
     {
+        public UnicodeRouteTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -56,7 +61,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CRUDEntitySetShouldWork()
         {
             var rand = new Random(RandomSeedGenerator.GetRandomSeed());
@@ -89,7 +94,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
             // delete entity
             await DeleteEntityAsync(uri, entitySetName, secondVersion);
             var entities = await GetEntitiesAsync(uri, entitySetName);
-            Assert.Equal(0, entities.ToList().Count());
+            Assert.Empty(entities.ToList());
         }
 
         private DataServiceContext CreateClient(Uri address)

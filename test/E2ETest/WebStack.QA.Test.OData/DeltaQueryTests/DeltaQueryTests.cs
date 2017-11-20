@@ -21,31 +21,15 @@ namespace WebStack.QA.Test.OData
 {
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
-    public class DeltaQueryTests
+    public class DeltaQueryTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public DeltaQueryTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -59,7 +43,7 @@ namespace WebStack.QA.Test.OData
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void DeltaVerifyReslt()
         {
             HttpRequestMessage get = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/TestCustomers?$deltaToken=abc");

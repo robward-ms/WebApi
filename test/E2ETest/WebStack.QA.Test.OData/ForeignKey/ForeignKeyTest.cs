@@ -17,23 +17,21 @@ using Nuwa;
 using WebStack.QA.Test.OData.Common;
 using WebStack.QA.Test.OData.ModelBuilder;
 using Xunit;
-using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.ForeignKey
 {
     [NuwaFramework]
-    [NwHost(HostType.KatanaSelf)]
+    [NuwaHost(HostType.KatanaSelf)]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ForeignKeyTest
+    public class ForeignKeyTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ForeignKeyTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(ForeignKeyCustomersController),
                 typeof(ForeignKeyOrdersController),
@@ -61,7 +59,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ReferentialConstraintModelBuilderTest(string modelMode)
@@ -95,7 +93,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
             Assert.Same(idProperty, principalProperty);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ReferentialConstraintPresentsOnMetadataDocument(string modelMode)
@@ -114,7 +112,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
             Assert.Contains(expect, response.Content.ReadAsStringAsync().Result);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ReferentialConstraintDoesnotPresentsOnMetadataDocument()
         {
             string requestUri = string.Format("{0}/noncascade/$metadata", this.BaseAddress);
@@ -124,7 +122,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
             Assert.DoesNotContain("ReferentialConstraint", response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanDeleteTheRelatedOrders_IfDeleteTheCustomer(string modelMode)
@@ -165,7 +163,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CannotDeleteTheRelatedOrders_IfDeleteTheCustomer()
         {
             await ResetDatasource("/noncascade/ResetDataSourceNonCacade");

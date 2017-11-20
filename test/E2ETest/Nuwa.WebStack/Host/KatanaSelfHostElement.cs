@@ -44,10 +44,10 @@ namespace Nuwa.WebStack.Host
             var sandbox = CreateFullTrustAppDomain();
             frame.SetState(KeySandbox, sandbox);
 
-            // load test assemly into sandbox
+            // load test assembly into sandbox
             if (sandbox != null && TypeDescriptor.TestAssembly != null)
             {
-                sandbox.Load(TypeDescriptor.TestAssembly.GetName());
+                sandbox.Load(TypeDescriptor.TestAssembly.Name);
             }
 
             // setup security strategy and base address
@@ -93,8 +93,8 @@ namespace Nuwa.WebStack.Host
                 // set up the server
                 serverInitiator.Setup(
                     baseAddress,
-                    TypeDescriptor.GetDesignatedMethod<NuwaKatanaConfigurationAttribute>(),
-                    TypeDescriptor.ConfigureMethod,
+                    TypeDescriptor.GetDesignatedMethod<NuwaKatanaConfigurationAttribute>()?.ToRuntimeMethod(),
+                    TypeDescriptor.ConfigureMethod?.ToRuntimeMethod(),
                     traceType, GetDefaultRouteTemplate());
             }
             catch (Exception ex)

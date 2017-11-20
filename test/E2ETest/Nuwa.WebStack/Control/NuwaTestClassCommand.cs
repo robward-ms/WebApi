@@ -5,6 +5,7 @@ using System.Linq;
 using Autofac;
 using Nuwa.DI;
 using Nuwa.Sdk;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Nuwa.Control
@@ -12,134 +13,86 @@ namespace Nuwa.Control
     /// <summary>
     /// Define the class level execution of Nuwa
     /// </summary>
-    public class NuwaTestClassCommand : DelegatingTestClassCommand
+    public static class NuwaTestClassCommand
     {
-        private Collection<RunFrame> _frames;
-        private IRunFrameBuilder _frmBuilder;
-
-        public NuwaTestClassCommand()
-            : base(new TestClassCommand())
+        public static IAttributeInfo GetNuwaFrameworkAttr(ITypeInfo typeUnderTest)
         {
-            var resolver = DependencyResolver.Instance;
-
-            // autowiring
-            _frmBuilder = resolver.Container.Resolve(
-                typeof(IRunFrameBuilder),
-                new NamedParameter("testClass", this))
-                as IRunFrameBuilder;
-
-            _frames = new Collection<RunFrame>();
-        }
-
-        public static NuwaFrameworkAttribute GetNuwaFrameworkAttr(ITestClassCommand cmd)
-        {
-            return cmd.TypeUnderTest.GetFirstCustomAttribute<NuwaFrameworkAttribute>();
+            return typeUnderTest.GetCustomAttributes<NuwaFrameworkAttribute>().FirstOrDefault();
         }
 
         /// <summary>
         /// Act before any test method is executed. All host strategies requested are set up in this method.
         /// </summary>
         /// <returns>Returns exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassStart()
+        public static Collection<RunFrame> CreateFrames(ITypeInfo typeUnderTest)
         {
-            Exception exception = null;
-
-            try
+            if (ValidateTypeUnderTest(typeUnderTest))
             {
-                ValidateTypeUnderTest();
-
-                // execute the default class start, should any exception returned terminate the execution.
-                exception = Proxy.ClassStart();
-                if (exception != null)
-                {
-                    // expected to be catched at upper level try clause
-                    throw new InvalidOperationException("Base class ClassStart failed", exception);
-                }
-
                 // create run frames
-                _frames = _frmBuilder.CreateFrames();
-            }
-            catch (Exception e)
-            {
-                exception = e;
+                var resolver = DependencyResolver.Instance;
+
+                // autowiring
+                var frmBuilder = resolver.Container.Resolve(
+                    typeof(IRunFrameBuilder),
+                    new NamedParameter("testClass", typeUnderTest))
+                    as IRunFrameBuilder;
+
+                return frmBuilder.CreateFrames();
             }
 
-            return exception;
+            return new Collection<RunFrame>();
         }
 
         /// <summary>
         /// Act after all test methods are executed. All host strategies are released in this method. 
         /// </summary>
         /// <returns>Returns aggregated exception thrown during execution; null, otherwise.</returns>
-        public override Exception ClassFinish()
+        public static void ClassFinish(Collection<RunFrame> frames)
         {
-            Exception retException = null;
-
-            try
+            // dispose all run frame
+            if (frames != null)
             {
-                var exceptions = new List<Exception>();
-
-                // dispose all run frame
-                foreach (var rf in _frames)
+                foreach (var rf in frames)
                 {
                     try
                     {
                         rf.Cleanup();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        exceptions.Add(ex);
+                        // While failure may occur, don't let errors in tearing down the
+                        // test fail the test.
                     }
                 }
-
-                // first release all the hosts
-                Exception baseException = Proxy.ClassFinish();
-                if (baseException != null)
-                {
-                    exceptions.Add(baseException);
-                }
-
-                if (exceptions.Count != 0)
-                {
-                    throw new AggregateException(exceptions);
-                }
             }
-            catch (Exception e)
-            {
-                retException = e;
-            }
-
-            return retException;
         }
 
-        public override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo testMethod)
+        public static IEnumerable<IXunitTestCase> EnumerateTestCommands(
+            ITypeInfo typeUnderTest,
+            IEnumerable<IXunitTestCase> discoveredTestCases,
+            IMessageSink diagnosticMessageSink,
+            TestMethodDisplay defaultMethodDisplay)
         {
-            /// TODO - Advanced feature:
-            /// 1. Frame filter, some cases can be filtered under some frame
-            var combinations = from test in Proxy.EnumerateTestCommands(testMethod)
-                               from frame in _frames
-                               select new { TestCommand = test, RunFrame = frame };
+            Collection<RunFrame> frames = CreateFrames(typeUnderTest);
 
-            foreach (var each in combinations)
+            foreach (var test in discoveredTestCases)
             {
-                var isSkipped =
-                    (each.TestCommand is DelegatingTestCommand) ?
-                    (each.TestCommand as DelegatingTestCommand).InnerCommand is SkipCommand :
-                    (each.TestCommand is SkipCommand);
-
-                if (isSkipped)
+                if (!string.IsNullOrEmpty(test.SkipReason))
                 {
-                    yield return each.TestCommand;
+                    yield return test;
+                }
+                else if (frames.Count == 0)
+                {
+                    yield return test;
                 }
                 else
                 {
-                    var testCommand = new NuwaTestCommand(each.TestCommand)
+                    for (int i = 0; i < frames.Count; i++)
                     {
-                        Frame = each.RunFrame,
-                        TestMethod = testMethod
-                    };
-
-                    yield return testCommand;
+                        // Test case gets frame number, 0 to #frames -1. We really just need a placeholder for discovery,
+                        // we'll attach to the actual frame during the test run.
+                        yield return new NuwaTestCase(i, diagnosticMessageSink, defaultMethodDisplay, test.TestMethod, test.TestMethodArguments);
+                    }
                 }
             }
         }
@@ -150,24 +103,23 @@ namespace Nuwa.Control
         /// Exception will be thrown if the validation failed. The thrown exception
         /// is expected be caught in external frame.
         /// </summary>
-        private void ValidateTypeUnderTest()
+        public static bool ValidateTypeUnderTest(ITypeInfo typeUnderTest)
         {
             // check framework attribute
-            if (NuwaTestClassCommand.GetNuwaFrameworkAttr(this) == null)
+            if (NuwaTestClassCommand.GetNuwaFrameworkAttr(typeUnderTest) == null)
             {
-                throw new InvalidOperationException(
-                    string.Format(
-                        "The test class must be marked by {0}.",
-                        typeof(NuwaFrameworkAttribute).Name));
+                return false;
             }
 
             // check configuration method attribute
-            var configMethodAttr = TypeUnderTest.GetCustomAttributes<NuwaConfigurationAttribute>();
+            var configMethodAttr = typeUnderTest.GetCustomAttributes<NuwaConfigurationAttribute>();
             if (configMethodAttr.Length > 1)
             {
                 throw new InvalidOperationException(
                     string.Format("More than two methods are marked by {0}.", typeof(NuwaConfigurationAttribute).Name));
             }
+
+            return true;
         }
     }
 }

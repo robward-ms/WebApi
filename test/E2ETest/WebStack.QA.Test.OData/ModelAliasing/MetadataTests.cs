@@ -16,16 +16,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ModelAliasing
 {
     [NuwaFramework]
-    public class ModelBuildersMetadataTests
+    public class ModelBuildersMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ModelBuildersMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -131,7 +130,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanRenameTypesAndNamespacesInConventionModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/convention/$metadata");
@@ -159,7 +158,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             Assert.NotNull(address);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanRenamePropertiesInConventionModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/convention/$metadata");
@@ -190,7 +189,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             Assert.NotNull(ordersLines.FindProperty("Cost"));
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanRenameTypesAndNamespacesInRegularModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/explicit/$metadata");
@@ -218,7 +217,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             Assert.NotNull(address);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanRenamePropertiesInRegularModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/explicit/$metadata");

@@ -26,16 +26,15 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DateAndTimeOfDayWithEfTest
+    public class DateAndTimeOfDayWithEfTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DateAndTimeOfDayWithEfTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(MetadataController), typeof(DateAndTimeOfDayModelsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -50,7 +49,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             CreateDatabase();
         }
 
-        [Fact]
+        [NuwaFact]
         public void MetadataDocument_IncludesDateAndTimeOfDayProperties()
         {
             // Arrange
@@ -94,7 +93,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(expected, response.Content.ReadAsStringAsync().Result);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanQueryEntitySet_WithDateAndTimeOfDayProperties()
         {
             // Arrange
@@ -118,7 +117,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal("05:03:05.0790000", result["value"][4]["CreatedTime"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanQuerySingleEntity_WithDateAndTimeOfDayProperties()
         {
             // Arrange
@@ -157,7 +156,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(JObject.Parse(expect), result);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanSelect_OnDateAndTimeOfDayProperties()
         {
             // Arrange
@@ -178,7 +177,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal("08:06:04.0030000", result["ResumeTime"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$filter=year(Birthday) eq 2017", "2")]
         [InlineData("?$filter=month(PublishDay) eq 01", "4")]
         [InlineData("?$filter=day(EndDay) ne 27", "1,2,3,4")]
@@ -193,7 +192,6 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
         [InlineData("?$filter=minute(EndTime) eq 06", "3")]
         [InlineData("?$filter=second(EndTime) eq 10", "5")]
         [InlineData("?$filter=EndTime eq null", "2,4")]
-        [InlineData("?$filter=EndTime ne null", "1,3,5")]
         [InlineData("?$filter=EndTime ge 02:03:05.0790000", "1,3,5")]
         public void CanFilter_OnDateAndTimeOfDayProperties(string filter, string expect)
         {
@@ -211,7 +209,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(expect, String.Join(",", result["value"].Select(e => e["Id"].ToString())));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$orderby=Birthday", "1,2,3,4,5")]
         [InlineData("?$orderby=Birthday desc", "5,4,3,2,1")]
         [InlineData("?$orderby=PublishDay", "1,3,5,4,2")]
@@ -236,7 +234,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(expect, String.Join(",", result["value"].Select(e => e["Id"].ToString())));
         }
 
-        [Fact]
+        [NuwaFact]
         public void PostEntity_WithDateAndTimeOfDayTimeProperties()
         {
             // Arrange
@@ -260,7 +258,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
 
-        [Fact]
+        [NuwaFact]
         public void PutEntity_WithDateAndTimeOfDayProperties()
         {
             // Arrange

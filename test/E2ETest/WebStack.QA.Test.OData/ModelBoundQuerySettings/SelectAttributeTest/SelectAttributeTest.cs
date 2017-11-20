@@ -14,7 +14,7 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
 {
-    public class SelectAttributeTest : ODataTestBase
+    public class SelectAttributeTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
@@ -25,8 +25,13 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
         private const string ModelBoundAutoSelectCustomerBaseUrl = "{0}/modelboundapi/AutoSelectCustomers";
 
+        public SelectAttributeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -42,7 +47,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
                 SelectAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl + "?$select=*")]
         [InlineData(CustomerBaseUrl + "?$select=Id")]
         [InlineData(CustomerBaseUrl + "?$select=Id,Name")]
@@ -66,46 +71,46 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("cannot be used in the $select query option.", result);
         }
 
-        [Theory]
-        [InlineData(OrderBaseUrl + "?$select=Name", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl + "?$select=Id", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl + "?$select=Id,Name", HttpStatusCode.BadRequest)]
+        [NuwaTheory]
+        [InlineData(OrderBaseUrl + "?$select=Name", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl + "?$select=Id", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
-            HttpStatusCode.BadRequest)]
+            (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
-            HttpStatusCode.BadRequest)]
+            (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
-            HttpStatusCode.OK)]
+            (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
-            HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl + "?$expand=Cars($select=Id,Name)", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl + "?$expand=Cars($select=CarNumber)", HttpStatusCode.BadRequest)]
-        [InlineData(CarBaseUrl + "?$select=Id,Name", HttpStatusCode.OK)]
-        [InlineData(CarBaseUrl + "?$select=CarNumber", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$select=Name", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$select=Id", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$select=Id,Name", HttpStatusCode.BadRequest)]
+            (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl + "?$expand=Cars($select=Id,Name)", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl + "?$expand=Cars($select=CarNumber)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CarBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.OK)]
+        [InlineData(CarBaseUrl + "?$select=CarNumber", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$select=Name", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$select=Id", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
-            HttpStatusCode.BadRequest)]
+            (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
-            HttpStatusCode.BadRequest)]
+            (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
-            HttpStatusCode.OK)]
+            (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl +
             "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
-            HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=Id,Name)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=CarNumber)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCarBaseUrl + "?$select=Id,Name", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCarBaseUrl + "?$select=CarNumber", HttpStatusCode.BadRequest)]
-        public void SelectOnEntityType(string entitySetUrl, HttpStatusCode statusCode)
+            (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=Id,Name)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=CarNumber)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCarBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCarBaseUrl + "?$select=CarNumber", (int)HttpStatusCode.BadRequest)]
+        public void SelectOnEntityType(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -118,27 +123,27 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             HttpResponseMessage response = client.SendAsync(request).Result;
             string result = response.Content.ReadAsStringAsync().Result;
 
-            Assert.Equal(statusCode, response.StatusCode);
-            if (statusCode == HttpStatusCode.BadRequest)
+            Assert.Equal(statusCode, (int)response.StatusCode);
+            if (statusCode == (int)HttpStatusCode.BadRequest)
             {
                 Assert.Contains("cannot be used in the $select query option.", result);
             }
         }
 
-        [Theory]
-        [InlineData(OrderBaseUrl + "?$expand=Customers($select=Id,Name)", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl + "(1)/Customers?$select=Id,Name", HttpStatusCode.OK)]
-        [InlineData(CustomerBaseUrl + "?$expand=Orders($select=Name)", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl + "(1)/Orders?$select=Name", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl + "?$expand=Orders($select=Id)", HttpStatusCode.OK)]
-        [InlineData(CustomerBaseUrl + "(1)/Orders?$select=Id", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($select=Id,Name)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl + "(1)/Customers?$select=Id,Name", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($select=Name)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Name", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($select=Id)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Id", HttpStatusCode.OK)]
-        public void SelectOnProperty(string entitySetUrl, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData(OrderBaseUrl + "?$expand=Customers($select=Id,Name)", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl + "(1)/Customers?$select=Id,Name", (int)HttpStatusCode.OK)]
+        [InlineData(CustomerBaseUrl + "?$expand=Orders($select=Name)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl + "(1)/Orders?$select=Name", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl + "?$expand=Orders($select=Id)", (int)HttpStatusCode.OK)]
+        [InlineData(CustomerBaseUrl + "(1)/Orders?$select=Id", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($select=Id,Name)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl + "(1)/Customers?$select=Id,Name", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($select=Name)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Name", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($select=Id)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Id", (int)HttpStatusCode.OK)]
+        public void SelectOnProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -151,14 +156,14 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             HttpResponseMessage response = client.SendAsync(request).Result;
             string result = response.Content.ReadAsStringAsync().Result;
 
-            Assert.Equal(statusCode, response.StatusCode);
-            if (statusCode == HttpStatusCode.BadRequest)
+            Assert.Equal(statusCode, (int)response.StatusCode);
+            if (statusCode == (int)HttpStatusCode.BadRequest)
             {
                 Assert.Contains("cannot be used in the $select query option.", result);
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectWithAutoExpand(string url)
@@ -181,7 +186,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("Name", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectPropertyAccessWithAutoExpand(string url)
@@ -205,7 +210,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("Name", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectByDefault(string url)
@@ -227,7 +232,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("Id", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void DollarSelectGetPrecedenceWithAutoSelect(string url)
@@ -250,7 +255,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("CarNumber", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void NestedDollarSelectGetPrecedenceWithAutoSelect(string url)
@@ -271,7 +276,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
             Assert.Contains("CarNumber", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(AutoSelectCustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]

@@ -34,7 +34,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             var model = builder.GetEdmModel();
 
             var manager = model.SchemaElements.OfType<IEdmEntityType>().First(e => e.Name == "InheritanceTests_Manager");
-            Assert.False(manager.Properties().Any(p => p.Name == "Photo"));
+            Assert.DoesNotContain(manager.Properties(), (p) => p.Name == "Photo");
         }
     }
 }

@@ -22,10 +22,15 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class SelectExpandTests : ODataTestBase
+    public class SelectExpandTests : NuwaTestBase
     {
+        public SelectExpandTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                   typeof(IAssembliesResolver),
@@ -58,7 +63,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=*", BaseAddress);
@@ -83,7 +88,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().All(p => p.Name != "#Container.CreditRating")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryJustTheActionsOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Default.*", BaseAddress);
@@ -108,7 +113,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Any(p => p.Name == "#Default.CreditRating")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Name", BaseAddress);
@@ -133,7 +138,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 1 && x.Properties().All(p => p.Name == "Name")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Id,Name&$expand=SelectOrders($select=Id)", BaseAddress);
@@ -159,7 +164,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => (int)x["Id"] == ((JArray)x["SelectOrders"]).Count));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -181,7 +186,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id&$expand=SelectOrders", BaseAddress);
@@ -215,7 +220,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -254,7 +259,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id,SelectOrders&$expand=SelectOrders($expand=OrderDetails)", BaseAddress);
@@ -294,7 +299,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -326,7 +331,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
         {
             // Arrange
@@ -348,12 +353,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
-            Assert.Equal(expandProp.Count, 2);
-            Assert.Equal(expandProp[0]["Id"], 1);
-            Assert.Equal(expandProp[1]["Id"], 2);
+            Assert.Equal(2, expandProp.Count);
+            Assert.Equal(1, expandProp[0]["Id"]);
+            Assert.Equal(2, expandProp[1]["Id"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true)", BaseAddress);
@@ -384,7 +389,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedDollarCountInDollarExpandWithNestedDollarFilterWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($filter=Id lt 1;$count=true)", BaseAddress);
@@ -412,13 +417,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
                 if (customerId == 0)
                 {
                     // the "SelectOrders" in the first customer is empty.
-                    Assert.Equal(0, orders.Count);
+                    Assert.Empty(orders);
                     Assert.Equal(0, (int)customer["SelectOrders@odata.count"]);
                 }
                 else
                 {
                     // the "SelectOrders" in other customers has only one entity, because the result is filtered by "Id" < 1.
-                    Assert.Equal(1, orders.Count);
+                    Assert.Single(orders);
                     Assert.Equal(1, (int)customer["SelectOrders@odata.count"]);
                 }
 
@@ -429,7 +434,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true;$expand=OrderDetails($count=true))", BaseAddress);
@@ -462,7 +467,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedSkipInDollarExpandWorks()
         {
             // Arrange
@@ -497,7 +502,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedTopInDollarExpandWorks()
         {
             // Arrange
@@ -523,16 +528,16 @@ namespace WebStack.QA.Test.OData.QueryComposition
             foreach (JObject customer in (IEnumerable<JToken>)customers)
             {
                 JArray orders = customer["SelectOrders"] as JArray;
-                Assert.Equal(1, orders.Count);
+                Assert.Single(orders);
                 foreach (JObject order in (IEnumerable<JToken>)orders)
                 {
                     JArray orderdetails = order["OrderDetails"] as JArray;
-                    Assert.Equal(1, orderdetails.Count());
+                    Assert.Single(orderdetails);
                 }
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedOrderByInDollarExpandWorks()
         {
             // Arrange
@@ -561,7 +566,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(0, orderdetails[0]["Id"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedTopSkipOrderByInDollarExpandWorksWithEF()
         {
             // Arrange
@@ -583,8 +588,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
-            Assert.Equal(expandProp.Count, 1);
-            Assert.Equal(expandProp[0]["Id"], 2);
+            Assert.Single(expandProp);
+            Assert.Equal(2, expandProp[0]["Id"]);
         }
 
         private void RestoreData()
@@ -688,13 +693,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
         [ODataRoute("ResetDataSource")]
         public IHttpActionResult ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.Customers.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
+                Generate();
             }
 
-            Generate();
             return Ok();
         }
 

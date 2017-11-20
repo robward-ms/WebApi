@@ -42,10 +42,15 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class ConditionalLinkGeneration_ConventionModelBuilder_Tests : ODataTestBase
+    public class ConditionalLinkGeneration_ConventionModelBuilder_Tests : NuwaTestBase
     {
+        public ConditionalLinkGeneration_ConventionModelBuilder_Tests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var repo = ConditionalLinkGeneration_ProductsController.Repository;
             repo[typeof(Product)] = new System.Collections.Concurrent.ConcurrentDictionary<int, Product>();

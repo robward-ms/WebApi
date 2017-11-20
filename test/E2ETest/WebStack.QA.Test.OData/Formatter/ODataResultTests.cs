@@ -63,10 +63,15 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class ODataResultTests : ODataTestBase
+    public class ODataResultTests : NuwaTestBase
     {
+        public ODataResultTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -83,7 +88,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ODataResultWithZeroResultShouldWork()
         {
             // Arrange

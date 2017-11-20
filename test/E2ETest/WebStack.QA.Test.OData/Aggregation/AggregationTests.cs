@@ -14,16 +14,20 @@ using Newtonsoft.Json.Linq;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Aggregation
 {
-    public class AggregationTests : ODataTestBase
+    public class AggregationTests : NuwaTestBase
     {
         private const string AggregationTestBaseUrl = "{0}/aggregation/Customers";
 
+        public AggregationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -36,7 +40,7 @@ namespace WebStack.QA.Test.OData.Aggregation
                 AggregationEdmModel.GetEdmModel(configuration));
         }
 
-        [Fact]
+        [NuwaFact]
         public void AggregateNavigationPropertyWorks()
         {
             // Arrange
@@ -55,7 +59,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             var result = response.Content.ReadAsAsync<JObject>().Result;
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            
+
             var results = result["value"] as JArray;
             Assert.Equal(3, results.Count);
             Assert.Equal("0", results[0]["TotalPrice"].ToString());
@@ -66,7 +70,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Customer1", results[2]["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByNavigationPropertyWorks()
         {
             // Arrange
@@ -94,7 +98,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Order1", order1["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByComplexPropertyWorks()
         {
             // Arrange
@@ -122,7 +126,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("City1", address1["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByMultipleNestedPropertiesWorks()
         {
             // Arrange
@@ -154,7 +158,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Order1", order2["Name"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void AggregateAggregatedPropertyWorks()
         {
             // Arrange
@@ -176,11 +180,11 @@ namespace WebStack.QA.Test.OData.Aggregation
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
             Assert.Equal("4500", results[0]["TotalAmount"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void AggregateVirtualCountWorks()
         {
             // Arrange
@@ -206,7 +210,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(10, responseObj.Count);
         }
 
-        [Fact]
+        [NuwaFact]
         public void GroupByVirtualCountWorks()
         {
             // Arrange
@@ -232,14 +236,14 @@ namespace WebStack.QA.Test.OData.Aggregation
                 .ToDictionary(x => x.Name);
 
             dict.TryGetValue("Customer1", out responseObj);
-            Assert.Equal(responseObj.Count, 5);
+            Assert.Equal(5, responseObj.Count);
 
             dict.TryGetValue("Customer0", out responseObj);
-            Assert.Equal(responseObj.Count, 4);
+            Assert.Equal(4, responseObj.Count);
         }
 
 
-        [Fact]
+        [NuwaFact]
         public void AggregateAggregatedWithGRoupByPropertyWorks()
         {
             // Arrange
@@ -270,7 +274,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal("Customer1", results[2]["Name"].ToString());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with sum as TotalPrice))" +
                     "/filter(TotalPrice ge 2001)")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with sum as TotalId))" +
@@ -300,10 +304,10 @@ namespace WebStack.QA.Test.OData.Aggregation
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
@@ -325,7 +329,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.Sum as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.YetAnotherMethod as IdStdDev))")]
@@ -347,7 +351,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with YetAnotherMethod as IdStdDev))")]
@@ -369,7 +373,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=aggregate(Order/Price with sum as Result)", "4500")]
         [InlineData("?$apply=aggregate(Order/Price with min as Result)", "0")]
         [InlineData("?$apply=aggregate(Order/Price with max as Result)", "900")]
@@ -396,7 +400,7 @@ namespace WebStack.QA.Test.OData.Aggregation
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var results = result["value"] as JArray;
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
             Assert.Equal(expectedResult, results[0]["Result"].ToString());
         }
     }

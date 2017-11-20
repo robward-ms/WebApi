@@ -22,17 +22,16 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    [NwHost(HostType.KatanaSelf)]
-    public class UnqualifiedNameCallRoutingTests
+    [NuwaHost(HostType.KatanaSelf)]
+    public class UnqualifiedNameCallRoutingTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public UnqualifiedNameCallRoutingTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(UnqualifiedCarsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -57,7 +56,7 @@ namespace WebStack.QA.Test.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/UnqualifiedCars(5)/Wash", "WashSingle5")]
         [InlineData("/odata/UnqualifiedCars(5)/Default.Wash", "WashSingle5")]
         [InlineData("/odata/UnqualifiedCars/Wash", "WashCollection")]
@@ -72,7 +71,7 @@ namespace WebStack.QA.Test.OData.Routing
             Assert.Equal(expectedResult, (string)response.Content.ReadAsAsync<JObject>().Result["value"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/UnqualifiedCars(5)/Check", "CheckSingle5")]
         [InlineData("/odata/UnqualifiedCars(5)/Default.Check", "CheckSingle5")]
         [InlineData("/odata/UnqualifiedCars/Check", "CheckCollection")]

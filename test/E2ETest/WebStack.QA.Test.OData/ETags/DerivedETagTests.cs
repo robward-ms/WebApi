@@ -18,16 +18,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class DerivedETagTests
+    public class DerivedETagTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DerivedETagTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
@@ -50,7 +49,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void DerivedTypesHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers?$select=Id";
@@ -72,7 +71,7 @@ namespace WebStack.QA.Test.OData.ETags
             Assert.True(String.Concat(jsonETags) == String.Concat(derivedEtags), "Derived Types has different etags than base type");
         }
 
-        [Fact]
+        [NuwaFact]
         public void SingletonsHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers?$select=Id";

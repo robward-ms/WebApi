@@ -37,10 +37,15 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class PrimitiveTypesTests : ODataTestBase
+    public class PrimitiveTypesTests : NuwaTestBase
     {
+        public PrimitiveTypesTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -49,7 +54,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/PrimitiveTypes/GetIQueryableOfString?$skip=1&$top=1")]
         [InlineData("/api/PrimitiveTypes/GetIEnumerableOfString?$skip=1&$top=1")]
         [InlineData("/api/PrimitiveTypes/GetIEnumerableOfString?$filter=$it eq 'Two'")]

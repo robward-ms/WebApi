@@ -24,18 +24,17 @@ using HttpClientExtensions = System.Net.Http.HttpClientExtensions;
 namespace WebStack.QA.Test.OData.Singleton
 {
     [NuwaFramework]
-    public class SingletonTest
+    public class SingletonTest : NuwaTestBase
     {
         private const string NameSpace = "WebStack.QA.Test.OData.Singleton";
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public SingletonTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(UmbrellaController), typeof(MonstersIncController), typeof(MetadataController), typeof(PartnersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -54,7 +53,7 @@ namespace WebStack.QA.Test.OData.Singleton
 
         #region Test
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -76,7 +75,7 @@ namespace WebStack.QA.Test.OData.Singleton
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella/Partners/$count")]
         [InlineData("conCon", "Umbrella/Partners/$count")]
         public async Task NotCountable(string model, string url)
@@ -101,7 +100,7 @@ namespace WebStack.QA.Test.OData.Singleton
                 "The query specified in the URI is not valid. The property 'Partners' cannot be used for $count.");
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expAttr/MonstersInc/Branches/$count", 2)]
         [InlineData("conAttr/MonstersInc/Branches/$count?$filter=City eq 'Shanghai'", 1)]
         public async Task QueryBranchesCount(string url, int expectedCount)
@@ -123,7 +122,7 @@ namespace WebStack.QA.Test.OData.Singleton
                 string.Format("Expected: {0}; Actual: {1}; Request URL: {2}", expectedCount, responseString, requestUri));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -176,7 +175,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         // Navigation link CRUD, singleton is navigation source and entityset is navigation target
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -193,7 +192,7 @@ namespace WebStack.QA.Test.OData.Singleton
             HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json.GetValue("value") as JArray;
-            Assert.Equal<int>(0, result.Count);
+            Assert.Empty(result);
 
             string navigationLinkUri = string.Format(requestUri + "/$ref");
 
@@ -259,7 +258,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         // Navigation link CRUD, where entityset is navigation source and singleton is navigation target
-        [Theory]
+        [NuwaTheory]
         [InlineData("expAttr", "application/json;odata.metadata=full")]
         [InlineData("conAttr", "application/json;odata.metadata=minimal")]
         public async Task EntitySetNavigationLinkCRUD(string model, string format)
@@ -322,7 +321,7 @@ namespace WebStack.QA.Test.OData.Singleton
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella", "application/json;odata.metadata=full")]
         [InlineData("expAttr", "MonstersInc", "application/json;odata.metadata=minimal")]
         [InlineData("conCon", "Umbrella", "application/json;odata.metadata=full")]
@@ -359,7 +358,7 @@ namespace WebStack.QA.Test.OData.Singleton
             Assert.Equal(company.Location, (string)result["Location"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]

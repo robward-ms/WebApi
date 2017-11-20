@@ -17,8 +17,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class TopSkipOrderByTests : ODataTestBase
+    public class TopSkipOrderByTests : NuwaTestBase
     {
+        public TopSkipOrderByTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string> ActionNames
         {
             get
@@ -33,27 +38,27 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
-        [PropertyData("ActionNames")]
+        [NuwaTheory]
+        [MemberData(nameof(ActionNames))]
         public void TestTop(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
             var response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$top=1").Result;
             var result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
 
-            Assert.Equal(1, result.Count());
+            Assert.Single(result);
             Assert.Equal(1, result.First().Id);
         }
 
-        [Theory]
-        [PropertyData("ActionNames")]
+        [NuwaTheory]
+        [MemberData(nameof(ActionNames))]
         public void TestSkip(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
@@ -64,8 +69,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(2, result.First().Id);
         }
 
-        [Theory]
-        [PropertyData("ActionNames")]
+        [NuwaTheory]
+        [MemberData(nameof(ActionNames))]
         public void TestOrderBy(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
@@ -88,7 +93,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal("Mike", result.First().Name);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestOtherQueries()
         {
             var response = await Client.GetAsync(BaseAddress + "/api/TopSkipOrderByTests/GetODataQueryOptions?$skiptoken=abc&$expand=abc&$select=abc&$count=abc&$deltatoken=abc");

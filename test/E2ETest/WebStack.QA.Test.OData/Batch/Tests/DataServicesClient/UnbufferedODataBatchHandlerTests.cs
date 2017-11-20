@@ -94,31 +94,15 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class CUDBatchTests : IODataTestBase
+    public class CUDBatchTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public CUDBatchTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -144,12 +128,12 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CanPerformCudOperationsOnABatch()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -179,12 +163,12 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
                 await newClient.UnbufferedBatchCustomer.ExecuteAsync();
 
             var changedCustomerList = changedCustomers.ToList();
-            Assert.False(changedCustomerList.Any(x => x.Id == customerToDelete.Id));
+            Assert.DoesNotContain(changedCustomerList, (x) => x.Id == customerToDelete.Id);
             Assert.Equal(customerToUpdate.Name, changedCustomerList.Single(x => x.Id == customerToUpdate.Id).Name);
             Assert.Single(changedCustomerList, x => x.Id == 10);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CanHandleAbsoluteAndRelativeUrls()
         {
             // Arrange
@@ -278,31 +262,15 @@ Content-Type: application/json;odata.metadata=minimal
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class QueryBatchTests : IODataTestBase
+    public class QueryBatchTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public QueryBatchTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -328,12 +296,12 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanBatchQueriesWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -361,7 +329,7 @@ Content-Type: application/json;odata.metadata=minimal
                 }
                 if (response.Query.RequestUri == singleCustomerRequestUri)
                 {
-                    Assert.Equal(1, response.Cast<UnbufferedBatchProxy.UnbufferedBatchCustomer>().Count());
+                    Assert.Single(response.Cast<UnbufferedBatchProxy.UnbufferedBatchCustomer>());
                     continue;
                 }
             }
@@ -371,31 +339,15 @@ Content-Type: application/json;odata.metadata=minimal
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ErrorsBatchTests : IODataTestBase
+    public class ErrorsBatchTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public ErrorsBatchTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -422,12 +374,12 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Fact]
+        [NuwaFact]
         public void SendsIndividualErrorWhenOneOfTheRequestsFails()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -456,38 +408,22 @@ Content-Type: application/json;odata.metadata=minimal
             var exception = aggregateException.InnerExceptions.SingleOrDefault() as DataServiceRequestException;
             Assert.NotNull(exception);
             Assert.Equal(200, exception.Response.BatchStatusCode);
-            Assert.Equal(1, exception.Response.Count());
+            Assert.Single(exception.Response);
         }
     }
 
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class LinksBatchTests : IODataTestBase
+    public class LinksBatchTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public LinksBatchTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -512,12 +448,12 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Fact]
+        [NuwaFact]
         public virtual void CanSetLinksInABatchWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -538,31 +474,15 @@ Content-Type: application/json;odata.metadata=minimal
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ContinueOnErrorBatchTests : IODataTestBase
+    public class ContinueOnErrorBatchTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public ContinueOnErrorBatchTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -588,12 +508,12 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CanNotContinueOnErrorWhenHeaderNotSet()
         {
             // Arrange
@@ -657,7 +577,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
             Assert.Equal(2, subResponseCount);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CanContinueOnErrorWhenHeaderSet()
         {
             // Arrange

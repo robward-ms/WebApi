@@ -15,16 +15,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.DollarId
 {
     [NuwaFramework]
-    public class DollarIdTest
+    public class DollarIdTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DollarIdTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -37,7 +36,7 @@ namespace WebStack.QA.Test.OData.DollarId
             configuration.EnsureInitialized();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Singers(0)/Albums";
@@ -63,10 +62,10 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json["value"] as JArray;
-            Assert.Equal<int>(1, result.Count);
+            Assert.Single(result);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteContainedNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/Sales";
@@ -81,7 +80,7 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json["value"] as JArray;
-            Assert.Equal<int>(1, result.Count);
+            Assert.Single(result);
 
             response = await this.Client.DeleteAsync(string.Format(requestBaseUri + "/$ref?$id=../../Albums(5)/Sales(7)", this.BaseAddress));
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
@@ -89,10 +88,10 @@ namespace WebStack.QA.Test.OData.DollarId
             response = await this.Client.GetAsync(requestBaseUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json["value"] as JArray;
-            Assert.Equal<int>(0, result.Count);
+            Assert.Empty(result);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task GetSingersNameOfAlbum()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/WebStack.QA.Test.OData.DollarId.GetSingers()?$filter=MasterPiece eq 'def'&$select=Name";

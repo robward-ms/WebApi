@@ -28,16 +28,15 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DateAndTimeOfDayTest
+    public class DateAndTimeOfDayTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DateAndTimeOfDayTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(DCustomersController), typeof(MetadataController), typeof(EfCustomersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -65,7 +64,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -129,8 +128,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("MediaTypes")]
+        [NuwaTheory]
+        [MemberData(nameof(MediaTypes))]
         public async Task QueryDCustomerEntityTest(string mode, string mime)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers(2)?$format={2}", BaseAddress, mode, mime);
@@ -233,8 +232,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("FilterData")]
+        [NuwaTheory]
+        [MemberData(nameof(FilterData))]
         public async Task CanFilterDateAndTimeOfDayProperty(string mode, string filter, IList<int> expect)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers?{2}", BaseAddress, mode, filter);
@@ -297,8 +296,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("OrderByData")]
+        [NuwaTheory]
+        [MemberData(nameof(OrderByData))]
         public async Task CanOrderByDateAndTimeOfDayProperty(string mode, string orderby, string expect)
         {
             string requestUri = string.Format("{0}/{1}/DCustomers?{2}", BaseAddress, mode, orderby);
@@ -344,8 +343,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("FunctionData")]
+        [NuwaTheory]
+        [MemberData(nameof(FunctionData))]
         public async Task CanCallFunctionWithDateAndTimeOfDayParameters(string mode, string function)
         {
             string parameter =
@@ -385,8 +384,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("ActionData")]
+        [NuwaTheory]
+        [MemberData(nameof(ActionData))]
         public async Task CanCallActionWithDateAndTimeOfDayParameters(string mode, string action)
         {
             string requestUri = string.Format("{0}/{1}/{2}", BaseAddress, mode, action);
@@ -414,7 +413,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(isNullable, property.Type.IsNullable);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("json")]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
@@ -529,8 +528,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("FilterDataForEf")]
+        [NuwaTheory]
+        [MemberData(nameof(FilterDataForEf))]
         public async Task CanFilterDateAndTimeOfDayPropertyOnEf(string filter, IList<int> expect)
         {
             await ResetDatasource("convention");
@@ -578,8 +577,8 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
-        [PropertyData("OrderByDataEf")]
+        [NuwaTheory]
+        [MemberData(nameof(OrderByDataEf))]
         public async Task CanOrderByDateAndTimeOfDayPropertyOnEf(string orderby, string expect)
         {
             await ResetDatasource("convention");

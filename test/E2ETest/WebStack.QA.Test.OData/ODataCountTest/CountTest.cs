@@ -18,16 +18,15 @@ namespace WebStack.QA.Test.OData.ODataCountTest
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ODataCountTest
+    public class ODataCountTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ODataCountTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(HeroesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -46,7 +45,7 @@ namespace WebStack.QA.Test.OData.ODataCountTest
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/odata/Heroes/$count", 1)]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()/$count", 5)]
         [InlineData("{0}/odata/Heroes/Default.GetNames()/$count", 2)]
@@ -64,7 +63,7 @@ namespace WebStack.QA.Test.OData.ODataCountTest
             Assert.Equal(expectedCount, actualCount);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/odata/Heroes?$count=true", 1)]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()?$count=true", 5)]
         [InlineData("{0}/odata/Heroes/Default.GetNames()?$count=true", 2)]
@@ -82,7 +81,7 @@ namespace WebStack.QA.Test.OData.ODataCountTest
             Assert.Equal(expectedCount, result["@odata.count"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/odata/Heroes")]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()")]
         [InlineData("{0}/odata/Heroes/Default.GetNames()")]

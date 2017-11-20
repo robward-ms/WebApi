@@ -20,10 +20,15 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class SingleResultExpandTests : ODataTestBase
+    public class SingleResultExpandTests : NuwaTestBase
     {
+        public SingleResultExpandTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -49,7 +54,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryJustThePropertiesOfTheEntriesOnAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)/?$select=*", BaseAddress);
@@ -61,7 +66,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(json.Properties().All(p => p.Name != "#Container.CreditRating"));
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryJustTheSingleResultWithoutParameters()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)", BaseAddress);
@@ -72,7 +77,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.NotNull(json);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryJustTheActionsOfTheEntriesOnAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)/?$select=Id,Default.*", BaseAddress);
@@ -81,10 +86,10 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
             var json = await response.Content.ReadAsAsync<JObject>();
             Assert.NotNull(json);
-            Assert.True(json.Properties().Any(p => p.Name == "#Default.CreditRating"));
+            Assert.Contains(json.Properties(), (p) => p.Name == "#Default.CreditRating");
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryASubsetOfThePropertiesOfAnEntryOnAnEntryQuery()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)/?$select=Name", BaseAddress);
@@ -93,11 +98,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
             var json = await response.Content.ReadAsAsync<JObject>();
             Assert.NotNull(json);
-            Assert.Equal(1, json.Properties().Count());
+            Assert.Single(json.Properties());
             Assert.Equal("Name", json.Properties().Single().Name);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
 
@@ -111,7 +116,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True((int)json["Id"] == ((JArray)json["SingleResultOrders"]).Count);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryASubSetOfThePropertiesPresentOnlyInADerivedEntryOnAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(10)?" +
@@ -124,7 +129,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(2, json.Properties().Count());
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInlineForAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)?$select=Id&$expand=SingleResultOrders", BaseAddress);
@@ -143,7 +148,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationPropertiesForAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(10)?" +
@@ -171,7 +176,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)?$select=Id,SingleResultOrders&$expand=SingleResultOrders($expand=OrderDetails)", BaseAddress);
@@ -196,7 +201,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntriesOnAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)?" +

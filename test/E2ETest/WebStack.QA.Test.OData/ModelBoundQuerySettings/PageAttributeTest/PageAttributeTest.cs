@@ -14,15 +14,20 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
 {
-    public class PageAttributeTest : ODataTestBase
+    public class PageAttributeTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
+        public PageAttributeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -37,7 +42,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
                 PageAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(OrderBaseUrl + "?$top=3", 2)]
         [InlineData(ModelBoundOrderBaseUrl + "?$top=3", 2)]
         public void DefaultMaxTop(string url, int maxTop)
@@ -59,7 +64,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
             Assert.Contains(string.Format("The limit of '{0}' for Top query has been exceeded", maxTop), result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl + "?$top=10")]
         [InlineData(OrderBaseUrl + "/WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$top=10")]
@@ -82,16 +87,16 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
             Assert.Contains("The limit of '5' for Top query has been exceeded", result);
         }
 
-        [Theory]
-        [InlineData(CustomerBaseUrl + "?$expand=Orders($top=3)", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl + "?$expand=Customers($top=10)", HttpStatusCode.OK)]
-        [InlineData(CustomerBaseUrl + "(1)/Orders?$top=3", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl + "(1)/Customers?$top=10", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($top=3)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($top=10)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$top=3", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl + "(1)/Customers?$top=10", HttpStatusCode.OK)]
-        public void MaxTopOnProperty(string url, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData(CustomerBaseUrl + "?$expand=Orders($top=3)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl + "?$expand=Customers($top=10)", (int)HttpStatusCode.OK)]
+        [InlineData(CustomerBaseUrl + "(1)/Orders?$top=3", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl + "(1)/Customers?$top=10", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($top=3)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($top=10)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$top=3", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl + "(1)/Customers?$top=10", (int)HttpStatusCode.OK)]
+        public void MaxTopOnProperty(string url, int statusCode)
         {
             // MaxTop on property override on entity type
             string queryUrl =
@@ -105,14 +110,14 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
             HttpResponseMessage response = client.SendAsync(request).Result;
             string result = response.Content.ReadAsStringAsync().Result;
 
-            Assert.Equal(statusCode, response.StatusCode);
-            if (statusCode == HttpStatusCode.BadRequest)
+            Assert.Equal(statusCode, (int)response.StatusCode);
+            if (statusCode == (int)HttpStatusCode.BadRequest)
             {
                 Assert.Contains("The limit of '2' for Top query has been exceeded", result);
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
         public void PageSizeOnEntityType(string url)
@@ -129,7 +134,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
             Assert.Contains(string.Format(url, "") + "?$skip=1", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders")]
         [InlineData(CustomerBaseUrl, "(1)/Orders")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders")]

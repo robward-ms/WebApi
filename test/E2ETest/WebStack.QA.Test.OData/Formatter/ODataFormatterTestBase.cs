@@ -13,8 +13,13 @@ namespace WebStack.QA.Test.OData.Formatter
         DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion);
     }
 
-    public class ODataFormatterTestBase : ODataTestBase, IODataFormatterTestBase
+    public class ODataFormatterTestBase : NuwaTestBase, IODataFormatterTestBase
     {
+        public ODataFormatterTestBase(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public virtual DataServiceContext ReaderClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
         {
             //By default reader uses the same configuration as writer. Reading is a more important scenario than writing

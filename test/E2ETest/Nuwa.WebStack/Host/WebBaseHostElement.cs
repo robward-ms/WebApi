@@ -21,9 +21,9 @@ namespace Nuwa.WebStack.Host
 {
     /// <summary>
     /// The element sets up web host. 
-    /// During start up, it retrieves source, initializes deployement and host options, initilaizes configurations, 
+    /// During start up, it retrieves source, initializes deployment and host options, initializes configurations, 
     /// deploys, starts host.
-    /// When shutdown, it stop and dispose host server and teardown configurations.
+    /// When shutdown, it stop and dispose host server and tear-down configurations.
     /// </summary>
     public abstract class WebBaseHostElement : BaseHostElement
     {
@@ -258,7 +258,7 @@ namespace Nuwa.WebStack.Host
             var deploymentDescriptor = context.Deployment;
             if (deploymentDescriptor.ScopePath != null)
             {
-                var resourceAssembly = deploymentDescriptor.ScopeResourceType != null ? deploymentDescriptor.ScopeResourceType.Assembly : descriptor.TestAssembly;
+                var resourceAssembly = deploymentDescriptor.ScopeResourceType != null ? deploymentDescriptor.ScopeResourceType.Assembly : descriptor.TestTypeInfo.ToRuntimeType().Assembly;
                 options.AddAssemblyAndReferences(resourceAssembly);
                 options.AddTextFilesFromResources(resourceAssembly, deploymentDescriptor.ScopePath);
             }
@@ -279,7 +279,7 @@ namespace Nuwa.WebStack.Host
                         "NuwaControllerAttribute.");
                 }
 
-                options.AddAssemblyAndReferences(descriptor.TestAssembly);
+                options.AddAssemblyAndReferences(descriptor.TestTypeInfo.ToRuntimeType().Assembly);
             }
             else
             {
@@ -299,7 +299,7 @@ namespace Nuwa.WebStack.Host
             // set configure action
             if (descriptor.ConfigureMethod != null)
             {
-                options.ConfigureMethod = descriptor.ConfigureMethod;
+                options.ConfigureMethod = descriptor.ConfigureMethod.ToRuntimeMethod();
                 options.AddAssemblyAndReferences(options.ConfigureMethod.Module.Assembly);
             }
 
@@ -314,9 +314,9 @@ namespace Nuwa.WebStack.Host
                     config.AddAppSection(
                         "owin:AppStartup",
                         string.Format("{0}.{1}, {2}",
-                            method.DeclaringType.FullName,
+                            method.Type.Name,
                             method.Name,
-                            method.DeclaringType.Assembly.GetName().Name));
+                            method.Type.Assembly.Name));
                 });
             }
             else if (EnableDefaultOwinWebApiConfiguration)
@@ -366,7 +366,7 @@ namespace Nuwa.WebStack.Host
             {
                 Action<WebConfigHelper> action = Delegate.CreateDelegate(
                     typeof(Action<WebConfigHelper>),
-                    descriptor.WebConfigMethod)
+                    descriptor.WebConfigMethod.ToRuntimeMethod())
                     as Action<WebConfigHelper>;
 
                 if (action != null)
@@ -387,7 +387,7 @@ namespace Nuwa.WebStack.Host
             // Update deployment options
             if (descriptor.WebDeployConfigMethod != null)
             {
-                descriptor.WebDeployConfigMethod.Invoke(null, new object[] { options });
+                descriptor.WebDeployConfigMethod.ToRuntimeMethod().Invoke(null, new object[] { options });
             }
 
             if (EnableGlobalAsax)
@@ -429,7 +429,7 @@ namespace Nuwa.WebStack.Host
 
         private static IEnumerable<IWebHostConfiguration> GetWebConfigurations(TestTypeDescriptor descriptor)
         {
-            var type = descriptor.TestTypeInfo.Type;
+            var type = descriptor.TestTypeInfo.ToRuntimeType();
 
             var retval = type.GetCustomAttributes()
                              .Where(one => one is IWebHostConfiguration)

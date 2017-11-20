@@ -9,13 +9,13 @@ namespace WebStack.QA.Test.OData.AutoExpand
 {
     public class CustomersController : ODataController
     {
-        private readonly AutoExpandContext _db = new AutoExpandContext();
+        private readonly AutoExpandCustomerContext _db = new AutoExpandCustomerContext();
 
         [EnableQuery]
         public IQueryable<Customer> Get()
         {
             ResetDataSource();
-            var db = new AutoExpandContext();
+            var db = new AutoExpandCustomerContext();
             return db.Customers;
         }
 
@@ -23,7 +23,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
         public SingleResult<Customer> Get(int key)
         {
             ResetDataSource();
-            var db = new AutoExpandContext();
+            var db = new AutoExpandCustomerContext();
             return SingleResult.Create(db.Customers.Where(c => c.Id == key));
         }
 
@@ -103,25 +103,22 @@ namespace WebStack.QA.Test.OData.AutoExpand
 
         private void ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.Customers.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
+                Generate();
             }
-
-            Generate();
         }
     }
 
     public class PeopleController : ODataController
     {
-        private readonly AutoExpandContext _db = new AutoExpandContext();
+        private readonly AutoExpandPeopleContext _db = new AutoExpandPeopleContext();
 
         [EnableQuery(MaxExpansionDepth = 4)]
         public IQueryable<People> Get()
         {
             ResetDataSource();
-            var db = new AutoExpandContext();
+            var db = new AutoExpandPeopleContext();
             return db.People;
         }
 
@@ -158,25 +155,22 @@ namespace WebStack.QA.Test.OData.AutoExpand
 
         private void ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.People.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
-            }
-
-            Generate();
+                Generate();
+            };
         }
     }
 
     public class NormalOrdersController : ODataController
     {
-        private readonly AutoExpandContext _db = new AutoExpandContext();
+        private readonly AutoExpandOrdersContext _db = new AutoExpandOrdersContext();
 
         [EnableQuery]
         public IQueryable<NormalOrder> Get()
         {
             ResetDataSource();
-            var db = new AutoExpandContext();
+            var db = new AutoExpandOrdersContext();
             return db.NormalOrders;
         }
 
@@ -184,7 +178,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
         public SingleResult<NormalOrder> Get(int key)
         {
             ResetDataSource();
-            var db = new AutoExpandContext();
+            var db = new AutoExpandOrdersContext();
             return SingleResult.Create(db.NormalOrders.Where(o => o.Id == key));
         }
 
@@ -238,13 +232,10 @@ namespace WebStack.QA.Test.OData.AutoExpand
 
         private void ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.NormalOrders.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
-            }
-
-            Generate();
+                Generate();
+            };
         }
     }
 }

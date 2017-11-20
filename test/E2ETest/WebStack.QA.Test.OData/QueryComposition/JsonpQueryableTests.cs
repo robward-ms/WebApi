@@ -67,10 +67,15 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class JsonpQueryableTests : ODataTestBase
+    public class JsonpQueryableTests : NuwaTestBase
     {
+        public JsonpQueryableTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var f = new JsonpMediaTypeFormatter();
@@ -80,7 +85,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryableShouldWorkWithJsonp()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$top=1&callback=test");

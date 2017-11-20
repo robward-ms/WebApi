@@ -21,16 +21,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ModelAliasing
 {
     [NuwaFramework]
-    public class QueryTests
+    public class QueryTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public QueryTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -69,7 +68,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueriesWorkOnAliasedModels()
         {
             IEnumerable<Customer> customers = Enumerable.Range(0, 10).Select(i => new Customer

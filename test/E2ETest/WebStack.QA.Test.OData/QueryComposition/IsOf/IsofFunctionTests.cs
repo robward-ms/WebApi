@@ -22,18 +22,17 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class IsofFunctionTests
+    public class IsofFunctionTests : NuwaTestBase
     {
         private static readonly string[] DataSourceTypes = new string[] {"IM", "EF"}; // In Memory or Entity Framework
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public IsofFunctionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[]
             {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};
@@ -114,11 +113,11 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
-        [PropertyData("PrimitivePropertyFilters")]
-        [PropertyData("EnumPropertyFilters")]
-        [PropertyData("ComplexPropertyFilters")]
-        [PropertyData("EntityPropertyFilters")]
+        [NuwaTheory]
+        [MemberData(nameof(PrimitivePropertyFilters))]
+        [MemberData(nameof(EnumPropertyFilters))]
+        [MemberData(nameof(ComplexPropertyFilters))]
+        [MemberData(nameof(EntityPropertyFilters))]
         [InlineData("?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", null)]
         public async Task QueryEntitySetUsingProperty_UsingInMemoryData(string filter, string expected)
         {
@@ -146,9 +145,9 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
-        [PropertyData("PrimitivePropertyFilters")]
-        [PropertyData("EnumPropertyFilters")]
+        [NuwaTheory]
+        [MemberData(nameof(PrimitivePropertyFilters))]
+        [MemberData(nameof(EnumPropertyFilters))]
         public async Task QueryEntitySetUsingPropertyFailed_UsingEFDataForPrimitiveAndEnum(string filter, string expected)
         {
             // Arrange
@@ -158,14 +157,15 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             HttpResponseMessage response = await Client.GetAsync(requestUri);
 
             // Assert
+            Assert.DoesNotContain("unused", expected);
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
             Assert.Contains("Only entity types and complex types are supported in LINQ to Entities queries.",
                 response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
-        [PropertyData("EntityPropertyFilters")]
+        [NuwaTheory]
+        [MemberData(nameof(EntityPropertyFilters))]
         [InlineData("?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3")]
         public async Task QueryEntitySetUsingProperty_UsingEFData(string filter, string expected)
         {
@@ -193,7 +193,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("IM", true)]
         [InlineData("EF", false)] // EF does not support complex type inheritance.
         public async Task IsOfFilterQueryWithComplexTypeProperty(string dataSourceMode, bool work)
@@ -241,8 +241,8 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
-        [PropertyData("IsOfFilterOnType")]
+        [NuwaTheory]
+        [MemberData(nameof(IsOfFilterOnType))]
         public async Task IsOfFilterQueryOnTypeWorks(string filter, string expected)
         {
             foreach (string dataSourceMode in DataSourceTypes)
@@ -266,7 +266,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("IM", true)]
         [InlineData("EF", false)] // EF does not work.
         public async Task IsOfFilterQueryOnTypeDifferentResultUsingDifferentData(string dataSourceMode, bool work)
@@ -287,7 +287,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
 
                 JArray value = responseString["value"] as JArray;
                 Assert.NotNull(value);
-                Assert.Equal(0, value.Count);
+                Assert.Empty(value);
 
                 Assert.Equal("", string.Join(",", value.Select(e => (int)e["Id"])));
             }
@@ -300,7 +300,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("IM")]
         [InlineData("EF")]
         public async Task IsOfFilterQueryFailedOnUnquotedType(string dataSourceMode)

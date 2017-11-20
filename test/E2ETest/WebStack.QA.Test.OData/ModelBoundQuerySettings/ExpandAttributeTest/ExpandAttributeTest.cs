@@ -14,15 +14,20 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
 {
-    public class ExpandAttributeTest : ODataTestBase
+    public class ExpandAttributeTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
+        public ExpandAttributeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -36,7 +41,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
                 ExpandAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl + "?$expand=NoExpandOrders")]
         [InlineData(CustomerBaseUrl + "?$expand=Order")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=NoExpandOrders")]
@@ -58,16 +63,16 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
             Assert.Contains("cannot be used in the $expand query option", result);
         }
 
-        [Theory]
-        [InlineData(CustomerBaseUrl, "Orders", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl, "Customers", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl, "Customers2", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl, "NoExpandCustomers", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "Orders", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl, "Customers", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl, "Customers2", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl, "NoExpandCustomers", HttpStatusCode.BadRequest)]
-        public void ExpandOnEntityType(string entitySetUrl, string expandOption, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData(CustomerBaseUrl, "Orders", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl, "Customers", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl, "Customers2", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl, "NoExpandCustomers", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "Orders", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl, "Customers", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl, "Customers2", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl, "NoExpandCustomers", (int)HttpStatusCode.BadRequest)]
+        public void ExpandOnEntityType(string entitySetUrl, string expandOption, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -78,35 +83,35 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
             HttpClient client = new HttpClient();
 
             HttpResponseMessage response = client.SendAsync(request).Result;
-            Assert.Equal(statusCode, response.StatusCode);
+            Assert.Equal(statusCode, (int)response.StatusCode);
         }
 
-        [Theory]
-        [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers2)", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers2", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers)", HttpStatusCode.OK)]
-        [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Orders)", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl, "(1)/Customers2?$expand=Orders", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order)", HttpStatusCode.OK)]
-        [InlineData(OrderBaseUrl, "(1)/Customers2?$expand=Order", HttpStatusCode.OK)]
-        [InlineData(CustomerBaseUrl, "?$expand=Order($expand=Customers2)", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl, "(1)/Order?$expand=Customers2", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl, "?$expand=Order($expand=Customers)", HttpStatusCode.BadRequest)]
-        [InlineData(CustomerBaseUrl, "(1)/Order?$expand=Customers", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers2)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Orders?$expand=Customers2", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Orders?$expand=Customers", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Orders)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl, "(1)/Customers2?$expand=Orders", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Order)", HttpStatusCode.OK)]
-        [InlineData(ModelBoundOrderBaseUrl, "(1)/Customers2?$expand=Order", HttpStatusCode.OK)]
-        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Order($expand=Customers2)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers2", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Order($expand=Customers)", HttpStatusCode.BadRequest)]
-        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers", HttpStatusCode.BadRequest)]
-        public void ExpandOnProperty(string entitySetUrl, string url, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers2)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers)", (int)HttpStatusCode.OK)]
+        [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Orders)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl, "(1)/Customers2?$expand=Orders", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order)", (int)HttpStatusCode.OK)]
+        [InlineData(OrderBaseUrl, "(1)/Customers2?$expand=Order", (int)HttpStatusCode.OK)]
+        [InlineData(CustomerBaseUrl, "?$expand=Order($expand=Customers2)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl, "(1)/Order?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl, "?$expand=Order($expand=Customers)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(CustomerBaseUrl, "(1)/Order?$expand=Customers", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers2)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Orders?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Orders?$expand=Customers", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Orders)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl, "(1)/Customers2?$expand=Orders", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Order)", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundOrderBaseUrl, "(1)/Customers2?$expand=Order", (int)HttpStatusCode.OK)]
+        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Order($expand=Customers2)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Order($expand=Customers)", (int)HttpStatusCode.BadRequest)]
+        [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers", (int)HttpStatusCode.BadRequest)]
+        public void ExpandOnProperty(string entitySetUrl, string url, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -118,14 +123,14 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
 
             HttpResponseMessage response = client.SendAsync(request).Result;
             string result = response.Content.ReadAsStringAsync().Result;
-            Assert.Equal(statusCode, response.StatusCode);
-            if (statusCode == HttpStatusCode.BadRequest)
+            Assert.Equal(statusCode, (int)response.StatusCode);
+            if (statusCode == (int)HttpStatusCode.BadRequest)
             {
                 Assert.Contains("cannot be used in the $expand query option", result);
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers($expand=Orders($expand=Customers)))", 3)]
         [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers($expand=Orders($expand=Customers))", 2)]
         [InlineData(CustomerBaseUrl, "?$expand=AutoExpandOrder($expand=RelatedOrder($levels=3)),Friend($levels=3)", 3)]
@@ -155,7 +160,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
             Assert.Contains("The maximum depth allowed is " + maxDepth, result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
         public void AutomaticExpand(string url)
@@ -172,7 +177,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.ExpandAttributeTest
             Assert.Contains("AutoExpandOrder", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(CustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundCustomerBaseUrl)]

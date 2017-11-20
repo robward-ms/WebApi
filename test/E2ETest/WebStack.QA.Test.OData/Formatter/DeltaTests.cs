@@ -170,6 +170,11 @@ namespace WebStack.QA.Test.OData.Formatter
 
     public class DeltaTests : ODataFormatterTestBase
     {
+        public DeltaTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);
@@ -295,17 +300,16 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
-    public class PutDeltaOfTTests
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
+    public class PutDeltaOfTTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PutDeltaOfTTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -320,7 +324,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void PutShouldntOverrideNavigationProperties()
         {
             HttpRequestMessage put = new HttpRequestMessage(HttpMethod.Put, BaseAddress + "/odata/DeltaCustomers(5)");
@@ -338,17 +342,16 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
-    public class PatchtDeltaOfTTests
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
+    public class PatchtDeltaOfTTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PatchtDeltaOfTTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -363,7 +366,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void PatchShouldSupportNonSettableCollectionProperties()
         {
             HttpRequestMessage patch = new HttpRequestMessage(new HttpMethod("MERGE"), BaseAddress + "/odata/DeltaCustomers(5)");

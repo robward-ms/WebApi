@@ -38,10 +38,15 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class ServerDrivenPagingTests : ODataTestBase
+    public class ServerDrivenPagingTests : NuwaTestBase
     {
+        public ServerDrivenPagingTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.Clear();
@@ -56,7 +61,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        // [Fact]
+        // [NuwaFact]
         public void VerifyNextPageLinkAndInlineCountGeneratedCorrect()
         {
             // Arrange & Act

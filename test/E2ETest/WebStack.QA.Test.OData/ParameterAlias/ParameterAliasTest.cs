@@ -18,16 +18,15 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.ParameterAlias
 {
     [NuwaFramework]
-    public class ParameterAliasTest
+    public class ParameterAliasTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ParameterAliasTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(TradesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -68,7 +67,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
         }
 
         #region Test
-        [Fact]
+        [NuwaFact]
         public async Task ParameterAliasInFunctionCall()
         {
             //Unbound function
@@ -86,7 +85,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             Assert.Equal(1000, (long)json["value"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$filter=contains(@p1, @p2)&@p1=Description&@p2='Export'", 3)]   //Reference property and primitive type
         [InlineData("?@p1=startswith(Description,'Import')&$filter=@p1", 3)]  //Reference expression
         [InlineData("?$filter=TradingVolume eq @p1", 1)]  //Reference nullable value
@@ -101,7 +100,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             Assert.Equal(expectedResult, result.Count);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$orderby=@p1&@p1=PortingCountryOrRegion", "Australia")]
         [InlineData("?$orderby=ProductName,@p2 desc,PortingCountryOrRegion desc&@p2=TradingVolume", "USA")]
         public async Task ParameterAliasInOrderby(string queryOption, string expectedPortingCountry)
@@ -117,7 +116,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             Assert.Equal(8000, result.First["TradingVolume"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         //Use multi times in different place
         [InlineData("/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=WebStack.QA.Test.OData.ParameterAlias.CountryOrRegion'USA'&$filter=PortingCountryOrRegion eq @p1 and @p2 gt 1000&$orderby=@p2&@p2=TradingVolume", 1, 0)]
         //Reference property under complex type
@@ -134,7 +133,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             Assert.Equal(expectedZipCode, result.First["TradeLocation"]["ZipCode"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ParameterAliasWithUnresolvedPathSegment()
         {
             string requestBaseUri = this.BaseAddress;

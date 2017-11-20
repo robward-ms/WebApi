@@ -21,16 +21,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class ETagsUntypedTests
+    public class ETagsUntypedTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ETagsUntypedTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -58,7 +57,7 @@ namespace WebStack.QA.Test.OData.ETags
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public void ModelBuilderTest()
         {
             string expectMetadata =
@@ -105,7 +104,7 @@ namespace WebStack.QA.Test.OData.ETags
             Assert.Equal(new[] { "Name" }, collection.Elements.Select(e => ((IEdmPathExpression) e).PathSegments.Single()));
         }
 
-        [Fact]
+        [NuwaFact]
         public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagUntypedCustomers(1)?$format=json";
@@ -119,7 +118,7 @@ namespace WebStack.QA.Test.OData.ETags
             var etagInPayload = (string)result["@odata.etag"];
 
             Assert.True(etagInPayload == etagInHeader);
-            Assert.Equal(etagInPayload, "W/\"J1NhbSc=\"");
+            Assert.Equal("W/\"J1NhbSc=\"", etagInPayload);
         }
     }
 

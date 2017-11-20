@@ -57,6 +57,14 @@ namespace WebStack.QA.Test.OData.QueryComposition
                         // Method 'ResolveFileConflict' in type 'ErrorLogger' from assembly 'LTAF.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' does not have an implementation.
                         continue;
                     }
+                    if (assembly.FullName.Contains("xunit.runner"))
+                    {
+                        // If this assembly is not ignored, then below errors will occur:
+                        // System.Reflection.ReflectionTypeLoadException : Unable to load one or more of the requested types. 
+                        // Retrieve the LoaderExceptions property for more information.
+                        // when loading: microsoft.visualstudio.testplatform.objectmodel
+                        continue;
+                    }
 
                     try
                     {
@@ -187,8 +195,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return sb.ToString();
         }
 
-        [Theory]
-        [PropertyData("TypeData")]
+        [NuwaTheory]
+        [MemberData(nameof(TypeData))]
         public void RunQueryableOnAllPossibleTypes(Type type, string queryString)
         {
             int seed = RandomSeedGenerator.GetRandomSeed();

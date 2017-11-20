@@ -33,10 +33,15 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class AnonymousTypeTests : ODataTestBase
+    public class AnonymousTypeTests : NuwaTestBase
     {
+        public AnonymousTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -45,12 +50,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ReturnIQueryableOfAnonymousTypeShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/AnonymousType/Get?$filter=FirstName eq 'John'").Result;
             var actual = response.Content.ReadAsAsync<IEnumerable<AnonymousType_Person>>().Result;
-            Assert.Equal(1, actual.Count());
+            Assert.Single(actual);
             Assert.Equal("John", actual.First().FirstName);
         }
     }

@@ -18,13 +18,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.Singleton
 {
     [NuwaFramework]
-    public class SingletonClientTest
+    public class SingletonClientTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
+        public SingletonClientTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -46,7 +48,7 @@ namespace WebStack.QA.Test.OData.Singleton
                 new DefaultODataBatchHandler(server));
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task SingletonClientQueryTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -72,7 +74,7 @@ namespace WebStack.QA.Test.OData.Singleton
 
             // $select
             var category = ClientContext.Umbrella.Select(u => u.Category).Single();
-            Assert.Equal(Client.CompanyCategory.Communication, category);
+            Assert.Equal(WebStack.QA.Test.OData.Singleton.Client.CompanyCategory.Communication, category);
 
             // Add navigation link
             var partner = new Client.Partner() { ID = 111, Name = "NewPartner1" };
@@ -110,10 +112,10 @@ namespace WebStack.QA.Test.OData.Singleton
             await ClientContext.SaveChangesAsync();
 
             umbrella = ClientContext.Umbrella.Expand(u => u.Partners).Single();
-            Assert.Equal(1, umbrella.Partners.Count);
+            Assert.Single(umbrella.Partners);
         }
 
-        [Fact]
+        [NuwaFact]
         public void SingletonQueryInBatchTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -148,7 +150,7 @@ namespace WebStack.QA.Test.OData.Singleton
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task SingletonUpdateInBatchTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";

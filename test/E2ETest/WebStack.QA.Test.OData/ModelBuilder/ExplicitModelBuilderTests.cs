@@ -22,16 +22,15 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ExplicitModelBuilderTests
+    public class ExplicitModelBuilderTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ExplicitModelBuilderTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -177,7 +176,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return modelBuilder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
 
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {
@@ -198,22 +197,22 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             Assert.Equal(5, address.Properties().Count());
 
             var product = edmModel.SchemaElements.First(e => e.Name == "Product") as IEdmEntityType;
-            Assert.Equal(1, product.Key().Count());
+            Assert.Single(product.Key());
             Assert.Equal("ID", product.Key().First().Name);
             Assert.Equal(5, product.Properties().Count());
 
             var supplier = edmModel.SchemaElements.First(e => e.Name == "Supplier") as IEdmEntityType;
-            Assert.Equal(1, supplier.Key().Count());
+            Assert.Single(supplier.Key());
             Assert.Equal("ID", supplier.Key().First().Name);
             Assert.Equal(6, supplier.Properties().Count());
 
             var addressesProperty = supplier.Properties().First(p => p.Name == "Addresses").Type.AsCollection();
             Assert.Equal(typeof(Address).FullName, addressesProperty.CollectionDefinition().ElementType.FullName());
-            Assert.Equal(false, addressesProperty.IsNullable);
+            Assert.False(addressesProperty.IsNullable);
 
             var tagsProperty = supplier.Properties().First(p => p.Name == "Tags").Type.AsCollection();
             Assert.Equal("Edm.String", tagsProperty.CollectionDefinition().ElementType.FullName());
-            Assert.Equal(true, tagsProperty.IsNullable);
+            Assert.True(tagsProperty.IsNullable);
         }
     }
 }

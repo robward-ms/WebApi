@@ -19,6 +19,7 @@ using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
 using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
@@ -26,16 +27,15 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ActionMetadataTests
+    public class ActionMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ActionMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Actions", "Actions", GetActionsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -121,8 +121,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void AlwaysAvailableActionsGetAdvertisedOnFullMetadataOnly(string acceptHeader)
         {
             //Arrange
@@ -164,8 +164,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void TransientActionsDontGetAdvertisedWhenTheyArentAvailable(string acceptHeader)
         {
             //Arrange
@@ -190,8 +190,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsGetAdvertisedWhenTheyAreAvailable(string acceptHeader)
         {
             //Arrange
@@ -238,8 +238,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void AlwaysAvailableActionsGetAdvertisedForDerivedTypesOnFullMetadataOnly(string acceptHeader)
         {
             //Arrange
@@ -296,8 +296,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsDontGetAdvertisedForDerivedTypesWhenTheyArentAvailable(string acceptHeader)
         {
             // Arrange
@@ -324,8 +324,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsGetAdvertisedForDerivedTypesWhenTheyAreAvailable(string acceptHeader)
         {
             // Arrange

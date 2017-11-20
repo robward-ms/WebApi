@@ -26,16 +26,15 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 namespace WebStack.QA.Test.OData.Swagger
 {
     [NuwaFramework]
-    public class SwaggerMetadataTest
+    public class SwaggerMetadataTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public SwaggerMetadataTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SwaggerController), typeof(MetadataController)};
 
@@ -70,7 +69,7 @@ namespace WebStack.QA.Test.OData.Swagger
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$swagger")]
         [InlineData("swagger.json")]
         public void SwaggerPathHandlerWorksForSwaggerMetadataUri(string swaggerMetadataUri)
@@ -89,7 +88,7 @@ namespace WebStack.QA.Test.OData.Swagger
             Assert.IsType<SwaggerPathSegment>(segment);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task EnableSwaggerMetadataTest()
         {
             JObject expectObj = JObject.Parse(@"{

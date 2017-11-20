@@ -18,13 +18,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.DollarId
 {
     [NuwaFramework]
-    public class DollarIdClientTest
+    public class DollarIdClientTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
+        public DollarIdClientTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -37,7 +39,7 @@ namespace WebStack.QA.Test.OData.DollarId
             configuration.EnsureInitialized();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteNavigationLink()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -59,7 +61,7 @@ namespace WebStack.QA.Test.OData.DollarId
             Assert.Equal(2, singer.Albums.Count);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteContainedNavigationLink()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -79,7 +81,7 @@ namespace WebStack.QA.Test.OData.DollarId
             await clientContext.SaveChangesAsync();
 
             clientContext.LoadProperty(album, "Sales");
-            Assert.Equal(1, album.Sales.Count);
+            Assert.Single(album.Sales);
         }
 
         // [Fact(Skip = "Used to generate csdl file")]

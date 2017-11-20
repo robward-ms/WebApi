@@ -13,13 +13,17 @@ using Nuwa;
 using WebStack.QA.Common.XUnit;
 using WebStack.QA.Test.OData.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.AutoExpand
 {
-    public class AutoExpandTests : ODataTestBase
+    public class AutoExpandTests : NuwaTestBase
     {
         private const string AutoExpandTestBaseUrl = "{0}/autoexpand/Customers(5)";
+
+        public AutoExpandTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         public static TheoryDataSet<string, int> AutoExpandTestData
         {
@@ -37,7 +41,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -55,8 +59,8 @@ namespace WebStack.QA.Test.OData.AutoExpand
                 AutoExpandEdmModel.GetEdmModel(configuration));
         }
 
-        [Theory]
-        [PropertyData("AutoExpandTestData")]
+        [NuwaTheory]
+        [MemberData(nameof(AutoExpandTestData))]
         public void QueryForAnEntryIncludeTheAutoExpandNavigationProperty(string url, int propCount)
         {
             // Arrange
@@ -89,7 +93,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Null(friend["Order"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void LevelsWithAutoExpandInSameNavigationProperty()
         {
             // Arrange
@@ -109,7 +113,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Null(customer["Friend"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("1", 1)]
         [InlineData("3", 3)]
         [InlineData("max", 4)]
@@ -142,7 +146,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Null(friend["Friend"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryIncludeTheDerivedAutoExpandNavigationProperty()
         {
             // Arrange
@@ -170,7 +174,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Null(order["Choice"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryIncludeTheMultiDerivedAutoExpandNavigationProperty()
         {
             // Arrange
@@ -198,7 +202,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Null(order["Choice"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/autoexpand/NormalOrders")]
         [InlineData("{0}/autoexpand/NormalOrders(1)")]
         public void DerivedAutoExpandNavigationPropertyTest(string url)
@@ -221,7 +225,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             Assert.Contains("OrderDetail", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/autoexpand/NormalOrders?$select=Id", true)]
         [InlineData("{0}/autoexpand/NormalOrders", false)]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$select=Id", true)]
@@ -255,7 +259,7 @@ namespace WebStack.QA.Test.OData.AutoExpand
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder($select=Id)", true)]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder", false)]
         public void DisableAutoExpandWhenSelectIsPresentDollarExpandTest(string url, bool isSelectPresent)

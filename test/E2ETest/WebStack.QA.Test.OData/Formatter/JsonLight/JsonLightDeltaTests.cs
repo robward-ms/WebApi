@@ -6,12 +6,18 @@ using System.Web.Http;
 using Microsoft.OData.Client;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightDeltaTests : DeltaTests
     {
+        public JsonLightDeltaTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public override DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
@@ -29,14 +35,14 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

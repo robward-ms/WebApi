@@ -23,16 +23,15 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    public class RefRoutingConventionTests
+    public class RefRoutingConventionTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public RefRoutingConventionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(AddressesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -61,7 +60,7 @@ namespace WebStack.QA.Test.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("POST", "/Customers(5)/Orders/$ref")]
         [InlineData("POST", "/Customers(5)/WebStack.QA.Test.OData.Routing.VipCustomer/Orders/$ref")]
         [InlineData("PUT", "/Addresses(5)/VipCustomer/$ref")]
@@ -76,7 +75,7 @@ namespace WebStack.QA.Test.OData.Routing
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/Customers(5)/Orders(25)/$ref")]
         [InlineData("/Orders(25)/Customer/$ref")]
         [InlineData("/Customers(5)/WebStack.QA.Test.OData.Routing.VipCustomer/Addresses(25)/$ref")]

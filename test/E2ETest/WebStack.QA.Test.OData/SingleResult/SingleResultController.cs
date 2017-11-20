@@ -44,13 +44,10 @@ namespace WebStack.QA.Test.OData.SingleResultTest
 
         private void ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.Customers.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
+                Generate();
             }
-
-            Generate();
         }
     }
 }

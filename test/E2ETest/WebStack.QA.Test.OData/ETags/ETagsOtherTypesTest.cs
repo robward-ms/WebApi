@@ -21,16 +21,15 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class ETagsOtherTypesTest
+    public class ETagsOtherTypesTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ETagsOtherTypesTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -56,7 +55,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task GetEntryWithIfNoneMatchShouldReturnNotModifiedETagsTest_ForDouble()
         {
             string eTag;
@@ -93,7 +92,7 @@ namespace WebStack.QA.Test.OData.ETags
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task GetEntryWithIfNoneMatchShouldReturnNotModifiedETagsTest_ForShort()
         {
             string eTag;

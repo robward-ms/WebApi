@@ -42,6 +42,11 @@ namespace WebStack.QA.Test.OData.Formatter
 
     public class ComplexTypeTests : ODataFormatterTestBase
     {
+        public ComplexTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);

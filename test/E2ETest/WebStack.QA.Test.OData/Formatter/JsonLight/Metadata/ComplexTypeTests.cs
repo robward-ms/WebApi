@@ -12,6 +12,7 @@ using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
+using Xunit;
 using Xunit.Extensions;
 using JsonLightModel = WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
 
@@ -20,28 +21,15 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ComplexTypeTests
+    public class ComplexTypeTests : NuwaTestBase
     {
-        private string _baseAddress;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public ComplexTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get { return _baseAddress; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Complex", "Complex", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -55,7 +43,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]

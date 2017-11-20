@@ -16,7 +16,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
         public EnumType_Type Type { get; set; }
     }
 
-    public class EnumTypeTests : ODataTestBase
+    public class EnumTypeTests : NuwaTestBase
     {
+        public EnumTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
     }
 }

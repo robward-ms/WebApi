@@ -26,16 +26,15 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class PrimitiveTypesMetadataTests
+    public class PrimitiveTypesMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PrimitiveTypesMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -111,8 +110,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task MetadataIsCorrectForFeedsOfEntriesWithJustPrimitiveTypeProperties(
             string acceptHeader)
         {
@@ -139,8 +138,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypePropertiesData")]
+        [NuwaTheory]
+        [MemberData(nameof(MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypePropertiesData))]
         public async Task MetadataIsCorrectForThePropertiesOfAnEntryWithJustPrimitiveTypeProperties(
             string acceptHeader,
             string propertyName,
@@ -180,8 +179,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public async Task MetadataIsCorrectForAnEntryWithJustPrimitiveTypeProperties(string acceptHeader)
         {
             // Arrange
@@ -197,22 +196,22 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             var result = await response.Content.ReadAsAsync<JObject>();
 
             // Assert
-            JsonAssert.DoesNotContainProperty("BooleanProperty@odata.type", result);
-            JsonAssert.DoesNotContainProperty("Id@odata.type", result);
-            JsonAssert.DoesNotContainProperty("NullableIntProperty@odata.type", result);
+            Assert.Null(result.Property("BooleanProperty@odata.type"));
+            Assert.Null(result.Property("Id@odata.type"));
+            Assert.Null(result.Property("NullableIntProperty@odata.type"));
             string doublePropertyValue = (string)result["DoubleProperty"];
             if (!doublePropertyValue.Equals("INF", StringComparison.InvariantCulture)
                 && !doublePropertyValue.Equals("-INF", StringComparison.InvariantCulture)
                 && !doublePropertyValue.Equals("NaN", StringComparison.InvariantCulture))
             {
-                JsonAssert.DoesNotContainProperty("DoubleProperty@odata.type", result);
+                Assert.Null(result.Property("DoubleProperty@odata.type"));
             }
 
-            JsonAssert.DoesNotContainProperty("Int32Property@odata.type", result);
+            Assert.Null(result.Property("Int32Property@odata.type"));
 
             if (acceptHeader.Contains("odata.metadata=none"))
             {
-                JsonAssert.DoesNotContainProperty("@odata.context", result);
+                Assert.Null(result.Property("@odata.context"));
             }
             else
             {
@@ -222,15 +221,15 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             if (acceptHeader.Contains("odata.metadata=full"))
             {
                 ODataUrlAssert.UrlEquals(requestUrl, result, "@odata.id", BaseAddress);
-                JsonAssert.PropertyEquals("#Binary", "BinaryProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#Duration", "DurationProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#Decimal", "DecimalProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#Single", "SingleProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#Guid", "GuidProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#Int16", "Int16Property@odata.type", result);
-                JsonAssert.PropertyEquals("#Int64", "Int64Property@odata.type", result);
-                JsonAssert.PropertyEquals("#SByte", "SbyteProperty@odata.type", result);
-                JsonAssert.PropertyEquals("#DateTimeOffset", "DateTimeOffsetProperty@odata.type", result);
+                Assert.Equal("#Binary", result.Property("BinaryProperty@odata.type").Value);
+                Assert.Equal("#Duration", result.Property("DurationProperty@odata.type").Value);
+                Assert.Equal("#Decimal", result.Property("DecimalProperty@odata.type").Value);
+                Assert.Equal("#Single", result.Property("SingleProperty@odata.type").Value);
+                Assert.Equal("#Guid", result.Property("GuidProperty@odata.type").Value);
+                Assert.Equal("#Int16", result.Property("Int16Property@odata.type").Value);
+                Assert.Equal("#Int64", result.Property("Int64Property@odata.type").Value);
+                Assert.Equal("#SByte", result.Property("SbyteProperty@odata.type").Value);
+                Assert.Equal("#DateTimeOffset", result.Property("DateTimeOffsetProperty@odata.type").Value);
             }
         }
     }

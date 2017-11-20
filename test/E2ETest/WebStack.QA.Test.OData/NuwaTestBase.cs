@@ -4,21 +4,27 @@
 using System;
 using System.Net.Http;
 using Nuwa;
+using WebStack.QA.Test.OData.Common;
+using Xunit;
 
-namespace WebStack.QA.Test.OData.Common
+namespace WebStack.QA.Test.OData
 {
-    public interface IODataTestBase
-    {
-        string BaseAddress { get; set; }
-        HttpClient Client { get; set; }
-    }
-
+    /// <summary>
+    /// The NuwaTestBaseClass is used to attach a class fixture to Nuwa-based tests and to force
+    /// a constructor to take in the fixture.
+    /// </summary>
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public abstract class ODataTestBase : IODataTestBase
+    public class NuwaTestBase : IClassFixture<NuwaClassFixture>
     {
         private string baseAddress = null;
+
+        public NuwaTestBase(NuwaClassFixture fixture)
+        {
+            // Pass this test class instance to the fixture so it
+            // can set properties on us.
+            fixture.RegisterClass(this);
+        }
 
         [NuwaBaseAddress]
         public string BaseAddress

@@ -23,22 +23,21 @@ namespace WebStack.QA.Test.OData.UriParserExtension
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class EnumPrefixFreeTest
+    public class EnumPrefixFreeTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public EnumPrefixFreeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);;
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
 
             configuration.Routes.Clear();
 
@@ -53,33 +52,33 @@ namespace WebStack.QA.Test.OData.UriParserExtension
         }
 
         [NuwaWebConfig]
-        public static void UpdateWebConfig(WebConfigHelper webConfig)
+        internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddRAMFAR(true);
         }
 
-        public static TheoryDataSet<string, string, HttpStatusCode> EnumPrefixFreeCases
+        public static TheoryDataSet<string, string, int> EnumPrefixFreeCases
         {
             get
             {
-                return new TheoryDataSet<string, string, HttpStatusCode>()
+                return new TheoryDataSet<string, string, int>()
                 {
-                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'Male'", "gender='Male'", HttpStatusCode.OK },
-                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'UnknownValue'", "gender='UnknownValue'", HttpStatusCode.NotFound },
+                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'Male'", "gender='Male'", (int)HttpStatusCode.OK },
+                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'UnknownValue'", "gender='UnknownValue'", (int)HttpStatusCode.NotFound },
                 };
             }
         }
 
-        [Theory]
-        [PropertyData("EnumPrefixFreeCases")]
-        public async Task EnableEnumPrefixFreeTest(string prefix, string prefixFree, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [MemberData(nameof(EnumPrefixFreeCases))]
+        public async Task EnableEnumPrefixFreeTest(string prefix, string prefixFree, int statusCode)
         {
             // Enum with prefix
             var prefixUri = string.Format("{0}/odata/Customers/Default.GetCustomerByGender({1})", this.BaseAddress, prefix);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, prefixUri);
             HttpResponseMessage response = await Client.SendAsync(request);
 
-            Assert.Equal(statusCode, response.StatusCode);
+            Assert.Equal(statusCode, (int)response.StatusCode);
             string prefixResponse = await response.Content.ReadAsStringAsync();
 
             // Enum prefix free
@@ -87,10 +86,10 @@ namespace WebStack.QA.Test.OData.UriParserExtension
             request = new HttpRequestMessage(HttpMethod.Get, prefixFreeUri);
             response = await Client.SendAsync(request);
 
-            Assert.Equal(statusCode, response.StatusCode);
+            Assert.Equal(statusCode, (int)response.StatusCode);
             string prefixFreeResponse = await response.Content.ReadAsStringAsync();
 
-            if (statusCode == HttpStatusCode.OK)
+            if (statusCode == (int)HttpStatusCode.OK)
             {
                 Assert.Equal(prefixResponse, prefixFreeResponse);
             }

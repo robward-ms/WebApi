@@ -17,17 +17,16 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    [NwHost(Nuwa.HostType.KatanaSelf)]
-    public class ActionRoutingConventionTests
+    [NuwaHost(Nuwa.HostType.KatanaSelf)]
+    public class ActionRoutingConventionTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ActionRoutingConventionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -45,7 +44,7 @@ namespace WebStack.QA.Test.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/ActionCars(5)/WebStack.QA.Test.OData.Routing.ActionFerrari/Default.Wash", "Ferrari")]
         [InlineData("/odata/ActionCars(5)/Default.Wash", "Car")]
         [InlineData("/odata/ActionFerraris(5)/WebStack.QA.Test.OData.Routing.ActionCar/Default.Wash", "Car")]

@@ -100,23 +100,28 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class HttpAndODataErrorAlwaysIncludeDetailsTests : ODataTestBase
+    public class HttpAndODataErrorAlwaysIncludeDetailsTests : NuwaTestBase
     {
-        public static TheoryDataSet<ErrorType, HttpStatusCode, string, string> TestData
+        public HttpAndODataErrorAlwaysIncludeDetailsTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
+        public static TheoryDataSet<ErrorType, int, string, string> TestData
         {
             get
             {
                 var testData = new List<object[]>
                 {
-                    new object[] { ErrorType.ThrowExceptionInAction, HttpStatusCode.InternalServerError, "ThrowExceptionInAction" },
-                    new object[] { ErrorType.ThrowHttpResponseExceptionInAction, HttpStatusCode.NotFound, "ThrowHttpResponseExceptionInAction" },
-                    new object[] { ErrorType.ResponseErrorResponseInAction, HttpStatusCode.NotFound, "ResponseErrorResponseInAction" },
-                    new object[] { ErrorType.ResponseHttpErrorResponseInAction, HttpStatusCode.NotFound, "ResponseHttpErrorResponseInAction" },
-                    new object[] { ErrorType.QueryableThrowException, HttpStatusCode.InternalServerError, "Cannot serialize a null 'Resource'." },
-                    new object[] { ErrorType.NotSupportGetException, HttpStatusCode.MethodNotAllowed, "The requested resource does not support http method 'GET'." },
-                    new object[] { ErrorType.ActionNotFound, HttpStatusCode.NotFound, "No HTTP resource was found that matches the request URI" },
-                    new object[] { ErrorType.ReturnODataErrorResponseInAction, HttpStatusCode.InternalServerError, "ReturnODataErrorResponseInActionException" },
-                    new object[] { ErrorType.ModelStateError, HttpStatusCode.BadRequest, "Requested value 'NotExistType' was not found." }
+                    new object[] { ErrorType.ThrowExceptionInAction, (int)HttpStatusCode.InternalServerError, "ThrowExceptionInAction" },
+                    new object[] { ErrorType.ThrowHttpResponseExceptionInAction, (int)HttpStatusCode.NotFound, "ThrowHttpResponseExceptionInAction" },
+                    new object[] { ErrorType.ResponseErrorResponseInAction, (int)HttpStatusCode.NotFound, "ResponseErrorResponseInAction" },
+                    new object[] { ErrorType.ResponseHttpErrorResponseInAction, (int)HttpStatusCode.NotFound, "ResponseHttpErrorResponseInAction" },
+                    new object[] { ErrorType.QueryableThrowException, (int)HttpStatusCode.InternalServerError, "Cannot serialize a null 'Resource'." },
+                    new object[] { ErrorType.NotSupportGetException, (int)HttpStatusCode.MethodNotAllowed, "The requested resource does not support http method 'GET'." },
+                    new object[] { ErrorType.ActionNotFound, (int)HttpStatusCode.NotFound, "No HTTP resource was found that matches the request URI" },
+                    new object[] { ErrorType.ReturnODataErrorResponseInAction, (int)HttpStatusCode.InternalServerError, "ReturnODataErrorResponseInActionException" },
+                    new object[] { ErrorType.ModelStateError, (int)HttpStatusCode.BadRequest, "Requested value 'NotExistType' was not found." }
                 };
                 var acceptHeaders = new List<string> 
                 {
@@ -133,7 +138,7 @@ namespace WebStack.QA.Test.OData.Formatter
                     "application/json;odata.streaming=false",
                     "application/json"
                 };
-                var theory = new TheoryDataSet<ErrorType, HttpStatusCode, string, string>();
+                var theory = new TheoryDataSet<ErrorType, int, string, string>();
                 foreach (var acceptHeader in acceptHeaders)
                 {
                     foreach (dynamic item in testData)
@@ -145,59 +150,59 @@ namespace WebStack.QA.Test.OData.Formatter
             }
         }
 
-        public HttpRequestMessage CreateRequestMessage(ErrorType errorType, string header)
+        public static HttpRequestMessage CreateRequestMessage(string baseAddress, ErrorType errorType, string header)
         {
             var request = new HttpRequestMessage();
             switch (errorType)
             {
                 case ErrorType.ThrowExceptionInAction:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""ThrowExceptionInAction"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
                 case ErrorType.ThrowHttpResponseExceptionInAction:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""ThrowHttpResponseExceptionInAction"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
                 case ErrorType.ResponseErrorResponseInAction:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""ResponseErrorResponseInAction"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
                 case ErrorType.ResponseHttpErrorResponseInAction:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""ResponseHttpErrorResponseInAction"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
                 case ErrorType.ReturnODataErrorResponseInAction:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""ReturnODataErrorResponseInAction"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
                 case ErrorType.QueryableThrowException:
                     request.Method = HttpMethod.Get;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo(1)/Items");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo(1)/Items");
                     request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
                     break;
                 case ErrorType.NotSupportGetException:
                     request.Method = HttpMethod.Get;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo(1)");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo(1)");
                     request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
                     break;
                 case ErrorType.ActionNotFound:
                     request.Method = HttpMethod.Get;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo(1)/Name");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo(1)/Name");
                     request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
                     break;
                 case ErrorType.ModelStateError:
                     request.Method = HttpMethod.Post;
-                    request.RequestUri = new Uri(this.BaseAddress + "/HttpError_Todo/");
+                    request.RequestUri = new Uri(baseAddress + "/HttpError_Todo/");
                     request.Content = new StringContent(@"{ ""ErrorType"": ""NotExistType"" }");
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(header);
                     break;
@@ -209,7 +214,7 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -226,46 +231,47 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [TheoryAttribute]
-        [PropertyData("TestData")]
-        public virtual void TestHttpErrorInAction(ErrorType errorType, HttpStatusCode code, string message, string header)
+        [NuwaTheory]
+        [MemberData(nameof(TestData))]
+        public virtual void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {
             // Arrange
             if (header != string.Empty)
             {
-                SetClient(header);
+                Client.DefaultRequestHeaders.Accept.Clear();
+                Client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
             }
 
             // Act
-            var response = this.Client.SendAsync(CreateRequestMessage(errorType, header)).Result;
+            var request = CreateRequestMessage(this.BaseAddress, errorType, header);
+            var response = this.Client.SendAsync(request).Result;
             string responseMessage = response.Content.ReadAsStringAsync().Result;
 
             // Assert
-            Assert.Equal(code, response.StatusCode);
+            Assert.Equal(code, (int)response.StatusCode);
             Assert.Contains(message, responseMessage);
-        }
-
-        public void SetClient(string header)
-        {
-            Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
         }
     }
 
-    public class HttpAndODataErrorNeverIncludeDetailsTests : HttpAndODataErrorAlwaysIncludeDetailsTests
+    public class HttpAndODataErrorNeverIncludeDetailsTests : NuwaTestBase
     {
-        public static TheoryDataSet<ErrorType, HttpStatusCode, string, string> TestData2
+        public HttpAndODataErrorNeverIncludeDetailsTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
+        public static TheoryDataSet<ErrorType, int, string, string> TestData
         {
             get
             {
                 var testData = new List<object[]>
                 {
-                    new object[] { ErrorType.ThrowExceptionInAction, HttpStatusCode.InternalServerError, "ThrowExceptionInAction" },
-                    new object[] { ErrorType.ThrowHttpResponseExceptionInAction, HttpStatusCode.NotFound, "ThrowHttpResponseExceptionInAction" },
-                    new object[] { ErrorType.ResponseErrorResponseInAction, HttpStatusCode.NotFound, "ResponseErrorResponseInAction" },
-                    new object[] { ErrorType.QueryableThrowException, HttpStatusCode.InternalServerError, "Cannot serialize a null 'Resource'." },
-                    new object[] { ErrorType.ReturnODataErrorResponseInAction, HttpStatusCode.InternalServerError, "ReturnODataErrorResponseInActionException" },
-                    new object[] { ErrorType.ModelStateError, HttpStatusCode.BadRequest, "Requested value 'NotExistType' was not found." }
+                    new object[] { ErrorType.ThrowExceptionInAction, (int)HttpStatusCode.InternalServerError, "ThrowExceptionInAction" },
+                    new object[] { ErrorType.ThrowHttpResponseExceptionInAction, (int)HttpStatusCode.NotFound, "ThrowHttpResponseExceptionInAction" },
+                    new object[] { ErrorType.ResponseErrorResponseInAction, (int)HttpStatusCode.NotFound, "ResponseErrorResponseInAction" },
+                    new object[] { ErrorType.QueryableThrowException, (int)HttpStatusCode.InternalServerError, "Cannot serialize a null 'Resource'." },
+                    new object[] { ErrorType.ReturnODataErrorResponseInAction, (int)HttpStatusCode.InternalServerError, "ReturnODataErrorResponseInActionException" },
+                    new object[] { ErrorType.ModelStateError, (int)HttpStatusCode.BadRequest, "Requested value 'NotExistType' was not found." }
                 };
                 var acceptHeaders = new List<string> 
                 {
@@ -282,7 +288,7 @@ namespace WebStack.QA.Test.OData.Formatter
                     "application/json;odata.streaming=false",
                     "application/json"
                 };
-                var theory = new TheoryDataSet<ErrorType, HttpStatusCode, string, string>();
+                var theory = new TheoryDataSet<ErrorType, int, string, string>();
                 foreach (var acceptHeader in acceptHeaders)
                 {
                     foreach (dynamic item in testData)
@@ -295,31 +301,33 @@ namespace WebStack.QA.Test.OData.Formatter
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration2(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
-            configuration.EnableODataSupport(GetEdmModel(configuration));
+            configuration.EnableODataSupport(HttpAndODataErrorAlwaysIncludeDetailsTests.GetEdmModel(configuration));
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 100 });
         }
 
-        [Theory]
-        [PropertyData("TestData2")]
-        public override void TestHttpErrorInAction(ErrorType errorType, HttpStatusCode code, string message, string header)
+        [NuwaTheory]
+        [MemberData(nameof(TestData))]
+        public void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {
             // Arrange
             if (header != string.Empty)
             {
-                SetClient(header);
+                Client.DefaultRequestHeaders.Accept.Clear();
+                Client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(header));
             }
 
             // Act
-            var response = this.Client.SendAsync(CreateRequestMessage(errorType, header)).Result;
+            var request = HttpAndODataErrorAlwaysIncludeDetailsTests.CreateRequestMessage(this.BaseAddress, errorType, header);
+            var response = this.Client.SendAsync(request).Result;
             string responseMessage = response.Content.ReadAsStringAsync().Result;
 
             // Assert
-            Assert.Equal(code, response.StatusCode);
+            Assert.Equal(code, (int)response.StatusCode);
             Assert.DoesNotContain(message, responseMessage);
         }
     }

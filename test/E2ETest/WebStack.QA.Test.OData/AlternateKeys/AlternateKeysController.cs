@@ -65,7 +65,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             Assert.Equal("SSN-6-T-006", ssnKey);
 
             IList<string> changedPropertyNames = delta.GetChangedPropertyNames().ToList();
-            Assert.Equal(1, changedPropertyNames.Count);
+            Assert.Single(changedPropertyNames);
             Assert.Equal("Name", String.Join(",", changedPropertyNames));
 
             IEdmEntityObject originalCustomer = null;

@@ -75,7 +75,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             var model = modelBuilder.GetEdmModel();
 
             var actual = model.SchemaElements.Where(e => e.Name == typeof(ImplicitModelBuilder_EntityWithStaticProperty).Name).OfType<EdmEntityType>().Single();
-            Assert.Equal(1, actual.Properties().Count());
+            Assert.Single(actual.Properties());
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
             var actual = model.SchemaElements.Where(e => e.Name == typeof(ImplicitModelBuilder_EntityWithObjectProperty).Name).OfType<EdmEntityType>().Single();
 
-            Assert.Equal(1, actual.Properties().Count());
+            Assert.Single(actual.Properties());
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
             var actual = model.SchemaElements.Where(e => e.Name == typeof(ImplicitModelBuilder_EntityWithIndexers).Name).OfType<EdmEntityType>().Single();
 
-            Assert.Equal(1, actual.Properties().Count());
+            Assert.Single(actual.Properties());
         }
 
         [Fact]
@@ -169,10 +169,15 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class ImplicitModelBuilderE2ETests : ODataTestBase
+    public class ImplicitModelBuilderE2ETests : NuwaTestBase
     {
+        public ImplicitModelBuilderE2ETests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -191,7 +196,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {
             var response = await Client.GetAsync(BaseAddress + "/$metadata");
@@ -212,12 +217,12 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             Assert.Equal(5, address.Properties().Count());
 
             var product = edmModel.SchemaElements.Where(e => e.Name == "Product").First() as IEdmEntityType;
-            Assert.Equal(1, product.Key().Count());
+            Assert.Single(product.Key());
             Assert.Equal("ID", product.Key().First().Name);
             Assert.Equal(5, product.Properties().Count());
 
             var supplier = edmModel.SchemaElements.Where(e => e.Name == "Supplier").First() as IEdmEntityType;
-            Assert.Equal(1, supplier.Key().Count());
+            Assert.Single(supplier.Key());
             Assert.Equal("ID", supplier.Key().First().Name);
             Assert.Equal(6, supplier.Properties().Count());
 
@@ -230,11 +235,11 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             //    the Nuallable attribute defaults to true
             // b) A property whose Type attribute specifies a collection MUST NOT specify a value for the 
             //    Nullable attribute as the collection always exists, it may just be empty.
-            Assert.Equal(true, addressesProperty.IsNullable);
+            Assert.True(addressesProperty.IsNullable);
 
             var tagsProperty = supplier.Properties().First(p => p.Name == "Tags").Type.AsCollection();
             Assert.Equal("Edm.String", tagsProperty.CollectionDefinition().ElementType.FullName());
-            Assert.Equal(true, tagsProperty.IsNullable);
+            Assert.True(tagsProperty.IsNullable);
         }
     }
 }

@@ -24,16 +24,15 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class EntryMetadataTests
+    public class EntryMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public EntryMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Relationships", "Relationships", GetRelationshipsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -124,8 +123,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
             string acceptHeader)
         {
@@ -173,8 +172,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
         {
             //Arrange
@@ -200,8 +199,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -227,8 +226,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -254,8 +253,8 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
-        [PropertyData("AllAcceptHeaders")]
+        [NuwaTheory]
+        [MemberData(nameof(AllAcceptHeaders))]
         public void CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
@@ -281,7 +280,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]
@@ -314,7 +313,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             //Assert
             foreach (var returnedChildEntityId in returnedChildrenIdentities)
             {
-                Assert.True(childEntities.Any(x => x.Id == returnedChildEntityId));
+                Assert.Contains(childEntities, (x) => x.Id == returnedChildEntityId);
             }
         }
     }

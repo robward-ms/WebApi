@@ -22,16 +22,15 @@ namespace WebStack.QA.Test.OData.UriParserExtension
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class CaseInsensitiveTest
+    public class CaseInsensitiveTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public CaseInsensitiveTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -77,8 +76,8 @@ namespace WebStack.QA.Test.OData.UriParserExtension
             }
         }
 
-        [Theory]
-        [PropertyData("CaseInsensitiveCases")]
+        [NuwaTheory]
+        [MemberData(nameof(CaseInsensitiveCases))]
         public async Task EnableCaseInsensitiveTest(string method, string caseSensitive, string caseInsensitive)
         {
             // Case sensitive

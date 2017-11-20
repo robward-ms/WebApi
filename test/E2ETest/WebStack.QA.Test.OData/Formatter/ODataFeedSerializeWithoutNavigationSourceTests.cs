@@ -21,16 +21,15 @@ namespace WebStack.QA.Test.OData.Formatter
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ODataFeedSerializeWithoutNavigationSourceTests
+    public class ODataFeedSerializeWithoutNavigationSourceTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ODataFeedSerializeWithoutNavigationSourceTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration config)
+        internal static void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(AnyController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -52,7 +51,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanSerializeFeedWithoutNavigationSource()
         {
             // Arrange

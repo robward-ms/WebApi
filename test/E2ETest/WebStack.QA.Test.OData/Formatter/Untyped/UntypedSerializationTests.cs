@@ -29,31 +29,15 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class UntypedSerializationTests
+    public class UntypedSerializationTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public UntypedSerializationTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -84,7 +68,7 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -98,25 +82,23 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
             response.EnsureSuccessStatusCode();
         }
 
-        public static TheoryDataSet<string, object> UntypedWorksForAllKindsOfDataTypesPropertyData
+        [NuwaTheory]
+        [InlineData("PrimitiveCollection")]
+        [InlineData("ComplexObjectCollection")]
+        [InlineData("EntityCollection")]
+        [InlineData("SinglePrimitive")]
+        [InlineData("SingleComplexObject")]
+        [InlineData("SingleEntity")]
+        public void UntypedWorksForAllKindsOfDataTypes(string actionName)
         {
-            get
-            {
-                TheoryDataSet<string, object> data = new TheoryDataSet<string, object>();
-                data.Add("PrimitiveCollection", JToken.FromObject(new { value = Enumerable.Range(1, 10) }));
-                data.Add("ComplexObjectCollection", JToken.FromObject(new { value = CreateAddresses(10) }));
-                data.Add("EntityCollection", JToken.FromObject(new { value = CreateOrders(10) }));
-                data.Add("SinglePrimitive", JToken.FromObject(new { value = 10 }));
-                data.Add("SingleComplexObject", JToken.FromObject(CreateAddress(10)));
-                data.Add("SingleEntity", JToken.FromObject(CreateOrder(10)));
-                return data;
-            }
-        }
+            object expectedPayload = null;
+            expectedPayload = (actionName == "PrimitiveCollection") ? new { value = Enumerable.Range(1, 10) } : expectedPayload;
+            expectedPayload = (actionName == "ComplexObjectCollection") ? new { value = CreateAddresses(10) } : expectedPayload;
+            expectedPayload = (actionName == "EntityCollection") ? new { value = CreateOrders(10) } : expectedPayload;
+            expectedPayload = (actionName == "SinglePrimitive") ? new { value = 10 } : expectedPayload;
+            expectedPayload = (actionName == "SingleComplexObject") ? CreateAddress(10) : expectedPayload;
+            expectedPayload = (actionName == "SingleEntity") ? CreateOrder(10) : expectedPayload;
 
-        [Theory]
-        [PropertyData("UntypedWorksForAllKindsOfDataTypesPropertyData")]
-        public void UntypedWorksForAllKindsOfDataTypes(string actionName, JToken expectedPayload)
-        {
             string url = "/untyped/UntypedCustomers/Default." + actionName;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + url);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
@@ -124,10 +106,10 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);
             JToken result = response.Content.ReadAsAsync<JObject>().Result;
-            Assert.Equal(expectedPayload, result, JToken.EqualityComparer);
+            Assert.Equal(JToken.FromObject(expectedPayload), result, JToken.EqualityComparer);
         }
 
-        [Fact]
+        [NuwaFact]
         public void RoundTripEntityWorks()
         {
             int i = 10;
@@ -156,7 +138,7 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
         }
 
 
-        [Fact]
+        [NuwaFact]
         public void UntypedActionParametersRoundtrip()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + "/untyped/UntypedCustomers/Default.UntypedParameters");

@@ -6,18 +6,42 @@ using Microsoft.AspNet.OData.Builder;
 
 namespace WebStack.QA.Test.OData.AutoExpand
 {
-    public class AutoExpandContext : DbContext
+    public class AutoExpandCustomerContext : DbContext
     {
         public static string ConnectionString =
-            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandTest";
+            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandCustomerContext";
 
-        public AutoExpandContext()
+        public AutoExpandCustomerContext()
             : base(ConnectionString)
         {
         }
 
         public DbSet<Customer> Customers { get; set; }
+    }
+
+    public class AutoExpandPeopleContext : DbContext
+    {
+        public static string ConnectionString =
+            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandPeopleContext";
+
+        public AutoExpandPeopleContext()
+            : base(ConnectionString)
+        {
+        }
+
         public DbSet<People> People { get; set; }
+    }
+
+    public class AutoExpandOrdersContext : DbContext
+    {
+        public static string ConnectionString =
+            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandOrdersContext";
+
+        public AutoExpandOrdersContext()
+            : base(ConnectionString)
+        {
+        }
+
         public DbSet<NormalOrder> NormalOrders { get; set; }
     }
 

@@ -20,12 +20,17 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.DependencyInjection
 {
-    public class CustomizeSerializerTest : ODataTestBase
+    public class CustomizeSerializerTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/dependencyinjection/Customers";
 
+        public CustomizeSerializerTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),
@@ -41,7 +46,7 @@ namespace WebStack.QA.Test.OData.DependencyInjection
                        .AddService<ODataResourceSerializer, AnnotatingEntitySerializer>(ServiceLifetime.Singleton));
         }
 
-        [Fact]
+        [NuwaFact]
         public void CutomizeSerializerProvider()
         {
             string queryUrl =
@@ -59,7 +64,7 @@ namespace WebStack.QA.Test.OData.DependencyInjection
             Assert.Contains(MyODataSerializerProvider.EnumNotSupportError, result);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CutomizeSerializer()
         {
             string queryUrl =

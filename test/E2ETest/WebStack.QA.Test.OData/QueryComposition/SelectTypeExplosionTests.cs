@@ -9,18 +9,18 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Nuwa;
 using WebStack.QA.Common.XUnit;
+using Xunit;
 using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
     [NuwaFramework]
-    public class SelectTypeExplosionTests
+    public class SelectTypeExplosionTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public SelectTypeExplosionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         public static void Configuration(HttpConfiguration config)
@@ -167,7 +167,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        //[Fact]
+        //[NuwaFact]
         //public void CombinatorsWork()
         //{
         //    char[] letters = "abcdef".ToCharArray();
@@ -178,8 +178,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
         //    }
         //}
 
-        [Theory]
-        [PropertyData("Queries")]
+        [NuwaTheory]
+        [MemberData(nameof(Queries))]
         public void ServerDoesntCreateAnInfiniteAmmountOfTypes(string query)
         {
             string requestUrl = BaseAddress + "/TypeWithManyProperties?$select=" + query;

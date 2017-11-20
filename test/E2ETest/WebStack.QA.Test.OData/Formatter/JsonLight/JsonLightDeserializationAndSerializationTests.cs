@@ -16,6 +16,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightDeserializationAndSerializationTests : DeserializationAndSerializationTests
     {
+        public JsonLightDeserializationAndSerializationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public override DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
@@ -36,27 +41,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             return ctx;
         }
 
-        public static TheoryDataSet<UniverseEntity, string> EntityData
+        public static TheoryDataSet<string> EntityData
         {
             get
             {
-                var data = new TheoryDataSet<UniverseEntity, string>();
-                //var entity = new UniverseEntityClient()
-                var entity = new UniverseEntity()
-                {
-                    ID = "1",
-                    OptionalComplexProperty = null,
-                    //string1 = @"""[t@xt""",
-                    //string2 = @"""'[t@xt""",
-                    //string3 =  @"""}t@xt{""",
-                    //string4 = @"""[t@xt'',,][']other::]mo}{retext""",
-                    //number10 = 10,
-                    //number10point5 = 10.5M,
-                    //number10e25 = 10e25M,
-                    //boolean_true = true,
-                    //boolean_false = false
-                };    
-                        
+                var data = new TheoryDataSet<string>();
                 var acceptHeaders = new string[] 
                 {
                     "application/json;odata.metadata=minimal;odata.streaming=true",
@@ -71,7 +60,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
                 };
                 foreach (var header in acceptHeaders)
                 {
-                    data.Add(entity, header);
+                    data.Add(header);
                 }
 
                 return data;
@@ -79,7 +68,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -87,16 +76,30 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             configuration.EnableODataSupport(GetEdmModel());
         }
 
-        [Theory]
-        [PropertyData("EntityData")]
-//        public void PutAndGetShouldReturnSameEntityJsonLight(UniverseEntityClient entity, string acceptHeader)
-        public void PutAndGetShouldReturnSameEntityJsonLight(UniverseEntity entity, string acceptHeader)
+        [NuwaTheory]
+        [MemberData(nameof(EntityData))]
+        public void PutAndGetShouldReturnSameEntityJsonLight(string acceptHeader)
         {
+            var entity = new UniverseEntity()
+            {
+                ID = "1",
+                OptionalComplexProperty = null,
+                //string1 = @"""[t@xt""",
+                //string2 = @"""'[t@xt""",
+                //string3 =  @"""}t@xt{""",
+                //string4 = @"""[t@xt'',,][']other::]mo}{retext""",
+                //number10 = 10,
+                //number10point5 = 10.5M,
+                //number10e25 = 10e25M,
+                //boolean_true = true,
+                //boolean_false = false
+            };
+
             AcceptHeader = acceptHeader;
             PostAndGetShouldReturnSameEntity(entity);
         }
 
-        [Fact]
+        [NuwaFact]
         public void SerializationTests()
         {
             string requestUri = this.BaseAddress + "/UniverseEntity";

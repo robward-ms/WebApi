@@ -75,15 +75,15 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
             var requiredProperty2 = simpleDataContractModel.Properties().Single(p => p.Name == "RequiredProperty2") as EdmProperty;
 
-            Assert.Equal(false, requiredProperty2.Type.IsNullable);
+            Assert.False(requiredProperty2.Type.IsNullable);
 
             var navigationProperty1 = simpleDataContractModel.Properties().Single(p => p.Name == "NavigationProperty1") as EdmNavigationProperty;
             Assert.Equal(EdmMultiplicity.One, navigationProperty1.TargetMultiplicity());
 
-            Assert.False(simpleDataContractModel.Properties().Any(p => p.Name == "ReadOnlyProperty"));
+            Assert.DoesNotContain(simpleDataContractModel.Properties(), (p) => p.Name == "ReadOnlyProperty");
 
             var derivedDCModel = model.SchemaElements.OfType<IEdmEntityType>().First(t => t.Name == typeof(DerivedDataContractModel).Name);
-            Assert.False(derivedDCModel.Properties().Any(p => p.Name == "NotDataMember"));
+            Assert.DoesNotContain(derivedDCModel.Properties(), (p) => p.Name == "NotDataMember");
         }
     }
 }
