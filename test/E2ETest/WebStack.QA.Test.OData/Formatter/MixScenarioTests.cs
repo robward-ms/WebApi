@@ -70,8 +70,13 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class MixScenarioTestsWebApi : ODataTestBase
+    public class MixScenarioTestsWebApi : NuwaTestBase
     {
+        public MixScenarioTestsWebApi(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -88,7 +93,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void WebAPIShouldWorkWithPrimitiveTypeCollectionInJSON()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/Get").Result;
@@ -98,7 +103,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Equal("value1", result.First());
         }
 
-        [Fact]
+        [NuwaFact]
         public void WebAPIShouldWorkWithHttpErrorInJSON()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/ThrowExceptionInAction").Result;
@@ -107,7 +112,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Contains("Something wrong", result["ExceptionMessage"].ToString());
         }
 
-        [Fact]
+        [NuwaFact]
         public void WebAPIQueryableShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/GetQueryableData?$filter=Id gt 1").Result;
@@ -119,6 +124,11 @@ namespace WebStack.QA.Test.OData.Formatter
 
     public class MixScenarioTestsOData : ODataFormatterTestBase
     {
+        public MixScenarioTestsOData(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);

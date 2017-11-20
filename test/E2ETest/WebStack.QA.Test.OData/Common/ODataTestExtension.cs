@@ -19,7 +19,7 @@ namespace WebStack.QA.Test.OData.Common
 {
     public static class ODataTestExtension
     {
-        public static void ClearRepository(this IODataTestBase test, string entityName)
+        public static void ClearRepository(this NuwaTestBase test, string entityName)
         {
             test.Client.DeleteAsync(test.BaseAddress + "/" + entityName).Wait();
         }
@@ -58,7 +58,7 @@ namespace WebStack.QA.Test.OData.Common
             }
 
             var newRequest = new HttpRequestMessage(HttpMethod.Get, uri);
-			newRequest.SetConfiguration(request.GetConfiguration());
+            newRequest.SetConfiguration(request.GetConfiguration());
             var route = request.GetRouteData().Route;
 
             var newRoute = new HttpRoute(

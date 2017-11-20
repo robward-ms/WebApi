@@ -20,8 +20,13 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.QueryComposition
 {
     [NuwaFramework]
-    public class ComplextTypeCollectionTests : ODataTestBase
+    public class ComplextTypeCollectionTests : NuwaTestBase
     {
+        public ComplextTypeCollectionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -36,7 +41,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.MapODataServiceRoute("odataRoute", "odata", builder.GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        [Fact]
+        [NuwaFact]
         public void OrderByTest()
         {
             HttpResponseMessage response = Client.GetAsync(BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/Addresses?$orderby=City").Result;
@@ -55,7 +60,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(expectedData, actualData);
         }
 
-        [Fact]
+        [NuwaFact]
         public void PageSizeWorksOnCollectionOfComplexProperty()
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos";
@@ -79,7 +84,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(new[] {"Company 1", "Company 2"}, actualData);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("", false)]
         [InlineData("?$count=false", false)]
         [InlineData("?$count=true", true)]

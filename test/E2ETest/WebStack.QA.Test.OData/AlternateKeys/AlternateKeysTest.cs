@@ -25,13 +25,12 @@ namespace WebStack.QA.Test.OData.AlternateKeys
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class AlternateKeysTest
+    public class AlternateKeysTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public AlternateKeysTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -63,7 +62,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             configuration.EnsureInitialized();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task AlteranteKeysMetadata()
         {
             string expect = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
@@ -202,7 +201,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             Assert.Equal(expect, responseContent);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntityWithSingleAlternateKeysWorks()
         {
             // query with alternate keys
@@ -234,7 +233,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(SingleAlternateKeysCases))]
         public async Task EntityWithSingleAlternateKeys_ReturnsSame_WithPrimitiveKey(string declaredKeys, string alternatekeys)
         {
@@ -255,7 +254,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             Assert.Equal(primitiveResponse, alternatekeyResponse);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntityWithMultipleAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             // query with declared key
@@ -281,7 +280,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             Assert.Equal(primitiveResponse, tokenResponse);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntityWithComposedAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             // query with declared key
@@ -300,7 +299,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
             Assert.Equal(primitiveResponse, composedResponse);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryFailedIfMissingAnyOfComposedAlternateKeys()
         {
             var requestUri = string.Format("{0}/odata/People(Country_Region='United States')", this.BaseAddress);
@@ -310,7 +309,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
 
         /* Not supported now: see github issue: https://github.com/OData/odata.net/issues/294
          * if supported. modify the following test
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntityWithComplexPropertyAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             var requestUri = string.Format("{0}/odata/Companies(2)", this.BaseAddress);
@@ -329,7 +328,7 @@ namespace WebStack.QA.Test.OData.AlternateKeys
         }
          * */
 
-        [Fact]
+        [NuwaFact]
         public async Task CanUpdateEntityWithSingleAlternateKeys()
         {
             string expect = "{" +

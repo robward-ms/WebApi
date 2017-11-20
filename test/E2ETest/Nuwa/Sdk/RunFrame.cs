@@ -42,7 +42,7 @@ namespace Nuwa.Sdk
             private set;
         }
 
-        public void Initialize(Type testClassType, NuwaTestCase testCommand)
+        public void Initialize(Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
             if (!_initialized)
             {
@@ -56,7 +56,7 @@ namespace Nuwa.Sdk
 
             foreach (var elem in _elements)
             {
-                elem.Recover(testClassType, testCommand);
+                elem.Recover(this, testClassType, testClassInstance, testCommand);
             }
         }
 

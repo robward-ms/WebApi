@@ -18,13 +18,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class PatchUpdatedEntryWithIfMatchETagsTest
+    public class PatchUpdatedEntryWithIfMatchETagsTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PatchUpdatedEntryWithIfMatchETagsTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -54,7 +53,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)?$format=json";

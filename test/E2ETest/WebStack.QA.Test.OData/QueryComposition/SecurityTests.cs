@@ -13,8 +13,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class SecurityTests : ODataTestBase
+    public class SecurityTests : NuwaTestBase
     {
+        public SecurityTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string> DoSAttackData
         {
             get
@@ -77,7 +82,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(DoSAttackData))]
         public void TestDosAttack(string filter)
         {
@@ -86,7 +91,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var result = response.Content.ReadAsStringAsync().Result;
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(DoSAttackData))]
         public void TestDosAttackWithMultipleThreads(string filter)
         {
@@ -96,7 +101,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             });
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AnyAllDoSAttackData))]
         public void TestAnyAllDosAttack(string filter)
         {
@@ -105,7 +110,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var result = response.Content.ReadAsStringAsync().Result;
         }
 
-        //[Theory]
+        //[NuwaTheory]
         //[MemberData(nameof(AnyAllDoSAttackData))]
         //public void TestAnyAllDosAttackWithMultipleThreads(string filter)
         //{
@@ -115,7 +120,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         //    });
         //}
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(InvalidUnicodeData))]
         public void TestInvalidUnicodeAttack(string query)
         {

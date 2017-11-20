@@ -21,7 +21,7 @@ namespace Nuwa.Sdk
         {
         }
 
-        public virtual void Recover(Type testClassType, NuwaTestCase testCommand)
+        public virtual void Recover(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
         }
 

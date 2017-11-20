@@ -26,25 +26,12 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class CustomConventionActionMetadataTests
+    public class CustomConventionActionMetadataTests : NuwaTestBase
     {
-        private string _baseAddress;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public CustomConventionActionMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get { return _baseAddress; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -178,7 +165,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsGetAlwaysAdvertised(string acceptHeader)
         {
@@ -216,7 +203,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedWithTheTargetWhenAvailable(string acceptHeader)
         {
@@ -256,7 +243,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedWhenNotAvailable(string acceptHeader)
         {
@@ -280,7 +267,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsInDerivedTypesGetAlwaysAdvertised(string acceptHeader)
         {
@@ -332,7 +319,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedInDerivedTypesWithTheTargetWhenAvailable(string acceptHeader)
         {
@@ -384,7 +371,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedInDerivedTypesWhenNotAvailable(string acceptHeader)
         {

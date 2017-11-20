@@ -64,25 +64,12 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class SupportDollarValueTest
+    public class SupportDollarValueTest : NuwaTestBase
     {
-        private string _baseAddress;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public SupportDollarValueTest(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get { return _baseAddress; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -110,7 +97,7 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanExtendTheFormatterToSupportPrimitiveRawValues()
         {
             // Arrange
@@ -126,7 +113,7 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
             Assert.Equal(long.MaxValue, result);
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanExtendTheFormatterToSupportBinaryRawValues()
         {
             // Arrange
@@ -143,7 +130,7 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
             Assert.True(new HashSet<byte>(Enumerable.Range(1, 10).Select(x => (byte)x)).SetEquals(result));
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanExtendTheFormatterToSupportNullRawValues()
         {
             // Arrange

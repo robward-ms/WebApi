@@ -93,8 +93,8 @@ namespace Nuwa.WebStack.Host
                 // set up the server
                 serverInitiator.Setup(
                     baseAddress,
-                    TypeDescriptor.GetDesignatedMethod<NuwaKatanaConfigurationAttribute>().ToRuntimeMethod(),
-                    TypeDescriptor.ConfigureMethod.ToRuntimeMethod(),
+                    TypeDescriptor.GetDesignatedMethod<NuwaKatanaConfigurationAttribute>()?.ToRuntimeMethod(),
+                    TypeDescriptor.ConfigureMethod?.ToRuntimeMethod(),
                     traceType, GetDefaultRouteTemplate());
             }
             catch (Exception ex)

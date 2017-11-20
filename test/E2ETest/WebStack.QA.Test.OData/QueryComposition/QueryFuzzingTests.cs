@@ -19,8 +19,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class QueryFuzzingTests : ODataTestBase
+    public class QueryFuzzingTests : NuwaTestBase
     {
+        public QueryFuzzingTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string> FuzzingQueries
         {
             get
@@ -73,7 +78,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(FuzzingQueries))]
         public void TestFuzzingQueries(string filter)
         {

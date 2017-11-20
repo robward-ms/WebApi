@@ -13,9 +13,14 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.SingleResultTest
 {
-    public class SingleResultTests : ODataTestBase
+    public class SingleResultTests : NuwaTestBase
     {
         private const string BaseUrl = "{0}/singleresult/Customers";
+
+        public SingleResultTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -31,7 +36,7 @@ namespace WebStack.QA.Test.OData.SingleResultTest
                 SingleResultEdmModel.GetEdmModel(configuration));
         }
 
-        [Fact]
+        [NuwaFact]
         public void EmptySingleResultReturnsNotFound()
         {
             // Arrange

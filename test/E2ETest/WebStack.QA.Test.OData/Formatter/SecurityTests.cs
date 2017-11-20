@@ -57,8 +57,13 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class DosSecurityTests : ODataTestBase
+    public class DosSecurityTests : NuwaTestBase
     {
+        public DosSecurityTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -82,7 +87,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -105,7 +110,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Contains("The depth limit for entries in nested expanded navigation links was reached", content);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -133,7 +138,7 @@ namespace WebStack.QA.Test.OData.Formatter
             response.EnsureSuccessStatusCode();
         }
 
-        [Fact]
+        [NuwaFact]
         public void BigDataServiceVersionHeaderShouldBeRejected()
         {
             var model = new Security_ArrayModel();

@@ -27,8 +27,13 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ComplexTypeInheritanceTests
+    public class ComplexTypeInheritanceTests : NuwaTestBase
     {
+        public ComplexTypeInheritanceTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string, string> MediaTypes
         {
             get
@@ -51,12 +56,6 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 return data;
             }
         }
-
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -85,7 +84,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 
 
         #region CRUD on the entity
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // POST ~/Windows
@@ -154,7 +153,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.Single(window.OptionalShapes);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$select=...&$orderby=...&$expand=...
         public async Task QueryCollectionContainingEntity(string mode, string mime)
@@ -182,7 +181,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.Equal("1", (string)window2["Parent"]["Id"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$filter=CurrentShape/HasBorder eq true
         public async Task QueryEntitiesFilteredByComplexType(string mode, string mime)
@@ -204,7 +203,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Windows(3)
@@ -257,7 +256,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // Patch ~/Widnows(1)
@@ -302,7 +301,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // DELETE ~/Windows(1)
@@ -318,7 +317,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 
         #region RUD on complex type
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape
         public async Task QueryComplexTypeProperty(string mode, string mime)
@@ -343,7 +342,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 2, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // GET ~/Windows(1)/OptionalShapes/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle
@@ -365,7 +364,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.True(1 == optionalShapes.Count);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // GET ~/Windows(3)/OptionalShapes
@@ -387,7 +386,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.True(2 == optionalShapes.Count);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/HasBorder
         public async Task QueryPropertyDefinedInComplexTypeProperty(string mode, string mime)
@@ -409,7 +408,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected that HasBorder is true, but actually not,\n request uri: {0},\n response payload: {1}", requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle/Radius
         public async Task QueryComplexTypePropertyDefinedOnDerivedType(string mode, string mime)
@@ -431,7 +430,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 2, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Windows(3)/OptionalShapes
@@ -478,7 +477,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Widnows(1)/CurrentShape
@@ -513,7 +512,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 5, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PATCH ~/Windows(3)/OptionalShapes
@@ -530,7 +529,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.True(HttpStatusCode.NotFound == response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task PatchToSingleComplexTypeProperty(string modelMode)
@@ -559,7 +558,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.Equal(15, radius);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task DeleteToNullableComplexTypeProperty(string modelMode)

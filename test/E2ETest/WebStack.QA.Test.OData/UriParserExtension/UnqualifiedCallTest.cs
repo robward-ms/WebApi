@@ -22,13 +22,12 @@ namespace WebStack.QA.Test.OData.UriParserExtension
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class UnqualifiedCallTest
+    public class UnqualifiedCallTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public UnqualifiedCallTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -63,7 +62,7 @@ namespace WebStack.QA.Test.OData.UriParserExtension
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(UnqualifiedCallCases))]
         public async Task EnableUnqualifiedCallTest(string method, string caseSensitive, string caseInsensitive)
         {

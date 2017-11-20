@@ -24,13 +24,12 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class LowerCamelCaseTest
+    public class LowerCamelCaseTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public LowerCamelCaseTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -75,7 +74,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ModelBuilderTest()
         {
             string requestUri = string.Format("{0}/odata/$metadata", this.BaseAddress);
@@ -102,7 +101,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             addressType.Properties().All(p => this.IsCamelCase(p.Name));
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySet(string format)
         {
@@ -118,7 +117,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(empolyee);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithDerivedType(string format)
         {
@@ -144,7 +143,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(employee);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntity(string format)
         {
@@ -158,7 +157,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualZero(string format)
         {
@@ -171,7 +170,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Null(result["manager"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualNegativeOne(string format)
         {
@@ -185,7 +184,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
                 result["error"]["innererror"]["message"].Value<string>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsGreaterThanTheMaxExpansionDepth(string format)
         {
@@ -201,7 +200,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
                 result["error"]["message"].Value<string>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualToTheMaxExpansionDepth(string format)
         {
@@ -220,7 +219,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Null(manager8["manager"]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpand(string format)
         {
@@ -248,7 +247,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Null(employee8["directReports"]);// The levels value is 2, but ID 8 is at the third level: 8->9->10
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpandToSameType(string format)
         {
@@ -273,7 +272,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.True(10 == employee8["next"]["next"]["id"].Value<int>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWhereCircularExists(string format)
         {
@@ -290,7 +289,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.True(1 == content["next"]["next"]["id"].Value<int>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWithNestedExpand(string format)
         {
@@ -307,7 +306,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.True(6 == content["next"]["next"]["next"]["id"].Value<int>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployee(string format)
         {
@@ -331,7 +330,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Null(employee10);
         }
         
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployeeWithNestedExpand(string format)
         {
@@ -350,7 +349,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Equal(10,employee10["id"].Value<int>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromCollectionEmployeeToSingleManager(string format)
         {
@@ -378,7 +377,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Null(thirdLevelManager);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyInEntityType(string format)
         {
@@ -397,7 +396,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyValueInEntityType(string format)
         {
@@ -409,7 +408,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Equal("Name1", content);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithFilter(string format)
         {
@@ -426,7 +425,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithSelect(string format)
         {
@@ -457,7 +456,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(employee);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithOrderBy(string format)
         {
@@ -478,7 +477,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
 
-        [Fact]
+        [NuwaFact]
         public async Task AddEntity()
         {
             var postUri = this.BaseAddress + "/odata/Employees";
@@ -502,7 +501,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task UpdateEntity()
         {
             var putUri = this.BaseAddress + "/odata/Employees(2)";
@@ -533,7 +532,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteEntity()
         {
             var uriDelete = this.BaseAddress + "/odata/Employees(1)";
@@ -544,7 +543,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ActionCall()
         {
             var postUri = this.BaseAddress + "/odata/SetAddress";
@@ -572,7 +571,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             Assert.Equal("Street20", street);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionCall()
         {
             var getUri = this.BaseAddress + "/odata/GetAddress(id=1)";

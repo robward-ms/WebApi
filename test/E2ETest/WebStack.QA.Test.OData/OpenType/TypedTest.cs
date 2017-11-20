@@ -26,24 +26,21 @@ namespace WebStack.QA.Test.OData.OpenType
     using Nuwa;
     using WebStack.QA.Test.OData.Common;
     using Xunit;
-    using Xunit.Extensions;
     using TypedProxy = WebStack.QA.Test.OData.OpenType.Typed.Client;
 
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class TypedOpenTypeTest
+    public class TypedOpenTypeTest : NuwaTestBase
     {
         private static string[] Routings = new string[] { "convention", "AttributeRouting" };
         int expectedValueOfInt, actualValueOfInt;
         int? expectedValueOfNullableInt, actualValueOfNullableInt;
         string expectedValueOfString, actualValueOfString;
 
-
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public TypedOpenTypeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -71,7 +68,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Query
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -106,7 +103,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -139,7 +136,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -160,7 +157,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -185,7 +182,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal("Male", gender);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -211,7 +208,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal("US", countryCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -233,7 +230,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal("US", countryOrRegion);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -258,7 +255,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -281,7 +278,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Update
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -348,7 +345,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -402,7 +399,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task PatchOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -449,7 +446,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task PatchOpenDerivedComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -494,7 +491,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task PutOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -546,7 +543,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Insert
 
-        [Fact]
+        [NuwaFact]
         public async Task InsertEntityWithOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -604,7 +601,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Delete
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -635,7 +632,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -669,7 +666,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Function & Action
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -697,7 +694,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -725,7 +722,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -760,7 +757,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Query
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntitySetClientTest()
         {
             foreach (string routing in Routings)
@@ -791,7 +788,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntitySetClientTestWithSelect()
         {
             foreach (string routing in Routings)
@@ -813,7 +810,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryEntityClientTest()
         {
             foreach (string routing in Routings)
@@ -842,7 +839,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryDerivedEntityClientTest()
         {
             foreach (string routing in Routings)
@@ -872,7 +869,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryOpenComplexTypePropertyAccountInfoClientTest()
         {
             await ResetDatasource();
@@ -887,7 +884,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal(10, accountInfo.Age);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryOpenComplexTypePropertyAddressClientTest()
         {
             await ResetDatasource();
@@ -902,7 +899,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal("US", address.CountryOrRegion);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryOpenComplexTypePropertyTagsClientTest()
         {
             await ResetDatasource();
@@ -917,7 +914,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal("Value 2", tags.Tag2);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryNonDynamicPropertyClientTest()
         {
             await ResetDatasource();
@@ -935,7 +932,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Update
 
-        [Fact]
+        [NuwaFact]
         public async Task PatchEntityWithOpenComplexTypeClientTest()
         {
             foreach (string routing in Routings)
@@ -996,7 +993,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task PutEntityWithOpenComplexTypeClientTest()
         {
             foreach (string routing in Routings)
@@ -1064,7 +1061,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Insert
 
-        [Fact]
+        [NuwaFact]
         public async Task InsertBaseEntityWithOpenTypePropertyClientTest()
         {
             await ResetDatasource();
@@ -1133,7 +1130,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal(TypedProxy.Gender.Male, insertedAccount.OwnerGender);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task InsertDerivedEntityWithOpenComplexTypePropertyClientTest()
         {
             await ResetDatasource();
@@ -1208,7 +1205,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Delete
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteEntityWithOpenComplexTypePropertyClientTest()
         {
             foreach (string routing in Routings)
@@ -1254,7 +1251,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task GetShipAddressesFunctionClientTest()
         {
             foreach (string routing in Routings)
@@ -1273,7 +1270,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task IncreaseAgeActionClientTest2()
         {
             foreach (string routing in Routings)
@@ -1293,7 +1290,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task AddShipAddressActionClientTest()
         {
             foreach (string routing in Routings)
@@ -1320,7 +1317,7 @@ namespace WebStack.QA.Test.OData.OpenType
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task UpdateAddressActionClientTest()
         {
             await ResetDatasource();
@@ -1345,7 +1342,7 @@ namespace WebStack.QA.Test.OData.OpenType
         #endregion
 
         #endregion
-        [Fact]
+        [NuwaFact]
         public async Task QueryBaseEntityType()
         {
             await ResetDatasource();
@@ -1363,7 +1360,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 string.Format("Employee count is in-correct, expected: {0}, actual: {1}", expectedInt, actualInt));
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task QueryDerivedEntityType()
         {
             await ResetDatasource();
@@ -1393,7 +1390,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 string.Format("Manager count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ExpandOpenEntityType()
         {
             await ResetDatasource();
@@ -1417,7 +1414,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal(2, account.ShipAddresses.Count);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task InsertBaseEntity()
         {
             await ResetDatasource();
@@ -1439,7 +1436,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         // POST ~/Employees
-        [Fact]
+        [NuwaFact]
         public async Task InsertDerivedEntityType()
         {
             await ResetDatasource();
@@ -1470,7 +1467,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 string.Format("Manager PhoneNumbers count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [Fact]
+        [NuwaFact]
         // PUT ~/Employees(1)/Namespace.Manager
         public async Task ReplaceDerivedEntityType()
         {
@@ -1506,7 +1503,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 string.Format("Manager PhoneNumbers count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [Fact]
+        [NuwaFact]
         // PATCH ~/Employees(1)/Namespace.Manager
         public async Task UpdateDerivedEntityType()
         {

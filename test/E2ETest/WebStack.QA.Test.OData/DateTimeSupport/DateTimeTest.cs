@@ -26,13 +26,12 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DateTimeTest
+    public class DateTimeTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DateTimeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -63,7 +62,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -96,7 +95,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
         }
 
         #region CRUD on DateTime related entity
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CreateFileTest(string mode)
@@ -123,7 +122,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Equal(expect, response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task QueryFileEntitySetTest(string mode)
@@ -170,7 +169,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryFileEntityTest(string mode, string mime)
         {
@@ -196,7 +195,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Equal(DateTimeOffset.Parse("2014-12-24T01:02:03-08:00"), content["ModifiedDates"][2]);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task UpdateFileEntityTestRoundTrip(string mode)
@@ -227,7 +226,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Contains("\"DeleteDate\":\"2014-12-30T15:01:03-08:00\"", response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CreateDeleteFileEntityRoundTrip(string mode)
@@ -255,7 +254,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
 
         #region Query option on DateTime
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanSelectDateTimeProperty(string mode)
@@ -269,7 +268,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Contains("\"CreatedDate\":\"2017-12-23T17:02:03-08:00\"", response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanFilterDateTimeProperty(string mode)
@@ -292,7 +291,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Equal(3, content["value"][0]["ModifiedDates"].Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanOrderByDateTimeProperty(string mode)
@@ -318,7 +317,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
 
         #region function/action on DateTime
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanCallFunctionOnDateTime(string mode)
@@ -336,7 +335,7 @@ namespace WebStack.QA.Test.OData.DateTimeSupport
             Assert.Equal(5, content["value"].Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanCallActionOnDateTime(string mode)

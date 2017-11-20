@@ -38,8 +38,13 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
         }
     }
 
-    public class UnicodeRouteTests : ODataTestBase
+    public class UnicodeRouteTests : NuwaTestBase
     {
+        public UnicodeRouteTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -56,7 +61,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CRUDEntitySetShouldWork()
         {
             var rand = new Random(RandomSeedGenerator.GetRandomSeed());

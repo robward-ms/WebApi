@@ -164,25 +164,12 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class SerializeEntityReferenceLinksTest
+    public class SerializeEntityReferenceLinksTest : NuwaTestBase
     {
-        private string _baseAddress;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public SerializeEntityReferenceLinksTest(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get { return _baseAddress; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -209,7 +196,7 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanExtendTheFormatterToSerializeEntityReferenceLinks()
         {
             string requestUrl = BaseAddress + "/EntityReferenceLinks/ParentEntity(1)/Children/$ref";

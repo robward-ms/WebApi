@@ -18,13 +18,13 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DynamicPropertiesTest
+    public class DynamicPropertiesTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
+        public DynamicPropertiesTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -47,7 +47,7 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("DynamicCustomers(1)/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty_1")]
         [InlineData("DynamicCustomers(2)/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount_2")]
         [InlineData("DynamicCustomers(3)/Order/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromOrder_3")]
@@ -69,7 +69,7 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
             Assert.Contains(expected, response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("Put")]
         [InlineData("Patch")]
         [InlineData("Post")]
@@ -85,7 +85,7 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("DynamicCustomers(2)/SecondAccount/DynamicPropertyName")]
         [InlineData("DynamicSingleCustomer/SecondAccount/DynamicPropertyName")]
         public void AccessDynamicPropertyWithoutImplementMethod(string uri)

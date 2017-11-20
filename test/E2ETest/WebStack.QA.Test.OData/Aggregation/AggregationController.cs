@@ -57,13 +57,10 @@ namespace WebStack.QA.Test.OData.Aggregation
 
         protected void ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.Customers.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
+                Generate();
             }
-
-            Generate();
         }
     }
 

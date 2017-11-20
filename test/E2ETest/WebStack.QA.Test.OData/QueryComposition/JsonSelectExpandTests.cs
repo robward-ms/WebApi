@@ -17,8 +17,13 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class JsonSelectExpandTests : ODataTestBase
+    public class JsonSelectExpandTests : NuwaTestBase
     {
+        public JsonSelectExpandTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -29,7 +34,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=*", BaseAddress);
@@ -53,7 +58,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=Name", BaseAddress);
@@ -77,7 +82,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 1 && x.Properties().All(p => p.Name == "Name")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=Id,Name&$expand=JsonSelectOrders($select=Id)", BaseAddress);
@@ -103,7 +108,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => (int)x["Id"] == ((JArray)x["JsonSelectOrders"]).Count));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +
@@ -129,7 +134,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer?$select=Id&$expand=JsonSelectOrders($select=*)", BaseAddress);
@@ -163,7 +168,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +
@@ -206,7 +211,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer?$select=Id,JsonSelectOrders&$expand=JsonSelectOrders($expand=OrderDetails)", BaseAddress);
@@ -246,7 +251,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +

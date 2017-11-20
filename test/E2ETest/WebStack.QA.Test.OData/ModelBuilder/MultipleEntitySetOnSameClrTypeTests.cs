@@ -29,8 +29,13 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class MultipleEntitySetOnSameClrTypeTests : ODataTestBase
+    public class MultipleEntitySetOnSameClrTypeTests : NuwaTestBase
     {
+        public MultipleEntitySetOnSameClrTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -69,7 +74,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryableShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products1?$top=1").Result;

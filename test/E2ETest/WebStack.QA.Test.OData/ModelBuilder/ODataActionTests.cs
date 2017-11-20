@@ -23,8 +23,13 @@ using Container = ModelBuilder.ActionTest.Default.Container;
 
 namespace WebStack.QA.Test.OData.ModelBuilder
 {
-    public class ODataActionTests : ODataTestBase
+    public class ODataActionTests : NuwaTestBase
     {
+        public ODataActionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -35,7 +40,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
 
         // ExtendSupportDate of a single Product
-        [Theory]
+        [NuwaTheory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDate1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDate2")]
         public void SingleEntityBoundActionTest(string entitySetName, string actionName)
@@ -56,7 +61,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
 
         // ExtendSupportDates of a collection of Products
-        [Theory]
+        [NuwaTheory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDates1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDates2")]
         public void CollectionOfEntitiesBoundActionTest(string entitySetName, string actionName)
@@ -81,7 +86,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
 
         // UpdateRating of a single RatedProduct
-        [Theory]
+        [NuwaTheory]
         [InlineData("ODataActionTests_Products1", "UpdateRating1")]
         [InlineData("ODataActionTests_Products2", "UpdateRating2")]
         public void SingleInheritedEntityBoundActionTest(string entitySetName, string actionName)
@@ -101,7 +106,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
 
         // UpdateRatings of a collection of inherited RatedProducts
-        [Theory]
+        [NuwaTheory]
         [InlineData("ODataActionTests_Products1", "UpdateRatings1")]
         [InlineData("ODataActionTests_Products2", "UpdateRatings2")]
         public void CollectionOfInheritedEntitiesBoundActionTest(string entitySetName, string actionName)

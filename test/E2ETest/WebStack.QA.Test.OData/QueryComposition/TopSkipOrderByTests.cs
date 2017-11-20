@@ -17,8 +17,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class TopSkipOrderByTests : ODataTestBase
+    public class TopSkipOrderByTests : NuwaTestBase
     {
+        public TopSkipOrderByTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string> ActionNames
         {
             get
@@ -40,7 +45,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ActionNames))]
         public void TestTop(string actionName)
         {
@@ -52,7 +57,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(1, result.First().Id);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ActionNames))]
         public void TestSkip(string actionName)
         {
@@ -64,7 +69,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(2, result.First().Id);
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ActionNames))]
         public void TestOrderBy(string actionName)
         {
@@ -88,7 +93,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal("Mike", result.First().Name);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestOtherQueries()
         {
             var response = await Client.GetAsync(BaseAddress + "/api/TopSkipOrderByTests/GetODataQueryOptions?$skiptoken=abc&$expand=abc&$select=abc&$count=abc&$deltatoken=abc");

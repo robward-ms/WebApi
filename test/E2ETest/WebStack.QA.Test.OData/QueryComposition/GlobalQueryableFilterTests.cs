@@ -167,8 +167,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class GlobalQueryableFilterWithoutResultLimitTests : ODataTestBase
+    public class GlobalQueryableFilterWithoutResultLimitTests : NuwaTestBase
     {
+        public GlobalQueryableFilterWithoutResultLimitTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -178,7 +183,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableWithQAttr")]
@@ -191,7 +196,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
             Assert.Single(actual);
         }
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
@@ -204,7 +209,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.NotEqual(1, actual.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithQAttr")]
         public void TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
@@ -214,7 +219,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Contains("The requested resource is not a collection.", response.Content.ReadAsStringAsync().Result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithResultLimit")]
         public virtual void TestQueryableAttributeShouldWinGlobalQueryableFilter(string url)
         {
@@ -224,7 +229,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(5, actual.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetProduct")]
         public virtual void TestQueryableAttributeWontAffectOtherActions(string url)
         {
@@ -235,6 +240,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
     public class GlobalQueryableFilterWithResultLimitTests : GlobalQueryableFilterWithoutResultLimitTests
     {
+        public GlobalQueryableFilterWithResultLimitTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration1(HttpConfiguration configuration)
         {
@@ -245,8 +255,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : ODataTestBase
+    public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : NuwaTestBase
     {
+        public GlobalQueryableFilterWithDerivedEnableQueryAttribute(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -256,7 +271,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedQAttrResultLimit")]
@@ -269,7 +284,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(3, actual.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable?$top=4&$customQuery=1")]
         public void TestCustomQueryWorksUnderGlobalFilter(string url)
         {
@@ -279,7 +294,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(3, actual.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
@@ -292,7 +307,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.NotEqual(4, actual.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithDerivedQAttr")]
         public void TestActionsThatNotAllowedByQueryableAttribute(string url)
         {

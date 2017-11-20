@@ -57,6 +57,11 @@ namespace WebStack.QA.Test.OData.Formatter
 
     public class DeserializationAndSerializationTests : ODataFormatterTestBase
     {
+        public DeserializationAndSerializationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         protected static IEdmModel GetEdmModel()
         {
             var builder = new ODataConventionModelBuilder();

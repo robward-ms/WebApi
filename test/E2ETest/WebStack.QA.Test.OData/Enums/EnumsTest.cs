@@ -26,13 +26,12 @@ namespace WebStack.QA.Test.OData.Enums
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class EnumsTest
+    public class EnumsTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public EnumsTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -52,7 +51,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region ModelBuilder
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -135,7 +134,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region Query
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -160,7 +159,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/convention/Employees/$count", 3)]
         [InlineData("/convention/Employees/$count?$filter=Name eq 'Name1'", 1)]
         public async Task QueryEntitySetCount(string url, int expectedCount)
@@ -178,7 +177,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal<int>(expectedCount, int.Parse(count));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/convention/Employees(1)/SkillSet/$count", 2)]
         [InlineData("/convention/Employees(1)/SkillSet/$count?$filter=$it eq WebStack.QA.Test.OData.Enums.Skill'Sql'", 1)]
         public async Task QuerySkillSetCount(string url, int expectedCount)
@@ -196,7 +195,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal<int>(expectedCount, int.Parse(count));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -232,7 +231,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -249,7 +248,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal(AccessLevel.Execute, actual);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -279,7 +278,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal("Pingpong", value);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -302,7 +301,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -337,7 +336,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -355,7 +354,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal(3, value.Count);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -383,7 +382,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region Update
 
-        [Fact]
+        [NuwaFact]
         public async Task AddEntity()
         {
             await ResetDatasource();
@@ -424,7 +423,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task UpdateEntity()
         {
             await ResetDatasource();
@@ -483,7 +482,7 @@ namespace WebStack.QA.Test.OData.Enums
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("PUT")]
         [InlineData("PATCH")]
         public async Task UpsertEntity(string method)
@@ -517,7 +516,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region Delete
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteEntity()
         {
             await ResetDatasource();
@@ -552,7 +551,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region Enum with action
 
-        [Fact]
+        [NuwaFact]
         public async Task EnumInActionParameter()
         {
             await ResetDatasource();
@@ -564,7 +563,7 @@ namespace WebStack.QA.Test.OData.Enums
             response.EnsureSuccessStatusCode();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task EnumInActionOutput()
         {
             await ResetDatasource();
@@ -585,7 +584,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         #region Enum with function
 
-        [Fact]
+        [NuwaFact]
         public async Task EnumInFunctionOutput()
         {
             await ResetDatasource();
@@ -598,7 +597,7 @@ namespace WebStack.QA.Test.OData.Enums
             Assert.Equal("Execute", value);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/convention/HasAccessLevel(ID=1,AccessLevel=WebStack.QA.Test.OData.Enums.AccessLevel'Read')", false)]
         [InlineData("/convention/HasAccessLevel(ID=2,AccessLevel=WebStack.QA.Test.OData.Enums.AccessLevel'1')", true)]
         public async Task EnumInFunctionParameter(string url, bool expectedValue)

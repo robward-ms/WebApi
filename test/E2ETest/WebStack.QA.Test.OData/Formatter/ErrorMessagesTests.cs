@@ -16,13 +16,12 @@ using Nuwa;
 namespace WebStack.QA.Test.OData.Formatter
 {
     [NuwaFramework]
-    public class ErrorMessagesTests
+    public class ErrorMessagesTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ErrorMessagesTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)

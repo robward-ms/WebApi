@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
@@ -10,107 +10,93 @@ namespace Nuwa.Sdk
     /// <summary>
     /// the test command adopt specific host strategy
     /// </summary>
-    public class NuwaTestCase : IXunitTestCase
+    public class NuwaTestCase : XunitTestCase
     {
-        private IXunitTestCase _innerTestCase;
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Called by the de-serializer", true)]
+        public NuwaTestCase() { }
 
-        public NuwaTestCase(IXunitTestCase innerTestCase)
+        public NuwaTestCase(
+            int frameId,
+            IMessageSink diagnosticMessageSink,
+            TestMethodDisplay defaultMethodDisplay,
+            ITestMethod testMethod,
+            object[] testMethodArguments = null)
+            : base(diagnosticMessageSink, defaultMethodDisplay, testMethod, testMethodArguments)
         {
-            if (innerTestCase == null)
+            FrameId = frameId;
+        }
+
+        public int FrameId { get; private set; }
+
+        protected override string GetDisplayName(IAttributeInfo factAttribute, string displayName)
+        {
+            string newDisplayName = base.GetDisplayName(factAttribute, displayName);
+            return newDisplayName + " Frame " + FrameId.ToString();
+        }
+
+        public override void Serialize(IXunitSerializationInfo data)
+        {
+            base.Serialize(data);
+            data.AddValue("FrameId", FrameId);
+        }
+
+        public override void Deserialize(IXunitSerializationInfo data)
+        {
+            base.Deserialize(data);
+            FrameId = data.GetValue<int>("FrameId");
+        }
+
+        protected override string GetUniqueID()
+        {
+            string id = base.GetUniqueID();
+            return id + " -" + FrameId.ToString();
+        }
+
+        public override async Task<RunSummary> RunAsync(
+            IMessageSink diagnosticMessageSink,
+            IMessageBus messageBus,
+            object[] constructorArguments,
+            ExceptionAggregator aggregator,
+            CancellationTokenSource cancellationTokenSource)
+        {
+            // Find fixture and register.
+            ITestCaseManager manager = null;
+            foreach (object arg in constructorArguments)
             {
-                throw new ArgumentNullException("innerTestCase");
+                manager = arg as ITestCaseManager;
+                if (manager != null)
+                {
+                    manager.RegisterTest(this);
+                    break;
+                }
             }
 
-            _innerTestCase = innerTestCase;
-        }
-
-        public RunFrame Frame { get; set; }
-
-        public string DisplayName
-        {
-            get
+            // If fixture not found, fail this test case.
+            RunSummary runSummary = new RunSummary() { Total = 1 };
+            if (manager == null)
             {
-                return _innerTestCase.DisplayName;
+                runSummary.Failed++;
+                string output = "Class fixture not found. Test class must implement constructor accepting NuwaClassFixture";
+                TestFailed testResult = new TestFailed(new XunitTest(this, this.DisplayName), 0, output, new Exception(output));
+                messageBus.QueueMessage(testResult);
             }
-        }
-
-        public IMethodInfo Method
-        {
-            get
+            else
             {
-                return _innerTestCase.Method;
-            }
-        }
+                // Run the test case.
+                runSummary = await base.RunAsync(diagnosticMessageSink, messageBus, constructorArguments, aggregator, cancellationTokenSource);
 
-        public string SkipReason
-        {
-            get
-            {
-                return _innerTestCase.SkipReason;
-            }
-        }
-
-        public ISourceInformation SourceInformation
-        {
-            get
-            {
-                return _innerTestCase.SourceInformation;
+                // Verify class registered
+                if (((runSummary.Failed + runSummary.Skipped) == 0) && (!manager.VerifyRegisterClass()))
+                {
+                    runSummary.Failed++;
+                    string output = "Class fixture not called. Test class must implement constructor calling NuwaClassFixture.RegisterClass()";
+                    TestFailed testResult = new TestFailed(new XunitTest(this, this.DisplayName), 0, output, new Exception(output));
+                    messageBus.QueueMessage(testResult);
+                }
             }
 
-            set
-            {
-                _innerTestCase.SourceInformation = value;
-            }
+            return runSummary;
         }
-
-        public object[] TestMethodArguments
-        {
-            get
-            {
-                return _innerTestCase.TestMethodArguments;
-            }
-        }
-
-        public Dictionary<string, List<string>> Traits
-        {
-            get
-            {
-                return _innerTestCase.Traits;
-            }
-        }
-
-        public string UniqueID
-        {
-            get
-            {
-                return _innerTestCase.UniqueID;
-            }
-        }
-
-        public ITestMethod TestMethod
-        {
-            get
-            {
-                return _innerTestCase.TestMethod;
-            }
-        }
-
-        public void Deserialize(IXunitSerializationInfo info)
-        {
-            _innerTestCase.Deserialize(info);
-        }
-
-        public void Serialize(IXunitSerializationInfo info)
-        {
-            _innerTestCase.Serialize(info);
-        }
-
-        public Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus, object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
-        {
-
-            Frame.Initialize(TestMethod.TestClass.Class.ToRuntimeType(), this);
-            return _innerTestCase.RunAsync(diagnosticMessageSink, messageBus, constructorArguments, aggregator, cancellationTokenSource);
-        }
-
     }
 }

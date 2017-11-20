@@ -169,8 +169,13 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class ImplicitModelBuilderE2ETests : ODataTestBase
+    public class ImplicitModelBuilderE2ETests : NuwaTestBase
     {
+        public ImplicitModelBuilderE2ETests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -191,7 +196,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {
             var response = await Client.GetAsync(BaseAddress + "/$metadata");

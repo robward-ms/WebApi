@@ -48,16 +48,16 @@ namespace Nuwa.Sdk.Elements
             frame.SetState(KeyClientStrategy, clientStrategy);
         }
 
-        public override void Recover(Type testClassType, NuwaTestCase testCommand)
+        public override void Recover(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
-            SetHttpclient(testClassType, testCommand);
+            SetHttpclient(frame, testClassType, testClassInstance, testCommand);
         }
 
         /// <summary>
         /// Create an http client according to configuration and host strategy
         /// </summary>
         /// <param name="testClass">the test class under test</param>
-        protected void SetHttpclient(Type testClassType, NuwaTestCase testCommand)
+        protected void SetHttpclient(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
             // set the HttpClient if necessary
             var clientPrpt = testClassType.GetProperties()
@@ -70,7 +70,7 @@ namespace Nuwa.Sdk.Elements
             }
 
             // create a client strategy from the host strategy
-            var strategy = testCommand.Frame.GetState(KeyClientStrategy) as IClientStrategy;
+            var strategy = frame.GetState(KeyClientStrategy) as IClientStrategy;
             if (strategy == null)
             {
                 return;
@@ -90,7 +90,7 @@ namespace Nuwa.Sdk.Elements
             if (strategy != null)
             {
                 strategy.MessageLog = this.MessageLog;
-                clientPrpt.SetValue(testClass, strategy.CreateClient(), null);
+                clientPrpt.SetValue(testClassInstance, strategy.CreateClient(), null);
             }
             else
             {

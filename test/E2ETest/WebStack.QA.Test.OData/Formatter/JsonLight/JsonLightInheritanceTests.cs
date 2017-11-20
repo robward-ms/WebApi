@@ -20,6 +20,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightInheritanceTests : InheritanceTests
     {
+        public JsonLightInheritanceTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public static TheoryDataSet<Type, string, string> PostGetUpdateAndDeleteData
@@ -93,7 +98,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             configuration.AddODataQueryFilter();
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(PostGetUpdateAndDeleteData))]
         public async Task PostGetUpdateAndDeleteJsonLight(Type entityType, string entitySetName, string acceptHeader)
         {
@@ -102,7 +107,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             await PostGetUpdateAndDelete(entityType, entitySetName);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -118,7 +123,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             AddAndRemoveBaseNavigationPropertyInDerivedType();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -134,7 +139,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             AddAndRemoveDerivedNavigationPropertyInDerivedType();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

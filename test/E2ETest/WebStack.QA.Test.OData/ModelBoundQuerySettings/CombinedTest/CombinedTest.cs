@@ -14,12 +14,17 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
 {
-    public class CombinedTest : ODataTestBase
+    public class CombinedTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
+
+        public CombinedTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -36,7 +41,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
                 CombinedEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl + "?$expand=NoExpandOrders", "expand")]
         [InlineData(CustomerBaseUrl + "?$count=true", "count")]
         [InlineData(CustomerBaseUrl + "?$filter=Id eq 1", "filter")]
@@ -64,7 +69,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl, "Orders($count=true)", "count")]
         [InlineData(CustomerBaseUrl, "Orders($filter=Id eq 1)", "filter")]
         [InlineData(CustomerBaseUrl, "Orders($orderby=Id)", "orderby")]
@@ -89,7 +94,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl, "CountableOrders($count=true)")]
         [InlineData(CustomerBaseUrl, "Orders($filter=Name eq 'test')")]
         [InlineData(CustomerBaseUrl, "Orders($orderby=Name)")]
@@ -112,7 +117,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
@@ -133,7 +138,7 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($count=true)")]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($top=1)")]
         [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($count=true)")]

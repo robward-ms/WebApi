@@ -22,13 +22,12 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    public class ODataValueProviderTests
+    public class ODataValueProviderTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ODataValueProviderTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -47,27 +46,27 @@ namespace WebStack.QA.Test.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [Theory]
-        [InlineData("{0}/odata/BindCustomers({1})", 5, HttpStatusCode.OK)]
-        [InlineData("{0}/odata/BindCustomers({1})", 0, HttpStatusCode.BadRequest)]
-        public void CanModelBindNonStringDataFromUri(string urlTemplate, int key, HttpStatusCode expectedStatusCode)
+        [NuwaTheory]
+        [InlineData("{0}/odata/BindCustomers({1})", 5, (int)HttpStatusCode.OK)]
+        [InlineData("{0}/odata/BindCustomers({1})", 0, (int)HttpStatusCode.BadRequest)]
+        public void CanModelBindNonStringDataFromUri(string urlTemplate, int key, int expectedStatusCode)
         {
             string url = string.Format(urlTemplate, BaseAddress, key);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
             HttpResponseMessage response = Client.SendAsync(request).Result;
-            Assert.Equal(expectedStatusCode, response.StatusCode);
+            Assert.Equal(expectedStatusCode, (int)response.StatusCode);
             dynamic content = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal(key, (int)content.Id);
         }
 
-        [Theory]
-        [InlineData("{0}/api/BindCustomersApi/", HttpStatusCode.BadRequest)]
-        public void CanModelBindNonStringDataFromUriWebAPI(string urlTemplate, HttpStatusCode expectedStatusCode)
+        [NuwaTheory]
+        [InlineData("{0}/api/BindCustomersApi/", (int)HttpStatusCode.BadRequest)]
+        public void CanModelBindNonStringDataFromUriWebAPI(string urlTemplate, int expectedStatusCode)
         {
             string url = string.Format(urlTemplate, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
             HttpResponseMessage response = Client.SendAsync(request).Result;
-            Assert.Equal(expectedStatusCode, response.StatusCode);
+            Assert.Equal(expectedStatusCode, (int)response.StatusCode);
             dynamic content = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal(0, (int)content.Id);
         }

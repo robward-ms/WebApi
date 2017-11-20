@@ -18,13 +18,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class DeleteUpdatedEntryWithIfMatchETagsTest
+    public class DeleteUpdatedEntryWithIfMatchETagsTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DeleteUpdatedEntryWithIfMatchETagsTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -44,7 +43,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string eTag;

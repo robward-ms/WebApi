@@ -22,13 +22,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
-    public class JsonETagsTests
+    public class JsonETagsTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public JsonETagsTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -63,7 +62,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ModelBuilderTest()
         {
             string expectMetadata =
@@ -135,7 +134,7 @@ namespace WebStack.QA.Test.OData.ETags
                 collection.Elements.Select(e => ((IEdmPathExpression) e).PathSegments.Single()));
         }
 
-        [Fact]
+        [NuwaFact]
         public void JsonWithDifferentMetadataLevelsHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers";

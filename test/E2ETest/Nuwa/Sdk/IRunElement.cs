@@ -37,7 +37,7 @@ namespace Nuwa.Sdk
         /// <summary>
         /// Recover test scene
         /// </summary>
-        void Recover(Type testClassType, NuwaTestCase testCommand);
+        void Recover(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand);
 
         /// <summary>
         /// Clean up the test command and run frame.

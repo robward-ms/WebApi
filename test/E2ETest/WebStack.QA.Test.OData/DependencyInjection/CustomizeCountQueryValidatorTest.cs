@@ -19,10 +19,15 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.DependencyInjection
 {
-    public class CustomizeCountQueryValidatorTest : ODataTestBase
+    public class CustomizeCountQueryValidatorTest : NuwaTestBase
     {
         private const string CustomerBaseUrl = "{0}/dependencyinjection/Customers";
         private const string OrderBaseUrl = "{0}/dependencyinjection/Orders";
+
+        public CustomizeCountQueryValidatorTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -40,10 +45,10 @@ namespace WebStack.QA.Test.OData.DependencyInjection
                        .AddService<CountQueryValidator, MyCountQueryValidator>(ServiceLifetime.Singleton));
         }
 
-        [Theory]
-        [InlineData(CustomerBaseUrl + "?$count=true", HttpStatusCode.BadRequest)]
-        [InlineData(OrderBaseUrl + "?$count=true", HttpStatusCode.OK)]
-        public void CutomizeCountValidator(string entitySetUrl, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData(CustomerBaseUrl + "?$count=true", (int)HttpStatusCode.BadRequest)]
+        [InlineData(OrderBaseUrl + "?$count=true", (int)HttpStatusCode.OK)]
+        public void CutomizeCountValidator(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -56,8 +61,8 @@ namespace WebStack.QA.Test.OData.DependencyInjection
             HttpResponseMessage response = client.SendAsync(request).Result;
             string result = response.Content.ReadAsStringAsync().Result;
 
-            Assert.Equal(statusCode, response.StatusCode);
-            if (statusCode == HttpStatusCode.BadRequest)
+            Assert.Equal(statusCode, (int)response.StatusCode);
+            if (statusCode == (int)HttpStatusCode.BadRequest)
             {
                 Assert.Contains("cannot be used for $count", result);
             }

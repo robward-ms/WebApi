@@ -23,17 +23,16 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.UnboundOperation
 {
     [NuwaFramework]
-    public class UnboundOperationTest
+    public class UnboundOperationTest : NuwaTestBase
     {
         #region Set up
 
         private readonly string EdmSchemaNamespace = typeof(ConventionCustomer).Namespace;
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public UnboundOperationTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -70,7 +69,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
 
         #region Model Builder
 
-        [Fact]
+        [NuwaFact]
         public async Task MetaDataTest()
         {
             // Act
@@ -141,7 +140,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             #endregion
         }
 
-        [Theory()]
+        [NuwaTheory]
         [InlineData("application/json")]
         public async Task ServiceDocumentTest(string format)
         {
@@ -172,7 +171,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
 
         #region functions and function imports
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportWithoutParameters()
         {
             // Act
@@ -192,7 +191,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportOverload()
         {
             // Act
@@ -210,7 +209,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.DoesNotContain("\"ID\":409", responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/GetAllConventionCustomersImport(CustomerName='Name 1')/$count", "2")] // returns collection of entity.
         [InlineData("/odata/GetDefinedGenders()/$count", "2")] // returns collection of enum
         public async Task DollarCountFollowingFunctionImport(string url, string expectedCount)
@@ -226,7 +225,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Equal("2", responseString);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportWithOneParameters()
         {
             // Arrange
@@ -248,7 +247,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Contains(expect, responseString);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportWithMoreThanOneParameters()
         {
             // Arrange
@@ -269,7 +268,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Contains("\"Price@odata.type\":\"#Decimal\",\"Price\":5", responseString);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportFollowedByProperty()
         {
             // Arrange
@@ -288,7 +287,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Contains(expect, responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("GetAllConventionCustomersImport()")]
         [InlineData("GetAllConventionCustomersImport(CustomerName='Name%201')")]
         public async Task FunctionImportFollowedByQueryOption(string functionImport)
@@ -311,7 +310,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
         }
 
         // Negative: Unbound function in query option is not supported
-        [Fact]
+        [NuwaFact]
         public async Task UnboundFunctionInFilter()
         {
             // Arrange
@@ -328,7 +327,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task FunctionImportInFilter()
         {
             // Arrange
@@ -356,7 +355,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task UnboundFunction_WithPrimitiveEnumComplexEntity_AndCollectionOfThemParameters()
         {
             // Arrange
@@ -377,7 +376,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             response.EnsureSuccessStatusCode();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task UnboundAction_WithPrimitiveEnumComplexEntity_AndCollectionOfThemParameters()
         {
             // Arrange
@@ -407,7 +406,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
 
         #region action imports
 
-        [Fact]
+        [NuwaFact]
         public async Task ActionImportWithParameters()
         {
             await ResetDatasource();
@@ -421,7 +420,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             Assert.Contains("Street 11", responseString);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ActionImportFollowedByQueryOption()
         {
             await this.ResetDatasource();

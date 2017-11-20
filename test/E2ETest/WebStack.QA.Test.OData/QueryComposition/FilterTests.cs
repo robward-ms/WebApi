@@ -22,8 +22,13 @@ using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class FilterTests : ODataTestBase
+    public class FilterTests : NuwaTestBase
     {
+        public FilterTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         #region Test Data
         public static TheoryDataSet<string, IEnumerable<Product>> SpecialCharacterData
         {
@@ -221,149 +226,202 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
-        [MemberData(nameof(SpecialCharacterData))]
-        [MemberData(nameof(OperatorData))]
-        [MemberData(nameof(StringFunctionData))]
-        //[MemberData(nameof(MixQueries))] 1559
-        //[MemberData(nameof(AdHocTests))]
-        [MemberData(nameof(DateAndTimeOfDayData))]
-        public void TestFilters(string filter, IEnumerable<Product> expected)
+        [NuwaFact]
+        public void TestFilters()
         {
-            var requestUri = this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter;
+            // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = SpecialCharacterData
+                .Union(OperatorData)
+                .Union(StringFunctionData)
+                .Union(DateAndTimeOfDayData);
+            //.Union(MixQueries) 1559
+            //.Union*AdHocTests);
 
-            var response = this.Client.GetAsync(requestUri).Result;
-            if (response.StatusCode != HttpStatusCode.OK)
+            foreach (var testCase in testCases)
             {
-                /* 
-                 * This if statement is added due to that the test data is generated randomly, and sometimes the test case fails on CI,
-                 * but we have no way to investigate as both the request and response are not logged. 
-                 */
+                string filter = (string)testCase[0];
+                IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
 
-                // C:\Users\{user}\AppData\Local\Temp\
-                var now = DateTimeOffset.Now;
-                var path = System.IO.Path.GetTempPath() + "FilterTests.TestFilters.Error." + now.ToString("yyyy-MM-dd_HH-mm-ss_fffffff.") + Guid.NewGuid().ToString() + ".log";
-                var traceListener = new TextWriterTraceListener(path, "FilterTests.TestFilters");
-                Trace.Listeners.Add(traceListener);
+                var requestUri = this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter;
 
-                Trace.TraceInformation("Request: {0}", requestUri);
-                Trace.TraceError("StatusCode: {0}", response.StatusCode);
-                Trace.TraceError(response.Content.ReadAsStringAsync().Result);
+                var response = this.Client.GetAsync(requestUri).Result;
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    /* 
+                     * This if statement is added due to that the test data is generated randomly, and sometimes the test case fails on CI,
+                     * but we have no way to investigate as both the request and response are not logged. 
+                     */
 
-                Trace.Flush();
-                Trace.Listeners.Remove(traceListener);
-                traceListener.Close();
-                Assert.True(false);
-            }
-            var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                    // C:\Users\{user}\AppData\Local\Temp\
+                    var now = DateTimeOffset.Now;
+                    var path = System.IO.Path.GetTempPath() + "FilterTests.TestFilters.Error." + now.ToString("yyyy-MM-dd_HH-mm-ss_fffffff.") + Guid.NewGuid().ToString() + ".log";
+                    var traceListener = new TextWriterTraceListener(path, "FilterTests.TestFilters");
+                    Trace.Listeners.Add(traceListener);
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
-            {
-                Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
-                Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
-                Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
-            }
-        }
+                    Trace.TraceInformation("Request: {0}", requestUri);
+                    Trace.TraceError("StatusCode: {0}", response.StatusCode);
+                    Trace.TraceError(response.Content.ReadAsStringAsync().Result);
 
-        [Theory]
-        [MemberData(nameof(SpecialCharacterData))]
-        [MemberData(nameof(OperatorData))]
-        [MemberData(nameof(StringFunctionData))]
-        //[MemberData(nameof(MixQueries))] 1559
-        //[MemberData(nameof(AdHocTests))]
-        [MemberData(nameof(DateAndTimeOfDayData))]
-        public void TestFiltersWithXmlSerializer(string filter, IEnumerable<Product> expected)
-        {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter);
-            request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/xml"));
-            var response = this.Client.SendAsync(request).Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                    Trace.Flush();
+                    Trace.Listeners.Remove(traceListener);
+                    traceListener.Close();
+                    Assert.True(false);
+                }
+                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
-            {
-                Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
-                Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
-                Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
+                    Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
+                    Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                }
             }
         }
 
-        [Theory]
-        [MemberData(nameof(SpecialCharacterData))]
-        [MemberData(nameof(OperatorData))]
-        [MemberData(nameof(StringFunctionData))]
-        // [MemberData(nameof(MixQueries))] // 1559
-        // [MemberData(nameof(AdHocTests))] // 396
-        [MemberData(nameof(DateAndTimeOfDayData))]
-        public void TestFiltersOnHttpResponse(string filter, IEnumerable<Product> expected)
+        [NuwaFact]
+        public void TestFiltersWithXmlSerializer()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsHttpResponse?$filter=" + filter).Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = SpecialCharacterData
+                .Union(OperatorData)
+                .Union(StringFunctionData)
+                .Union(DateAndTimeOfDayData);
+            //.Union(MixQueries) 1559
+            //.Union*AdHocTests); 396
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
+            foreach (var testCase in testCases)
             {
-                Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
-                Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
-                Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                string filter = (string)testCase[0];
+                IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
+
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter);
+                request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/xml"));
+                var response = this.Client.SendAsync(request).Result;
+                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
+                    Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
+                    Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                }
             }
         }
 
-        [Theory]
-        [MemberData(nameof(SpecialCharacterData))]
-        [MemberData(nameof(OperatorData))]
-        [MemberData(nameof(StringFunctionData))]
-        //[MemberData(nameof(MixQueries))]// 1559
-        // [MemberData(nameof(AdHocTests))] // 396
-        [MemberData(nameof(DateAndTimeOfDayData))]
-        public void TestFiltersAsync(string filter, IEnumerable<Product> expected)
+        [NuwaFact]
+        public void TestFiltersOnHttpResponse()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetAsyncProducts?$filter=" + filter).Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = SpecialCharacterData
+                .Union(OperatorData)
+                .Union(StringFunctionData)
+                .Union(DateAndTimeOfDayData);
+            //.Union(MixQueries) 1559
+            //.Union*AdHocTests); 396
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
+            foreach (var testCase in testCases)
             {
-                Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
-                Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
-                Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                string filter = (string)testCase[0];
+                IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
+
+                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsHttpResponse?$filter=" + filter).Result;
+                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
+                    Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
+                    Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                }
             }
         }
 
-        [Theory]
-        [MemberData(nameof(SpecialCharacterData))]
-        [MemberData(nameof(OperatorData))]
-        [MemberData(nameof(StringFunctionData))]
-        //[MemberData(nameof(MixQueries))] // 1559
-        // [MemberData(nameof(AdHocTests))] // 396
-        [MemberData(nameof(DateAndTimeOfDayData))]
-        public void TestFiltersOnAnonymousType(string filter, IEnumerable<Product> expected)
+        [NuwaFact]
+        public void TestFiltersAsync()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsAsAnonymousType?$filter=" + filter).Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = SpecialCharacterData
+                .Union(OperatorData)
+                .Union(StringFunctionData)
+                .Union(DateAndTimeOfDayData);
+            //.Union(MixQueries) 1559
+            //.Union*AdHocTests); 396
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
+            foreach (var testCase in testCases)
             {
-                Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
-                Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
-                Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                string filter = (string)testCase[0];
+                IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
+
+                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetAsyncProducts?$filter=" + filter).Result;
+                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
+                    Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
+                    Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                }
             }
         }
 
-        [Theory]
-        [MemberData(nameof(AnyAllData))]
-        public void TestAnyAll(string filter, IEnumerable<Movie> expected)
+        [NuwaFact]
+        public void TestFiltersOnAnonymousType()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMovies?$filter=" + filter).Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Movie>>().Result;
+            // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = SpecialCharacterData
+                .Union(OperatorData)
+                .Union(StringFunctionData)
+                .Union(DateAndTimeOfDayData);
+            //.Union(MixQueries) 1559
+            //.Union*AdHocTests); 396
 
-            Assert.Equal(expected.Count(), result.Count());
-            for (int i = 0; i < expected.Count(); i++)
+            foreach (var testCase in testCases)
             {
-                Assert.Equal(expected.ElementAt(i).MovieId, result.ElementAt(i).MovieId);
-                Assert.Equal(expected.ElementAt(i).Director.PersonId, result.ElementAt(i).Director.PersonId);
+                string filter = (string)testCase[0];
+                IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
+
+                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsAsAnonymousType?$filter=" + filter).Result;
+                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).ID, result.ElementAt(i).ID);
+                    Assert.Equal(expected.ElementAt(i).Name, result.ElementAt(i).Name);
+                    Assert.Equal(expected.ElementAt(i).Description, result.ElementAt(i).Description);
+                }
+            }
+        }
+
+        [NuwaFact]
+        public void TestAnyAll()
+        {
+            // While this seems ideal for a Theory test case, the IEnumerable<Movie> would need to be serialize-able in
+            // order to generate an Xunit 2.0 test case.
+            var testCases = AnyAllData;
+            foreach (var testCase in testCases)
+            {
+                string filter = (string)testCase[0];
+                IEnumerable<Movie> expected = (IEnumerable<Movie>)testCase[1];
+
+                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMovies?$filter=" + filter).Result;
+                var result = response.Content.ReadAsAsync<IEnumerable<Movie>>().Result;
+
+                Assert.Equal(expected.Count(), result.Count());
+                for (int i = 0; i < expected.Count(); i++)
+                {
+                    Assert.Equal(expected.ElementAt(i).MovieId, result.ElementAt(i).MovieId);
+                    Assert.Equal(expected.ElementAt(i).Director.PersonId, result.ElementAt(i).Director.PersonId);
+                }
             }
         }
 
@@ -373,11 +431,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
         //[MemberData(nameof(StringFunctionData))]
         //[MemberData(nameof(MixQueries))] 1559
         //[MemberData(nameof(AdHocTests))]
-        public void TestFiltersWithMultipleThreads(string filter, IEnumerable<Product> expected)
+        protected void TestFiltersWithMultipleThreads(string filter, IEnumerable<Product> expected)
         {
             Parallel.For(0, 10, i =>
             {
-                TestFilters(filter, expected);
+                //TestFilters(filter, expected);
             });
         }
     }

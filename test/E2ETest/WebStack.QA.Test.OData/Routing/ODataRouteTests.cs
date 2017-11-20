@@ -22,28 +22,12 @@ namespace WebStack.QA.Test.OData.Routing
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ODataRouteTests
+    public class ODataRouteTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public ODataRouteTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -69,7 +53,7 @@ namespace WebStack.QA.Test.OData.Routing
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("")]
         [InlineData("prefix/")]
         [InlineData("parameter/")]

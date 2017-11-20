@@ -18,13 +18,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ModelBuilder
 {
     [NuwaFramework]
-    public class ActionMetadataTests
+    public class ActionMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ActionMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -44,7 +43,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ProvideOverloadToSupplyEntitySetConfiguration()
         {
             IEdmModel model = null;

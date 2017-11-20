@@ -49,53 +49,50 @@ namespace Nuwa.Control
         /// <returns>Returns aggregated exception thrown during execution; null, otherwise.</returns>
         public static void ClassFinish(Collection<RunFrame> frames)
         {
-            var exceptions = new List<Exception>();
-
             // dispose all run frame
-            foreach (var rf in frames)
+            if (frames != null)
             {
-                try
+                foreach (var rf in frames)
                 {
-                    rf.Cleanup();
+                    try
+                    {
+                        rf.Cleanup();
+                    }
+                    catch (Exception)
+                    {
+                        // While failure may occur, don't let errors in tearing down the
+                        // test fail the test.
+                    }
                 }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-
-            if (exceptions.Count != 0)
-            {
-                throw new AggregateException(exceptions);
             }
         }
 
-        public static IEnumerable<IXunitTestCase> EnumerateTestCommands(ITypeInfo typeUnderTest, IEnumerable<IXunitTestCase> discoveredTestCases)
+        public static IEnumerable<IXunitTestCase> EnumerateTestCommands(
+            ITypeInfo typeUnderTest,
+            IEnumerable<IXunitTestCase> discoveredTestCases,
+            IMessageSink diagnosticMessageSink,
+            TestMethodDisplay defaultMethodDisplay)
         {
-            // If framework attribute, get frames.
-            // If frames but no fixture, fail test case or skip.
-            // Otherwise, base class discover only.
+            Collection<RunFrame> frames = CreateFrames(typeUnderTest);
 
-            /// TODO - Advanced feature:
-            /// 1. Frame filter, some cases can be filtered under some frame
-            var combinations = from test in discoveredTestCases
-                               from frame in CreateFrames(typeUnderTest)
-                               select new { TestCommand = test, RunFrame = frame };
-
-            foreach (var each in combinations)
+            foreach (var test in discoveredTestCases)
             {
-                if (!string.IsNullOrEmpty(each.TestCommand.SkipReason))
+                if (!string.IsNullOrEmpty(test.SkipReason))
                 {
-                    yield return each.TestCommand;
+                    yield return test;
+                }
+                else if (frames.Count == 0)
+                {
+                    yield return test;
                 }
                 else
                 {
-                    var testCommand = new NuwaTestCase(each.TestCommand)
+                    for (int i = 0; i < frames.Count; i++)
                     {
-                        Frame = each.RunFrame,
-                    };
-
-                    yield return testCommand;
+                        // Test case gets frame number, 0 to #frames -1. We really just need a placeholder for discovery,
+                        // we'll attach to the actual frame during the test run.
+                        yield return new NuwaTestCase(i, diagnosticMessageSink, defaultMethodDisplay, test.TestMethod, test.TestMethodArguments);
+                    }
                 }
             }
         }
@@ -106,7 +103,7 @@ namespace Nuwa.Control
         /// Exception will be thrown if the validation failed. The thrown exception
         /// is expected be caught in external frame.
         /// </summary>
-        private static bool ValidateTypeUnderTest(ITypeInfo typeUnderTest)
+        public static bool ValidateTypeUnderTest(ITypeInfo typeUnderTest)
         {
             // check framework attribute
             if (NuwaTestClassCommand.GetNuwaFrameworkAttr(typeUnderTest) == null)

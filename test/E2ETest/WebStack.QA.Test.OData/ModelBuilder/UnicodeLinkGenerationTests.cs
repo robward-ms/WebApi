@@ -19,8 +19,13 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class UnicodeLinkGenerationTests : ODataTestBase
+    public class UnicodeLinkGenerationTests : NuwaTestBase
     {
+        public UnicodeLinkGenerationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {

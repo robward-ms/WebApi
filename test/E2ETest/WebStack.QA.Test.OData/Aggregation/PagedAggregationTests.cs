@@ -11,13 +11,17 @@ using Newtonsoft.Json.Linq;
 using Nuwa;
 using WebStack.QA.Test.OData.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace WebStack.QA.Test.OData.Aggregation
 {
-    public class PagedAggregationTests : ODataTestBase
+    public class PagedAggregationTests : NuwaTestBase
     {
         private const string AggregationTestBaseUrl = "{0}/pagedaggregation/Customers";
+
+        public PagedAggregationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -33,7 +37,7 @@ namespace WebStack.QA.Test.OData.Aggregation
                 AggregationEdmModel.GetEdmModel(configuration));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +
                     "/filter(Order/Name ne 'Order0')&$orderby=Order/Name")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +

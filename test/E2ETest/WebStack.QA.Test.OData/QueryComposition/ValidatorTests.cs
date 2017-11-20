@@ -170,31 +170,24 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class ValidatorTests : ODataTestBase
+    public class ValidatorTests : NuwaTestBase
     {
-        public static TheoryDataSet<ODataValidationSettings, string, bool> ValidateOptionsData
+        public ValidatorTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
+        public static TheoryDataSet<string, bool> ValidateOptionsData
         {
             get
             {
-                var commonSettings = new ODataValidationSettings
-                {
-                    MaxTop = 10,
-                    MaxSkip = 10,
-                    AllowedQueryOptions = AllowedQueryOptions.Top | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Filter,
-                    AllowedLogicalOperators = AllowedLogicalOperators.Not | AllowedLogicalOperators.Equal | AllowedLogicalOperators.GreaterThan | AllowedLogicalOperators.And | AllowedLogicalOperators.Or,
-                    AllowedFunctions = AllowedFunctions.AllMathFunctions | AllowedFunctions.Contains | AllowedFunctions.AllDateTimeFunctions,
-                    AllowedArithmeticOperators = AllowedArithmeticOperators.Add | AllowedArithmeticOperators.Subtract
-                };
-                commonSettings.AllowedOrderByProperties.Add("ID");
-                commonSettings.AllowedOrderByProperties.Add("DateTime");
-
-                var set = new TheoryDataSet<ODataValidationSettings, string, bool>();
-                set.Add(commonSettings, "$top=10", true);
-                set.Add(commonSettings, "$top=11", false);
-                set.Add(commonSettings, new AttackStringBuilder().Append("$filter=").Repeat("not ", 50).Append("(1 mul 1 eq 1)").ToString(), false);
-                set.Add(commonSettings, "$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and floor(Double) gt 5", true);
-                set.Add(commonSettings, "$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and floor(Decimal) gt 5", true);
-                set.Add(commonSettings, "$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and length(Name) gt 5", false);
+                var set = new TheoryDataSet<string, bool>();
+                set.Add("$top=10", true);
+                set.Add("$top=11", false);
+                set.Add(new AttackStringBuilder().Append("$filter=").Repeat("not ", 50).Append("(1 mul 1 eq 1)").ToString(), false);
+                set.Add("$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and floor(Double) gt 5", true);
+                set.Add("$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and floor(Decimal) gt 5", true);
+                set.Add("$top=10&$orderby=ID,DateTime&$filter=contains(Name, 'Test') and (DateTime gt 2012-12-04T00:00:00Z or 1 add 1 eq 2) and length(Name) gt 5", false);
 
                 return set;
             }
@@ -249,7 +242,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/ValidatorTests/OnlySupportTopAndSkip?$top=1&$skip=10", true)]
         [InlineData("/api/ValidatorTests/OnlySupportTopAndSkip?$orderby=ID", false)]
         [InlineData("/api/ValidatorTests/MaxTopSkipIs10?$top=9&$skip=10", true)]
@@ -280,10 +273,22 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ValidateOptionsData))]
-        public void VerifyValidateOptions(ODataValidationSettings settings, string query, bool success)
+        public void VerifyValidateOptions(string query, bool success)
         {
+            var settings = new ODataValidationSettings
+            {
+                MaxTop = 10,
+                MaxSkip = 10,
+                AllowedQueryOptions = AllowedQueryOptions.Top | AllowedQueryOptions.OrderBy | AllowedQueryOptions.Filter,
+                AllowedLogicalOperators = AllowedLogicalOperators.Not | AllowedLogicalOperators.Equal | AllowedLogicalOperators.GreaterThan | AllowedLogicalOperators.And | AllowedLogicalOperators.Or,
+                AllowedFunctions = AllowedFunctions.AllMathFunctions | AllowedFunctions.Contains | AllowedFunctions.AllDateTimeFunctions,
+                AllowedArithmeticOperators = AllowedArithmeticOperators.Add | AllowedArithmeticOperators.Subtract
+            };
+            settings.AllowedOrderByProperties.Add("ID");
+            settings.AllowedOrderByProperties.Add("DateTime");
+
             var response = this.Client.PostAsync(
                 this.BaseAddress + "/api/ValidatorTests/ValidateOptions?" + query,
                 new ObjectContent<ODataValidationSettings>(settings, new JsonMediaTypeFormatter())).Result;
@@ -297,20 +302,20 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllowedFunctionsData))]
         public void VerifyAllowedFunctions(AllowedFunctions value1, AllowedFunctions value2)
         {
             Assert.Equal(value2, value1 & value2);
         }
 
-        [Theory]
-        [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=ID gt 2", HttpStatusCode.OK)]
-        [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=Name eq 'One'", HttpStatusCode.BadRequest)]
-        public void VerifyCustomValidator(string url, HttpStatusCode statusCode)
+        [NuwaTheory]
+        [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=ID gt 2", (int)HttpStatusCode.OK)]
+        [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=Name eq 'One'", (int)HttpStatusCode.BadRequest)]
+        public void VerifyCustomValidator(string url, int statusCode)
         {
             var response = this.Client.GetAsync(this.BaseAddress + url).Result;
-            Assert.Equal(statusCode, response.StatusCode);
+            Assert.Equal(statusCode, (int)response.StatusCode);
         }
     }
 }

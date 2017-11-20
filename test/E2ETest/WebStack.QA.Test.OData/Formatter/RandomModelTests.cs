@@ -23,30 +23,14 @@ namespace WebStack.QA.Test.OData.Formatter
     [NuwaHost(HostType.WcfSelf)]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class RandomModelTests : IODataTestBase, IODataFormatterTestBase
+    public class RandomModelTests : NuwaTestBase, IODataFormatterTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
-        {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
-        }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         private static ODataModelTypeCreator creator = null;
+
+        public RandomModelTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         public static ODataModelTypeCreator Creator
         {
@@ -151,7 +135,7 @@ namespace WebStack.QA.Test.OData.Formatter
         // delete entity
         private async Task<DataServiceResponse> DeleteEntityAsync<T>(string entitySetName, T entity)
         {
-            var client = WriterClient(new Uri(baseAddress), ODataProtocolVersion.V4);
+            var client = WriterClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             client.AttachTo(entitySetName, entity);
             client.DeleteObject(entity);
 

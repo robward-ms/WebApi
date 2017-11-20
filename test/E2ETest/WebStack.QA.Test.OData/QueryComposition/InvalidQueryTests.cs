@@ -18,13 +18,12 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.QueryComposition
 {
     [NuwaFramework]
-    public class InvalidQueryTests
+    public class InvalidQueryTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public InvalidQueryTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -41,7 +40,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/InvalidQueryCustomers?$filter=id eq 5")]
         [InlineData("/odata/InvalidQueryCustomers(5)?$filter=id eq 5")]
         [InlineData("/odata/InvalidQueryCustomers?$orderby=id")]

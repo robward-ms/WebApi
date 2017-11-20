@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.props" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.props')" />
-  <Import Project="..\..\..\sln\packages\xunit.runner.visualstudio.2.3.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props')" />
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -96,7 +96,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\..\sln\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -144,16 +144,16 @@
       <HintPath>..\..\..\sln\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="xunit.assert, Version=2.3.0.3820, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\..\..\sln\packages\xunit.assert.2.3.0\lib\netstandard1.1\xunit.assert.dll</HintPath>
+    <Reference Include="xunit.assert, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="xunit.core, Version=2.3.0.3820, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\..\..\sln\packages\xunit.extensibility.core.2.3.0\lib\netstandard1.1\xunit.core.dll</HintPath>
+    <Reference Include="xunit.core, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.3.0.3820, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\..\..\sln\packages\xunit.extensibility.execution.2.3.0\lib\net452\xunit.execution.desktop.dll</HintPath>
+    <Reference Include="xunit.execution.desktop, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -227,8 +227,10 @@
     <Compile Include="Formatter\ODataFeedSerializeWithoutNavigationSourceTests.cs" />
     <Compile Include="NuwaClassFixture.cs" />
     <Compile Include="NuwaFactAttribute.cs" />
-    <Compile Include="NuwaTestBaseClass.cs" />
-    <Compile Include="NuwaTestCaseDiscoverer.cs" />
+    <Compile Include="NuwaTestBase.cs" />
+    <Compile Include="NuwaFactDiscoverer.cs" />
+    <Compile Include="NuwaTheoryAttribute.cs" />
+    <Compile Include="NuwaTheoryDiscoverer.cs" />
     <Compile Include="ODataCountTest\CountController.cs" />
     <Compile Include="ODataCountTest\CountDataModel.cs" />
     <Compile Include="ODataCountTest\CountEdmModel.cs" />
@@ -799,7 +801,6 @@
     <Compile Include="Common\Models\Vehicle\Vehicle.cs" />
     <Compile Include="Common\NavigationRoutingConvention2.cs" />
     <Compile Include="Common\ODataAcceptHeaderTestSet.cs" />
-    <Compile Include="Common\ODataTestBase.cs" />
     <Compile Include="Common\ODataTestConstants.cs" />
     <Compile Include="Common\ODataTestExtension.cs" />
     <Compile Include="Common\ODataUrlAssert.cs" />
@@ -915,7 +916,6 @@
     <Compile Include="OpenType\TypedTest.cs" />
     <Compile Include="ParameterAlias\ParameterAliasDataSource.cs" />
     <Compile Include="ParameterAlias\ParameterAliasTest.cs" />
-    <Compile Include="Programs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\AttackStringBuilder.cs" />
     <Compile Include="QueryComposition\AnonymousTypeTests.cs" />
@@ -1028,6 +1028,10 @@
       <Project>{45aa91b6-8657-4676-b441-5f325170b8b6}</Project>
       <Name>Nuwa.WebStack</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nuwa\Nuwa.csproj">
+      <Project>{A0A7A1E8-AF58-4BC8-A547-91D1DB9680CC}</Project>
+      <Name>Nuwa</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebStack.QA.Instancing\WebStack.QA.Instancing.csproj">
       <Project>{fac5c560-6ee4-441a-b7f4-8b21951c35e0}</Project>
       <Name>WebStack.QA.Instancing</Name>
@@ -1047,9 +1051,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.runner.visualstudio.2.3.0\build\net20\xunit.runner.visualstudio.props'))" />
-    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.props'))" />
-    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.targets'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <Import Project="..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.targets" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.0\build\xunit.core.targets')" />
+  <Import Project="..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
 </Project>

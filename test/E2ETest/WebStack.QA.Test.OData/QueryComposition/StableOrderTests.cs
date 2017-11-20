@@ -76,8 +76,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class StableOrderWithoutResultLimitTests : ODataTestBase
+    public class StableOrderWithoutResultLimitTests : NuwaTestBase
     {
+        public StableOrderWithoutResultLimitTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -87,7 +92,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/StableOrder/GetQueryable")]
         [InlineData("/api/StableOrder/GetEnumerable")]
         [InlineData("/api/StableOrder/GetEnumerable?a=b")]
@@ -105,7 +110,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/api/StableOrder/GetQueryable?$skip=1&$top=100")]
         [InlineData("/api/StableOrder/GetEnumerable?$skip=1")]
         [InlineData("/api/StableOrder/GetQueryable?$skip=1")]

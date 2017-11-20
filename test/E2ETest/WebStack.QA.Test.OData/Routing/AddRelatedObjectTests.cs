@@ -20,13 +20,12 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
-    public class AddRelatedObjectTests
+    public class AddRelatedObjectTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public AddRelatedObjectTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -49,19 +48,20 @@ namespace WebStack.QA.Test.OData.Routing
         {
             get
             {
-                TheoryDataSet<string, string, object> dataSet = new TheoryDataSet<string, string, object>();
-                dataSet.Add("POST", "/AROCustomers(5)/Orders", new AROOrder() { Id = 5 });
-                dataSet.Add("POST", "/AROCustomers(5)/WebStack.QA.Test.OData.Routing.AROVipCustomer/Orders", new AROOrder() { Id = 5 });
+                TheoryDataSet<string, string> dataSet = new TheoryDataSet<string, string>();
+                dataSet.Add("POST", "/AROCustomers(5)/Orders");
+                dataSet.Add("POST", "/AROCustomers(5)/WebStack.QA.Test.OData.Routing.AROVipCustomer/Orders");
                 // ConventionRouting does not support PUT to single-value navigation property
                 // dataSet.Add("PUT", "/AROCustomers(5)/WebStack.QA.Test.OData.Routing.AROVipCustomer/Address", new AROAddress() { Id = 5 });
                 return dataSet;
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AddRelatedObjectConventionsWorkPropertyData))]
-        public void AddRelatedObjectConventionsWork(string method, string url, object data)
+        public void AddRelatedObjectConventionsWork(string method, string url)
         {
+            object data = new AROOrder() { Id = 5 };
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), BaseAddress + url);
             request.Content = new ObjectContent(data.GetType(), data, new JsonMediaTypeFormatter());
             HttpResponseMessage response = Client.SendAsync(request).Result;

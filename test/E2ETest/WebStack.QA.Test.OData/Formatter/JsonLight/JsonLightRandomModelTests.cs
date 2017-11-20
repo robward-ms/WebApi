@@ -19,6 +19,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightRandomModelTests : RandomModelTests
     {
+        public JsonLightRandomModelTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public virtual string AcceptHeader { get; set; }
 
         public static TheoryDataSet<string, Type, string> EntityTypes

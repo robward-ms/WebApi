@@ -110,13 +110,12 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     [NuwaHost(HostType.KatanaSelf)]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class SpecialCharactersLinkGenerationTests
+    public class SpecialCharactersLinkGenerationTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public SpecialCharactersLinkGenerationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -134,7 +133,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var context = new DataServiceContext(new Uri(this.BaseAddress));
@@ -165,8 +164,13 @@ namespace WebStack.QA.Test.OData.ModelBuilder
         }
     }
 
-    public class SpecialCharactersLinkGenerationWebTests : ODataTestBase
+    public class SpecialCharactersLinkGenerationWebTests : NuwaTestBase
     {
+        public SpecialCharactersLinkGenerationWebTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -183,7 +187,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));

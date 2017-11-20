@@ -28,13 +28,12 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DateAndTimeOfDayTest
+    public class DateAndTimeOfDayTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DateAndTimeOfDayTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -65,7 +64,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -129,7 +128,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryDCustomerEntityTest(string mode, string mime)
         {
@@ -233,7 +232,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(FilterData))]
         public async Task CanFilterDateAndTimeOfDayProperty(string mode, string filter, IList<int> expect)
         {
@@ -297,7 +296,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(OrderByData))]
         public async Task CanOrderByDateAndTimeOfDayProperty(string mode, string orderby, string expect)
         {
@@ -344,7 +343,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(FunctionData))]
         public async Task CanCallFunctionWithDateAndTimeOfDayParameters(string mode, string function)
         {
@@ -385,7 +384,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ActionData))]
         public async Task CanCallActionWithDateAndTimeOfDayParameters(string mode, string action)
         {
@@ -414,7 +413,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             Assert.Equal(isNullable, property.Type.IsNullable);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("json")]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
@@ -434,7 +433,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             JObject content = await response.Content.ReadAsAsync<JObject>();
 
             Assert.Equal(2, content["Id"]);
-            Assert.Equal(DateTimeOffset.Parse("2016-12-24T03:02:03.007-08:00"), content["DateTime"]);
+            Assert.Equal(DateTimeOffset.Parse("2016-12-24T03:02:03.006-08:00"), content["DateTime"]);
             Assert.Equal(DateTimeOffset.Parse("2015-02-24T03:02:03.006-08:00"), content["Offset"]);
             Assert.Equal(DateTimeOffset.Parse("2014-12-26T11:02:03.004-08:00"), content["NullableOffset"]);
 
@@ -467,7 +466,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
                     new object[] {"$filter=NullableOffset lt cast(2014-12-29T01:02:03.004Z,Edm.DateTimeOffset)", new [] {1,2} },
 
                     // fractionalseconds()
-                    new object[] {"$filter=fractionalseconds(DateTime) eq 0.007", new[] {1,2,3,4} },
+                    new object[] {"$filter=fractionalseconds(DateTime) eq 0.007", new[] { 3 } },
                     new object[] {"$filter=fractionalseconds(Offset) gt 0.004", new[] {1,2,3,4,5} },
 
                     new object[] {"$filter=fractionalseconds(NullableDateTime) eq null", new[] {2,4} },
@@ -499,9 +498,9 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
                     new object[] {"$filter=2014-12-28 ne date(NullableOffset)", new[] {1,2,3,5} },
 
                     // time(DateTime)
-                    new object[] {"$filter=time(DateTime) eq 02:02:03.007", new[] {1} },
-                    new object[] {"$filter=05:02:03.007 eq time(DateTime)", new[] {4} },
-                    new object[] {"$filter=time(DateTime) lt 05:02:03.007", new[] {1,2,3} },
+                    new object[] {"$filter=time(DateTime) eq 02:02:03.005", new[] {1} },
+                    new object[] {"$filter=05:02:03.008 eq time(DateTime)", new[] {4} },
+                    new object[] {"$filter=time(DateTime) lt 05:02:03.008", new[] {1,2,3} },
 
                     // time(DateTimeOffset)
                     new object[] {"$filter=time(Offset) eq 02:02:03.005", new[] {1} },
@@ -529,7 +528,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(FilterDataForEf))]
         public async Task CanFilterDateAndTimeOfDayPropertyOnEf(string filter, IList<int> expect)
         {
@@ -578,7 +577,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(OrderByDataEf))]
         public async Task CanOrderByDateAndTimeOfDayPropertyOnEf(string orderby, string expect)
         {

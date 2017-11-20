@@ -21,13 +21,12 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class DateWithEfTest
+    public class DateWithEfTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DateWithEfTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -50,7 +49,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$filter=Birthday eq null", "2,4")]
         [InlineData("$filter=Birthday ne null", "1,3,5")]
         [InlineData("$filter=Birthday eq 2015-10-01", "1")]

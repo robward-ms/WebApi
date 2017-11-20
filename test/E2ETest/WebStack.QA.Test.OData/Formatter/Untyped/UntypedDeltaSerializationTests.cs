@@ -24,28 +24,12 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class UntypedDeltaSerializationTests
+    public class UntypedDeltaSerializationTests : NuwaTestBase
     {
-        private string baseAddress = null;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public UntypedDeltaSerializationTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get
-            {
-                return baseAddress;
-            }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -64,7 +48,7 @@ namespace WebStack.QA.Test.OData.Formatter.Untyped
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=full")]

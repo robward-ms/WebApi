@@ -63,8 +63,13 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class ODataResultTests : ODataTestBase
+    public class ODataResultTests : NuwaTestBase
     {
+        public ODataResultTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -83,7 +88,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task ODataResultWithZeroResultShouldWork()
         {
             // Arrange

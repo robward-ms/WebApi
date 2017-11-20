@@ -18,13 +18,12 @@ namespace WebStack.QA.Test.OData.Routing
 {
     [NuwaFramework]
     [NuwaHost(Nuwa.HostType.KatanaSelf)]
-    public class ActionRoutingConventionTests
+    public class ActionRoutingConventionTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ActionRoutingConventionTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -45,7 +44,7 @@ namespace WebStack.QA.Test.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/odata/ActionCars(5)/WebStack.QA.Test.OData.Routing.ActionFerrari/Default.Wash", "Ferrari")]
         [InlineData("/odata/ActionCars(5)/Default.Wash", "Car")]
         [InlineData("/odata/ActionFerraris(5)/WebStack.QA.Test.OData.Routing.ActionCar/Default.Wash", "Car")]

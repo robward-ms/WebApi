@@ -19,13 +19,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.ModelBuilder
 {
     [NuwaFramework]
-    public class PropertyTestsUsingConventionModelBuilder
+    public class PropertyTestsUsingConventionModelBuilder : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PropertyTestsUsingConventionModelBuilder(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -42,7 +41,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ConventionModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
@@ -57,13 +56,12 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     }
 
     [NuwaFramework]
-    public class PropertyTestsUsingODataModelBuilder
+    public class PropertyTestsUsingODataModelBuilder : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public PropertyTestsUsingODataModelBuilder(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -82,7 +80,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ODataModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");

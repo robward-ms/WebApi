@@ -22,13 +22,12 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ComplexTypeInheritanceSerializeTest
+    public class ComplexTypeInheritanceSerializeTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ComplexTypeInheritanceSerializeTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -45,7 +44,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             configuration.EnsureInitialized();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task CanQueryInheritanceComplexInComplexProperty()
         {
             string requestUri = string.Format("{0}/odata/InheritanceCustomers?$format=application/json;odata.metadata=full", BaseAddress);

@@ -24,13 +24,12 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class EntryMetadataTests
+    public class EntryMetadataTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public EntryMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -124,7 +123,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
             string acceptHeader)
@@ -173,7 +172,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
         {
@@ -200,7 +199,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -227,7 +226,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -254,7 +253,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -281,7 +280,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]

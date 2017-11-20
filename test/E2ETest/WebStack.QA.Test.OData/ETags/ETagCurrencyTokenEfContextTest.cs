@@ -18,13 +18,12 @@ namespace WebStack.QA.Test.OData.ETags
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class ETagCurrencyTokenEfContextTest
+    public class ETagCurrencyTokenEfContextTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ETagCurrencyTokenEfContextTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -47,7 +46,7 @@ namespace WebStack.QA.Test.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task NestedDollarSelectWorksOnCurrencyTokenProperty()
         {
             string expect = "{\r\n" +

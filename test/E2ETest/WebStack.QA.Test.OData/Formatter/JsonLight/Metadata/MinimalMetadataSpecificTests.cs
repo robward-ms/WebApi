@@ -18,13 +18,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
 {
     [NuwaFramework]
-    public class MinimalMetadataSpecificTests
+    public class MinimalMetadataSpecificTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public MinimalMetadataSpecificTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -47,7 +46,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryWithCastDoesntContainODataType()
         {
             // Arrange
@@ -65,7 +64,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             Assert.DoesNotContain("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.BigPet", payload);
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryWithoutCastContainsODataType()
         {
             // Arrange

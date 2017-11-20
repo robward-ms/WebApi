@@ -101,8 +101,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class ODataQueryOptionsTests : ODataTestBase
+    public class ODataQueryOptionsTests : NuwaTestBase
     {
+        public ODataQueryOptionsTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -113,7 +118,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Fact]
+        [NuwaFact]
         public void OptionsOnIEnumerableTShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnIEnumerableT?$filter=ID ge 50").Result;
@@ -121,7 +126,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(50, actual.Count());
         }
 
-        [Fact]
+        [NuwaFact]
         public void OptionsOnStringShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnString?$filter=ID ge 50").Result;
@@ -129,7 +134,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal("Test50", actual);
         }
 
-        [Fact]
+        [NuwaFact]
         public void GetTopValueShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/GetTopValue?$top=50").Result;
@@ -137,7 +142,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(50, actual);
         }
 
-        [Fact]
+        [NuwaFact]
         public void OptionsOnHttpResponseMessageShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnHttpResponseMessage?$filter=ID ge 50").Result;
@@ -145,7 +150,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Console.WriteLine(actual);
         }
 
-        [Fact]
+        [NuwaFact]
         public void UnitTestOptionsShouldWork()
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();
@@ -160,7 +165,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal("Test99", result);
         }
 
-        [Fact]
+        [NuwaFact]
         public void UnitTestOptionsOfStringShouldWork()
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();

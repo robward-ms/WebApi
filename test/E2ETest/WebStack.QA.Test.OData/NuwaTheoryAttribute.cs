@@ -8,11 +8,11 @@ using Xunit.Sdk;
 namespace WebStack.QA.Test.OData
 {
     /// <summary>
-    /// Nuwa-specific Fact attribute used to attach a Nuwa discoverer.
+    /// Nuwa-specific Theory attribute used to attach a Nuwa discoverer.
     /// </summary>
-    [XunitTestCaseDiscoverer("WebStack.QA.Test.OData.NuwaFactDiscoverer", "WebStack.QA.Test.OData")]
+    [XunitTestCaseDiscoverer("WebStack.QA.Test.OData.NuwaTheoryDiscoverer", "WebStack.QA.Test.OData")]
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class NuwaFactAttribute : FactAttribute
+    public sealed class NuwaTheoryAttribute : TheoryAttribute
     {
     }
 }

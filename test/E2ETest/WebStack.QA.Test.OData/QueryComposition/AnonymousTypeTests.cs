@@ -33,8 +33,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class AnonymousTypeTests : ODataTestBase
+    public class AnonymousTypeTests : NuwaTestBase
     {
+        public AnonymousTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -45,7 +50,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Fact]
+        [NuwaFact]
         public void ReturnIQueryableOfAnonymousTypeShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/AnonymousType/Get?$filter=FirstName eq 'John'").Result;

@@ -22,13 +22,12 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.ModelAliasing
 {
     [NuwaFramework]
-    public class FormattersTests
+    public class FormattersTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public FormattersTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -71,7 +70,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json;odata.streaming=true")]

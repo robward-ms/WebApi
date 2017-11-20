@@ -22,13 +22,12 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class ExplicitModelBuilderTests
+    public class ExplicitModelBuilderTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public ExplicitModelBuilderTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -177,7 +176,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return modelBuilder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
 
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {

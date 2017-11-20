@@ -124,9 +124,9 @@ namespace Nuwa.Sdk.Elements
             }
         }
 
-        public override void Recover(Type testClassType, NuwaTestCase testCommand)
+        public override void Recover(RunFrame frame, Type testClassType, object testClassInstance, NuwaTestCase testCommand)
         {
-            base.Recover(testClassType, testCommand);
+            base.Recover(frame, testClassType, testClassInstance, testCommand);
         }
 
         private static void SetupSecureEnvironment(X509Certificate2 certificate, string port)

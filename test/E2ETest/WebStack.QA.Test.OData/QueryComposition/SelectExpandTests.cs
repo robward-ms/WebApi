@@ -22,8 +22,13 @@ using Xunit;
 
 namespace WebStack.QA.Test.OData.QueryComposition
 {
-    public class SelectExpandTests : ODataTestBase
+    public class SelectExpandTests : NuwaTestBase
     {
+        public SelectExpandTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -58,7 +63,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return model;
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=*", BaseAddress);
@@ -83,7 +88,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().All(p => p.Name != "#Container.CreditRating")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryJustTheActionsOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Default.*", BaseAddress);
@@ -108,7 +113,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Any(p => p.Name == "#Default.CreditRating")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Name", BaseAddress);
@@ -133,7 +138,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 1 && x.Properties().All(p => p.Name == "Name")));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Id,Name&$expand=SelectOrders($select=Id)", BaseAddress);
@@ -159,7 +164,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => (int)x["Id"] == ((JArray)x["SelectOrders"]).Count));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -181,7 +186,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id&$expand=SelectOrders", BaseAddress);
@@ -215,7 +220,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -254,7 +259,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id,SelectOrders&$expand=SelectOrders($expand=OrderDetails)", BaseAddress);
@@ -294,7 +299,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -326,7 +331,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
         {
             // Arrange
@@ -353,7 +358,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(2, expandProp[1]["Id"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true)", BaseAddress);
@@ -384,7 +389,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedDollarCountInDollarExpandWithNestedDollarFilterWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($filter=Id lt 1;$count=true)", BaseAddress);
@@ -429,7 +434,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true;$expand=OrderDetails($count=true))", BaseAddress);
@@ -462,7 +467,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedSkipInDollarExpandWorks()
         {
             // Arrange
@@ -497,7 +502,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedTopInDollarExpandWorks()
         {
             // Arrange
@@ -532,7 +537,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedNestedOrderByInDollarExpandWorks()
         {
             // Arrange
@@ -561,7 +566,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal(0, orderdetails[0]["Id"]);
         }
 
-        [Fact]
+        [NuwaFact]
         public void NestedTopSkipOrderByInDollarExpandWorksWithEF()
         {
             // Arrange
@@ -688,13 +693,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
         [ODataRoute("ResetDataSource")]
         public IHttpActionResult ResetDataSource()
         {
-            if (_db.Database.Exists())
+            if (!_db.Customers.Any())
             {
-                _db.Database.Delete();
-                _db.Database.Create();
+                Generate();
             }
 
-            Generate();
             return Ok();
         }
 
@@ -726,7 +729,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
     public class SampleContext : DbContext
     {
-        public static string ConnectionString = @"Data Source=(LocalDb)\v11.0;Integrated Security=True;Initial Catalog=SelectExpandTest";
+        public static string ConnectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=SelectExpandTest";
 
         public SampleContext()
             : base(ConnectionString)

@@ -21,9 +21,9 @@ namespace Nuwa.WebStack.Host
 {
     /// <summary>
     /// The element sets up web host. 
-    /// During start up, it retrieves source, initializes deployement and host options, initilaizes configurations, 
+    /// During start up, it retrieves source, initializes deployment and host options, initializes configurations, 
     /// deploys, starts host.
-    /// When shutdown, it stop and dispose host server and teardown configurations.
+    /// When shutdown, it stop and dispose host server and tear-down configurations.
     /// </summary>
     public abstract class WebBaseHostElement : BaseHostElement
     {

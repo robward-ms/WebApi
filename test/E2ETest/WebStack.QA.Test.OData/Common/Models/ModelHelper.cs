@@ -118,9 +118,9 @@ namespace WebStack.QA.Test.OData.Common.Models
 
         public static IEnumerable<Movie> CreateMovieData()
         {
-            Person mike = new Person { PersonId = 1, Name = "Mike", Tags = new string[] { "Favorit" }, Age = 45 };
+            Person mike = new Person { PersonId = 1, Name = "Mike", Tags = new string[] { "Favorite" }, Age = 45 };
             Person tom = new Person { PersonId = 2, Name = "Tom", Tags = null, Age = 28 };
-            Person kevin = new Person { PersonId = 3, Name = "Kevin", Tags = new string[] { "Favorit", "Super Star" }, Age = 30 };
+            Person kevin = new Person { PersonId = 3, Name = "Kevin", Tags = new string[] { "Favorite", "Super Star" }, Age = 30 };
             Person rose = new Person { PersonId = 4, Name = "Rose", Tags = null, Partner = kevin, Age = 22 };
             kevin.Partner = rose;
             return new Movie[] 

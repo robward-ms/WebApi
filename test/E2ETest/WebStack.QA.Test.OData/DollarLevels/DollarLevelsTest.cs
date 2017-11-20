@@ -16,15 +16,14 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.DollarLevels
 {
     [NuwaFramework]
-    public class DollarLevelsTest
+    public class DollarLevelsTest : NuwaTestBase
     {
         private const string NameSpace = "WebStack.QA.Test.OData.DollarLevels";
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DollarLevelsTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -41,7 +40,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$expand=Manager($levels=-1)", 
             "Levels option must be a non-negative integer or 'max', it is set to '-1' instead.")]
         [InlineData("$expand=Manager($levels=2;$expand=DirectReports($levels=-1))", 
@@ -64,7 +63,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
                 result["error"]["innererror"]["message"].Value<string>());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$expand=Manager($levels=3)", 
             "$expand=Manager($expand=Manager($expand=Manager))")]
         [InlineData("$expand=Manager($levels=0)", 
@@ -91,7 +90,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$expand=Manager($levels=max)",
             "$expand=Manager($expand=Manager($expand=Manager($expand=Manager)))")]
         [InlineData("$expand=Manager($levels=max;$expand=DirectReports($levels=2))",
@@ -119,7 +118,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$expand=Manager($levels=max)", "$expand=Manager")]
         [InlineData("$expand=Manager($levels=1)", "$expand=Manager")]
         public async Task LevelsWithValidator(string originalQuery, string expandedQuery)
@@ -140,7 +139,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("$expand=Manager($levels=2)", 
             "The request includes a $expand path which is too deep. The maximum depth allowed is 1.")]
         public async Task InvalidLevelsWithValidator(string query, string errorMessage)
@@ -155,7 +154,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
                 result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("DLEmployees?$expand=Friend($levels=max)",
             "DLEmployees?$expand=Friend($expand=Friend)")]
         [InlineData("DLEmployees?$expand=Friend($levels=1)",
@@ -182,7 +181,7 @@ namespace WebStack.QA.Test.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("DLEmployees?$expand=Friend($levels=5)",
             "The request includes a $expand path which is too deep. The maximum depth allowed is 4.")]
         [InlineData("DLEmployees(1)?$expand=Friend($levels=4)",

@@ -13,6 +13,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightDeltaTests : DeltaTests
     {
+        public JsonLightDeltaTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public override DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
@@ -37,7 +42,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

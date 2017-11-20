@@ -20,21 +20,16 @@ namespace WebStack.QA.Test.OData.Cast
 {
     [NuwaFramework]
     [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
-    public class CastTest
+    public class CastTest : NuwaTestBase
     {
         private readonly string _namespaceOfEdmSchema = null;
         private static string[] dataSourceTypes = new string[] { "IM", "EF" };// In Memory and Entity Framework
 
-        public CastTest()
+        public CastTest(NuwaClassFixture fixture)
+            : base(fixture)
         {
             _namespaceOfEdmSchema = typeof(Product).Namespace;
         }
-
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -95,7 +90,7 @@ namespace WebStack.QA.Test.OData.Cast
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(Combinations))]
         public async Task Query(string dataSourceMode, string dollarFormat, int expectedEntityCount)
         {

@@ -71,8 +71,13 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
         }
     }
 
-    public class LinkGenerationTests : ODataTestBase
+    public class LinkGenerationTests : NuwaTestBase
     {
+        public LinkGenerationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -99,7 +104,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
             return mb.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void GeneratedLinkShouldMatchRequestRouting()
         {
             var content = this.Client.GetStringAsync(this.BaseAddress + "/v1/LinkGeneration_Model1").Result;
@@ -109,7 +114,7 @@ namespace WebStack.QA.Test.OData.ODataPathHandler
             Assert.DoesNotContain(@"/v1/LinkGeneration_Model2", content);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("/v1/LinkGeneration_Model1(1)/NonContainedNavigationProperty", "/v1/LinkGeneration_Model2(2)")]
         public void GeneratedLinkTestForNavigationProperty(string requestUrl, string expectLinkUrl)
         {

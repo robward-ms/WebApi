@@ -19,25 +19,12 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
     [NuwaFramework]
     [NuwaHttpClientConfiguration(MessageLog = false)]
     [NuwaTrace(typeof(PlaceholderTraceWriter))]
-    public class FeedMetadataTests
+    public class FeedMetadataTests : NuwaTestBase
     {
-        private string _baseAddress;
-
-        [NuwaBaseAddress]
-        public string BaseAddress
+        public FeedMetadataTests(NuwaClassFixture fixture)
+            : base(fixture)
         {
-            get { return _baseAddress; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    _baseAddress = value.Replace("localhost", Environment.MachineName);
-                }
-            }
         }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -55,7 +42,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]
@@ -85,7 +72,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             JsonAssert.PropertyEquals(expectedNextLink, "@odata.nextLink", result);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]
@@ -121,7 +108,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]

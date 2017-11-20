@@ -215,6 +215,11 @@ namespace WebStack.QA.Test.OData.Formatter
 
     public class InheritanceTests : ODataFormatterTestBase
     {
+        public InheritanceTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var builder = new ODataConventionModelBuilder(configuration);

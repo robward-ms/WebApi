@@ -21,8 +21,13 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.DollarFormat
 {
     [NuwaFramework]
-    public class DollarFormatOverrideAcceptMediaTypeTests
+    public class DollarFormatOverrideAcceptMediaTypeTests : NuwaTestBase
     {
+        public DollarFormatOverrideAcceptMediaTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public static TheoryDataSet<string, string, string> BasicMediaTypes
         {
             get
@@ -187,12 +192,6 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
         }
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -214,7 +213,7 @@ namespace WebStack.QA.Test.OData.DollarFormat
             return builder.GetEdmModel();
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(FeedMediaTypes))]
         public async Task QueryFeedWithDollarFormatOverrideAcceptMediaTypeTests(
             string contentType,
@@ -268,11 +267,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(EntryMediaTypes))]
         public async Task QueryEntryWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -318,11 +317,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryPropertyWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -361,11 +360,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryNavigationPropertyWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -404,11 +403,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryCollectionWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -448,11 +447,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
 
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ServiceDocumentMediaTypes))]
         public async Task QueryServiceDocumentWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -491,11 +490,11 @@ namespace WebStack.QA.Test.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
-                response.Content.ReadAsAsync<JObject>().RunSynchronously();
+                await response.Content.ReadAsAsync<JObject>();
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(MetadataDocumentMediaTypes))]
         public async Task QueryMetadataDocumentWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {

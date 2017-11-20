@@ -27,7 +27,7 @@ using Xunit.Extensions;
 namespace WebStack.QA.Test.OData.BoundOperation
 {
     [NuwaFramework]
-    public class BoundOperationTest
+    public class BoundOperationTest : NuwaTestBase
     {
         private const string CollectionOfEmployee = "Collection(NS.Employee)";
         private const string CollectionOfManager = "Collection(NS.Manager)";
@@ -42,11 +42,10 @@ namespace WebStack.QA.Test.OData.BoundOperation
             return responseForPost;
         }
 
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public BoundOperationTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -76,7 +75,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             configuration.EnsureInitialized();
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("AttributeRouting")]
         [InlineData("ConventionRouting")]
         [Trait("Pioneer", "true")]
@@ -271,7 +270,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
         }
         #region functions
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/Default.GetCount()")]//Convention routing
         [InlineData("AttributeRouting/Employees/Default.GetCount()")]//Attribute routing
         public async Task FunctionBoundToEntitySet(string url)
@@ -296,7 +295,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/Default.GetCount(Name='Name1%252F')", 1)]// Slash
         [InlineData("AttributeRouting/Employees/Default.GetCount(Name='Name6%3F')", 2)]// QuestionMark
         [InlineData("AttributeRouting/Employees/Default.GetCount(Name='Name20%23')", 2)]// Pound
@@ -315,7 +314,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(string.Format(@"""value"":{0}", expectedCount), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/NS.Manager/Default.GetCount()", 5)]//Convention routing
         [InlineData("AttributeRouting/Employees/NS.Manager/Default.GetCount()", 10)]//Attribute routing
         public async Task FunctionBoundToEntitySetForDerivedBindingType(string url, int expectedCount)
@@ -334,7 +333,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(string.Format(@"""value"":{0}", expectedCount), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/Default.GetEmailsCount()", 1)]//Convention routing
         [InlineData("AttributeRouting/Employees(1)/Default.GetEmailsCount()", 2)]//Attribute routing
         public async Task FunctionBoundToEntityType(string url, int expectedCount)
@@ -353,7 +352,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(string.Format(@"""value"":{0}", expectedCount), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/NS.Manager/Default.GetEmailsCount()", 1)]//Convention routing
         [InlineData("AttributeRouting/Employees(1)/NS.Manager/Default.GetEmailsCount()", 2)]//Attribute routing
         public async Task FunctionBoundToDerivedEntityType(string url, int expectedCount)
@@ -372,7 +371,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(string.Format(@"""value"":{0}", expectedCount), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees?$filter=Default.GetEmailsCount() lt 10")]
         [InlineData("ConventionRouting/Employees?$filter=$it/Default.GetEmailsCount() lt 10")]
         [InlineData("ConventionRouting/Employees/NS.Manager?$filter=Default.GetEmailsCount() lt 10")]
@@ -393,7 +392,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(@"System.NotImplementedException", responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/Emails/$count", 1)]
         [InlineData("AttributeRouting/Employees(1)/Emails/$count", 2)]
         public async Task DollarCount(string url, int expectedCount)
@@ -429,7 +428,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/Default.GetOptionalAddresses()/$count", 1)]
         [InlineData("AttributeRouting/Employees(1)/Default.GetOptionalAddresses()/$count", 2)]
         [InlineData("ConventionRouting/Employees(1)/Default.GetOptionalAddresses()/$count?$filter=City eq 'Beijing'", 0)]
@@ -454,7 +453,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
                 string.Format("Expected: {0}; Actual: {1}; Request URL: {2}", expectedCount, responseString, requestUri));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(param=7,price=9.9,name='Tony',names=['Mike','John'])")]
         [InlineData("ConventionRouting", "(param=8,price=null,name=null,names=['Sun',null,'Mike'])")]
         [InlineData("ConventionRouting", "(param=9,price=null,name=null,names=@p)?@p=['Mike',null,'John']")] // parameter alias
@@ -476,7 +475,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(ReplaceParameterAlias(parameter), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(param=null,price=9.9,name='Tony',names=['Mike','John'])")]
         [InlineData("AttributeRouting", "(param=null,price=9.9,name='Tony',names=['Mike','John'])")]
         public async Task BoundFunction_DoesnotWork_WithNullValue_ForNonNullablePrimitiveParameter(string route, string parameter)
@@ -493,7 +492,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains("Type verification failed. Expected non-nullable type 'Edm.Int32' but received a null value.", responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(bkColor=NS.Color'Red',frColor=NS.Color'Blue',colors=['Red','Green'])")]
         [InlineData("ConventionRouting", "(bkColor=NS.Color'Blue',frColor=null,colors=['Red','Green'])")]
         [InlineData("ConventionRouting", "(bkColor=NS.Color'Green',frColor=@x,colors=@y)?@x=null&@y=['Red','Blue']")] // parameter alias
@@ -515,7 +514,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(ReplaceParameterAlias(parameter.Replace("NS.Color", "")), responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(bkColor=null,frColor=NS.Color'Red',colors=['Red','Green'])")]
         [InlineData("AttributeRouting", "(bkColor=null,frColor=NS.Color'Blue',colors=['Red','Green'])")]
         public async Task BoundFunction_DoesnotWork_WithNullValue_ForNonNullableEnumParameter(string route, string parameter)
@@ -532,7 +531,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains("Type verification failed. Expected non-nullable type 'NS.Color' but received a null value.", responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(bkColor=NS.Color'Red',frColor=NS.Color'Red',colors=[null,'Red'])")]
         [InlineData("AttributeRouting", "(bkColor=NS.Color'Green',frColor=NS.Color'Green',colors=[null,'Green'])")]
         public async Task BoundFunction_DoesnotWork_WithNullValue_ForNonNullableCollectionEnumParameter(string route, string parameter)
@@ -609,7 +608,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(ComplexTestData))]
         public async Task BoundFunction_Works_WithComplex_And_CollectionOfComplexParameters(string route, string parameter, string expect)
         {
@@ -628,7 +627,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(JObject.Parse(expect), JObject.Parse(responseString));
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(address=null,location=null,addresses=[])")]
         [InlineData("AttributeRouting", "(address=null,location=null,addresses=[])")]
         public async Task BoundFunction_DoesnotWork_WithNullValue_ForNonNullableComplexParameter(string route, string parameter)
@@ -645,7 +644,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains("Type verification failed. Expected non-nullable type 'NS.Address' but received a null value.", responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting", "(address=@p,location=null,addresses=null)?@p={\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}")]
         [InlineData("AttributeRouting", "(address=@p,location=null,addresses=null)?@p={\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}")]
         public async Task BoundFunction_DoesnotWork_WithNullValue_ForCollectionComplexParameter(string route, string parameter)
@@ -695,7 +694,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             }
         }
 
-        [Theory]
+        [NuwaTheory]
         [MemberData(nameof(EntityTestData))]
         public async Task BoundFunction_Works_WithEntity_And_CollectionOfEntityParameters(string route, string parameter)
         {
@@ -713,7 +712,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
         #region actions
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/Default.IncreaseSalary", 2)]//Convention routing
         [InlineData("AttributeRouting/Employees/Default.IncreaseSalary", 1)]//Attribute routing
         public async Task ActionBountToEntitySet(string url, int expectedCount)
@@ -734,7 +733,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(expectedCount, response.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/NS.Manager/Default.IncreaseSalary", 5)]//Convention routing
         [InlineData("AttributeRouting/Employees/NS.Manager/Default.IncreaseSalary", 2)]//Attribute routing
         public async Task ActionBountToEntitySetForDerivedBindingType(string url, int expectedCount)
@@ -755,7 +754,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(expectedCount, response.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees/Default.IncreaseSalary", 3)]//Convention routing
         [InlineData("AttributeRouting/Employees/Default.IncreaseSalary", 1)]//Attribute routing
         public async Task ActionFollowedByQueryOption(string url, int expectedCount)
@@ -776,7 +775,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(expectedCount, response.Count());
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/Default.IncreaseSalary", 20)]//Convention routing
         [InlineData("AttributeRouting/Employees(1)/Default.IncreaseSalary", 40)]//Attribute routing
         public async Task ActionBountToBaseEntityType(string url, int expectedCount)
@@ -798,7 +797,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
         }
 
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/NS.Manager/Default.IncreaseSalary", 20)]//Convention routing
         [InlineData("AttributeRouting/Employees(1)/NS.Manager/Default.IncreaseSalary", 40)]//Attribute routing
         public async Task ActionBountToDerivedEntityType(string url, int expectedCount)
@@ -818,7 +817,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Contains(@"""value"":" + expectedCount, responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting")]
         [InlineData("AttributeRouting")]
         public async Task BoundAction_Works_WithPrimitive_And_CollectionOfPrimitiveParameters(string route)
@@ -847,7 +846,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
                 responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting")]
         [InlineData("AttributeRouting")]
         public async Task BoundAction_Works_WithEnum_And_CollectionOfEnumParameters(string route)
@@ -875,7 +874,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
                 responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting")]
         [InlineData("AttributeRouting")]
         public async Task BoundAction_Works_WithComplex_And_CollectionOfComplexParameters(string route)
@@ -904,7 +903,7 @@ namespace WebStack.QA.Test.OData.BoundOperation
                 responseString);
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("ConventionRouting")]
         [InlineData("AttributeRouting")]
         public async Task BoundAction_Works_WithEntity_And_CollectionOfEntityParameters(string route)

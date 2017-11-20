@@ -20,13 +20,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.QueryComposition
 {
     [NuwaFramework]
-    public class OrderByTests
+    public class OrderByTests : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public OrderByTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration config)
@@ -43,7 +42,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanOrderByNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/ZipCode desc";
@@ -61,7 +60,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanOrderByMultipleNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/CountryOrRegion/Name asc, Address/ZipCode asc";
@@ -80,7 +79,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public void CanOrderByDuplicatePropertiesSimiliarPath()
         {
             string query =

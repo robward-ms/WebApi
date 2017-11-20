@@ -15,13 +15,12 @@ using Xunit;
 namespace WebStack.QA.Test.OData.DollarId
 {
     [NuwaFramework]
-    public class DollarIdTest
+    public class DollarIdTest : NuwaTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
+        public DollarIdTest(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
 
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
@@ -37,7 +36,7 @@ namespace WebStack.QA.Test.OData.DollarId
             configuration.EnsureInitialized();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Singers(0)/Albums";
@@ -66,7 +65,7 @@ namespace WebStack.QA.Test.OData.DollarId
             Assert.Single(result);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task DeleteContainedNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/Sales";
@@ -92,7 +91,7 @@ namespace WebStack.QA.Test.OData.DollarId
             Assert.Empty(result);
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task GetSingersNameOfAlbum()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/WebStack.QA.Test.OData.DollarId.GetSingers()?$filter=MasterPiece eq 'def'&$select=Name";

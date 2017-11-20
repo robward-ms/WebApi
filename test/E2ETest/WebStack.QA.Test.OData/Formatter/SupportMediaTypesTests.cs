@@ -40,8 +40,13 @@ namespace WebStack.QA.Test.OData.Formatter
         }
     }
 
-    public class SupportMediaTypeTests : ODataTestBase
+    public class SupportMediaTypeTests : NuwaTestBase
     {
+        public SupportMediaTypeTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -61,7 +66,7 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public void RequestJsonLightShouldWork()
         {
             // Arrange
@@ -80,7 +85,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [Fact]
+        [NuwaFact]
         public void RequestAtomShouldNotWork()
         {
             // Arrange
@@ -99,7 +104,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [Fact]
+        [NuwaFact]
         public void RequestHasNoAcceptHeaderShouldNotWork()
         {
             // Arrange
@@ -117,7 +122,7 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [Fact]
+        [NuwaFact]
         public void RequestXmlShouldWorkWithMetadata()
         {
             // Arrange

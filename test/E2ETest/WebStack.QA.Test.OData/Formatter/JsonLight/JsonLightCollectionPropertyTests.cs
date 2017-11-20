@@ -14,6 +14,11 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 {
     public class JsonLightCollectionPropertyTests : CollectionPropertyTests
     {
+        public JsonLightCollectionPropertyTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         public string AcceptHeader { get; set; }
 
         public override DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
@@ -30,7 +35,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             return ctx;
         }
 
-        [Theory]
+        [NuwaTheory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

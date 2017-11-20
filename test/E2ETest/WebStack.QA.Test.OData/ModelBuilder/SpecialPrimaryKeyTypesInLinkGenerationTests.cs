@@ -202,8 +202,13 @@ namespace WebStack.QA.Test.OData.ModelBuilder
     }
     #endregion
 
-    public class SpecialPrimaryKeyTypesInLinkGenerationTests : ODataTestBase
+    public class SpecialPrimaryKeyTypesInLinkGenerationTests : NuwaTestBase
     {
+        public SpecialPrimaryKeyTypesInLinkGenerationTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -223,7 +228,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestGuidTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -245,7 +250,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestStringTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -267,7 +272,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestUIntTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -289,7 +294,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
             }
         }
 
-        [Fact]
+        [NuwaFact]
         public async Task TestLongTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));

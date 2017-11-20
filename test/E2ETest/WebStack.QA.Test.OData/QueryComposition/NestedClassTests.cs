@@ -51,8 +51,13 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
     }
 
-    public class NestedClassTests : ODataTestBase
+    public class NestedClassTests : NuwaTestBase
     {
+        public NestedClassTests(NuwaClassFixture fixture)
+            : base(fixture)
+        {
+        }
+
         [NuwaConfiguration]
         internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
@@ -63,7 +68,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryOnNestClassShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=Name eq 'aaa'").Result;
@@ -74,7 +79,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             Assert.Equal("aaa", actual.Single().Name);
         }
 
-        [Fact]
+        [NuwaFact]
         public void QueryOnPropertyWithNestedTypeShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=NestProperty/Name eq 'aaa'").Result;
