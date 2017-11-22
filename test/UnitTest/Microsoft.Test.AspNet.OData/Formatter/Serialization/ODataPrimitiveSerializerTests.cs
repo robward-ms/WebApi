@@ -40,12 +40,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             {
                 DateTime dtUtc = new DateTime(2014, 12, 12, 1, 2, 3, DateTimeKind.Utc);
                 DateTime dtLocal = new DateTime(2014, 12, 12, 1, 2, 3, DateTimeKind.Local);
-                DateTime unspecified = new DateTime(2014, 12, 12, 1, 2, 3, DateTimeKind.Unspecified);
+                //DateTime unspecified = new DateTime(2014, 12, 12, 1, 2, 3, DateTimeKind.Unspecified);
                 return new TheoryDataSet<DateTime, DateTimeOffset>
                 {
                     { dtUtc, DateTimeOffset.Parse("2014-12-11T17:02:03-8:00") },
                     { dtLocal, new DateTimeOffset(dtLocal).ToOffset(new TimeSpan(-8, 0, 0)) },
-                    { unspecified, DateTimeOffset.Parse("2014-12-12T01:02:03-8:00") }
+                    //{ unspecified, DateTimeOffset.Parse("2014-12-12T01:02:03-8:00") }
                 };
             }
         }
