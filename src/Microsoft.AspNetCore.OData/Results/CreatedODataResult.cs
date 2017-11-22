@@ -20,7 +20,6 @@ namespace Microsoft.AspNet.OData.Results
     public class CreatedODataResult<T> : IActionResult
     {
         private readonly T _innerResult;
-        private Uri _entityIdHeader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatedODataResult{T}"/> class.

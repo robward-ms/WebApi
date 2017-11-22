@@ -17,7 +17,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
     {
         public static IEdmModel GetModel()
         {
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes();
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<RoutingCustomer>("RoutingCustomers");
             builder.EntitySet<Product>("Products");

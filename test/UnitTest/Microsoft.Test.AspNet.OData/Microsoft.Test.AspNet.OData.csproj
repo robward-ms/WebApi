@@ -112,6 +112,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\ControllerDescriptorFactory.cs" />
     <Compile Include="Factories\ODataConventionModelBuilderFactory.cs" />
     <Compile Include="Factories\ODataSerializerContextFactory.cs" />
     <Compile Include="Factories\RequestFactory.cs" />

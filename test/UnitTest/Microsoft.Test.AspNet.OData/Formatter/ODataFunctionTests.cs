@@ -52,7 +52,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public ODataFunctionTests()
         {
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
-            HttpConfiguration configuration = RoutingConfigurationFactory.CreateFromControllers(
+            HttpConfiguration configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[] { typeof(MetadataController), typeof(FCustomersController) });
             var model = GetUnTypedEdmModel();
 

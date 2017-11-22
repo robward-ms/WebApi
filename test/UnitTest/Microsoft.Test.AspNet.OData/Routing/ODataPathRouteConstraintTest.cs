@@ -10,11 +10,13 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
+using Microsoft.Test.AspNet.OData.Formatter;
 #else
 using System;
 using System.Collections.Generic;
@@ -364,7 +366,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             public IODataPathHandler PathHandler { get; set; }
             public IEdmModel Model { get; set; }
 #if NETCORE
-            public HttpRequest InnerReuqest { get; set; }
+            public HttpRequest InnerRequest { get; set; }
 #else
             public HttpRequestMessage InnerRequest { get; set; }
 #endif
@@ -389,15 +391,12 @@ namespace Microsoft.Test.AspNet.OData.Routing
         private bool ConstraintMatch(ODataPathRouteConstraint constraint, TestRouteRequest routeRequest, Dictionary<string, object> values, RouteDirection direction)
         {
 #if NETCORE
-            AspNetCore.Http.HttpContext context = new AspNetCore.Http.DefaultHttpContext();
-            AspNetCore.Http.HttpRequest request = context.Request;
-            foreach (KeyValuePair<string, string> kvp in versionRequest.Headers)
-            {
-                request.Headers.Add(kvp.Key, kvp.Value);
-            }
+            HttpRequest request = (routeRequest != null)
+                ? RequestFactory.Create(routeRequest.Method, routeRequest.Uri)
+                : RequestFactory.Create();
 
-            System.Uri requestUri = new System.Uri(versionRequest.Uri);
-            request.Method = versionRequest.Method.ToString();
+            System.Uri requestUri = new System.Uri(routeRequest.Uri);
+            request.Method = routeRequest.Method.ToString();
             request.Host = new AspNetCore.Http.HostString(requestUri.Host, requestUri.Port);
             request.Scheme = requestUri.Scheme;
 
@@ -405,7 +404,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 ? AspNetCore.Routing.RouteDirection.IncomingRequest
                 : AspNetCore.Routing.RouteDirection.UrlGeneration;
 
-            return constraint.Match(context, null, null, null, routeDirection);
+            return constraint.Match(request.HttpContext, null, null, null, routeDirection);
 #else
             HttpRequestMessage request = (routeRequest != null)
                 ? new HttpRequestMessage(routeRequest.Method, routeRequest.Uri)

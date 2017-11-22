@@ -150,7 +150,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             builder2.EntitySet<FormatterPerson>("People").HasIdLink(p => new Uri("http://link/"), false);
             var model2 = builder2.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(PeopleController) }); ;
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(PeopleController) }); ;
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
 
@@ -235,7 +235,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 typeof(QueryCompositionCategoryController), typeof(QueryCompositionAnonymousTypesController)
             };
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var config = RoutingConfigurationFactory.CreateWithTypes(controllers);
             config.Routes.MapHttpRoute("default", "{controller}/{key}", new { key = RouteParameter.Optional });
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 

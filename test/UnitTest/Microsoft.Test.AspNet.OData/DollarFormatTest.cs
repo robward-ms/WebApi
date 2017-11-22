@@ -26,7 +26,7 @@ namespace Microsoft.Test.AspNet.OData
             MediaTypeHeaderValue expected = MediaTypeHeaderValue.Parse(mediaTypeFormat);
             string url = string.Format("http://localhost/{0}?$format={1}", path, mediaTypeFormat);
             IEdmModel model = GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[] { typeof(FormatCustomersController), typeof(ThisController) });
             HttpServer server = new HttpServer(configuration);
             HttpClient client = new HttpClient(server);

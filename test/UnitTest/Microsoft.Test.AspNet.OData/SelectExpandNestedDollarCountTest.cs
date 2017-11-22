@@ -25,7 +25,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public SelectExpandNestedDollarCountTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateFromControllers(
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[]
                 {
                     typeof(MsCustomersController), typeof(MetadataController)

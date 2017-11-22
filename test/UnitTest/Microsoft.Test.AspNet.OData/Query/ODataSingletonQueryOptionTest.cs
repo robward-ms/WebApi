@@ -30,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         public ODataSingletonQueryOptionTest()
         {
             var controllers = new[] { typeof(MeController) };
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
             
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());

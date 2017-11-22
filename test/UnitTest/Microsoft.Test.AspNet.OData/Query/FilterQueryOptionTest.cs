@@ -905,7 +905,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetEnumModel()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(EnumModel));
+            var config = RoutingConfigurationFactory.CreateWithTypes(typeof(EnumModel));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<EnumModel>("EnumModels");
             return builder.GetEdmModel();
@@ -913,7 +913,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetCastModel()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(DataTypes));
+            var config = RoutingConfigurationFactory.CreateWithTypes(typeof(DataTypes));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("CastModels");
             return builder.GetEdmModel();
@@ -921,7 +921,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetParameterAliasModel()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(DataTypes));
+            var config = RoutingConfigurationFactory.CreateWithTypes(typeof(DataTypes));
             var builder = ODataConventionModelBuilderFactory.Create(config);
             builder.EntitySet<DataTypes>("ParameterAliasModels");
             return builder.GetEdmModel();
@@ -929,7 +929,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static IEdmModel GetPropertyAliasModel()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(typeof(PropertyAlias));
+            var config = RoutingConfigurationFactory.CreateWithTypes(typeof(PropertyAlias));
             var builder = ODataConventionModelBuilderFactory.CreateWithModelAliasing(config, modelAliasing: true);
             builder.EntitySet<PropertyAlias>("PropertyAliases");
             return builder.GetEdmModel();

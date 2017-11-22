@@ -101,7 +101,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/UntypedCustomers/NS.MyAction");
             request.Headers.Add("accept", "application/json");
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(UntypedCustomersController) });
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedCustomersController) });
             configuration.MapODataServiceRoute(GetUntypeModel());
             HttpClient client = new HttpClient(new HttpServer(configuration));
 

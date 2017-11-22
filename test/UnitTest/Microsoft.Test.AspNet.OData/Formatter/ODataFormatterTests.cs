@@ -96,7 +96,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder2.EntitySet<FormatterPerson>("People").HasIdLink(p => new Uri("http://link/"), false);
             var model2 = builder2.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(PeopleController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(PeopleController) });
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
 
@@ -385,7 +385,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] {typeof(EnumKeyCustomersController), typeof(EnumKeyCustomers2Controller) };
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
@@ -415,7 +415,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
 
-            using (var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers))
+            using (var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers))
             {
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
                 using (HttpServer host = new HttpServer(configuration))
@@ -482,7 +482,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<EnumCustomer>("EnumCustomers");
             IEdmModel model = builder.GetEdmModel();
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(EnumCustomersController) });
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(EnumCustomersController) });
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
@@ -507,7 +507,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
 
-            using (var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers))
+            using (var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers))
             {
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
                 using (HttpServer host = new HttpServer(configuration))
@@ -543,7 +543,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
 
-            using (var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers))
+            using (var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers))
             {
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
                 using (HttpServer host = new HttpServer(configuration))
@@ -569,7 +569,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(CollectionSerializerCustomersController) };
 
-            using (var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers))
+            using (var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers))
             {
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
                 using (HttpServer host = new HttpServer(configuration))
@@ -604,7 +604,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
             var controllers = new[] { typeof(EnumCustomersController) };
 
-            using (var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers))
+            using (var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers))
             {
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
                 using (HttpServer host = new HttpServer(configuration))
@@ -689,7 +689,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = GetKeyCustomerOrderModel();
             var controllers = new[] { typeof(KeyCustomers1Controller), typeof(KeyCustomers2Controller), typeof(KeyCustomerOrderController) };
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
@@ -716,7 +716,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = GetKeyCustomerOrderModel();
             var controllers = new[] { typeof(KeyOrders1Controller), typeof(KeyOrders2Controller), typeof(KeyCustomerOrderController) };
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
@@ -743,7 +743,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = GetKeyCustomerOrderModel();
             var controllers = new[] { typeof(KeyCustomers1Controller), typeof(KeyCustomers2Controller), typeof(KeyCustomerOrderController) };
 
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
@@ -973,7 +973,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private static HttpConfiguration CreateConfiguration(IEdmModel model)
         {
-            HttpConfiguration configuration = RoutingConfigurationFactory.CreateFromControllers(
+            HttpConfiguration configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[]
                 {
                     typeof(MainEntityController), typeof(PeopleController), typeof(EnumCustomersController),

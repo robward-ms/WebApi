@@ -80,9 +80,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
         {
             var mockType1 = new MockType("Foo");
             var mockType2 = new MockType("Bar").BaseType(mockType1);
-            var mockAssembly = new MockAssembly(mockType1, mockType2);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(mockType1, mockType2);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             var entity1 = builder.AddEntityType(mockType1);
@@ -100,9 +98,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var mockType2 = new MockType("Bar").BaseType(mockType1);
             var mockType3 = new MockType("ThirdLevel").BaseType(mockType2);
 
-            var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(mockType1, mockType2, mockType3);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             var entity1 = builder.AddEntityType(mockType1);
@@ -120,9 +116,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var mockType2 = new MockType("Bar").BaseType(mockType1).Property<int>("P1").Property<int>("P2");
             var mockType3 = new MockType("ThirdLevel").BaseType(mockType2).Property<int>("P1").Property<int>("P2");
 
-            var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(mockType1, mockType2, mockType3);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             var entity1 = builder.AddEntityType(mockType1);
@@ -148,9 +142,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             var mockType3 = new MockType("Fo").BaseType(mockType2);
             var mockType4 = new MockType("Bar").BaseType(mockType1);
 
-            var mockAssembly = new MockAssembly(mockType1, mockType2, mockType3, mockType4);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(mockType1, mockType2, mockType3, mockType4);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             var entity1 = builder.AddEntityType(mockType1);
@@ -1836,9 +1828,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .Property(typeof(int), "DerivedTypeId")
                 .BaseType(baseType);
 
-            MockAssembly mockAssembly = new MockAssembly(baseType, derivedType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseType, derivedType);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
@@ -1939,9 +1929,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .Property(typeof(int), "DerivedTypeId")
                 .BaseType(baseType);
 
-            MockAssembly mockAssembly = new MockAssembly(baseType, derivedType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseType, derivedType);
             var builder = ODataConventionModelBuilderFactory.Create(configuration, isQueryCompositionMode: true);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
@@ -1968,9 +1956,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .Property(typeof(Color), "DerivedTypeId")
                 .BaseType(baseType);
 
-            MockAssembly mockAssembly = new MockAssembly(baseType, derivedType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseType, derivedType);
             var builder = ODataConventionModelBuilderFactory.Create(configuration, isQueryCompositionMode: true);
 
             builder.AddEntitySet("bases", builder.AddEntityType(baseType));
@@ -2009,9 +1995,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .Property(typeof(int), "ID")
                 .Property(baseComplexType.Object, "ComplexProperty");
 
-            MockAssembly mockAssembly = new MockAssembly(baseComplexType, derivedComplexType, entityType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseComplexType, derivedComplexType, entityType);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             builder.AddEntitySet("entities", builder.AddEntityType(entityType));
@@ -2038,9 +2022,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .Property(typeof(int), "ID")
                 .Property(baseComplexType.Object, "ComplexProperty");
 
-            MockAssembly mockAssembly = new MockAssembly(baseComplexType, derivedComplexType, entityType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseComplexType, derivedComplexType, entityType);
             var builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             builder.AddEntitySet("entities", builder.AddEntityType(entityType));
@@ -2420,8 +2402,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             MockType complexBase = new MockType("ComplexBase").Property<string>("BaseProperty");
             MockType complexDerived = new MockType("ComplexBase").BaseType(complexBase).Property<int>("DerivedProperty");
 
-            MockAssembly mockAssembly = new MockAssembly(complexBase, complexDerived);
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(complexBase, complexDerived);
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.AddComplexType(complexBase);
 
@@ -2480,9 +2461,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
                 .BaseType(baseType)
                 .Property<int>("DerivedTypeProperty");
 
-            var mockAssembly = new MockAssembly(baseType, derivedType);
-
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseType, derivedType);
             var builder = ODataModelBuilderMocks.GetModelBuilderMock<ODataConventionModelBuilder>(configuration);
 
             // Act
@@ -2504,8 +2483,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             MockType baseType = new MockType("BaseType").Property<int>("BaseProperty");
             MockType derivedType = new MockType("DerivedType").BaseType(baseType).Property<int>("DerivedProperty");
 
-            MockAssembly mockAssembly = new MockAssembly(baseType, derivedType);
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(mockAssembly);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(baseType, derivedType);
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
 
             // Act

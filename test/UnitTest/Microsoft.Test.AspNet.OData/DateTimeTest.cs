@@ -342,7 +342,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient(TimeZoneInfo timeZoneInfo)
         {
-            HttpConfiguration config = RoutingConfigurationFactory.CreateFromControllers(
+            HttpConfiguration config = RoutingConfigurationFactory.CreateWithTypes(
                 new[] { typeof(MetadataController), typeof(DateTimeModelsController) });
             if (timeZoneInfo != null)
             {

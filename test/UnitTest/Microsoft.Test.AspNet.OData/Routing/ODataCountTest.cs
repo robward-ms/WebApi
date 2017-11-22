@@ -51,7 +51,6 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             IEdmModel model = GetEdmModel();
             var controllers = new[] { typeof(DollarCountEntitiesController) };
-            //configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
             var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
             _client = TestServerFactory.CreateClient(server);
         }
@@ -283,7 +282,11 @@ namespace Microsoft.Test.AspNet.OData.Routing
                     result = options.Filter.ApplyTo(result, new ODataQuerySettings()).Cast<string>();
                 }
 
+#if NETCORE
+                if (Request.ODataFeature().Path.Segments.OfType<CountSegment>().Any())
+#else
                 if (Request.ODataProperties().Path.Segments.OfType<CountSegment>().Any())
+#endif
                 {
                     return Ok(result.Count());
                 }

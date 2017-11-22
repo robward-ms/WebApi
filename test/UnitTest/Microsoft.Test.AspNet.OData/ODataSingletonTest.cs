@@ -28,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public ODataSingletonTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(OscorpController), typeof(OscorpSubsController) });
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OscorpController), typeof(OscorpSubsController) });
             _configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpServer server = new HttpServer(_configuration);
             _client = new HttpClient(server);

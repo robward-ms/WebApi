@@ -32,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public SelectExpandTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateFromControllers(
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[]
                 {
                     typeof(SelectExpandTestCustomersController), typeof(SelectExpandTestCustomersAliasController),

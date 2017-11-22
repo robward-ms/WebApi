@@ -78,7 +78,7 @@ namespace Microsoft.Test.AspNet.OData
             builder2.EntitySet<FormatterPerson>("People2");
             var model2 = builder2.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
@@ -96,7 +96,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<ForeignCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -120,7 +120,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<FkProduct>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -155,7 +155,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -189,7 +189,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<FkProduct2>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -238,7 +238,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<FkProduct3>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -262,7 +262,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<ForeignCustomer2>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -295,7 +295,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -331,7 +331,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -365,7 +365,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -394,7 +394,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<DependentEntity>("Dependents");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -445,7 +445,7 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"CustomerForeignKey\" ReferencedProperty=\"CustomerId\" />" +
                 "</NavigationProperty>";
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -468,7 +468,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -491,7 +491,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -531,7 +531,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.ComplexType<ComplexBaseType>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -576,7 +576,7 @@ namespace Microsoft.Test.AspNet.OData
             action.Parameter<string>("param").OptionalParameter = false;
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -623,7 +623,7 @@ namespace Microsoft.Test.AspNet.OData
             function.Parameter<string>("param").OptionalParameter = false;
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -650,7 +650,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntityType<AbstractEntityType>().Abstract().Property(a => a.IntProperty);
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -696,7 +696,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntityType<AnotherSubEntityType>().HasKey(d => d.AnotherKey).DerivesFrom<AbstractEntityType>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -730,7 +730,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EnumType<SimpleEnum>().Namespace = "NS";
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -764,7 +764,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<CustomerWithConcurrencyAttribute>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -958,7 +958,7 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void Controller_DoesNotAppear_InApiDescriptions()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.Routes.MapHttpRoute("Default", "{controller}/{action}");
             config.MapODataServiceRoute(ODataConventionModelBuilderFactory.Create().GetEdmModel());
             config.EnsureInitialized();
@@ -976,7 +976,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FormatterAccount>("Accounts");
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1017,7 +1017,7 @@ namespace Microsoft.Test.AspNet.OData
                 .HasSinglePath(c => c.Location)
                 .HasRequiredBinding(a => a.City, "Cities");
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1056,7 +1056,7 @@ namespace Microsoft.Test.AspNet.OData
             bindingConfiguration.HasOptionalBinding((BindingUsAddress u) => u.UsCity, "Cities_A");
             bindingConfiguration.HasManyBinding((BindingUsAddress u) => u.UsCities, "Cities_B");
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1104,7 +1104,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<BindingCustomer>("Customers");
             builder.EntitySet<BindingCity>("Cities");
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1119,7 +1119,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private HttpConfiguration GetConfiguration()
         {
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(MetadataController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(ODataTestUtil.GetEdmModel());
             return config;
         }

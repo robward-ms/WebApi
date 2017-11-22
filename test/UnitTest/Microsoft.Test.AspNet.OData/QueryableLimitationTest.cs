@@ -27,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public QueryableLimitationTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateFromControllers(new[]
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(new[]
             {
                 typeof(QueryLimitCustomersController),
                 typeof(OpenCustomersController),

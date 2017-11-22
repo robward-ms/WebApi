@@ -62,7 +62,6 @@
     <Compile Remove="Formatter\EdmLibHelpersTests.cs" />
     <Compile Remove="Formatter\EdmPrimitiveHelpersTest.cs" />
     <Compile Remove="Formatter\ETagTests.cs" />
-    <Compile Remove="Formatter\HttpRequestMessageExtensions.cs" />
     <Compile Remove="Formatter\InheritanceTests.cs" />
     <Compile Remove="Formatter\MediaTypeFormatterTestBase.cs" />
     <Compile Remove="Formatter\NullCollectionsTests.cs" />

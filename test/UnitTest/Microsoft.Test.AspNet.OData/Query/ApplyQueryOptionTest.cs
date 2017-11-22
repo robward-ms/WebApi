@@ -806,7 +806,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateFromControllers(
+            var config = RoutingConfigurationFactory.CreateWithTypes(
                 new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);
@@ -843,7 +843,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateFromControllers(
+            var config = RoutingConfigurationFactory.CreateWithTypes(
                 new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);

@@ -109,7 +109,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
             return configuration;
         }
 #else
-        internal static IRouteBuilder CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
+        internal static IRouteBuilder CreateWithRootContainer(string routeName = null, Action<IContainerBuilder> configureAction = null)
         {
             IRouteBuilder builder = Create();
 
@@ -122,44 +122,18 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        internal static HttpConfiguration CreateWithAssemblyResolver(MockAssembly assembly)
+        internal static HttpConfiguration CreateWithTypes(params Type[] types)
         {
             HttpConfiguration configuration = Create();
 
-            TestAssemblyResolver resolver = new TestAssemblyResolver(assembly);
+            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
             configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
 
             return configuration;
         }
 #else
-        internal static IRouteBuilder CreateWithAssemblyResolver(MockAssembly assembly)
-        {
-            IRouteBuilder builder = Create();
-
-            ApplicationPartManager applicationPartManager = builder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            AssemblyPart part = new AssemblyPart(assembly);
-            applicationPartManager.ApplicationParts.Add(part);
-
-            return builder;
-        }
-#endif
-
-        /// <summary>
-        /// Initializes a new instance of the routing configuration class.
-        /// </summary>
-        /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        internal static HttpConfiguration CreateWithAssemblyResolver(params Type[] types)
-        {
-            HttpConfiguration configuration = Create();
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(types);
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            return configuration;
-        }
-#else
-        internal static IRouteBuilder CreateWithAssemblyResolver(params Type[] types)
+        internal static IRouteBuilder CreateWithTypes(params Type[] types)
         {
             IRouteBuilder builder = Create();
 
@@ -176,21 +150,22 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if !NETCORE1x
-        public static HttpConfiguration CreateFromControllers(params Type[] controllers)
+        internal static HttpConfiguration CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
         {
-            var resolver = new TestAssemblyResolver(new MockAssembly(controllers));
-            var configuration = new HttpConfiguration();
+            HttpConfiguration configuration = CreateWithRootContainer(routeName, configureAction);
+
+            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
             configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
+
             return configuration;
         }
 #else
-        public static IRouteBuilder CreateFromControllers(params Type[] controllers)
+        internal static IRouteBuilder CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
         {
-            IRouteBuilder builder = Create();
+            IRouteBuilder builder = CreateWithRootContainer(routeName, configureAction);
 
             ApplicationPartManager applicationPartManager = builder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
+            AssemblyPart part = new AssemblyPart(new MockAssembly(types));
             applicationPartManager.ApplicationParts.Add(part);
 
             return builder;

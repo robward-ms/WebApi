@@ -88,6 +88,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(routeName, routePrefix, getModelFunction(configuration));
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
 
             TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
             configuration.Services.Replace(typeof(IAssembliesResolver), resolver);

@@ -44,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Vehicle>("vehicles");
             IEdmModel model = builder.GetEdmModel();
 
-            _config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(NullCollectionsTestsController) });
+            _config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullCollectionsTestsController) });
             _config.Formatters.Clear();
             _config.Formatters.AddRange(ODataMediaTypeFormatters.Create());
             _config.MapODataServiceRoute(model);

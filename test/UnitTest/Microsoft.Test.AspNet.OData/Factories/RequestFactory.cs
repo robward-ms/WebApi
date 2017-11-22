@@ -46,11 +46,15 @@ namespace Microsoft.Test.AspNet.OData.Factories
             return request;
         }
 #else
-        public static HttpRequest Create()
+        public static HttpRequest Create(Action<IContainerBuilder> configAction = null)
         {
             IContainerBuilder builder = new DefaultContainerBuilder();
             builder.AddService<ODataOptions, ODataOptions>(Microsoft.OData.ServiceLifetime.Singleton);
             builder.AddService<DefaultQuerySettings, DefaultQuerySettings>(Microsoft.OData.ServiceLifetime.Singleton);
+            if (configAction != null)
+            {
+                configAction(builder);
+            }
 
             HttpContext context = new DefaultHttpContext();
 
@@ -75,13 +79,12 @@ namespace Microsoft.Test.AspNet.OData.Factories
             return request;
         }
 #else
-        public static HttpRequest Create(HttpMethod method, string uri)
+        public static HttpRequest Create(HttpMethod method, string uri, Action<IContainerBuilder> configAction = null)
         {
-            Uri requestUri = new Uri(uri);
-            HttpContext context = new DefaultHttpContext();
-
-            HttpRequest request = context.Request;
+            HttpRequest request = Create(configAction);
             request.Method = method.ToString();
+
+            Uri requestUri = new Uri(uri);
             request.Host = new HostString(requestUri.Host, requestUri.Port);
             request.Scheme = requestUri.Scheme;
 
@@ -123,7 +126,6 @@ namespace Microsoft.Test.AspNet.OData.Factories
             var mockAction = new Mock<ActionDescriptor>();
             ActionDescriptor actionDescriptor = mockAction.Object;
 
-            RouteContext routeContext = new RouteContext(request.HttpContext);
             ActionContext actionContext = new ActionContext(request.HttpContext, routeData, actionDescriptor);
 
             IActionContextAccessor actionContextAccessor = request.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>();

@@ -2,20 +2,26 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
-using System.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
-using Moq;
 using Xunit;
 #else
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -28,6 +34,29 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         private DynamicPropertyRoutingConvention _routingConvention = new DynamicPropertyRoutingConvention();
 
         #region Negative Cases
+#if NETCORE
+        [Fact]
+        public void SelectAction_ThrowsArgumentNull_IfMissRouteContext()
+        {
+            // Act & Assert
+            ExceptionAssert.ThrowsArgumentNull(
+                () => _routingConvention.SelectAction(null),
+                "routeContext");
+        }
+
+        [Fact]
+        public void SelectAction_ThrowsArgumentNull_IfMissOdataPath()
+        {
+            // Arrange
+            var request = RequestFactory.Create();
+            var routeContext = new RouteContext(request.HttpContext);
+
+            // Act & Assert
+            ExceptionAssert.ThrowsArgumentNull(
+                () => _routingConvention.SelectAction(routeContext),
+                "odataPath");
+        }
+#else
         [Fact]
         public void SelectAction_ThrowsArgumentNull_IfMissOdataPath()
         {
@@ -66,6 +95,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
                 () => _routingConvention.SelectAction(odataPath, controllerContext.Object, null),
                 "actionMap");
         }
+#endif
 
         [Fact]
         public void SelectAction_ReturnsNull_IfActionIsMissing()
@@ -73,22 +103,17 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", "Customers(10)/Account/Tax");
-            ILookup<string, HttpActionDescriptor> emptyActionMap = new HttpActionDescriptor[0].ToLookup(desc => (string)null);
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var emptyActionMap = CreateActionMap();
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, emptyActionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, emptyActionMap);
 
             // Assert
             Assert.Null(selectedAction);
-            Assert.Empty(controllerContext.Request.GetRouteData().Values);
+            Assert.Empty(GetRouteData(request).Values);
         }
 
         [Theory]
@@ -102,22 +127,17 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", "Orders(7)/DynamicPropertyA");
-            ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetDynamicProperty");
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(method, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var actionMap = CreateActionMap("GetDynamicProperty");
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, actionMap);
 
             // Assert
             Assert.Null(selectedAction);
-            Assert.Empty(controllerContext.Request.GetRouteData().Values);
+            Assert.Empty(GetRouteData(request).Values);
         }
         #endregion
 
@@ -130,27 +150,23 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", url);
-            ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetDynamicPropertyFromAccount");
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var actionMap = CreateActionMap("GetDynamicPropertyFromAccount");
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, actionMap);
 
             // Assert
             Assert.NotNull(selectedAction);
             Assert.Equal("GetDynamicPropertyFromAccount", selectedAction);
-            var test = controllerContext.Request.GetRouteData();
-            Assert.Equal(3, controllerContext.Request.GetRouteData().Values.Count);
-            Assert.Equal(7, controllerContext.Request.GetRouteData().Values["key"]);
-            Assert.Equal("Amount", controllerContext.Request.GetRouteData().Values["dynamicProperty"]);
-            Assert.Equal("Amount", (controllerContext.Request.GetRouteData().Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
+
+            var routeData = GetRouteData(request);
+            Assert.Equal(3, routeData.Values.Count);
+            Assert.Equal(7, routeData.Values["key"]);
+            Assert.Equal("Amount", routeData.Values["dynamicProperty"]);
+            Assert.Equal("Amount", (routeData.Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
         }
 
         [Theory]
@@ -161,25 +177,22 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", url);
-            ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetDynamicPropertyFromAccount");
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var actionMap = CreateActionMap("GetDynamicPropertyFromAccount");
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, actionMap);
 
             // Assert
             Assert.NotNull(selectedAction);
             Assert.Equal("GetDynamicPropertyFromAccount", selectedAction);
-            Assert.Equal(2, controllerContext.Request.GetRouteData().Values.Count);
-            Assert.Equal("Amount", controllerContext.Request.GetRouteData().Values["dynamicProperty"]);
-            Assert.Equal("Amount", (controllerContext.Request.GetRouteData().Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
+
+            var routeData = GetRouteData(request);
+            Assert.Equal(2, routeData.Values.Count);
+            Assert.Equal("Amount", routeData.Values["dynamicProperty"]);
+            Assert.Equal("Amount", (routeData.Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
         }
         #endregion
 
@@ -192,27 +205,23 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", url);
-            ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetDynamicProperty");
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var actionMap = CreateActionMap("GetDynamicProperty");
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, actionMap);
 
             // Assert
             Assert.NotNull(selectedAction);
             Assert.Equal("GetDynamicProperty", selectedAction);
-            Assert.Equal(3, controllerContext.Request.GetRouteData().Values.Count);
-            Assert.Equal(7, controllerContext.Request.GetRouteData().Values["key"]);
-            Assert.Equal("DynamicPropertyA", controllerContext.Request.GetRouteData().Values["dynamicProperty"]);
-            Assert.Equal("DynamicPropertyA", (controllerContext.Request.GetRouteData().Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
+
+            var routeData = GetRouteData(request);
+            Assert.Equal(3, routeData.Values.Count);
+            Assert.Equal(7, routeData.Values["key"]);
+            Assert.Equal("DynamicPropertyA", routeData.Values["dynamicProperty"]);
+            Assert.Equal("DynamicPropertyA", (routeData.Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
         }
 
         [Theory]
@@ -223,27 +232,90 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             // Arrange
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model.Model, "http://localhost/", url);
-            ILookup<string, HttpActionDescriptor> actionMap = new HttpActionDescriptor[1].ToLookup(desc => "GetDynamicProperty");
-            HttpRequestContext requestContext = new HttpRequestContext();
-            HttpControllerContext controllerContext = new HttpControllerContext
-            {
-                Request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/"),
-                RequestContext = requestContext,
-                RouteData = new HttpRouteData(new HttpRoute())
-            };
-
-            controllerContext.Request.SetRequestContext(requestContext);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/");
+            var pathContext = GetPathContext(request, odataPath);
+            var controllerContext = GetControllerContext(request);
+            var actionMap = CreateActionMap("GetDynamicProperty");
 
             // Act
-            string selectedAction = _routingConvention.SelectAction(odataPath, controllerContext, actionMap);
+            string selectedAction = _routingConvention.SelectAction(pathContext, controllerContext, actionMap);
 
             // Assert
             Assert.NotNull(selectedAction);
             Assert.Equal("GetDynamicProperty", selectedAction);
-            Assert.Equal(2, controllerContext.Request.GetRouteData().Values.Count);
-            Assert.Equal("DynamicPropertyA", controllerContext.Request.GetRouteData().Values["dynamicProperty"]);
-            Assert.Equal("DynamicPropertyA", (controllerContext.Request.GetRouteData().Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
+
+            var routeData = GetRouteData(request);
+            Assert.Equal(2, routeData.Values.Count);
+            Assert.Equal("DynamicPropertyA", routeData.Values["dynamicProperty"]);
+            Assert.Equal("DynamicPropertyA", (routeData.Values[ODataParameterValue.ParameterValuePrefix + "dynamicProperty"] as ODataParameterValue).Value);
         }
         #endregion
+
+#if NETCORE
+        private RouteContext GetPathContext(HttpRequest request, ODataPath odataPath)
+        {
+            RouteContext routeContext = new RouteContext(request.HttpContext);
+            routeContext.HttpContext.ODataFeature().Path = odataPath;
+            return routeContext;
+        }
+
+        private SelectControllerResult GetControllerContext(HttpRequest request)
+        {
+            return new SelectControllerResult("Foo", null); ;
+        }
+
+        private IEnumerable<ControllerActionDescriptor> CreateActionMap(string key = null)
+        {
+            List<ControllerActionDescriptor> actionMap = new List<ControllerActionDescriptor>();
+            ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
+            actionMap.Add(descriptor);
+
+            if (string.IsNullOrEmpty(key))
+            {
+                descriptor.ActionName = key;
+            }
+
+            return actionMap;
+        }
+
+        private RouteData GetRouteData(HttpRequest request)
+        {
+            return request.HttpContext.GetRouteData();
+        }
+#else
+        private ODataPath GetPathContext(HttpRequestMessage request, ODataPath odataPath)
+        {
+            return odataPath;
+        }
+
+        private HttpControllerContext GetControllerContext(HttpRequestMessage request)
+        {
+            HttpRequestContext requestContext = new HttpRequestContext();
+            HttpControllerContext controllerContext = new HttpControllerContext
+            {
+                Request = request,
+                RequestContext = requestContext,
+                RouteData = new HttpRouteData(new HttpRoute())
+            };
+            controllerContext.Request.SetRequestContext(requestContext);
+
+            return controllerContext;
+        }
+
+        private ILookup<string, HttpActionDescriptor> CreateActionMap(string key = null)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                return new HttpActionDescriptor[0].ToLookup(desc => (string)null);
+            }
+
+            return new HttpActionDescriptor[1].ToLookup(desc => key);
+        }
+
+        private IHttpRouteData GetRouteData(HttpRequestMessage request)
+        {
+            return request.GetRouteData();
+        }
+#endif
     }
 }

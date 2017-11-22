@@ -49,7 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
         private static IEdmModel GetCustomersModel()
         {
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(typeof(QueryCompositionCustomer));
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(typeof(QueryCompositionCustomer));
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<QueryCompositionCustomer>("Customer");
             builder.EntityType<QueryCompositionCustomerBase>();
@@ -73,7 +73,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Validators
 
         private static ODataConventionModelBuilder GetProductsBuilder()
         {
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(typeof(Product));
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(typeof(Product));
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<Product>("Product");
             return builder;

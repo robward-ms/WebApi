@@ -34,7 +34,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public ODataSingletonRoutingTest()
         {
             var controllers = new[] { typeof(VipCustomerController) };
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(controllers);
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute(new CustomersModelWithInheritance().Model);
 
             _server = new HttpServer(configuration);

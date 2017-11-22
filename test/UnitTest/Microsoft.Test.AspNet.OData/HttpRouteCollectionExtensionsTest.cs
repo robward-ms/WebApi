@@ -141,7 +141,7 @@ namespace Microsoft.Test.AspNet.OData
             var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             IEdmModel model = builder.GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(CustomersController) });
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(CustomersController) });
             configuration.MapODataServiceRoute(model);
 
             // Act & Assert
@@ -155,7 +155,7 @@ namespace Microsoft.Test.AspNet.OData
             var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers").EntityType.Ignore(c => c.Name);
             IEdmModel model = builder.GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(CustomersController) });
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(CustomersController) });
             configuration.MapODataServiceRoute(
                 "RouteName",
                 "RoutePrefix",

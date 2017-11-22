@@ -33,6 +33,11 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
             }
 
             ODataPath odataPath = routeContext.HttpContext.ODataFeature().Path;
+            if (odataPath == null)
+            {
+                throw Error.ArgumentNull("odataPath");
+            }
+
             HttpRequest request = routeContext.HttpContext.Request;
 
             // Get a IActionDescriptorCollectionProvider from the global service provider.

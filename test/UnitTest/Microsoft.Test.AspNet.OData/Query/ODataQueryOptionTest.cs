@@ -1140,7 +1140,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
         private static HttpServer CreateServer()
         {
-            var configuration = RoutingConfigurationFactory.CreateWithAssemblyResolver(
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(
                     typeof(EntityModelsController),
                     typeof(ProductsController));
 

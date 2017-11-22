@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE1x
-using System.Web.Http;
-using Microsoft.AspNet.OData.Builder;
-#else
+#if NETCORE1x
 using System;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OData;
+#else
+using System.Web.Http;
+using Microsoft.AspNet.OData.Builder;
 #endif
 
 namespace Microsoft.Test.AspNet.OData.Factories

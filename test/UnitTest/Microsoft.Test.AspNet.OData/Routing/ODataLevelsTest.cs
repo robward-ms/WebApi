@@ -32,7 +32,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public ODataLevelsTest()
         {
             IEdmModel model = GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(LevelsEntitiesController) });
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(LevelsEntitiesController) });
             configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("odata", "odata", model);
             var server = new HttpServer(configuration);

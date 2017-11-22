@@ -139,7 +139,7 @@ namespace Microsoft.Test.AspNet.OData
                 "\"@odata.context\":\"http://localhost/odata/$metadata#Edm.Boolean\",\"value\":true" +
                 "}";
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(NullableEnumValueController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullableEnumValueController) });
             config.MapODataServiceRoute("odata", "odata", GetSampleModel());
             HttpClient client = new HttpClient(new HttpServer(config));
 
@@ -162,7 +162,7 @@ namespace Microsoft.Test.AspNet.OData
                 "\"@odata.context\":\"http://localhost/odata/$metadata#Edm.Boolean\",\"value\":false" +
                 "}";
 
-            var config = RoutingConfigurationFactory.CreateFromControllers(new[] { typeof(NullableEnumValueController) });
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullableEnumValueController) });
             config.MapODataServiceRoute("odata", "odata", GetSampleModel());
             HttpClient client = new HttpClient(new HttpServer(config));
 
