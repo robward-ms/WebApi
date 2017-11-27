@@ -4,11 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-#if !NETCORE
-using System.Web.Http;
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -23,7 +18,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Address = Microsoft.Test.AspNet.OData.Builder.TestModels.Address;
 
-namespace Microsoft.Test.AspNet.OData.OData.Query
+namespace Microsoft.Test.AspNet.OData.Query
 {
     public class ApplyQueryOptionTest
     {
@@ -662,7 +657,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             var context = new ODataQueryContext(model, typeof(Customer));
 
             var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration, "OData");
 
             var options = new ODataQueryOptions(context, request);
 
@@ -706,7 +701,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             var context = new ODataQueryContext(model, typeof(Customer));
 
             var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + clause, configuration);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + clause, configuration, "OData");
 
             var options = new ODataQueryOptions(context, request);
 
@@ -734,7 +729,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             var context = new ODataQueryContext(model, typeof(Customer));
 
             var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + filter, configuration, "OData");
 
             var options = new ODataQueryOptions(context, request);
 
@@ -762,6 +757,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
             }
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(CustomerTestFilters))]
         public void ApplyTo_Returns_Correct_Queryable_ForFilter(string filter, int[] customerIds)
@@ -794,7 +790,6 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                 actualCustomers.Select(customer => customer.CustomerId));
         }
 
-#if !NETCORE
         [Fact]
         public void ApplyToSerializationWorks()
         {
@@ -810,7 +805,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                 new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);
-            var client = new HttpClient(new HttpServer(config));
+            var client = new HttpClient(new System.Web.Http.HttpServer(config));
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/Customers?$apply=groupby((Name), aggregate(CustomerId with sum as TotalId))");
@@ -847,7 +842,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
                 new[] { typeof(MetadataController), typeof(CustomersController) });
 
             config.MapODataServiceRoute("odata", "odata", model);
-            var client = new HttpClient(new HttpServer(config));
+            var client = new HttpClient(new System.Web.Http.HttpServer(config));
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/Customers?$apply=groupby((Address/City), aggregate(CustomerId with sum as TotalId))");
@@ -886,7 +881,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
     }
 
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private List<Customer> _customers;
 
@@ -896,11 +891,7 @@ namespace Microsoft.Test.AspNet.OData.OData.Query
         }
 
         [EnableQuery]
-#if !NETCORE1x
-        public IHttpActionResult Get()
-#else
-        public IActionResult Get()
-#endif
+        public ITestActionResult Get()
         {
             return Ok(_customers);
         }

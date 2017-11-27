@@ -38,10 +38,10 @@ namespace Microsoft.AspNet.OData.Adapters
 
             this.innerDescriptor = actionDescriptor;
 
-            this.supportedHttpMethods = new List<ODataRequestMethod>();
             if (actionDescriptor.SupportedHttpMethods != null)
             {
-                foreach (System.Net.Http.HttpMethod method in actionDescriptor.SupportedHttpMethods)
+                this.supportedHttpMethods = new List<ODataRequestMethod>();
+                foreach (HttpMethod method in actionDescriptor.SupportedHttpMethods)
                 {
                     bool ignoreCase = true;
                     ODataRequestMethod methodEnum = ODataRequestMethod.Unknown;
@@ -85,6 +85,12 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public bool IsHttpMethodSupported(ODataRequestMethod method)
         {
+            // Assume all action are supported if not specified.
+            if (this.supportedHttpMethods == null)
+            {
+                return true;
+            }
+
             return this.supportedHttpMethods.Contains(method);
         }
     }

@@ -45,9 +45,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             ExceptionAssert.ThrowsArgumentNull(
                 () => new UpdatedODataResult<TestEntity>(entity: null), "entity");
         }
-#endif
-
-#if !NETCORE
+#else
         [Fact]
         public void Ctor_ControllerDependency_ThrowsArgumentNull_Entity()
         {
@@ -189,6 +187,14 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
 #endif
         }
 
+        private class TestEntity
+        {
+        }
+
+        private class TestController : ODataController
+        {
+        }
+
 #if NETCORE
         private HttpRequest CreateRequest(string preferHeaderValue = null)
         {
@@ -199,6 +205,12 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             }
 
             return request;
+        }
+
+        private IActionResult CreateActionResult(AspNetCore.Http.HttpRequest request)
+        {
+            UpdatedODataResult<TestEntity> updatedODataResult = new UpdatedODataResult<TestEntity>(_entity);
+            return updatedODataResult.GetInnerActionResult(request);
         }
 #else
         private HttpRequestMessage CreateRequest(string preferHeaderValue = null)
@@ -212,15 +224,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
 
             return request;
         }
-#endif
 
-#if NETCORE
-        private IActionResult CreateActionResult(AspNetCore.Http.HttpRequest request)
-        {
-            UpdatedODataResult<TestEntity> updatedODataResult = new UpdatedODataResult<TestEntity>(_entity);
-            return updatedODataResult.GetInnerActionResult(request);
-        }
-#else
         private IHttpActionResult CreateActionResult(HttpRequestMessage request)
         {
             UpdatedODataResult<TestEntity> updatedODataResult = new UpdatedODataResult<TestEntity>(_entity,
@@ -229,13 +233,5 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             return updatedODataResult.GetInnerActionResult();
         }
 #endif
-
-        private class TestEntity
-        {
-        }
-
-        private class TestController : ODataController
-        {
-        }
     }
 }

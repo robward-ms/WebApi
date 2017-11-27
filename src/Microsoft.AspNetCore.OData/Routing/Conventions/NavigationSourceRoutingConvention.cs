@@ -40,14 +40,14 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
 
             HttpRequest request = routeContext.HttpContext.Request;
 
-            // Get a IActionDescriptorCollectionProvider from the global service provider.
-            IActionDescriptorCollectionProvider actionCollectionProvider =
-                routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
-            Contract.Assert(actionCollectionProvider != null);
-
             SelectControllerResult controllerResult = SelectControllerImpl(odataPath, new WebApiRequestMessage(request));
             if (controllerResult != null)
             {
+                // Get a IActionDescriptorCollectionProvider from the global service provider.
+                IActionDescriptorCollectionProvider actionCollectionProvider =
+                    routeContext.HttpContext.RequestServices.GetRequiredService<IActionDescriptorCollectionProvider>();
+                Contract.Assert(actionCollectionProvider != null);
+
                 IEnumerable<ControllerActionDescriptor> actionDescriptors = actionCollectionProvider
                     .ActionDescriptors.Items.OfType<ControllerActionDescriptor>()
                     .Where(c => c.ControllerName == controllerResult.ControllerName);

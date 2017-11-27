@@ -250,7 +250,6 @@
     <Compile Include="FunctionActionAdvertisedTest.cs" />
     <Compile Include="PerRequestContentNegotiatorTest.cs" />
     <Compile Include="ODataRoutingAttributeTest.cs" />
-    <Compile Include="Formatter\HttpRequestMessageExtensions.cs" />
     <Compile Include="Formatter\HttpRouteCollectionExtensions.cs" />
     <Compile Include="PerRequestParameterBindingTest.cs" />
     <Compile Include="ODataSingletonTest.cs" />
@@ -269,6 +268,7 @@
     <Compile Include="Results\ResultHelpersTest.cs" />
     <Compile Include="Results\UpdatedODataResultTest.cs" />
     <Compile Include="Routing\AttributeRoutingOnSingletonTest.cs" />
+    <Compile Include="Routing\Conventions\SelectActionHelper.cs" />
     <Compile Include="Routing\ODataPathSegmentTranslatorTest.cs" />
     <Compile Include="Routing\Conventions\DynamicPropertyRoutingConventionTest.cs" />
     <Compile Include="Routing\Conventions\MockNavigationSourceRoutingConvention.cs" />

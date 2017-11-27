@@ -10,9 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-#if !NETCORE1x
-using System.Web.Http.Dispatcher;
-#endif
 using System.Xml.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
@@ -2255,7 +2252,8 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 typeof(object).FullName);
 
             // Act & Assert
-            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
+            // System.Linq provides more information in the exception on NetCore than NetFx, search for partial match.
+            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage, partialMatch: true);
         }
 
         [Theory]
@@ -2268,7 +2266,8 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 "Instance property 'DerivedCategoryName' is not defined for type 'System.Object'";
 
             // Act & Assert
-            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage);
+            // System.Linq provides more information in the exception on NetCore than NetFx, search for partial match.
+            ExceptionAssert.Throws<ArgumentException>(() => Bind<Product>(filter), expectedMessage, partialMatch: true);
         }
 
 #endregion

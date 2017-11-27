@@ -7,11 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Factories;
-using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 #else
@@ -70,7 +68,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), requestUri);
-            request.SetFakeODataRouteName();
+            //request.ODataProperties().RouteName = HttpRouteCollectionExtensions.RouteName;
 
             // Act
             var response = await client.SendAsync(request);
@@ -95,7 +93,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) => model.Model);
             HttpClient client = TestServerFactory.CreateClient(server);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
-            request.SetFakeODataRouteName();
+            //request.ODataProperties().RouteName = HttpRouteCollectionExtensions.RouteName;
 
             // Act
             HttpResponseMessage response = await client.SendAsync(request);
@@ -126,14 +124,14 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetCustomersFromSpecialCustomer";
             }
 
-            //[HttpPost]
+            [HttpPost]
             [ODataRoute("Customers/NS.SpecialCustomer")]
             public string PostCustomerFromSpecialCustomer()
             {
                 return "PostCustomerFromSpecialCustomer";
             }
 
-            //[HttpPost]
+            [HttpPost]
             [ODataRoute("Customers")]
             public string CreateCustomer()
             {
@@ -164,28 +162,28 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetCityOfACustomer_" + id;
             }
 
-            //[HttpPost]
+            [HttpPost]
             [ODataRoute("Customers({id})/NS.upgrade")]
             public string InvokeODataAction_Upgrade([FromODataUri]int id)
             {
                 return "InvokeODataAction_Upgrade_" + id;
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({id})/NS.IsUpgradedWithParam(city={city})")]
             public string GetIsUpgradedWithParam([FromODataUri] int id, [FromODataUri]string city)
             {
                 return "IsUpgradedWithParam_" + city;
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers/NS.IsAnyUpgraded()")]
             public string GetIsAnyUpgraded()
             {
                 return "IsAnyUpgraded";
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({id})/NS.SpecialCustomer/NS.IsSpecialUpgraded()")]
             public string GetIsSpecialUpgraded([FromODataUri] int id)
             {
@@ -199,21 +197,21 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetSalary_" + id;
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({id})/NS.SpecialCustomer/NS.GetSalary()")]
             public string GetSalaryFromSpecialCustomer([FromODataUri] int id)
             {
                 return "GetSalaryFromSpecialCustomer_" + id;
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({id})/NS.GetOrder(orderId={orderId})/Amount")]
             public int GetAmountFromOrder(int id, int orderId)
             {
                 return id + (orderId * 11);
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({key})/NS.GetCustomer(customer={customer})")]
             public string GetCustomer(int key, [FromODataUri]EdmEntityObject customer)
             {
@@ -231,14 +229,14 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return "GetCustomer(" + sb.ToString() + ")";
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({id})/Account/{pName:dynamicproperty}")]
             public string GetDynamicPropertyFromAccount([FromODataUri] int id, [FromODataUri]string pName)
             {
                 return "GetDynamicPropertyFromAccount_" + id + "_" + pName;
             }
 
-            //[HttpGet]
+            [HttpGet]
             [ODataRoute("Customers({cId})/Orders({oId})/{pName:dynamicproperty}")]
             public string GetDynamicPropertyFromOrder([FromODataUri] int cId, [FromODataUri] int oId, [FromODataUri]string pName)
             {

@@ -9,10 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-#if !NETCORE1x
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-#endif
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Query;
@@ -35,14 +31,14 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
         [Fact]
         public void Ctor_ThrowsForNullConfiguration()
         {
-#if !NETCORE1x
-            ExceptionAssert.ThrowsArgumentNull(
-                () => new ODataConventionModelBuilder(configuration: null),
-                "configuration");
-#else
+#if NETCORE1x
             ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataConventionModelBuilder(provider: null),
                 "provider");
+#else
+            ExceptionAssert.ThrowsArgumentNull(
+                () => new ODataConventionModelBuilder(configuration: null),
+                "configuration");
 #endif 
         }
 

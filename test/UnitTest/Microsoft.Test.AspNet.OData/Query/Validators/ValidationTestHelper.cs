@@ -1,16 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE1x
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Expressions;
-using Microsoft.Test.AspNet.OData.TestCommon;
 
 namespace Microsoft.Test.AspNet.OData.Query.Validators
 {

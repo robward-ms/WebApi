@@ -7,15 +7,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNet.OData.Adapters;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
@@ -41,7 +40,8 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         /// While this function does not uses types that are AspNetCore-specific,
         /// the functionality is due to the way assembly resolution is done in AspNet vs AspnetCore.
         /// </remarks>
-        public AttributeRoutingConvention(string routeName, IServiceProvider serviceProvider)
+        public AttributeRoutingConvention(string routeName, IServiceProvider serviceProvider,
+            IODataPathTemplateHandler pathTemplateHandler = null)
             : this(routeName)
         {
             if (serviceProvider == null)
@@ -51,19 +51,26 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
 
             _serviceProvider = serviceProvider;
 
-            IPerRouteContainer perRouteContainer = _serviceProvider.GetRequiredService<IPerRouteContainer>();
-            if (perRouteContainer == null)
+            if (pathTemplateHandler != null)
             {
-                throw Error.ArgumentNull("routeName");
+                ODataPathTemplateHandler = pathTemplateHandler;
             }
-
-            IServiceProvider rootContainer = perRouteContainer.GetODataRootContainer(routeName);
-            if (perRouteContainer == null)
+            else
             {
-                throw Error.ArgumentNull("routeName");
-            }
+                IPerRouteContainer perRouteContainer = _serviceProvider.GetRequiredService<IPerRouteContainer>();
+                if (perRouteContainer == null)
+                {
+                    throw Error.ArgumentNull("routeName");
+                }
 
-            ODataPathTemplateHandler = rootContainer.GetRequiredService<IODataPathTemplateHandler>();
+                IServiceProvider rootContainer = perRouteContainer.GetODataRootContainer(routeName);
+                if (perRouteContainer == null)
+                {
+                    throw Error.ArgumentNull("routeName");
+                }
+
+                ODataPathTemplateHandler = rootContainer.GetRequiredService<IODataPathTemplateHandler>();
+            }
         }
 
         /// <summary>

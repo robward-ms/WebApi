@@ -28,6 +28,11 @@ namespace Microsoft.AspNet.OData.Results
         /// <param name="controller">The controller from which to obtain the dependencies needed for execution.</param>
         public CreatedODataResult(T entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
             this._innerResult = entity;
         }
 
@@ -53,7 +58,7 @@ namespace Microsoft.AspNet.OData.Results
             {
                 ObjectResult objectResult = new ObjectResult(_innerResult)
                 {
-                    StatusCode = StatusCodes.Status200OK
+                    StatusCode = StatusCodes.Status201Created
                 };
 
                 return objectResult;

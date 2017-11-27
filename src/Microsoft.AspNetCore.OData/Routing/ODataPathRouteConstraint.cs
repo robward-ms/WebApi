@@ -50,8 +50,8 @@ namespace Microsoft.AspNet.OData.Routing
 
                     StringBuilder requestLeftPartBuilder = new StringBuilder(request.Scheme);
                     requestLeftPartBuilder.Append("://");
-                    requestLeftPartBuilder.Append(request.Host);
-                    requestLeftPartBuilder.Append(request.Path);
+                    requestLeftPartBuilder.Append(request.Host.HasValue ? request.Host.Value : request.Host.ToString());
+                    requestLeftPartBuilder.Append(request.Path.HasValue ? request.Path.Value : request.Path.ToString());
 
                     string queryString = request.QueryString.HasValue ? request.QueryString.ToString() : null;
 

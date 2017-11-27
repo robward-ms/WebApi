@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Formatter;
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -43,13 +44,15 @@ namespace Microsoft.Test.AspNet.OData
         private void InitializeConfiguration(Action<IContainerBuilder> action)
         {
             var configuration = RoutingConfigurationFactory.Create();
-            string routeName = Microsoft.Test.AspNet.OData.Formatter.HttpRouteCollectionExtensions.RouteName;
-#if !NETCORE1x
-            _rootContainer = configuration.CreateODataRootContainer(routeName, action);
-#else
+            string routeName = HttpRouteCollectionExtensions.RouteName;
+#if NETCORE1x
             IPerRouteContainer perRouteContainer = configuration.ServiceProvider.GetRequiredService<IPerRouteContainer>();
             Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(action);
             _rootContainer = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
+
+            // Without a proper container, WebApiAssemblyResolved has a problem here. It has no applicationpartManager.
+#else
+            _rootContainer = configuration.CreateODataRootContainer(routeName, action);
 #endif
         }
     }

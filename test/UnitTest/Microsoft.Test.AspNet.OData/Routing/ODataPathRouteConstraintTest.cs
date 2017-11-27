@@ -17,6 +17,8 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 using Microsoft.Test.AspNet.OData.Formatter;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.OData;
 #else
 using System;
 using System.Collections.Generic;
@@ -391,20 +393,43 @@ namespace Microsoft.Test.AspNet.OData.Routing
         private bool ConstraintMatch(ODataPathRouteConstraint constraint, TestRouteRequest routeRequest, Dictionary<string, object> values, RouteDirection direction)
         {
 #if NETCORE
+            IRouteBuilder config = RoutingConfigurationFactory.Create();
+            if (routeRequest?.PathHandler != null && routeRequest?.Model != null)
+            {
+                config.MapODataServiceRoute(_routeName, "", builder =>
+                    builder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routeRequest.PathHandler)
+                           .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routeRequest.Model));
+            }
+            else if (routeRequest?.PathHandler != null)
+            {
+                config.MapODataServiceRoute(_routeName, "", builder =>
+                    builder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routeRequest.PathHandler));
+            }
+            else if (routeRequest?.Model != null)
+            {
+                config.MapODataServiceRoute(_routeName, "", builder =>
+                    builder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routeRequest.Model));
+            }
+            else
+            {
+                config.MapODataServiceRoute(_routeName, "", builder => { });
+            }
+
             HttpRequest request = (routeRequest != null)
-                ? RequestFactory.Create(routeRequest.Method, routeRequest.Uri)
+                ? RequestFactory.Create(routeRequest.Method, routeRequest.Uri, config, _routeName)
                 : RequestFactory.Create();
 
-            System.Uri requestUri = new System.Uri(routeRequest.Uri);
-            request.Method = routeRequest.Method.ToString();
-            request.Host = new AspNetCore.Http.HostString(requestUri.Host, requestUri.Port);
-            request.Scheme = requestUri.Scheme;
+            // The RequestFactory will create a request container which most tests want but for checking the constraint,
+            // we don't want a request container before the test runs since Match() creates one.
+            request.DeleteRequestContainer(true);
 
             AspNetCore.Routing.RouteDirection routeDirection = (direction == RouteDirection.UriResolution)
                 ? AspNetCore.Routing.RouteDirection.IncomingRequest
                 : AspNetCore.Routing.RouteDirection.UrlGeneration;
 
-            return constraint.Match(request.HttpContext, null, null, null, routeDirection);
+            RouteValueDictionary routeValues = new RouteValueDictionary(values);
+
+            return constraint.Match(request.HttpContext, null, null, routeValues, routeDirection);
 #else
             HttpRequestMessage request = (routeRequest != null)
                 ? new HttpRequestMessage(routeRequest.Method, routeRequest.Uri)

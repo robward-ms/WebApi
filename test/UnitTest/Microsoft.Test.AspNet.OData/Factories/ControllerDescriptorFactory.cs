@@ -42,18 +42,26 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the [Http]ControllerDescriptor  class.</returns>
 #if NETCORE1x
-        public static ControllerActionDescriptor Create(IRouteBuilder routeBuilder, string name, Type controllerType)
+        public static IEnumerable<ControllerActionDescriptor> Create(IRouteBuilder routeBuilder, string name, Type controllerType)
         {
-            ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
-            descriptor.ControllerName = name;
-            descriptor.ControllerTypeInfo = controllerType.GetTypeInfo();
+            List<ControllerActionDescriptor> descriptors = new List<ControllerActionDescriptor>();
+            foreach (MethodInfo methodInfo in controllerType.GetMethods(BindingFlags.Public))
+            {
+                ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
+                descriptor.ControllerName = name;
+                descriptor.ControllerTypeInfo = controllerType.GetTypeInfo();
+                descriptor.ActionName = methodInfo.Name;
+                descriptor.DisplayName = methodInfo.Name;
+                descriptor.MethodInfo = methodInfo;
+                descriptors.Add(descriptor);
+            }
 
-            return descriptor;
+            return descriptors;
         }
 #else
-        public static HttpControllerDescriptor Create(HttpConfiguration configuration, string name, Type controllerType)
+        public static IEnumerable<HttpControllerDescriptor> Create(HttpConfiguration configuration, string name, Type controllerType)
         {
-            return new HttpControllerDescriptor(configuration, name, controllerType);
+            return new[] { new HttpControllerDescriptor(configuration, name, controllerType) };
         }
 #endif
 

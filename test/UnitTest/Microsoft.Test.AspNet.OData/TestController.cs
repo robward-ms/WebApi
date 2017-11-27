@@ -34,7 +34,7 @@ namespace Microsoft.Test.AspNet.OData
 
         [NonAction]
 #if NETCORE
-        public new TestOkObjectResult Ok(object value) { return new TestOkObjectResult(base.Ok(value)); }
+        public new TestOkObjectResult Ok(object value) { return new TestOkObjectResult(value); }
 #else
         public new TestOkObjectResult<T> Ok<T>(T value) { return new TestOkObjectResult<T>(base.Ok<T>(value)); }
 #endif
@@ -66,11 +66,12 @@ namespace Microsoft.Test.AspNet.OData
     /// Wrapper for OkObjectResult
     /// </summary>
 #if NETCORE
-    public class TestOkObjectResult : TestActionResult
+    public class TestOkObjectResult : TestObjectResult
     {
-        public TestOkObjectResult(OkObjectResult innerResult)
+        public TestOkObjectResult(object innerResult)
             : base(innerResult)
         {
+            this.StatusCode = 200;
         }
     }
 #else
@@ -83,21 +84,17 @@ namespace Microsoft.Test.AspNet.OData
     }
 #endif
 
-/// <summary>
-/// Platform-agnostic version of action result.
-/// </summary>
 #if NETCORE
+    /// <summary>
+    /// Platform-agnostic version of action result.
+    /// </summary>
     public interface ITestActionResult : IActionResult { }
-#else
-    public interface ITestActionResult : IHttpActionResult { }
-#endif
 
     /// <summary>
-    /// Wrapper for NotFoundObjectResult
+    /// Wrapper for platform-agnostic version of action result.
     /// </summary>
     public class TestActionResult : ITestActionResult
     {
-#if NETCORE
         private IActionResult innerResult;
 
         public TestActionResult(IActionResult innerResult)
@@ -109,7 +106,29 @@ namespace Microsoft.Test.AspNet.OData
         {
             return innerResult.ExecuteResultAsync(context);
         }
+    }
+
+    /// <summary>
+    /// Wrapper for platform-agnostic version of object result.
+    /// </summary>
+    public class TestObjectResult : ObjectResult, ITestActionResult
+    {
+        public TestObjectResult(object innerResult)
+            : base(innerResult)
+        {
+        }
+    }
 #else
+    /// <summary>
+    /// Platform-agnostic version of action result.
+    /// </summary>
+    public interface ITestActionResult : IHttpActionResult { }
+
+    /// <summary>
+    /// Wrapper for platform-agnostic version of action result.
+    /// </summary>
+    public class TestActionResult : ITestActionResult
+    {
         private IHttpActionResult innerResult;
 
         public TestActionResult(IHttpActionResult innerResult)
@@ -121,6 +140,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             return innerResult.ExecuteAsync(cancellationToken);
         }
-#endif
+
     }
+#endif
 }

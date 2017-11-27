@@ -204,14 +204,5 @@ namespace Microsoft.AspNet.OData.Adapters
         {
             get { return this.innerRequest.GetReaderSettings(); }
         }
-
-        /// <summary>
-        /// Gets the route data for the given request or null if not available.
-        /// </summary>
-        /// <returns></returns>
-        public IDictionary<string, object> RouteData
-        {
-            get { return this.innerRequest.GetRouteData().Values; }
-        }
     }
 }

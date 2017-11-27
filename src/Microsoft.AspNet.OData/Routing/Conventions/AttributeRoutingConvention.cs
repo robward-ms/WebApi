@@ -63,8 +63,8 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
 
             ODataPathTemplateHandler = pathTemplateHandler;
 
-            IODataPathHandler pathHandler = pathTemplateHandler as IODataPathHandler;
             // if settings is not on local, use the global configuration settings.
+            IODataPathHandler pathHandler = pathTemplateHandler as IODataPathHandler;
             if (pathHandler != null && pathHandler.UrlKeyDelimiter == null)
             {
                 ODataUrlKeyDelimiter urlKeyDelimiter = configuration.GetUrlKeyDelimiter();

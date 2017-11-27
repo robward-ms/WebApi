@@ -114,7 +114,14 @@ namespace Microsoft.AspNet.OData.Routing
                         ? serviceRoot
                         : serviceRoot + "/");
 
-                fullUri = new Uri(serviceRootUri, odataPath);
+                // Concatenate the root and path and create a Uri. Using Uri to build a Uri from
+                // a root and relative path changes the casing on .NetCore. However, odataPath may
+                // be a full Uri.
+                if (!Uri.TryCreate(odataPath, UriKind.Absolute, out fullUri))
+                {
+                    fullUri = new Uri(serviceRootUri + odataPath);
+                }
+
                 uriParser = new ODataUriParser(model, serviceRootUri, fullUri, requestContainer);
             }
 

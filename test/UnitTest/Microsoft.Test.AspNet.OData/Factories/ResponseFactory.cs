@@ -8,6 +8,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData;
 #else
 using System.Net;
@@ -25,28 +26,26 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        public static HttpResponseMessage Create(HttpStatusCode statusCode)
+#if NETCORE1x
+        public static HttpResponse Create(HttpStatusCode statusCode)
         {
-            var response = new HttpResponseMessage(statusCode);
+            // Add the options services.
+            IRouteBuilder config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+
+            // Create a new context and assign the services.
+            HttpContext context = new DefaultHttpContext();
+            context.RequestServices = config.ServiceProvider;
+            //context.ODataFeature().RequestContainer = provider;
+
+            // Get response and return it.
+            HttpResponse response = context.Response;
+            response.StatusCode = (int)statusCode;
             return response;
         }
 #else
-        public static HttpResponse Create(HttpStatusCode statusCode)
+        public static HttpResponseMessage Create(HttpStatusCode statusCode)
         {
-            IContainerBuilder builder = new DefaultContainerBuilder();
-            builder.AddService<ODataOptions, ODataOptions>(Microsoft.OData.ServiceLifetime.Singleton);
-            builder.AddService<DefaultQuerySettings, DefaultQuerySettings>(Microsoft.OData.ServiceLifetime.Singleton);
-
-            HttpContext context = new DefaultHttpContext();
-
-            IServiceProvider provider = builder.BuildContainer();
-            context.ODataFeature().RequestContainer = provider;
-            context.RequestServices = provider;
-
-            HttpResponse response = context.Response;
-            response.StatusCode = (int)statusCode;
-
+            var response = new HttpResponseMessage(statusCode);
             return response;
         }
 #endif

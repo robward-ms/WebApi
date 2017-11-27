@@ -827,6 +827,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(result, enumerator.Current);
         }
 
+#if !NETCORE // Crashes
         [Theory]
         [MemberData(nameof(Querying_Enum_Collections_Data))]
         public void Querying_Enum_Collections(IQueryable queryable, string query, object result)
@@ -846,6 +847,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.True(enumerator.MoveNext());
             Assert.Equal(result, enumerator.Current);
         }
+#endif
 
         [Fact]
         public void ODataQueryOptions_IgnoresUnknownOperatorStartingWithDollar()

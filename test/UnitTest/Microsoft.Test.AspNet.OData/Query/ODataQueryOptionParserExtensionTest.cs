@@ -3,8 +3,6 @@
 
 using System.Linq;
 using System.Net.Http;
-#if !NETCORE1x
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
@@ -99,7 +97,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             };
 
             var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData", b => b.AddService(ServiceLifetime.Singleton, sp => resolver));
-            var request = RequestFactory.Create(HttpMethod.Get, uri, configuration);
+            var request = RequestFactory.Create(HttpMethod.Get, uri, configuration, "OData");
 
             IEdmModel model = ODataRoutingModel.GetModel();
 

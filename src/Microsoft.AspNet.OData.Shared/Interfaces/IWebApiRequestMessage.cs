@@ -105,11 +105,5 @@ namespace Microsoft.AspNet.OData.Interfaces
         /// </summary>
         /// <returns></returns>
         ODataMessageReaderSettings ReaderSettings { get; }
-
-        /// <summary>
-        /// Retrieves the route data for the given request or null if not available.
-        /// </summary>
-        /// <returns></returns>
-        IDictionary<string, object> RouteData { get; }
     }
 }

@@ -1,18 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE1x
-using System;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.OData;
-using Microsoft.Test.AspNet.OData.TestCommon;
-#else
+#if NETCORE1x
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Builder.Internal;
@@ -23,15 +18,25 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
+#else
+using System;
+using System.Web.Http;
+using System.Web.Http.Dispatcher;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData;
+using Microsoft.Test.AspNet.OData.TestCommon;
 #endif
 
 namespace Microsoft.Test.AspNet.OData.Factories
 {
     /// <summary>
-    /// A class to create ODataConventionModelBuilder.
+    /// A class to create IRouteBuilder/HttpConfiguration.
     /// </summary>
     public class RoutingConfigurationFactory
     {
@@ -39,19 +44,16 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        public static HttpConfiguration Create()
-        {
-            return new HttpConfiguration();
-        }
-#else
+#if NETCORE1x
         public static IRouteBuilder Create()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddOptions();
-            serviceCollection.AddRouting();
+            serviceCollection.AddMvc();
+            serviceCollection.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+            serviceCollection.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
             serviceCollection.AddOData();
 
+            // Add an action select to return a default descriptor.
             var mockAction = new Mock<ActionDescriptor>();
             ActionDescriptor actionDescriptor = mockAction.Object;
 
@@ -64,6 +66,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 .Setup(a => a.SelectBestCandidate(It.IsAny<RouteContext>(), It.IsAny<IReadOnlyList<ActionDescriptor>>()))
                 .Returns(actionDescriptor);
 
+            // Add a mock action invoker & factory.
             var mockInvoker = new Mock<IActionInvoker>();
             mockInvoker.Setup(i => i.InvokeAsync())
                 .Returns(Task.FromResult(true));
@@ -72,11 +75,12 @@ namespace Microsoft.Test.AspNet.OData.Factories
             mockInvokerFactory.Setup(f => f.CreateInvoker(It.IsAny<ActionContext>()))
                 .Returns(mockInvoker.Object);
 
+            // Create a logger, diagnostic source and app builder.
             var mockLoggerFactory = new Mock<Microsoft.Extensions.Logging.ILoggerFactory>();
-
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
-
             IApplicationBuilder appBuilder = new ApplicationBuilder(serviceCollection.BuildServiceProvider());
+
+            // Create a route build with a default path handler.
             IRouteBuilder routeBuilder = new RouteBuilder(appBuilder);
             routeBuilder.DefaultHandler = new MvcRouteHandler(
                 mockInvokerFactory.Object,
@@ -87,14 +91,65 @@ namespace Microsoft.Test.AspNet.OData.Factories
 
             return routeBuilder;
         }
+#else
+        public static HttpConfiguration Create()
+        {
+            return new HttpConfiguration();
+        }
 #endif
 
         /// <summary>
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        internal static HttpConfiguration CreateWithRootContainer(string routeName = null, Action<IContainerBuilder> configureAction = null)
+#if NETCORE1x
+        public static IRouteBuilder CreateWithRoute(string route)
+        {
+            IRouteBuilder routeBuilder = Create();
+
+            //// Get constraint resolver.
+            //IInlineConstraintResolver inlineConstraintResolver = routeBuilder
+            //    .ServiceProvider
+            //    .GetRequiredService<IInlineConstraintResolver>();
+
+            //// Add route.
+            //routeBuilder.Routes.Add(new Route(routeBuilder.DefaultHandler, route, inlineConstraintResolver));
+
+            return routeBuilder;
+        }
+#else
+        public static HttpConfiguration CreateWithRoute(string route)
+        {
+            return new HttpConfiguration(new HttpRouteCollection(route));
+        }
+#endif
+
+        /// <summary>
+        /// Initializes a new instance of the routing configuration class.
+        /// </summary>
+        /// <returns>A new instance of the routing configuration class.</returns>
+#if NETCORE1x
+        internal static IRouteBuilder CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
+        {
+            IRouteBuilder builder = Create();
+            if (!string.IsNullOrEmpty(routeName))
+            {
+                // Build and configure the root container.
+                IPerRouteContainer perRouteContainer = builder.ServiceProvider.GetRequiredService<IPerRouteContainer>();
+                if (perRouteContainer == null)
+                {
+                    throw Error.ArgumentNull("routeName");
+                }
+
+                // Create an service provider for this route. Add the default services to the custom configuration actions.
+                Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(configureAction);
+                IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
+            }
+
+            return builder;
+        }
+#else
+        internal static HttpConfiguration CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
         {
             HttpConfiguration configuration = Create();
             if (!string.IsNullOrEmpty(routeName))
@@ -108,31 +163,13 @@ namespace Microsoft.Test.AspNet.OData.Factories
 
             return configuration;
         }
-#else
-        internal static IRouteBuilder CreateWithRootContainer(string routeName = null, Action<IContainerBuilder> configureAction = null)
-        {
-            IRouteBuilder builder = Create();
-
-            return builder;
-        }
 #endif
 
         /// <summary>
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        internal static HttpConfiguration CreateWithTypes(params Type[] types)
-        {
-            HttpConfiguration configuration = Create();
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
-
-            return configuration;
-        }
-#else
+#if NETCORE1x
         internal static IRouteBuilder CreateWithTypes(params Type[] types)
         {
             IRouteBuilder builder = Create();
@@ -143,23 +180,24 @@ namespace Microsoft.Test.AspNet.OData.Factories
 
             return builder;
         }
+#else
+        internal static HttpConfiguration CreateWithTypes(params Type[] types)
+        {
+            HttpConfiguration configuration = Create();
+
+            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
+
+            return configuration;
+        }
 #endif
 
         /// <summary>
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if !NETCORE1x
-        internal static HttpConfiguration CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
-        {
-            HttpConfiguration configuration = CreateWithRootContainer(routeName, configureAction);
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            return configuration;
-        }
-#else
+#if NETCORE1x
         internal static IRouteBuilder CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
         {
             IRouteBuilder builder = CreateWithRootContainer(routeName, configureAction);
@@ -169,6 +207,16 @@ namespace Microsoft.Test.AspNet.OData.Factories
             applicationPartManager.ApplicationParts.Add(part);
 
             return builder;
+        }
+#else
+        internal static HttpConfiguration CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
+        {
+            HttpConfiguration configuration = CreateWithRootContainer(routeName, configureAction);
+
+            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(types));
+            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+
+            return configuration;
         }
 #endif
     }

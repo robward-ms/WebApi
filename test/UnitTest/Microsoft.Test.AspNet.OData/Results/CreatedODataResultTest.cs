@@ -64,9 +64,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             ExceptionAssert.ThrowsArgumentNull(
                 () => new CreatedODataResult<TestEntity>(entity: null), "entity");
         }
-#endif
-
-#if !NETCORE
+#else
         [Fact]
         public void Ctor_ControllerDependency_ThrowsArgumentNull_Entity()
         {
@@ -171,7 +169,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
         public void GetInnerActionResult_ReturnsNegotiatedContentResult_IfRequestHasNoPreferenceHeader()
         {
             // Arrange
-            var  request = CreateRequest();
+            var request = CreateRequest();
             var createdODataResult = GetCreatedODataResult<TestEntity>(_entity, request);
 
             // Act
@@ -428,10 +426,35 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
                 Times.Once());
         }
 
+        private class TestEntity
+        {
+        }
+
+        private class TestController : ODataController
+        {
+        }
+
 #if NETCORE
         private CreatedODataResult<T> GetCreatedODataResult<T>(T entity, HttpRequest request, TestController controller = null)
         {
             return new CreatedODataResult<T>(entity);
+        }
+
+        private HttpRequest CreateRequest(string preferHeaderValue = null)
+        {
+            var request = RequestFactory.Create();
+            if (!string.IsNullOrEmpty(preferHeaderValue))
+            {
+                request.Headers.TryAdd("Prefer", new Extensions.Primitives.StringValues(preferHeaderValue));
+            }
+
+            return request;
+        }
+
+        private TestController CreateController(AspNetCore.Http.HttpRequest request)
+        {
+            TestController controller = new TestController();
+            return controller;
         }
 #else
         private CreatedODataResult<T> GetCreatedODataResult<T>(T entity, HttpRequestMessage request, TestController controller = null)
@@ -445,20 +468,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
                 return new CreatedODataResult<T>(entity, _contentNegotiator, request, _formatters, _locationHeader);
             }
         }
-#endif
 
-#if NETCORE
-        private HttpRequest CreateRequest(string preferHeaderValue = null)
-        {
-            var request = RequestFactory.Create();
-            if (!string.IsNullOrEmpty(preferHeaderValue))
-            {
-                request.Headers.TryAdd("Prefer", new Extensions.Primitives.StringValues(preferHeaderValue));
-            }
-
-            return request;
-        }
-#else
         private HttpRequestMessage CreateRequest(string preferHeaderValue = null)
         {
             var request = RequestFactory.Create();
@@ -470,15 +480,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
 
             return request;
         }
-#endif
 
-#if NETCORE
-        private TestController CreateController(AspNetCore.Http.HttpRequest request)
-        {
-            TestController controller = new TestController();
-            return controller;
-        }
-#else
         private TestController CreateController(HttpRequestMessage request)
         {
             TestController controller = new TestController();
@@ -487,13 +489,5 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             return controller;
         }
 #endif
-
-        private class TestEntity
-        {
-        }
-
-        private class TestController : ODataController
-        {
-        }
     }
 }

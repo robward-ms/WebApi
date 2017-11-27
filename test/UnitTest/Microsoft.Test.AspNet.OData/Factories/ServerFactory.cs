@@ -3,12 +3,16 @@
 
 #if NETCORE
 using System;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,15 +50,29 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Type[] controllers,
             Func<IRouteBuilder,IEdmModel> getModelFunction)
         {
-            IWebHostBuilder builder = WebHost.CreateDefaultBuilder().Configure(app =>
+            IWebHostBuilder builder = WebHost.CreateDefaultBuilder();
+            builder.ConfigureServices(services =>
+            {
+                services.AddMvc();
+                services.AddOData();
+            });
+
+            builder.Configure(app =>
             {
                 app.UseMvc((routeBuilder) =>
                 {
                     routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
 
                     ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+                    applicationPartManager.ApplicationParts.Clear();
+
                     AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
                     applicationPartManager.ApplicationParts.Add(part);
+
+                    // Insert a custom ControllerFeatureProvider to bypass the IsPublic restriction of controllers
+                    // to allow for nested controllers which are excluded by the built-in ControllerFeatureProvider.
+                    applicationPartManager.FeatureProviders.Clear();
+                    applicationPartManager.FeatureProviders.Add(new TestControllerFeatureProvider());
                 });
             });
 
@@ -69,6 +87,44 @@ namespace Microsoft.Test.AspNet.OData.Factories
         public static HttpClient CreateClient(TestServer server)
         {
             return server.CreateClient();
+        }
+
+        private class TestControllerFeatureProvider : ControllerFeatureProvider
+        {
+            /// <inheritdoc />
+            /// <remarks>
+            /// Identical to ControllerFeatureProvider.IsController except for the typeInfo.IsPublic check.
+            /// </remarks>
+            protected override bool IsController(TypeInfo typeInfo)
+            {
+                if (!typeInfo.IsClass)
+                {
+                    return false;
+                }
+
+                if (typeInfo.IsAbstract)
+                {
+                    return false;
+                }
+
+                if (typeInfo.ContainsGenericParameters)
+                {
+                    return false;
+                }
+
+                if (typeInfo.IsDefined(typeof(NonControllerAttribute)))
+                {
+                    return false;
+                }
+
+                if (!typeInfo.Name.EndsWith("Controller", StringComparison.OrdinalIgnoreCase) &&
+                    !typeInfo.IsDefined(typeof(ControllerAttribute)))
+                {
+                    return false;
+                }
+
+                return true;
+            }
         }
 #else
         /// <summary>

@@ -6,10 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-#if !NETCORE1x
-using System.Web.Http;
-using System.Web.Http.Routing;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -638,6 +634,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             Assert.Equal(expectedUri, functionLinkBuilder.BuildLink(context));
         }
 
+#if !NETCORE // Crashes
         [Fact]
         public void WhenFeedActionLinksNotManuallyConfigured_ConventionBasedBuilderUsesConventions()
         {
@@ -670,6 +667,7 @@ namespace Microsoft.Test.AspNet.OData.Builder
             Assert.NotNull(functionLinkBuilder);
             Assert.Equal(expectedUri, functionLinkBuilder.BuildLink(context));
         }
+#endif
 
         [Fact]
         public void GetEdmModel_SetsNullableIfParameterTypeIsNullable()

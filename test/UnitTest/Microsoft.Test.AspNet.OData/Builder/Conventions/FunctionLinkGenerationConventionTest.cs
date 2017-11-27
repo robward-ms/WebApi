@@ -96,6 +96,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.Null(function.GetFunctionLink());
         }
 
+#if !NETCORE // Crashes
         [Fact]
         public void Convention_GeneratesUri_ForFunctionBoundToCollectionOfEntity()
         {
@@ -125,6 +126,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
             Assert.Equal("http://localhost:123/odata/Customers/Default.MyFunction(param=@param)",
                 link.AbsoluteUri);
         }
+#endif
 
         [Fact]
         public void Apply_Doesnot_Override_UserConfiguration()

@@ -13,7 +13,7 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Serialization;
 using Xunit;
 
-namespace Microsoft.Test.AspNet.OData.Builderer
+namespace Microsoft.Test.AspNet.OData.Builder
 {
     public class LowerCamelCaserTest
     {

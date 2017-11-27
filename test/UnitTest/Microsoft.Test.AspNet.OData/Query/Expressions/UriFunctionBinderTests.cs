@@ -8,7 +8,7 @@ using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
-namespace Microsoft.Test.AspNet.OData.OData.Query.Expressions
+namespace Microsoft.Test.AspNet.OData.Query.Expressions
 {
     /// <summary>
     /// Tests to UriFunctions binder.

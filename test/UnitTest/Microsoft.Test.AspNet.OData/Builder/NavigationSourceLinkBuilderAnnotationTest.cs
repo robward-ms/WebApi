@@ -3,13 +3,8 @@
 
 using System;
 using System.Linq;
-using System.Net.Http;
-#if !NETCORE1x
-using System.Web.Http;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
