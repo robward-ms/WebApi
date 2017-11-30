@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE1x
+#if NETFX // HttpActionDescriptor.GetEdmModel implmention is part of EnableQueryAttribute.GetModel on AspNetCore
 using System;
 using System.Linq;
 using System.Web.Http;

@@ -31,7 +31,7 @@ namespace Microsoft.Test.AspNet.OData.Builder.Conventions
         [Fact]
         public void Ctor_ThrowsForNullConfiguration()
         {
-#if NETCORE1x
+#if NETCORE
             ExceptionAssert.ThrowsArgumentNull(
                 () => new ODataConventionModelBuilder(provider: null),
                 "provider");

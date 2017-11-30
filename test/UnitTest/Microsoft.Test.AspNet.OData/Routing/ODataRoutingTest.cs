@@ -10,10 +10,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Xunit;
@@ -26,51 +27,49 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Xunit;
 #endif
 
-#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataRoutingTest
     {
-        private readonly HttpServer _nullPrefixServer;
         private readonly HttpClient _nullPrefixClient;
-        private readonly HttpServer _fixedPrefixServer;
         private readonly HttpClient _fixedPrefixClient;
-        private readonly HttpServer _parameterizedPrefixServer;
         private readonly HttpClient _parameterizedPrefixClient;
 
         public ODataRoutingTest()
         {
             var model = ODataRoutingModel.GetModel();
 
-            // Separate clients and servers so routes are not ambiguous.
-            HttpConfiguration configuration = new HttpConfiguration();
-            configuration.MapODataServiceRoute("NullPrefixRoute", null, model);
+            var controllers = new[]
+            {
+                typeof(DateTimeOffsetKeyCustomersController),
+                typeof(MetadataController),
+                typeof(RoutingCustomersController),
+                typeof(ProductsController),
+                typeof(EnumCustomersController),
+                typeof(DestinationsController),
+            };
 
-            _nullPrefixServer = CreateServer(configuration);
-            _nullPrefixClient = new HttpClient(_nullPrefixServer);
+            // Separate clients and servers so routes are not ambiguous.
+            var _nullPrefixServer = TestServerFactory.Create("NullPrefixRoute", null, controllers, (routingConfig) => model);
+            _nullPrefixClient = TestServerFactory.CreateClient(_nullPrefixServer);
 
             // FixedPrefixRoute has both a non-empty virtual path root and a fixed route prefix.
-            configuration = new HttpConfiguration(new HttpRouteCollection("MyRoot"));
-            configuration.MapODataServiceRoute("FixedPrefixRoute", "odata", model);
+            var _fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", "FixedPrefixRoute", "odata", controllers, (routingConfig) => model);
+            _fixedPrefixClient = TestServerFactory.CreateClient(_fixedPrefixServer);
 
-            _fixedPrefixServer = CreateServer(configuration);
-            _fixedPrefixClient = new HttpClient(_fixedPrefixServer);
-
-            configuration = new HttpConfiguration();
-            configuration.MapODataServiceRoute("ParameterizedPrefixRoute", "{a}", model);
-
-            _parameterizedPrefixServer = CreateServer(configuration);
-            _parameterizedPrefixClient = new HttpClient(_parameterizedPrefixServer);
+            var _parameterizedPrefixServer = TestServerFactory.Create("ParameterizedPrefixRoute", "{a}", controllers, (routingConfig) => model);
+            _parameterizedPrefixClient = TestServerFactory.CreateClient(_parameterizedPrefixServer);
         }
 
         public static TheoryDataSet<string, string, string> ServiceAndMetadataRoutes
@@ -349,7 +348,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -465,25 +464,6 @@ namespace Microsoft.Test.AspNet.OData.Routing
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             string responseString = response.Content.ReadAsStringAsync().Result;
             Assert.Contains(expectedError, responseString);
-        }
-
-        private static HttpServer CreateServer(HttpConfiguration configuration)
-        {
-            // Need the MetadataController to resolve the service document as well as $metadata.
-            var controllers = new[]
-            {
-                typeof(DateTimeOffsetKeyCustomersController),
-                typeof(MetadataController),
-                typeof(RoutingCustomersController),
-                typeof(ProductsController),
-                typeof(EnumCustomersController),
-                typeof(DestinationsController),
-            };
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            return new HttpServer(configuration);
         }
     }
 
@@ -840,4 +820,3 @@ namespace Microsoft.Test.AspNet.OData.Routing
         }
     }
 }
-#endif

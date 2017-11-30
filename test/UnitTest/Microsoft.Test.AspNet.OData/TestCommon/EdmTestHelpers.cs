@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
@@ -54,7 +55,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
                 if (CsdlReader.TryParse(XmlReader.Create(new StringReader(GetEdmx())), out edmModel, out edmErrors))
                 {
                     _model = edmModel;
-#if !NETCORE1x
+#if !NETCORE
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Product"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Product)));
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Supplier"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Supplier)));
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Address"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Address)));
@@ -75,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
 
         public static string GetEdmx()
         {
-#if !NETCORE1x
+#if !NETCORE
             return Resources.ProductsCsdl;
 #else
             return string.Empty;

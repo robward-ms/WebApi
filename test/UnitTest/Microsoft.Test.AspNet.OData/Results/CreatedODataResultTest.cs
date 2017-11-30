@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Results;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
@@ -49,7 +50,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
     public class CreatedODataResultTest
     {
         private readonly TestEntity _entity = new TestEntity();
-#if !NETCORE
+#if NETFX // Only needed for AspNet
         private readonly HttpRequestMessage _request = new HttpRequestMessage();
         private readonly IContentNegotiator _contentNegotiator = new Mock<IContentNegotiator>().Object;
         private readonly IEnumerable<MediaTypeFormatter> _formatters = new MediaTypeFormatter[0];
@@ -203,7 +204,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             // Assert
             StatusCodeResult statusCodeResult = Assert.IsType<StatusCodeResult>(result);
             Assert.Equal(HttpStatusCode.NoContent, (HttpStatusCode)statusCodeResult.StatusCode);
-#if !NETCORE
+#if NETFX // Only needed for AspNet
             Assert.Same(request, statusCodeResult.Request);
 #endif
         }
@@ -445,7 +446,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Results
             var request = RequestFactory.Create();
             if (!string.IsNullOrEmpty(preferHeaderValue))
             {
-                request.Headers.TryAdd("Prefer", new Extensions.Primitives.StringValues(preferHeaderValue));
+                request.Headers.Add("Prefer", new StringValues(preferHeaderValue));
             }
 
             return request;

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 // TestAssemblyResolver is only needed in the AspNet version.
-#if !NETCORE1x
+#if NETFX
 using System;
 using System.Collections.Generic;
 using System.Reflection;

@@ -45,7 +45,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             var configuration = RoutingConfigurationFactory.Create();
             string routeName = HttpRouteCollectionExtensions.RouteName;
-#if NETCORE1x
+#if NETCORE
             IPerRouteContainer perRouteContainer = configuration.ServiceProvider.GetRequiredService<IPerRouteContainer>();
             Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(action);
             _rootContainer = perRouteContainer.CreateODataRootContainer(routeName, builderAction);

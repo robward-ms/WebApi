@@ -64,7 +64,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
                 "routeName");
         }
 
-#if !NETCORE
+#if NETFX // Only needed for AspNet
         [Fact]
         public void CtorTakingModelAndConfigurationAndPathHandler_ThrowsArgumentNull_Configuration()
         {
@@ -206,7 +206,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
                 "action that can be bound to it otherwise all intermediate segments must refer to a single resource.");
         }
 
-#if !NETCORE // AspNetCore version uses lazy initialization.
+#if NETFX // AspNetCore version uses lazy initialization.
         [Fact]
         public void AttributeMappingsInitialization_ThrowsInvalidOperation_IfNoConfigEnsureInitialized()
         {

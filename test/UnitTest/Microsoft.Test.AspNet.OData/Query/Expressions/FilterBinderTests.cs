@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
 using System.Data.Linq;
 #endif
 using System.Globalization;
@@ -2725,7 +2725,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
 #endregion
 
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
         [Theory]
         [InlineData("UShortProp eq 12", "$it => (Convert($it.UShortProp) == 12)")]
         [InlineData("ULongProp eq 12L", "$it => (Convert($it.ULongProp) == 12)")]
@@ -2754,7 +2754,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 #endif
 
         [Theory]
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
         [InlineData("BinaryProp eq binary'I6v/'", "$it => ($it.BinaryProp.ToArray() == System.Byte[])", true, true)]
         [InlineData("BinaryProp ne binary'I6v/'", "$it => ($it.BinaryProp.ToArray() != System.Byte[])", false, false)]
 #endif
@@ -2774,7 +2774,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
             RunFilters(filters,
                 new DataTypes
                 {
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
                     BinaryProp = new Binary(new byte[] { 35, 171, 255 }),
 #endif
                     ByteArrayProp = new byte[] { 35, 171, 255 }

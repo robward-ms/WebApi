@@ -48,7 +48,56 @@ namespace Microsoft.Test.AspNet.OData.Factories
             string routeName,
             string routePrefix,
             Type[] controllers,
+            Func<IRouteBuilder, IEdmModel> getModelFunction)
+        {
+            return Create(routeName, routePrefix, controllers, getModelFunction, null);
+        }
+
+        /// <summary>
+        /// Create an TestServer.
+        /// </summary>
+        /// <param name="route">The route.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An TestServer.</returns>
+        public static TestServer CreateWithRoute(
+            string route,
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
             Func<IRouteBuilder,IEdmModel> getModelFunction)
+        {
+            return Create(routeName, routePrefix, controllers, getModelFunction,
+                (routeBuilder) =>
+                {
+                    // Get constraint resolver.
+                    IInlineConstraintResolver inlineConstraintResolver = routeBuilder
+                        .ServiceProvider
+                        .GetRequiredService<IInlineConstraintResolver>();
+
+                    //// Add route.
+                    //routeBuilder.Routes.Add(new Route(routeBuilder.DefaultHandler, route, inlineConstraintResolver));
+                });
+        }
+
+        /// <summary>
+        /// Create an TestServer.
+        /// </summary>
+        /// <param name="route">The route.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <param name="configRouteAction">An action to apply to routing config.</param>
+        /// <returns>An TestServer.</returns>
+        private static TestServer Create(
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
+            Func<IRouteBuilder, IEdmModel> getModelFunction,
+            Action<IRouteBuilder> configRouteAction)
         {
             IWebHostBuilder builder = WebHost.CreateDefaultBuilder();
             builder.ConfigureServices(services =>
@@ -61,6 +110,8 @@ namespace Microsoft.Test.AspNet.OData.Factories
             {
                 app.UseMvc((routeBuilder) =>
                 {
+                    configRouteAction?.Invoke(routeBuilder);
+
                     routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
 
                     ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
@@ -142,9 +193,48 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Func<HttpConfiguration, IEdmModel> getModelFunction)
         {
             HttpConfiguration configuration = new HttpConfiguration();
+            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+        }
+
+        /// <summary>
+        /// Create an HttpServer.
+        /// </summary>
+        /// <param name="route">The route.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An HttpServer.</returns>
+        public static HttpServer CreateWithRoute(
+            string route,
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
+            Func<HttpConfiguration, IEdmModel> getModelFunction)
+        {
+            HttpConfiguration configuration = new HttpConfiguration(new HttpRouteCollection(route));
+            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+        }
+
+        /// <summary>
+        /// Create an HttpServer.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An HttpServer.</returns>
+        public static HttpServer Create(
+            HttpConfiguration configuration,
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
+            Func<HttpConfiguration, IEdmModel> getModelFunction)
+        {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(routeName, routePrefix, getModelFunction(configuration));
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
 
             TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
             configuration.Services.Replace(typeof(IAssembliesResolver), resolver);

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
@@ -35,6 +36,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
@@ -282,11 +284,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                     result = options.Filter.ApplyTo(result, new ODataQuerySettings()).Cast<string>();
                 }
 
-#if NETCORE
-                if (Request.ODataFeature().Path.Segments.OfType<CountSegment>().Any())
-#else
-                if (Request.ODataProperties().Path.Segments.OfType<CountSegment>().Any())
-#endif
+                if (Request.GetODataPath().Segments.OfType<CountSegment>().Any())
                 {
                     return Ok(result.Count());
                 }

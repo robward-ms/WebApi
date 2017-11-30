@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-#if !NETCORE1x
+#if !NETCORE
 using System.Net.Http;
 #endif
 using System.Threading.Tasks;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 #endif
 using Microsoft.AspNet.OData;
@@ -119,7 +119,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
     }
 
-#if !NETCORE1x
+#if !NETCORE
     public class QueryCompositionCustomerLowLevelController : TestControllerBase
     {
         // demo 2: low level APIs

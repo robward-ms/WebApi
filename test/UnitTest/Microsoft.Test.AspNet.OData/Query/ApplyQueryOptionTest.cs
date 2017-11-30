@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData;
@@ -757,7 +756,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             }
         }
 
-#if !NETCORE
+#if !NETCORE // Crashes
         [Theory]
         [MemberData(nameof(CustomerTestFilters))]
         public void ApplyTo_Returns_Correct_Queryable_ForFilter(string filter, int[] customerIds)
@@ -789,6 +788,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 customerIds,
                 actualCustomers.Select(customer => customer.CustomerId));
         }
+#endif
 
         [Fact]
         public void ApplyToSerializationWorks()
@@ -801,11 +801,11 @@ namespace Microsoft.Test.AspNet.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateWithTypes(
-                new[] { typeof(MetadataController), typeof(CustomersController) });
 
-            config.MapODataServiceRoute("odata", "odata", model);
-            var client = new HttpClient(new System.Web.Http.HttpServer(config));
+            var controllers = new[] { typeof(MetadataController), typeof(CustomersController) };
+            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            HttpClient client = TestServerFactory.CreateClient(server);
+
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/Customers?$apply=groupby((Name), aggregate(CustomerId with sum as TotalId))");
@@ -828,7 +828,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
 
         [Fact]
-        public void ApplyToSerializationWorksForCompelxTypes()
+        public void ApplyToSerializationWorksForComplexTypes()
         {
             // Arrange
             var model = new ODataModelBuilder()
@@ -838,11 +838,10 @@ namespace Microsoft.Test.AspNet.OData.Query
                             .Add_Customer_EntityType_With_CollectionProperties()
                             .Add_Customers_EntitySet()
                             .GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateWithTypes(
-                new[] { typeof(MetadataController), typeof(CustomersController) });
 
-            config.MapODataServiceRoute("odata", "odata", model);
-            var client = new HttpClient(new System.Web.Http.HttpServer(config));
+            var controllers = new[] { typeof(MetadataController), typeof(CustomersController) };
+            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/Customers?$apply=groupby((Address/City), aggregate(CustomerId with sum as TotalId))");
@@ -860,7 +859,6 @@ namespace Microsoft.Test.AspNet.OData.Query
             var address0 = results[0]["Address"] as JObject;
             Assert.Equal("redmond", address0["City"].ToString());
         }
-#endif
 
         private object GetValue(DynamicTypeWrapper wrapper, string path)
         {

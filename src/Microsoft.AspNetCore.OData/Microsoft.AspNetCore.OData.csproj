@@ -5,6 +5,7 @@
   <Import Project="..\..\tools\WebStack.settings.targets" />
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x;NOT_CLS_COMPLIANT</DefineConstants>
+    <RootNamespace>Microsoft.AspNetCore.OData</RootNamespace>
     <!-- Let's generate our own assembly info -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>

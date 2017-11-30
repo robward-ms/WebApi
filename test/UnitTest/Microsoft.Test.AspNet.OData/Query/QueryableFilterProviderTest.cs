@@ -4,7 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -18,7 +18,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 {
     public class QueryableFilterProviderTest
     {
-#if !NETCORE1x
+#if !NETCORE
         [Theory]
         [InlineData("GetQueryable")]
         [InlineData("GetGenericQueryable")]
@@ -116,7 +116,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             return null;
         }
 
-#if !NETCORE1x
+#if !NETCORE
         public SingleResult GetSingleResult()
         {
             return null;

@@ -6,7 +6,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
     /// <summary>
     /// A generic controller base which derives from a platform-specific type.
     /// </summary>
-#if NETCORE1x
+#if NETCORE
     public class TestControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
     }

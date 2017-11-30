@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 #else
@@ -377,7 +377,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Same(originalOption, queryOptions.OrderBy);
         }
 
-#if !NETCORE1x
+#if !NETCORE
         [Fact]
         public void ApplyTo_SetsRequestSelectExpandClause_IfSelectExpandIsNotNull()
         {
@@ -876,7 +876,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 "entity");
         }
 
-#if !NETCORE1x
+#if !NETCORE
         [Fact]
         public void ApplyTo_IgnoresCount_IfRequestAlreadyHasCount()
         {
@@ -988,7 +988,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(10, (result as IQueryable<Customer>).Count());
         }
 
-#if !NETCORE1x
+#if !NETCORE
         [Fact]
         public void ApplyTo_DoesnotCalculateNextPageLink_IfRequestAlreadyHasNextPageLink()
         {
@@ -1028,7 +1028,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.NotNull(queryOptions.Count);
         }
 
-#if !NETCORE1x
+#if !NETCORE
         [Fact]
         public void ODataQueryOptions_SetToApplied()
         {
@@ -1162,7 +1162,7 @@ namespace Microsoft.Test.AspNet.OData.Query
     {
         private static readonly IQueryable<ODataQueryOptionTest_EntityModel> _entityModels;
 
-#if !NETCORE1x
+#if !NETCORE
         public IHttpActionResult Get(ODataQueryOptions<ODataQueryOptionTest_EntityModel> queryOptions)
 #else
         public IActionResult Get(ODataQueryOptions<ODataQueryOptionTest_EntityModel> queryOptions)
@@ -1196,16 +1196,12 @@ namespace Microsoft.Test.AspNet.OData.Query
         }
     }
 
-    public class ProductsController : ODataController
+    public class ProductsController : TestController
     {
         private static readonly IQueryable<MyProduct> _products;
 
         [EnableQuery(PageSize = 2)]
-#if !NETCORE1x
-        public IHttpActionResult Get()
-#else
-        public IActionResult Get()
-#endif
+        public ITestActionResult Get()
             
         {
             return Ok(_products);

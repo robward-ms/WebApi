@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
@@ -65,7 +66,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal("10", query.Top.RawValue);
         }
 
-#if !NETCORE1x
+//#if !NETCORE
         [Theory]
         [InlineData("IfMatch")]
         [InlineData("IfNoneMatch")]
@@ -86,17 +87,17 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             EntitySetSegment entitySetSegment = new EntitySetSegment(customers);
             ODataPath odataPath = new ODataPath(new[] { entitySetSegment });
-            request.ODataProperties().Path = odataPath;
+            request.SetODataPath(odataPath);
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
             if (header.Equals("IfMatch"))
             {
-                request.Headers.IfMatch.Add(etagHeaderValue);
+                request.Headers.AddIfMatch(etagHeaderValue);
             }
             else
             {
-                request.Headers.IfNoneMatch.Add(etagHeaderValue);
+                request.Headers.AddIfNoneMatch(etagHeaderValue);
             }
 
             ODataQueryContext context = new ODataQueryContext(model, typeof(Customer));
@@ -110,7 +111,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal("Foo", result["Name"]);
             Assert.Equal("Foo", dynamicResult.Name);
         }
-#endif
+//#endif
 
         [Theory]
         [InlineData("IfMatch")]

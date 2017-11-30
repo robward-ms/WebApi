@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using System;
 using System.Globalization;
 using Microsoft.AspNet.OData;
@@ -27,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <returns>A new instance of the <see cref="ODataConventionModelBuilder"/> class.</returns>
         public static ODataConventionModelBuilder Create()
         {
-#if NETCORE1x
+#if NETCORE
             // Create an application part manager with both the product and test assemblies.
             ApplicationPartManager applicationPartManager = new ApplicationPartManager();
             applicationPartManager.ApplicationParts.Add(new AssemblyPart(typeof(ODataConventionModelBuilder).Assembly));
@@ -51,7 +51,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <param name="configuration">The <see cref="HttpConfiguration"/> to use.</param>
         /// <returns>A new instance of the <see cref="ODataConventionModelBuilder"/> class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ODataConventionModelBuilder Create(IRouteBuilder routeBuilder)
         {
             return new ODataConventionModelBuilder(routeBuilder.ServiceProvider);
@@ -69,7 +69,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <param name="configuration">The <see cref="HttpConfiguration"/> to use.</param>
         /// <param name="isQueryCompositionMode">The value for ModelAliasingEnabled.</param>
         /// <returns>A new instance of the <see cref="ODataConventionModelBuilder"/> class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ODataConventionModelBuilder Create(IRouteBuilder routeBuilder, bool isQueryCompositionMode)
         {
             return new ODataConventionModelBuilder(routeBuilder.ServiceProvider, isQueryCompositionMode);
@@ -99,7 +99,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <param name="configuration">The <see cref="HttpConfiguration"/> to use.</param>
         /// <param name="modelAliasing">The value for ModelAliasingEnabled.</param>
         /// <returns>A new instance of the <see cref="ODataConventionModelBuilder"/> class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ODataConventionModelBuilder CreateWithModelAliasing(IRouteBuilder routeBuilder, bool modelAliasing)
         {
             return new ODataConventionModelBuilder(routeBuilder.ServiceProvider) { ModelAliasingEnabled = modelAliasing };

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ODataSerializerContext Create(IEdmModel model, IEdmNavigationSource navigationSource, HttpRequest request)
         {
             return new ODataSerializerContext { Model = model, NavigationSource = navigationSource, Request = request };
@@ -40,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ODataSerializerContext Create(IEdmModel model, IEdmNavigationSource navigationSource, ODataPath path, HttpRequest request)
         {
             return new ODataSerializerContext { Model = model, NavigationSource = navigationSource, Path = path, Request = request };

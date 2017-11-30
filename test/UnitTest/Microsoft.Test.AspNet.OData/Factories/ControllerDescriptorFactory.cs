@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -25,7 +25,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the [Http]ControllerDescriptor class.
         /// </summary>
         /// <returns>A new instance of the [Http]ControllerDescriptor  class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static ControllerActionDescriptor Create()
         {
             return new ControllerActionDescriptor();
@@ -41,7 +41,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the [Http]ControllerDescriptor class.
         /// </summary>
         /// <returns>A new instance of the [Http]ControllerDescriptor  class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static IEnumerable<ControllerActionDescriptor> Create(IRouteBuilder routeBuilder, string name, Type controllerType)
         {
             List<ControllerActionDescriptor> descriptors = new List<ControllerActionDescriptor>();
@@ -69,7 +69,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new collection of the [Http]ControllerDescriptor class.
         /// </summary>
         /// <returns>A new collection of the [Http]ControllerDescriptor  class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static IEnumerable<ControllerActionDescriptor> CreateCollection()
         {
             return new ControllerActionDescriptor[0];

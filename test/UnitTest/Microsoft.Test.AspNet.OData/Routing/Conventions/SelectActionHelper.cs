@@ -31,15 +31,22 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
     public static class SelectActionHelper
     {
 #if NETCORE
-        internal static IEnumerable<ControllerActionDescriptor> CreateActionMap(string key = null)
+        internal static IEnumerable<ControllerActionDescriptor> CreateActionMap()
         {
             List<ControllerActionDescriptor> actionMap = new List<ControllerActionDescriptor>();
             ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
             actionMap.Add(descriptor);
+            return actionMap;
+        }
 
-            if (!string.IsNullOrEmpty(key))
+        internal static IEnumerable<ControllerActionDescriptor> CreateActionMap(params string[] actionNames)
+        {
+            List<ControllerActionDescriptor> actionMap = new List<ControllerActionDescriptor>();
+            foreach (string actionName in actionNames)
             {
-                descriptor.ActionName = key;
+                ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
+                descriptor.ActionName = actionName;
+                actionMap.Add(descriptor);
             }
 
             return actionMap;
@@ -73,14 +80,22 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             return request.HttpContext.GetRouteData();
         }
 #else
-        internal static ILookup<string, HttpActionDescriptor> CreateActionMap(string key = null)
+        internal static ILookup<string, HttpActionDescriptor> CreateActionMap()
         {
-            if (string.IsNullOrEmpty(key))
+            return new HttpActionDescriptor[0].ToLookup(desc => (string)null);
+        }
+
+        internal static ILookup<string, HttpActionDescriptor> CreateActionMap(params string[] actionNames)
+        {
+            List<HttpActionDescriptor> actionMap = new List<HttpActionDescriptor>();
+            foreach (string actionName in actionNames)
             {
-                return new HttpActionDescriptor[0].ToLookup(desc => (string)null);
+                Mock<HttpActionDescriptor> actionDescriptor = new Mock<HttpActionDescriptor> { CallBase = true };
+                actionDescriptor.Setup(a => a.ActionName).Returns(actionName);
+                actionMap.Add(actionDescriptor.Object);
             }
 
-            return new HttpActionDescriptor[1].ToLookup(desc => key);
+            return actionMap.ToLookup(a => a.ActionName);
         }
 
         internal static string SelectAction(NavigationSourceRoutingConvention convention, ODataPath odataPath, HttpRequestMessage request, ILookup<string, HttpActionDescriptor> actionMap, string controllerName = "ControllerName")

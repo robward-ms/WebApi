@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Results;
 #else
@@ -21,22 +21,20 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Microsoft.Test.AspNet.OData.TestCommon;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataLevelsTest
     {
-#if !NETCORE1x
         private HttpClient _client;
 
         public ODataLevelsTest()
         {
             IEdmModel model = GetEdmModel();
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(LevelsEntitiesController) });
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("odata", "odata", model);
-            var server = new HttpServer(configuration);
-            _client = new HttpClient(server);
+            Type[] controllers = new[] { typeof(LevelsEntitiesController) };
+            var _nullPrefixServer = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            _client = TestServerFactory.CreateClient(_nullPrefixServer);
         }
 
         [Fact]
@@ -570,7 +568,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // "Parent" => 1, "DerivedAncestors" => 2, max("BaseEntities") => 3
             Assert.Null(parent["DerivedAncestors"][1]["BaseEntities"][2]["BaseEntities"][1]["BaseEntities"][0]["BaseEntities"]);
         }
-#endif
+
         private void AssertEntity(JToken entity, int key)
         {
             Assert.Equal(key, entity["ID"]);
@@ -598,7 +596,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        public class LevelsEntitiesController : ODataController
+        public class LevelsEntitiesController : TestController
         {
             public IList<LevelsEntity> Entities;
 
@@ -652,7 +650,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 Entities[1].DerivedAncestors = new LevelsDerivedEntity[] { (LevelsDerivedEntity)Entities[3] };
             }
 
-#if !NETCORE1x
+#if !NETCORE
             public IHttpActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
             {
                 var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
@@ -674,7 +672,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 return Ok(result, result.GetType());
             }
 #else
-            public IActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
+            public ITestActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
             {
                 var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
 
@@ -697,23 +695,19 @@ namespace Microsoft.Test.AspNet.OData.Routing
 #endif
 
             [EnableQuery(MaxExpansionDepth = 5)]
-#if !NETCORE1x
-            public IHttpActionResult Get(int key)
-#else
-            public IActionResult Get(int key)
-#endif
+            public ITestActionResult Get(int key)
             {
                 return Ok(Entities.Single(e => e.ID == key));
             }
 
-#if !NETCORE1x
+#if !NETCORE
             private IHttpActionResult Ok(object content, Type type)
             {
                 var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
                 return Activator.CreateInstance(resultType, content, this) as IHttpActionResult;
             }
 #else
-            private IActionResult Ok(object content, Type type)
+            private ITestActionResult Ok(object content, Type type)
             {
                 //var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
                 return null; // Activator.CreateInstance(resultType, content, this) as IActionResult;

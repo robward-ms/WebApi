@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
@@ -18,27 +19,28 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 #endif
 
-#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataSingletonRoutingTest
     {
-        private HttpServer _server;
+        //private HttpServer _server;
         private HttpClient _client;
 
         public ODataSingletonRoutingTest()
         {
             var controllers = new[] { typeof(VipCustomerController) };
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
-            configuration.MapODataServiceRoute(new CustomersModelWithInheritance().Model);
+            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) =>
+            {
+                return new CustomersModelWithInheritance().Model;
+            });
 
-            _server = new HttpServer(configuration);
-            _client = new HttpClient(_server);
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Theory]
@@ -54,7 +56,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -70,6 +72,8 @@ namespace Microsoft.Test.AspNet.OData.Routing
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Contains("No HTTP resource was found that matches the request URI 'http://localhost/VipCustomer'.",
                 response.Content.ReadAsStringAsync().Result);
+
+            // AspNetCore: Fails since SelectCandidates does not return error.
         }
 
         [Theory]
@@ -85,7 +89,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -99,7 +103,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -116,7 +120,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -138,7 +142,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -151,7 +155,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
 
         [Theory]
@@ -166,7 +170,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             // Act & Assert
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            Assert.Equal(expectedResponse, (response.Content as ObjectContent<string>).Value);
+            Assert.Equal(expectedResponse, response.Content.AsObjectContentValue());
         }
     }
 
@@ -329,4 +333,3 @@ namespace Microsoft.Test.AspNet.OData.Routing
 #endregion
     }
 }
-#endif

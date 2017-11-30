@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Interfaces;
@@ -29,7 +29,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         internal static IWebApiAssembliesResolver CreateFake()
         {
             IRouteBuilder builder = RoutingConfigurationFactory.Create();

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using System;
 using System.Net;
 using Microsoft.AspNet.OData;
@@ -26,7 +26,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static HttpResponse Create(HttpStatusCode statusCode)
         {
             // Add the options services.

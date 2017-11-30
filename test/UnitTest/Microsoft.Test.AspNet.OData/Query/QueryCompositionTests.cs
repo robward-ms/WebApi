@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -30,7 +30,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 {
     public class QueryCompositionTests
     {
-#if !NETCORE1x
+#if !NETCORE
         private static IEdmModel _queryCompositionCustomerModel;
 
         [Theory]
@@ -220,7 +220,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(expectedResults, results);
         }
 
-#if !NETCORE1x
+#if !NETCORE
         private static HttpConfiguration InitializeConfiguration(string controllerName, bool useCustomEdmModel,
             ODataUriResolver resolver = null)
         {
@@ -298,7 +298,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 _model = model;
             }
 
-#if !NETCORE1x
+#if !NETCORE
             public override void OnActionExecuting(HttpActionContext actionContext)
             {
                 Assert.Equal(_model, actionContext.Request.GetModel());

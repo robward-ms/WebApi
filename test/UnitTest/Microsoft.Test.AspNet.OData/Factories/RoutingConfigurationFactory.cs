@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE1x
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static IRouteBuilder Create()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -102,7 +102,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         public static IRouteBuilder CreateWithRoute(string route)
         {
             IRouteBuilder routeBuilder = Create();
@@ -128,7 +128,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         internal static IRouteBuilder CreateWithRootContainer(string routeName, Action<IContainerBuilder> configureAction = null)
         {
             IRouteBuilder builder = Create();
@@ -169,7 +169,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         internal static IRouteBuilder CreateWithTypes(params Type[] types)
         {
             IRouteBuilder builder = Create();
@@ -197,7 +197,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Initializes a new instance of the routing configuration class.
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
-#if NETCORE1x
+#if NETCORE
         internal static IRouteBuilder CreateWithRootContainerAndTypes(string routeName = null, Action<IContainerBuilder> configureAction = null, params Type[] types)
         {
             IRouteBuilder builder = CreateWithRootContainer(routeName, configureAction);

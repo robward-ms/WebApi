@@ -1,23 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-
-    <SignAssembly>true</SignAssembly>
-
-    <AssemblyOriginatorKeyFile>..\..\..\tools\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
-
-    <DelaySign>true</DelaySign>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;NETCORE1x;NETSTANDARD1_6</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETCORE1x;NETSTANDARD1_6</DefineConstants>
+  <Import Project="..\..\..\tools\WebStack.settings.targets" />
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x;NOT_CLS_COMPLIANT</DefineConstants>
+    <!-- Let's generate our own assembly info -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>Microsoft.Test.AspNetCore.OData.TestCommon</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

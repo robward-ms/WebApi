@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 #else
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 {
     public class ODataSingletonQueryOptionTest
     {
-#if !NETCORE1x
+#if !NETCORE
         private HttpClient _client;
 
         public ODataSingletonQueryOptionTest()
@@ -108,7 +108,7 @@ namespace Microsoft.Test.AspNet.OData.Query
     }
 
     // Controller
-    public class MeController : ODataController
+    public class MeController : TestController
     {
         private Customer me = new SpecialCustomer
         {
@@ -130,21 +130,13 @@ namespace Microsoft.Test.AspNet.OData.Query
         };
 
         [EnableQuery]
-#if !NETCORE1x
-        public IHttpActionResult GetFromSpecialCustomer()
-#else
-        public IActionResult GetFromSpecialCustomer()
-#endif
+        public ITestActionResult GetFromSpecialCustomer()
         {
             return Ok((SpecialCustomer)me);
         }
 
         [EnableQuery]
-#if !NETCORE1x
-        public IHttpActionResult Get()
-#else
-        public IActionResult Get()
-#endif
+        public ITestActionResult Get()
         {
             return Ok(me);
         }

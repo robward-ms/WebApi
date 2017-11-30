@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
 using System.Data.Linq;
 #endif
 using System.Linq;
@@ -122,7 +122,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         public char? NullableCharProp { get; set; }
 
         public char[] CharArrayProp { get; set; }
-#if !NETCORE1x
+#if NETFX // Binary only supported on Net Framework
         public Binary BinaryProp { get; set; }
 #endif
         public XElement XElementProp { get; set; }

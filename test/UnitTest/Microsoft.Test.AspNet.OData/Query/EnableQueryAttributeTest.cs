@@ -9,11 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-#if !NETCORE1x
+#if !NETCORE
 using System.Net.Http.Formatting;
 #endif
 using System.Reflection;
-#if !NETCORE1x
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
@@ -31,7 +31,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Query.Controllers;
 using Microsoft.Test.AspNet.OData.Query.Validators;
-#if !NETCORE1x
+#if !NETCORE
 using Microsoft.Test.AspNet.OData.Routing;
 #endif
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -240,7 +240,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             ExceptionAssert.ThrowsArgumentNull(() => new EnableQueryAttribute().OnActionExecuted(null), "actionExecutedContext");
         }
 
-#if !NETCORE1x
+#if !NETCORE
         [Fact]
         public void OnActionExecuted_Throws_Null_Request()
         {
