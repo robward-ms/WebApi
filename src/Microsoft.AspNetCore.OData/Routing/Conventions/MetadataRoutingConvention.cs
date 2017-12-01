@@ -23,7 +23,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     public partial class MetadataRoutingConvention : IODataRoutingConvention
     {
         /// <inheritdoc/>
-        public ControllerActionDescriptor SelectAction(RouteContext routeContext)
+        public IEnumerable<ControllerActionDescriptor> SelectAction(RouteContext routeContext)
         {
             // Get a IActionDescriptorCollectionProvider from the global service provider.
             IActionDescriptorCollectionProvider actionCollectionProvider =
@@ -50,7 +50,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
 
                 if (!String.IsNullOrEmpty(actionName))
                 {
-                    return actionDescriptors.FirstOrDefault(
+                    return actionDescriptors.Where(
                         c => String.Equals(c.ActionName, actionName, StringComparison.OrdinalIgnoreCase));
                 }
             }

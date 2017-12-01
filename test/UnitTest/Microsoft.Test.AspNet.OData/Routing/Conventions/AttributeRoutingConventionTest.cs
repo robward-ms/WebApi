@@ -3,6 +3,7 @@
 
 #if NETCORE
 using System;
+using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
@@ -372,7 +373,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         {
             var request = RequestFactory.Create();
             RouteContext routeContext = new RouteContext(request.HttpContext);
-            return convention.SelectAction(routeContext);
+            return convention.SelectAction(routeContext).FirstOrDefault();
         }
 #else
         private AttributeRoutingConvention CreateAttributeRoutingConvention(

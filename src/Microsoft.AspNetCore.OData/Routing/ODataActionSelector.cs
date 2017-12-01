@@ -61,12 +61,12 @@ namespace Microsoft.AspNet.OData.Routing
 
             foreach (IODataRoutingConvention convention in routingConventions)
             {
-                ControllerActionDescriptor actionDescriptor = convention.SelectAction(context);
-                if (actionDescriptor != null)
+                IEnumerable<ControllerActionDescriptor> actionDescriptor = convention.SelectAction(context);
+                if (actionDescriptor != null && actionDescriptor.Any())
                 {
-                    context.RouteData.Values[ODataRouteConstants.Action] = actionDescriptor.ActionName;
-                    List<ActionDescriptor> list = new List<ActionDescriptor> { actionDescriptor };
-                    return list.AsReadOnly();
+                    // All actions have the same name but may differ by number of parameters.
+                    context.RouteData.Values[ODataRouteConstants.Action] = actionDescriptor.First().ActionName;
+                    return actionDescriptor.ToList();
                 }
             }
 
@@ -80,9 +80,12 @@ namespace Microsoft.AspNet.OData.Routing
             ODataPath odataPath = context.HttpContext.ODataFeature().Path;
             if (odataPath != null && routeData.Values.ContainsKey(ODataRouteConstants.Action))
             {
-                // If there is a path and is already and indication we routed it,
-                // select the first candidate; we should have only put one candidate in the list.
-                return candidates.First();
+                // Find the action with the greatest number of matched parameters.
+                var matchedCandidates = candidates
+                    .Where(c => c.Parameters.All(p => context.RouteData.Values.ContainsKey(p.Name)))
+                    .OrderByDescending(c => c.Parameters.Count);
+
+                return matchedCandidates.First();
             }
 
             return _innerSelector.SelectBestCandidate(context, candidates);

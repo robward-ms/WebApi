@@ -25,7 +25,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     {
         /// <inheritdoc/>
         /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
-        public ControllerActionDescriptor SelectAction(RouteContext routeContext)
+        public IEnumerable<ControllerActionDescriptor> SelectAction(RouteContext routeContext)
         {
             if (routeContext == null)
             {
@@ -57,7 +57,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
                     string actionName = SelectAction(routeContext, controllerResult, actionDescriptors);
                     if (!String.IsNullOrEmpty(actionName))
                     {
-                        return actionDescriptors.FirstOrDefault(
+                        return actionDescriptors.Where(
                             c => String.Equals(c.ActionName, actionName, StringComparison.OrdinalIgnoreCase));
                     }
                 }

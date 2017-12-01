@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System.Linq;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
@@ -134,7 +135,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             RouteContext routeContext = new RouteContext(request.HttpContext);
             routeContext.HttpContext.ODataFeature().Path = odataPath;
 
-            ControllerActionDescriptor descriptor = convention.SelectAction(routeContext);
+            ControllerActionDescriptor descriptor = convention.SelectAction(routeContext).FirstOrDefault();
             return descriptor?.ControllerName;
         }
 #else
