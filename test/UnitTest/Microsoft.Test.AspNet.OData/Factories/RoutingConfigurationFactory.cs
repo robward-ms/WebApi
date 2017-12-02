@@ -105,16 +105,8 @@ namespace Microsoft.Test.AspNet.OData.Factories
 #if NETCORE
         public static IRouteBuilder CreateWithRoute(string route)
         {
+            // TODO: Need to add the route to the prefix.
             IRouteBuilder routeBuilder = Create();
-
-            //// Get constraint resolver.
-            //IInlineConstraintResolver inlineConstraintResolver = routeBuilder
-            //    .ServiceProvider
-            //    .GetRequiredService<IInlineConstraintResolver>();
-
-            //// Add route.
-            //routeBuilder.Routes.Add(new Route(routeBuilder.DefaultHandler, route, inlineConstraintResolver));
-
             return routeBuilder;
         }
 #else

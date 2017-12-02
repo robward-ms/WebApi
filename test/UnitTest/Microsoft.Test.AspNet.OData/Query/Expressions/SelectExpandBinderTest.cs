@@ -520,8 +520,29 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             Expression property = _binder.CreatePropertyValueExpression(_model.Customer, idProperty, customer);
 
+            // NetFx and NetCore differ in the way Expression is converted to a string.
             Assert.Equal(ExpressionType.Conditional, property.NodeType);
-            Assert.Equal(String.Format("IIF(({0} == null), null, Convert({0}.ID))", customer.ToString()), property.ToString());
+            ConditionalExpression conditionalExpression = property as ConditionalExpression;
+            Assert.NotNull(conditionalExpression);
+            Assert.Equal(typeof(int?), conditionalExpression.Type);
+
+            Assert.Equal(ExpressionType.Convert, conditionalExpression.IfFalse.NodeType);
+            UnaryExpression falseUnaryExpression = conditionalExpression.IfFalse as UnaryExpression;
+            Assert.NotNull(falseUnaryExpression);
+            Assert.Equal(String.Format("{0}.ID", customer.ToString()), falseUnaryExpression.Operand.ToString());
+            Assert.Equal(typeof(int?), falseUnaryExpression.Type);
+
+            Assert.Equal(ExpressionType.Constant, conditionalExpression.IfTrue.NodeType);
+            ConstantExpression trueUnaryExpression = conditionalExpression.IfTrue as ConstantExpression;
+            Assert.NotNull(trueUnaryExpression);
+            Assert.Equal("null", trueUnaryExpression.ToString());
+
+            Assert.Equal(ExpressionType.Equal, conditionalExpression.Test.NodeType);
+            BinaryExpression binaryExpression = conditionalExpression.Test as BinaryExpression;
+            Assert.NotNull(binaryExpression);
+            Assert.Equal(customer.ToString(), binaryExpression.Left.ToString());
+            Assert.Equal("null", binaryExpression.Right.ToString());
+            Assert.Equal(typeof(bool), binaryExpression.Type);
         }
 
         [Fact]
@@ -533,8 +554,12 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
 
             Expression property = _binder.CreatePropertyValueExpression(_model.Customer, idProperty, customer);
 
-            Assert.Equal(String.Format("Convert({0}.ID)", customer.ToString()), property.ToString());
-            Assert.Equal(typeof(int?), property.Type);
+            // NetFx and NetCore differ in the way Expression is converted to a string.
+            Assert.Equal(ExpressionType.Convert, property.NodeType);
+            var unaryExpression = (property as UnaryExpression);
+            Assert.NotNull(unaryExpression);
+            Assert.Equal(String.Format("{0}.ID", customer.ToString()), unaryExpression.Operand.ToString());
+            Assert.Equal(typeof(int?), unaryExpression.Type);
         }
 
         //[Fact]

@@ -9,6 +9,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNet.OData.Routing.Template;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,7 +126,8 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
 
             // Arrange
             var config = RoutingConfigurationFactory.CreateWithRootContainer(RouteName);
-            var serviceProvider = GetServiceProvider(RouteName, config);
+            var serviceProvider = GetServiceProvider(config, RouteName);
+            var request = RequestFactory.Create(config, RouteName);
 
             ODataPathTemplate pathTemplate = new ODataPathTemplate();
             Mock<IODataPathTemplateHandler> pathTemplateHandler = new Mock<IODataPathTemplateHandler>();
@@ -136,7 +138,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             EnsureAttributeMapping(convention, config);
 
             // Act
-            Select(convention);
+            Select(convention, request);
 
             // Assert
             pathTemplateHandler.VerifyAll();
@@ -164,8 +166,9 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             string expectedPathTemplate, string expectedActionName)
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
-            var serviceProvider = GetServiceProvider(RouteName, configuration);
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer(RouteName);
+            var serviceProvider = GetServiceProvider(configuration, RouteName);
+            var request = RequestFactory.Create(configuration, RouteName);
             var descriptors = ControllerDescriptorFactory.Create(configuration, "TestController", 
                 controllerType);
 
@@ -179,7 +182,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             AttributeRoutingConvention convention = new AttributeRoutingConvention(RouteName, descriptors, pathTemplateHandler.Object);
 
             // Act
-            Select(convention);
+            Select(convention, request);
 
             // Assert
             pathTemplateHandler.VerifyAll();
@@ -358,7 +361,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             return new AttributeRoutingConvention(routeName: routeName, serviceProvider: routeBuilder.ServiceProvider, pathTemplateHandler: pathTemplateHandler);
         }
 
-        private IServiceProvider GetServiceProvider(string routeName, IRouteBuilder routeBuilder)
+        private IServiceProvider GetServiceProvider(IRouteBuilder routeBuilder, string routeName)
         {
             IPerRouteContainer perRouteContainer = routeBuilder.ServiceProvider.GetRequiredService<IPerRouteContainer>();
             return perRouteContainer.GetODataRootContainer(routeName);
@@ -369,9 +372,8 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             var mappings = convention.AttributeMappings;
         }
 
-        private ControllerActionDescriptor Select(AttributeRoutingConvention convention)
+        private ControllerActionDescriptor Select(AttributeRoutingConvention convention, HttpRequest request)
         {
-            var request = RequestFactory.Create();
             RouteContext routeContext = new RouteContext(request.HttpContext);
             return convention.SelectAction(routeContext).FirstOrDefault();
         }
@@ -389,7 +391,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             return new AttributeRoutingConvention(routeName: routeName, configuration: configuration, pathTemplateHandler: pathTemplateHandler);
         }
 
-        private IServiceProvider GetServiceProvider(string routeName, HttpConfiguration configuration)
+        private IServiceProvider GetServiceProvider(HttpConfiguration configuration, string routeName)
         {
             return configuration.GetODataRootContainer(routeName);
         }
@@ -399,9 +401,9 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
             configuration.EnsureInitialized();
         }
 
-        private string Select(AttributeRoutingConvention convention)
+        private string Select(AttributeRoutingConvention convention, HttpRequestMessage request)
         {
-            return convention.SelectController(new ODataPath(), new HttpRequestMessage());
+            return convention.SelectController(new ODataPath(), request);
         }
 #endif
     }

@@ -85,7 +85,11 @@ namespace Microsoft.AspNet.OData.Routing
                     .Where(c => c.Parameters.All(p => context.RouteData.Values.ContainsKey(p.Name)))
                     .OrderByDescending(c => c.Parameters.Count);
 
-                return matchedCandidates.First();
+                // Return either the best mathced candidate or the first
+                // candidate if none macthed.
+                return (matchedCandidates.Any())
+                    ? matchedCandidates.FirstOrDefault()
+                    : candidates.FirstOrDefault();
             }
 
             return _innerSelector.SelectBestCandidate(context, candidates);

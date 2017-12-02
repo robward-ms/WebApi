@@ -50,7 +50,33 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Type[] controllers,
             Func<IRouteBuilder, IEdmModel> getModelFunction)
         {
-            return Create(routeName, routePrefix, controllers, getModelFunction, null);
+            IWebHostBuilder builder = WebHost.CreateDefaultBuilder();
+            builder.ConfigureServices(services =>
+            {
+                services.AddMvc();
+                services.AddOData();
+            });
+
+            builder.Configure(app =>
+            {
+                app.UseMvc((routeBuilder) =>
+                {
+                    routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
+
+                    ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+                    applicationPartManager.ApplicationParts.Clear();
+
+                    AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
+                    applicationPartManager.ApplicationParts.Add(part);
+
+                    // Insert a custom ControllerFeatureProvider to bypass the IsPublic restriction of controllers
+                    // to allow for nested controllers which are excluded by the built-in ControllerFeatureProvider.
+                    applicationPartManager.FeatureProviders.Clear();
+                    applicationPartManager.FeatureProviders.Add(new TestControllerFeatureProvider());
+                });
+            });
+
+            return new TestServer(builder);
         }
 
         /// <summary>
@@ -69,65 +95,9 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Type[] controllers,
             Func<IRouteBuilder,IEdmModel> getModelFunction)
         {
-            return Create(routeName, routePrefix, controllers, getModelFunction,
-                (routeBuilder) =>
-                {
-                    // Get constraint resolver.
-                    IInlineConstraintResolver inlineConstraintResolver = routeBuilder
-                        .ServiceProvider
-                        .GetRequiredService<IInlineConstraintResolver>();
-
-                    //// Add route.
-                    //routeBuilder.Routes.Add(new Route(routeBuilder.DefaultHandler, route, inlineConstraintResolver));
-                });
-        }
-
-        /// <summary>
-        /// Create an TestServer.
-        /// </summary>
-        /// <param name="route">The route.</param>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
-        /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
-        /// <param name="configRouteAction">An action to apply to routing config.</param>
-        /// <returns>An TestServer.</returns>
-        private static TestServer Create(
-            string routeName,
-            string routePrefix,
-            Type[] controllers,
-            Func<IRouteBuilder, IEdmModel> getModelFunction,
-            Action<IRouteBuilder> configRouteAction)
-        {
-            IWebHostBuilder builder = WebHost.CreateDefaultBuilder();
-            builder.ConfigureServices(services =>
-            {
-                services.AddMvc();
-                services.AddOData();
-            });
-
-            builder.Configure(app =>
-            {
-                app.UseMvc((routeBuilder) =>
-                {
-                    configRouteAction?.Invoke(routeBuilder);
-
-                    routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
-
-                    ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-                    applicationPartManager.ApplicationParts.Clear();
-
-                    AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
-                    applicationPartManager.ApplicationParts.Add(part);
-
-                    // Insert a custom ControllerFeatureProvider to bypass the IsPublic restriction of controllers
-                    // to allow for nested controllers which are excluded by the built-in ControllerFeatureProvider.
-                    applicationPartManager.FeatureProviders.Clear();
-                    applicationPartManager.FeatureProviders.Add(new TestControllerFeatureProvider());
-                });
-            });
-
-            return new TestServer(builder);
+            // AspNetCore does not have that can be used to append a profix anymore
+            // just append the route to the prefix
+            return Create(routeName, route + "/" + routePrefix, controllers, getModelFunction);
         }
 
         /// <summary>

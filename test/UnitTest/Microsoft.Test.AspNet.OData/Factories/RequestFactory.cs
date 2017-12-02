@@ -5,6 +5,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
@@ -61,16 +62,30 @@ namespace Microsoft.Test.AspNet.OData.Factories
             // the request container if one does not exists.
             HttpRequest request = context.Request;
             request.ODataFeature().RouteName = useRouteName;
-            request.GetRequestContainer();
+            //request.GetRequestContainer();
 
             // Get request and return it.
             return request;
         }
 #else
-        public static HttpRequestMessage Create()
+        public static HttpRequestMessage Create(HttpConfiguration config = null, string routeName = null)
         {
             var request = new HttpRequestMessage();
-            request.EnableODataDependencyInjectionSupport();
+
+            if (config != null)
+            {
+                request.SetConfiguration(config);
+            }
+
+            if (!string.IsNullOrEmpty(routeName))
+            {
+                request.EnableODataDependencyInjectionSupport(routeName);
+            }
+            else
+            {
+                request.EnableODataDependencyInjectionSupport();
+            }
+
             return request;
         }
 #endif

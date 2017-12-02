@@ -61,15 +61,15 @@ namespace Microsoft.Test.AspNet.OData.Routing
             };
 
             // Separate clients and servers so routes are not ambiguous.
-            var _nullPrefixServer = TestServerFactory.Create("NullPrefixRoute", null, controllers, (routingConfig) => model);
-            _nullPrefixClient = TestServerFactory.CreateClient(_nullPrefixServer);
+            var nullPrefixServer = TestServerFactory.Create("NullPrefixRoute", null, controllers, (routingConfig) => model);
+            _nullPrefixClient = TestServerFactory.CreateClient(nullPrefixServer);
 
             // FixedPrefixRoute has both a non-empty virtual path root and a fixed route prefix.
-            var _fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", "FixedPrefixRoute", "odata", controllers, (routingConfig) => model);
-            _fixedPrefixClient = TestServerFactory.CreateClient(_fixedPrefixServer);
+            var fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", "FixedPrefixRoute", "odata", controllers, (routingConfig) => model);
+            _fixedPrefixClient = TestServerFactory.CreateClient(fixedPrefixServer);
 
-            var _parameterizedPrefixServer = TestServerFactory.Create("ParameterizedPrefixRoute", "{a}", controllers, (routingConfig) => model);
-            _parameterizedPrefixClient = TestServerFactory.CreateClient(_parameterizedPrefixServer);
+            var parameterizedPrefixServer = TestServerFactory.Create("ParameterizedPrefixRoute", "{a}", controllers, (routingConfig) => model);
+            _parameterizedPrefixClient = TestServerFactory.CreateClient(parameterizedPrefixServer);
         }
 
         public static TheoryDataSet<string, string, string> ServiceAndMetadataRoutes
