@@ -13,7 +13,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         private const string UnmappedRequestActionName = "HandleUnmappedRequest";
 
         /// <inheritdoc/>
-        internal static string SelectActionImpl(ODataPath odataPath, IWebApiControllerContext controllerContext, IWebApiActionMap actionMap)
+        internal static string SelectActionImpl(IWebApiActionMap actionMap)
         {
             if (actionMap.Contains(UnmappedRequestActionName))
             {

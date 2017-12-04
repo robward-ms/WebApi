@@ -7,8 +7,12 @@
     <RootNamespace>Microsoft.AspNet.OData</RootNamespace>
     <AssemblyName>Microsoft.AspNet.OData</AssemblyName>
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-    <RunCodeAnalysis>$(CodeAnalysis)</RunCodeAnalysis>
+    <!-- Unable to run code analysis in Release configuration. Release assemblies do not include SuppressMessage
+         attributes (so code analysis would always fail with the errors that are normally suppressed -->
+    <RunCodeAnalysis Condition=" '$(CodeAnalysis)' == '' and '$(Configuration)' != 'Release' ">true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
+    <StyleCopEnabled Condition=" '$(StyleCopEnabled)' == '' ">true</StyleCopEnabled>
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI</DefineConstants>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETFX;NETFX45</DefineConstants>
   </PropertyGroup>
@@ -82,7 +86,6 @@
     <Compile Include="Batch\ODataBatchHttpRequestMessageExtensions.cs" />
     <Compile Include="ETagMessageHandler.cs" />
     <Compile Include="Formatter\EdmLibHelpers.cs" />
-    <Compile Include="Formatter\IETagHandler.cs" />
     <Compile Include="Formatter\ODataCountMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataEnumValueMediaTypeMapping.cs" />
     <Compile Include="Formatter\ODataMediaTypeInputFormatter.cs" />
@@ -91,8 +94,8 @@
     <Compile Include="Formatter\Serialization\ODataSerializerContext.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProvider.cs" />
     <Compile Include="Formatter\Serialization\ODataSerializerProviderProxy.cs" />
+    <Compile Include="PerRouteContainer.cs" />
     <Compile Include="GetNextPageHelper.cs" />
-    <Compile Include="MetadataController.cs" />
     <Compile Include="Batch\UnbufferedODataBatchHandler.cs" />
     <Compile Include="Batch\ODataBatchResponseItem.cs" />
     <Compile Include="Batch\ODataBatchRequestItem.cs" />
@@ -188,9 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Query\Expressions\" />
   </ItemGroup>
   <Import Project="..\Microsoft.AspNet.OData.Shared\Microsoft.AspNet.OData.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

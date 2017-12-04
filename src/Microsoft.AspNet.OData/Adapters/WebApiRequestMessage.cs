@@ -18,22 +18,6 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 using HttpRequestMessageExtensions = Microsoft.AspNet.OData.Extensions.HttpRequestMessageExtensions;
 
-// If used to refactor formatters, we need:
-// model - can be retrieved from request container
-// path - in Context property
-// iscount or refactor and base on path. - is here, already used. Refactor those too? Need path check.
-// select and expand clause - in Context property
-// apply clause - in Context property
-// reader settings - has
-// writer settings - has
-// content mapping - has
-// request container - has
-// registering for disposal (do this in asp-net specific code). Appropriate to re-factor formatters instead.
-// creating ODataDeserializerContext - missing, not appropriate here? Do this as custom formatting code.
-// creating ODataSerializerContext - missing, not appropriate here? Do this as custom formatting code.
-// urlhelper - missing, not appropriate here. Appropriate to re-factor formatters instead.
-// configuration - missing, not appropriate here. Appropriate to re-factor formatters instead.
-
 namespace Microsoft.AspNet.OData.Adapters
 {
     /// <summary>

@@ -13,13 +13,6 @@ namespace Microsoft.AspNet.OData
     public class ODataOptions
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ODataOptions"/> class.
-        /// </summary>
-        public ODataOptions()
-        {
-        }
-
-        /// <summary>
         /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
         /// whether to recognize keys as segments or not in DefaultODataPathHandler.
         /// </summary>
@@ -28,6 +21,6 @@ namespace Microsoft.AspNet.OData
         /// <summary>
         /// Gets or Sets a value indicating if value should be emitted for dynamic properties which are null.
         /// </summary>
-        public bool NullDynamicPropertyIsEnabled { get; private set; }
+        public bool NullDynamicPropertyIsEnabled { get; set; }
     }
 }

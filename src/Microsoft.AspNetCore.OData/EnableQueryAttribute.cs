@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Common;
@@ -75,10 +77,26 @@ namespace Microsoft.AspNet.OData
                         actionExecutedContext.Result.GetType().FullName);
                 }
 
+                // Get collection from SingleResult.
+                IQueryable singleResultCollection = null;
+                SingleResult singleResult = responseContent.Value as SingleResult;
+                if (singleResult != null)
+                {
+                    // This could be a SingleResult, which has the property Queryable.
+                    // But it could be a SingleResult() or SingleResult<T>. Sort by number of parameters
+                    // on the property and get the one with the most parameters.
+                    PropertyInfo propInfo = responseContent.Value.GetType().GetProperties()
+                        .OrderBy(p => p.GetIndexParameters().Count())
+                        .Where(p => p.Name.Equals("Queryable"))
+                        .LastOrDefault();
+
+                    singleResultCollection = propInfo.GetValue(singleResult) as IQueryable;
+                }
+
                 // Execution the action.
                 object queryResult = OnActionExecuted(
                     responseContent.Value,
-                    (responseContent.Value as SingleResult)?.Queryable,
+                    singleResultCollection,
                     new WebApiActionDescriptor(actionDescriptor as ControllerActionDescriptor),
                     new WebApiRequestMessage(request),
                     (elementClrType) => GetModel(elementClrType, request, actionDescriptor),

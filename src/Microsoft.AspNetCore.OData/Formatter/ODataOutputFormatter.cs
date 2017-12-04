@@ -25,6 +25,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
@@ -80,7 +81,6 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <param name="formatter">The <see cref="ODataOutputFormatter"/> to copy settings from.</param>
         /// <param name="version">The OData version that this formatter supports.</param>
         /// <param name="request">The <see cref="HttpRequest"/> for the per-request formatter instance.</param>
-        /// <remarks>This is a copy constructor to be used in <see cref="GetPerRequestFormatterInstance"/>.</remarks>
         internal ODataOutputFormatter(ODataOutputFormatter formatter, ODataVersion version, HttpRequest request)
         {
             if (request == null)
@@ -150,7 +150,6 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        /// <inheritdoc/>
         //public override TextOutputFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request, MediaTypeHeaderValue mediaType)
         //{
         //    // call base to validate parameters
@@ -168,7 +167,6 @@ namespace Microsoft.AspNet.OData.Formatter
         //    }
         //}
 
-        /// <inheritdoc/>
         //public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         //{
         //    if (type == null)
@@ -266,11 +264,9 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         /// <inheritdoc/>
-        //[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
-            //public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content,
-            //    TransportContext transportContext, CancellationToken cancellationToken)
             Type type = context.ObjectType;
             object value = context.Object;
             HttpRequest request = context.HttpContext.Request;
@@ -296,7 +292,7 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        //[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
         private void WriteToStream(Type type, object value, Stream writeStream, HttpRequest request, string contentType, long? contentLength)
         {
             IEdmModel model = request.GetModel();

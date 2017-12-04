@@ -43,7 +43,7 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
             }
 
             // Clone the resource's context. Use a helper function so it can
-            // platform-specific differences in ODataSerializerContext.
+            // handle platform-specific differences in ODataSerializerContext.
             ODataSerializerContext context = resource.SerializerContext;
             this.CopyPlatformSpecificProperties(context);
 

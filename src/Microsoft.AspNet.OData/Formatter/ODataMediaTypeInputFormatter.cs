@@ -34,7 +34,7 @@ namespace Microsoft.AspNet.OData.Formatter
     internal class ODataMediaTypeInputFormatter
     {
         /// <inheritdoc/>
-        public bool CanReadType(Type type, IEdmModel model, ODataPath path, IEnumerable<ODataPayloadKind> payloadKinds, Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer)
+        public static bool CanReadType(Type type, IEdmModel model, ODataPath path, IEnumerable<ODataPayloadKind> payloadKinds, Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer)
         {
             if (type == null)
             {
@@ -110,7 +110,7 @@ namespace Microsoft.AspNet.OData.Formatter
             return result;
         }
 
-        private ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
+        private static ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
             Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer, Func<Type, ODataDeserializer> getODataPayloadDeserializer, out IEdmTypeReference expectedPayloadType)
         {
             expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);

@@ -35,11 +35,12 @@ namespace Microsoft.AspNet.OData
 
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
-            ObjectContent content = response?.Content as ObjectContent;
+            ObjectContent content = (response == null) ? null : response.Content as ObjectContent;
             if (content != null)
             {
+                int? responseCode = (response == null) ? null : (int?)response.StatusCode;
                 EntityTagHeaderValue etag = GetETag(
-                    (int?)response?.StatusCode,
+                    responseCode,
                     request.ODataProperties().Path,
                     request.GetModel(),
                     content.Value,

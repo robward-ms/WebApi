@@ -31,7 +31,7 @@ namespace Microsoft.AspNet.OData.Formatter
     internal partial class ODataMediaTypeOutputFormatter
     {
         /// <inheritdoc/>
-        public bool SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+        public static bool SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         {
             if (type == null)
             {
@@ -73,7 +73,7 @@ namespace Microsoft.AspNet.OData.Formatter
         // headers are read and manipulated
         // requestHeaders are read
         // version needed to call TryAddWithoutValidation on headers.
-        public void SetCharSetAndVersion(HttpContentHeaders headers, HttpRequestHeaders requestHeaders, ODataVersion version)
+        public static void SetCharSetAndVersion(HttpContentHeaders headers, HttpRequestHeaders requestHeaders, ODataVersion version)
         {
             // In general, in Web API we pick a default charset based on the supported character sets
             // of the formatter. However, according to the OData spec, the service shouldn't be sending
@@ -92,7 +92,7 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         /// <inheritdoc/>
-        public bool CanWriteType(Type type,IWebApiRequestMessage internalRequest, IEnumerable<ODataPayloadKind> payloadKinds, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        public static bool CanWriteType(Type type,IWebApiRequestMessage internalRequest, IEnumerable<ODataPayloadKind> payloadKinds, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             if (type == null)
             {
@@ -120,7 +120,7 @@ namespace Microsoft.AspNet.OData.Formatter
         // version is used for GetWriterSettings.
         // request headers used to get annotationFilter
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
-        public void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders, IEdmModel model, IWebApiUrlHelper urlHelper, ODataVersion version, IWebApiRequestMessage internalRequest, IWebApiHeaders requestHeaders, Uri baseAddress, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer, Func<ODataSerializerContext> getODataSerializerContext)
+        public static void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders, IEdmModel model, IWebApiUrlHelper urlHelper, ODataVersion version, IWebApiRequestMessage internalRequest, IWebApiHeaders requestHeaders, Uri baseAddress, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer, Func<ODataSerializerContext> getODataSerializerContext)
         {
             if (model == null)
             {
@@ -196,7 +196,7 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         // Also has AspNet-specific class, SingleResult. Could put that check in TypeHelper, which has #Ifdef already.
-        private ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        private static ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             // SingleResult<T> should be serialized as T.
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
@@ -208,7 +208,7 @@ namespace Microsoft.AspNet.OData.Formatter
             return serializer == null ? null : (ODataPayloadKind?)serializer.ODataPayloadKind;
         }
 
-        private ODataPayloadKind? GetEdmObjectPayloadKind(Type type, IWebApiRequestMessage internalRequest)
+        private static ODataPayloadKind? GetEdmObjectPayloadKind(Type type, IWebApiRequestMessage internalRequest)
         {
             if (internalRequest.IsCountRequest())
             {
@@ -246,7 +246,7 @@ namespace Microsoft.AspNet.OData.Formatter
             return null;
         }
 
-        private ODataSerializer GetSerializer(Type type, object value, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        private static ODataSerializer GetSerializer(Type type, object value, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer)
         {
             ODataSerializer serializer;
 

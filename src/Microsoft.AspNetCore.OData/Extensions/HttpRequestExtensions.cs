@@ -23,6 +23,9 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNet.OData.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for the <see cref="HttpRequestExtensions"/>.
+    /// </summary>
     public static class HttpRequestExtensions
     {
         /// <summary>
@@ -45,7 +48,7 @@ namespace Microsoft.AspNet.OData.Extensions
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The <see cref="IETagHandler"/> from the services container.</returns>
-        public static IETagHandler ETagHandler(this HttpRequest request)
+        public static IETagHandler GetETagHandler(this HttpRequest request)
         {
             if (request == null)
             {
@@ -53,7 +56,6 @@ namespace Microsoft.AspNet.OData.Extensions
             }
 
             return request.GetRequestContainer().GetRequiredService<IETagHandler>();
-            //return request.HttpContext.ETagHandler();
         }
 
         /// <summary>
@@ -165,7 +167,7 @@ namespace Microsoft.AspNet.OData.Extensions
                 }
 
                 // get the etag handler, and parse the etag
-                IETagHandler etagHandler = request.GetRequestContainer().GetRequiredService<IETagHandler>();
+                IETagHandler etagHandler = request.HttpContext.RequestServices.GetRequiredService<IETagHandler>();
                 IDictionary<string, object> properties = etagHandler.ParseETag(entityTagHeaderValue) ?? new Dictionary<string, object>();
                 IList<object> parsedETagValues = properties.Select(property => property.Value).AsList();
 
@@ -266,26 +268,6 @@ namespace Microsoft.AspNet.OData.Extensions
             }
 
             return null;
-        }
-
-        //public static IAssemblyProvider AssemblyProvider(this HttpRequest request)
-        //{
-        //    if (request == null)
-        //    {
-        //        throw Error.ArgumentNull("request");
-        //    }
-
-        //    return request.HttpContext.AssemblyProvider();
-        //}
-
-        public static bool HasQueryOptions(this HttpRequest request)
-        {
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
-            return request?.Query != null && request.Query.Count > 0;
         }
 
         internal static ODataVersion? ODataServiceVersion(this HttpRequest request)

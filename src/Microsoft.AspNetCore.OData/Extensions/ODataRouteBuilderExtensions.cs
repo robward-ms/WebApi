@@ -123,10 +123,10 @@ namespace Microsoft.AspNet.OData.Extensions
         }
 
         /// <summary>
-        /// Remote the trailing slash from a route string.
+        /// Remote the trailing slash from a route prefix string.
         /// </summary>
-        /// <param name="routePrefix"></param>
-        /// <returns></returns>
+        /// <param name="routePrefix">The route prefix string.</param>
+        /// <returns>The route prefix string without a strainling slash.</returns>
         private static string RemoveTrailingSlash(string routePrefix)
         {
             if (!String.IsNullOrEmpty(routePrefix))
@@ -142,13 +142,11 @@ namespace Microsoft.AspNet.OData.Extensions
             return routePrefix;
         }
 
-        // TODO: Batch?
-
         /// <summary>
         /// Configure the default services.
         /// </summary>
-        /// <param name="configureAction"></param>
-        /// <returns></returns>
+        /// <param name="configureAction">The configuring action to add the services to the root container.</param>
+        /// <returns>A configuring action to add the services to the root container.</returns>
         internal static Action<IContainerBuilder> ConfigureDefaultServices(Action<IContainerBuilder> configureAction)
         {
             return (builder =>

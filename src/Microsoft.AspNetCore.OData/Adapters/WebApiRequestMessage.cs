@@ -150,7 +150,7 @@ namespace Microsoft.AspNet.OData.Adapters
                 throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
             }
 
-            return this.innerRequest.ETagHandler().CreateETag(properties)?.ToString();
+            return this.innerRequest.GetETagHandler().CreateETag(properties)?.ToString();
         }
 
         /// <summary>

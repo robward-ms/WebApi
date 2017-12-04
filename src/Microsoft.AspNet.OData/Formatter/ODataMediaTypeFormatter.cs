@@ -190,13 +190,13 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         {
-            if (!_outputFormatter.SetDefaultContentHeaders(type, headers, mediaType))
+            if (!ODataMediaTypeOutputFormatter.SetDefaultContentHeaders(type, headers, mediaType))
             {
                 // This is the case when a user creates a new ObjectContent<T> passing in a null mediaType
                 base.SetDefaultContentHeaders(type, headers, mediaType);
             }
 
-            _outputFormatter.SetCharSetAndVersion(headers, Request.Headers, _version);
+            ODataMediaTypeOutputFormatter.SetCharSetAndVersion(headers, Request.Headers, _version);
 
         }
 
@@ -220,7 +220,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     return _deserializerProvider.GetEdmTypeDeserializer(objectType);
                 };
 
-                return _inputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, _payloadKinds, getEdmTypeDeserializer, getODataPayloadDeserializer);
+                return ODataMediaTypeInputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, _payloadKinds, getEdmTypeDeserializer, getODataPayloadDeserializer);
             }
 
             return false;
@@ -236,7 +236,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return _outputFormatter.CanWriteType(type, new WebApiRequestMessage(Request),
+                return ODataMediaTypeOutputFormatter.CanWriteType(type, new WebApiRequestMessage(Request),
                     _payloadKinds, (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request));
             }
 
@@ -295,6 +295,8 @@ namespace Microsoft.AspNet.OData.Formatter
 
         /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling",
+            Justification = "The complexity comes from refactoring to make this platform agnostic.")]
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content,
             TransportContext transportContext, CancellationToken cancellationToken)
         {
@@ -336,7 +338,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     };
                 };
 
-                _outputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), new WebApiUrlHelper(urlHelper),
+                ODataMediaTypeOutputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), new WebApiUrlHelper(urlHelper),
                     _version, new WebApiRequestMessage(Request), new WebApiRequestHeaders(Request.Headers), baseAddress,
                     (edmType) => _serializerProvider.GetEdmTypeSerializer(edmType),
                     (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request), getODataSerializerContext);

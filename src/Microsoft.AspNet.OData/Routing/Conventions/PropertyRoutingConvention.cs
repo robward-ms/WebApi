@@ -16,7 +16,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         /// <inheritdoc/>
         /// <remarks>This signature uses types that are AspNet-specific.</remarks>
         public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
-        ILookup<string, HttpActionDescriptor> actionMap)
+            ILookup<string, HttpActionDescriptor> actionMap)
         {
             ValidateSelectActionParameters(odataPath, controllerContext, actionMap);
             return SelectActionImpl(

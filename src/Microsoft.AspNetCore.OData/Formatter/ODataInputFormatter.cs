@@ -78,7 +78,6 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <param name="formatter">The <see cref="ODataInputFormatter"/> to copy settings from.</param>
         /// <param name="version">The OData version that this formatter supports.</param>
         /// <param name="request">The <see cref="HttpRequest"/> for the per-request formatter instance.</param>
-        /// <remarks>This is a copy constructor to be used in <see cref="GetPerRequestFormatterInstance"/>.</remarks>
         internal ODataInputFormatter(ODataInputFormatter formatter, ODataVersion version, HttpRequest request)
         {
             if (request == null)
@@ -148,7 +147,6 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        /// <inheritdoc/>
         //public override TextOutputFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request, MediaTypeHeaderValue mediaType)
         //{
         //    // call base to validate parameters
@@ -166,7 +164,6 @@ namespace Microsoft.AspNet.OData.Formatter
         //    }
         //}
 
-        /// <inheritdoc/>
         //public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         //{
         //    if (type == null)

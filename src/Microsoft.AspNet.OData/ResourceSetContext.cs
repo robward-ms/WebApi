@@ -68,7 +68,7 @@ namespace Microsoft.AspNet.OData
         /// <summary>
         /// Create a <see cref="ResourceSetContext"/> from an <see cref="ODataSerializerContext"/> and <see cref="IEnumerable"/>.
         /// </summary>
-        /// <param name="resourceSetInstance">The instance representing the resourceSet being written.</param>
+        /// <param name="resourceSetInstance">The instance representing the resource set being written.</param>
         /// <param name="writeContext">The serializer context.</param>
         /// <returns>A new <see cref="ResourceSetContext"/>.</returns>
         /// <remarks>This signature uses types that are AspNet-specific.</remarks>

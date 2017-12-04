@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.UriParser;
@@ -26,20 +26,20 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <summary>
         /// The inner request wrapped by this instance.
         /// </summary>
-        internal HttpRequest innerRequest;
+        internal IUrlHelper innerHelper;
 
         /// <summary>
         /// Initializes a new instance of the WebApiUrlHelper class.
         /// </summary>
         /// <param name="helper">The inner helper.</param>
-        public WebApiUrlHelper(HttpRequest request)
+        public WebApiUrlHelper(IUrlHelper helper)
         {
-            if (request == null)
+            if (helper == null)
             {
-                throw Error.ArgumentNull("request");
+                throw Error.ArgumentNull("helper");
             }
 
-            this.innerRequest = request;
+            this.innerHelper = helper;
         }
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns>The generated OData link.</returns>
         public string CreateODataLink(IList<ODataPathSegment> segments)
         {
-            string routeName = this.innerRequest.ODataFeature().RouteName;
+            string routeName = this.innerHelper.ActionContext.HttpContext.Request.ODataFeature().RouteName;
             if (String.IsNullOrEmpty(routeName))
             {
                 throw Error.InvalidOperation(SRResources.RequestMustHaveODataRouteName);
             }
 
-            IODataPathHandler pathHandler = this.innerRequest.GetPathHandler();
+            IODataPathHandler pathHandler = this.innerHelper.ActionContext.HttpContext.Request.GetPathHandler();
             return CreateODataLink(routeName, pathHandler, segments);
         }
 
@@ -90,8 +90,7 @@ namespace Microsoft.AspNet.OData.Adapters
 
             string odataPath = pathHandler.Link(new ODataPath(segments));
 
-            IUrlHelper urlHelper = this.innerRequest.HttpContext.GetUrlHelper();
-            return urlHelper.Link(
+            return this.innerHelper.Link(
                 routeName,
                 new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
         }

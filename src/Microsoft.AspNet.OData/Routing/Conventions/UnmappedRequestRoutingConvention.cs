@@ -17,10 +17,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
         public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
         {
             ValidateSelectActionParameters(odataPath, controllerContext, actionMap);
-            return SelectActionImpl(
-                odataPath,
-                new WebApiControllerContext(controllerContext, GetControllerResult(controllerContext)),
-                new WebApiActionMap(actionMap));
+            return SelectActionImpl(new WebApiActionMap(actionMap));
         }
     }
 }

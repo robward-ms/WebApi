@@ -5,19 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Routing;
-using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Mvc.Routing;
+using ODataPathSegment = Microsoft.OData.UriParser.ODataPathSegment;
 
 namespace Microsoft.AspNet.OData.Extensions
 {
     /// <summary>
-    /// Provides extension methods for the <see cref="UrlHelper"/> class.
+    /// Provides extension methods for the <see cref="IUrlHelper"/> class.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class UrlHelperExtensions
@@ -84,13 +82,6 @@ namespace Microsoft.AspNet.OData.Extensions
             return urlHelper.Link(
                 routeName,
                 new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } });
-            //return RouteUrl(new UrlRouteContext()
-            //{
-            //    RouteName = routeName,
-            //    Values = new RouteValueDictionary() { { ODataRouteConstants.ODataPath, odataPath } },
-            //    Protocol = HttpContext.Request.Scheme,
-            //    Host = HttpContext.Request.Host.ToUriComponent()
-            //});
         }
     }
 }

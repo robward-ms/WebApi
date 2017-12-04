@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNet.OData.Adapters;
 using System;
+using Microsoft.AspNet.OData.Common;
 
 namespace Microsoft.AspNet.OData.Results
 {
@@ -25,12 +26,11 @@ namespace Microsoft.AspNet.OData.Results
         /// Initializes a new instance of the <see cref="CreatedODataResult{T}"/> class.
         /// </summary>
         /// <param name="entity">The created entity.</param>
-        /// <param name="controller">The controller from which to obtain the dependencies needed for execution.</param>
         public CreatedODataResult(T entity)
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw Error.ArgumentNull("entity");
             }
 
             this._innerResult = entity;

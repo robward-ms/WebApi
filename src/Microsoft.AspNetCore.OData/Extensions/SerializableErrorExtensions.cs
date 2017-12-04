@@ -19,7 +19,7 @@ namespace Microsoft.AspNet.OData.Extensions
         /// <summary>
         /// Converts the <paramref name="serializableError"/> to an <see cref="ODataError"/>.
         /// </summary>
-        /// <param name="httpserializableErrorError">The <see cref="SerializableError"/> instance to convert.</param>
+        /// <param name="serializableError">The <see cref="SerializableError"/> instance to convert.</param>
         /// <returns>The converted <see cref="ODataError"/></returns>
         public static ODataError CreateODataError(this SerializableError serializableError)
         {

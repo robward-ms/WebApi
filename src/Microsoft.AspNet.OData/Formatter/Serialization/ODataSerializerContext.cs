@@ -61,7 +61,6 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
             Url = context.Url;
             // TODO: This property is not copied in the Aspnet version of the product.
             //RequestContext = context.RequestContext;
-
         }
     }
 }

@@ -9,7 +9,6 @@ namespace Microsoft.AspNet.OData
     /// </summary>
     public partial class ODataNullValueMessageHandler // TODO: DelegatingHandler
     {
-        /// <inheritdoc />
         //protected async override Task<HttpResponseMessage> SendAsync(
         //    HttpRequest request,
         //    CancellationToken cancellationToken)

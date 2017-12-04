@@ -20,7 +20,7 @@ namespace Microsoft.AspNet.OData
     /// </summary>
     public partial class ETagMessageHandler
     {
-        private EntityTagHeaderValue GetETag(
+        private static EntityTagHeaderValue GetETag(
             int? statusCode,
             ODataPath path,
             IEdmModel model,
@@ -36,11 +36,6 @@ namespace Microsoft.AspNet.OData
             {
                 throw Error.ArgumentNull("model");
             }
-
-            //if (value == null)
-            //{
-            //    throw Error.ArgumentNull("value");
-            //}
 
             if (etagHandler == null)
             {

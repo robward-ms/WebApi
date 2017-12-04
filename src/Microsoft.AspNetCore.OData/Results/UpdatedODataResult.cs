@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,12 +24,11 @@ namespace Microsoft.AspNet.OData.Results
         /// Initializes a new instance of the <see cref="UpdatedODataResult{T}"/> class.
         /// </summary>
         /// <param name="entity">The updated entity.</param>
-        /// <param name="controller">The controller from which to obtain the dependencies needed for execution.</param>
         public UpdatedODataResult(T entity)
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw Error.ArgumentNull("entity");
             }
 
             this._innerResult = entity;

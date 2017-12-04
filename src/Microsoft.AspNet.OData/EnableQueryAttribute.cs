@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -38,6 +40,8 @@ namespace Microsoft.AspNet.OData
         /// </summary>
         /// <param name="actionExecutedContext">The context related to this action, including the response message,
         /// request message and HttpConfiguration etc.</param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling",
+            Justification = "The majority of types referenced by this method result from HttpActionExecutedContext")]
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext == null)
@@ -79,10 +83,26 @@ namespace Microsoft.AspNet.OData
                         response.Content.GetType().FullName);
                 }
 
+                // Get collection from SingleResult.
+                IQueryable singleResultCollection = null;
+                SingleResult singleResult = responseContent.Value as SingleResult;
+                if (singleResult != null)
+                {
+                    // This could be a SingleResult, which has the property Queryable.
+                    // But it could be a SingleResult() or SingleResult<T>. Sort by number of parameters
+                    // on the property and get the one with the most parameters.
+                    PropertyInfo propInfo = responseContent.Value.GetType().GetProperties()
+                        .OrderBy(p => p.GetIndexParameters().Count())
+                        .Where(p => p.Name.Equals("Queryable"))
+                        .LastOrDefault();
+
+                    singleResultCollection = propInfo.GetValue(singleResult) as IQueryable;
+                }
+
                 // Execution the action.
                 object queryResult = OnActionExecuted(
                     responseContent.Value,
-                    (responseContent.Value as SingleResult)?.Queryable,
+                    singleResultCollection,
                     new WebApiActionDescriptor(actionDescriptor),
                     new WebApiRequestMessage(request),
                     (elementClrType) => GetModel(elementClrType, request, actionDescriptor),

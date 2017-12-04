@@ -28,7 +28,7 @@ namespace Microsoft.AspNet.OData
             {
                 _request = value;
                 InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
-                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request) : null;
+                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request.HttpContext.GetUrlHelper()) : null;
             }
         }
 

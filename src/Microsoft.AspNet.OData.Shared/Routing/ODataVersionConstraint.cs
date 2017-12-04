@@ -90,7 +90,7 @@ namespace Microsoft.AspNet.OData.Routing
         private ODataVersion? GetVersion(IDictionary<string, IEnumerable<string>> headers, ODataVersion? serviceVersion, ODataVersion? maxServiceVersion)
         {
             // The logic is as follows. We check OData-Version first and if not present we check OData-MaxVersion.
-            // If both OData-Version and OData-MaxVersion do not present, we assume the version is V4
+            // If both OData-Version and OData-MaxVersion are not present, we assume the version is V4
 
             int versionHeaderCount = GetHeaderCount(ODataServiceVersionHeader, headers);
             int maxVersionHeaderCount = GetHeaderCount(ODataMaxServiceVersionHeader, headers);

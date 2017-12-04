@@ -15,7 +15,6 @@ namespace Microsoft.AspNet.OData.Formatter.Deserialization
         /// </summary>
         /// <param name="edmType">The EDM type.</param>
         /// <returns>An <see cref="ODataEdmTypeDeserializer"/> that can deserialize the given EDM type.</returns>
-        /// <remarks>This signature uses only types shared between AspNet and AspNetCore.</remarks>
         public abstract ODataEdmTypeDeserializer GetEdmTypeDeserializer(IEdmTypeReference edmType);
     }
 }

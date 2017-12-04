@@ -94,6 +94,7 @@ namespace Microsoft.AspNet.OData.Routing
             return path.ToString();
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Function is difficult to split up.")]
         private ODataPath Parse(string serviceRoot, string odataPath, IServiceProvider requestContainer, bool template)
         {
             ODataUriParser uriParser;
@@ -205,7 +206,8 @@ namespace Microsoft.AspNet.OData.Routing
                                 !(id.EdmType.IsOrInheritsFrom(lastSegmentEdmType.ElementType.Definition) ||
                                   lastSegmentEdmType.ElementType.Definition.IsOrInheritsFrom(id.EdmType)))))
                     {
-                        // To avoid a dependency on System.Net.Http, extract id manually.
+                        // System.Net.Http on NetCore does not have the Uri extension method
+                        // ParseQueryString(), to avoid a platform-specific call, extract $id manually.
                         string idValue = fullUri.Query;
                         string idParam = "$id=";
                         int start = idValue.IndexOf(idParam, StringComparison.OrdinalIgnoreCase);

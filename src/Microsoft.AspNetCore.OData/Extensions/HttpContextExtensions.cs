@@ -40,6 +40,11 @@ namespace Microsoft.AspNet.OData.Extensions
             return odataFeature;
         }
 
+        /// <summary>
+        /// Extension method to return the <see cref="IUrlHelper"/> from the <see cref="HttpContext"/>.
+        /// </summary>
+        /// <param name="httpContext">The Http context.</param>
+        /// <returns>The <see cref="IUrlHelper"/>.</returns>
         public static IUrlHelper GetUrlHelper(this HttpContext httpContext)
         {
             if (httpContext == null)
@@ -52,7 +57,12 @@ namespace Microsoft.AspNet.OData.Extensions
             return httpContext.RequestServices.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(actionContext);
         }
 
-        public static IETagHandler ETagHandler(this HttpContext httpContext)
+        /// <summary>
+        /// Extension method to return the <see cref="IETagHandler"/> from the <see cref="HttpContext"/>.
+        /// </summary>
+        /// <param name="httpContext">The Http context.</param>
+        /// <returns>The <see cref="IETagHandler"/>.</returns>
+        public static IETagHandler GetETagHandler(this HttpContext httpContext)
         {
             if (httpContext == null)
             {
@@ -62,15 +72,5 @@ namespace Microsoft.AspNet.OData.Extensions
             // Get an IETagHandler from the global service provider.
             return httpContext.RequestServices.GetRequiredService<IETagHandler>();
         }
-
-        //public static IAssemblyProvider AssemblyProvider(this HttpContext httpContext)
-        //{
-        //    if (httpContext == null)
-        //    {
-        //        throw Error.ArgumentNull("httpContext");
-        //    }
-
-        //    return httpContext.RequestServices.GetRequiredService<IAssemblyProvider>();
-        //}
-    }
+   }
 }

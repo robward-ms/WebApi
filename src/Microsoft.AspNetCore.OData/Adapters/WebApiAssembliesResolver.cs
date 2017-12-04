@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNet.OData.Interfaces;
@@ -37,9 +37,9 @@ namespace Microsoft.AspNet.OData.Adapters
         }
 
         /// <summary>
-        /// Returns a list of assemblies available for the application. 
+        /// Returns a list of assemblies available for the application.
         /// </summary>
-        /// <returns>A list of assemblies available for the application. </returns>
+        /// <returns>A list of assemblies available for the application.</returns>
         public IEnumerable<Assembly> Assemblies
         {
             get
@@ -50,11 +50,8 @@ namespace Microsoft.AspNet.OData.Adapters
                     return parts.Where(p => p is AssemblyPart).Select(p => (p as AssemblyPart).Assembly);
                 }
 
-                // Default: return all assemblies in the current app domain.
-                // TODO: This is pretty expensive.
-                //AssemblyName[] assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-                Debug.Assert(false);
-                return null;
+                // Cannot get the list of assemblies without an innerManager.
+                throw new NotImplementedException();
             }
         }
     }

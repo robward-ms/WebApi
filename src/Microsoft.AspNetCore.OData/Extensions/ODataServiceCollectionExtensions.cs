@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Linq;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Interfaces;
@@ -63,7 +64,7 @@ namespace Microsoft.AspNet.OData.Extensions
             services.AddSingleton<IActionSelector, ODataActionSelector>();
 
             // Add the ActionContextAccessor; this allows access to the ActionContext which is needed
-            //during the formatting process to construct a IUrlHelper.
+            // during the formatting process to construct a IUrlHelper.
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             return new ODataBuilder(services);
@@ -75,7 +76,7 @@ namespace Microsoft.AspNet.OData.Extensions
         /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
         /// http://go.microsoft.com/fwlink/?LinkId=279712.
         /// </summary>
-        /// <param name="configuration">The server configuration.</param>
+        /// <param name="services">The services collection.</param>
         public static IServiceCollection AddODataQueryFilter(this IServiceCollection services)
         {
             return AddODataQueryFilter(services, new EnableQueryAttribute());
@@ -87,7 +88,7 @@ namespace Microsoft.AspNet.OData.Extensions
         /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
         /// http://go.microsoft.com/fwlink/?LinkId=279712.
         /// </summary>
-        /// <param name="configuration">The server configuration.</param>
+        /// <param name="services">The services collection.</param>
         /// <param name="queryFilter">The action filter that executes the query.</param>
         public static IServiceCollection AddODataQueryFilter(this IServiceCollection services, IActionFilter queryFilter)
         {
@@ -110,12 +111,12 @@ namespace Microsoft.AspNet.OData.Extensions
         {
             if (builder == null)
             {
-                throw new ArgumentNullException(nameof(builder));
+                throw Error.ArgumentNull(nameof(builder));
             }
 
             if (setupAction == null)
             {
-                throw new ArgumentNullException(nameof(setupAction));
+                throw Error.ArgumentNull(nameof(setupAction));
             }
 
             builder.Services.Configure(setupAction);
@@ -132,12 +133,12 @@ namespace Microsoft.AspNet.OData.Extensions
         {
             if (builder == null)
             {
-                throw new ArgumentNullException(nameof(builder));
+                throw Error.ArgumentNull(nameof(builder));
             }
 
             if (setupAction == null)
             {
-                throw new ArgumentNullException(nameof(setupAction));
+                throw Error.ArgumentNull(nameof(setupAction));
             }
 
             builder.Services.Configure(setupAction);

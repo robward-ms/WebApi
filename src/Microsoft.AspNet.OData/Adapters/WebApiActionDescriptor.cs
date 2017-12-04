@@ -26,7 +26,7 @@ namespace Microsoft.AspNet.OData.Adapters
         private HttpActionDescriptor innerDescriptor;
 
         /// <summary>
-        /// Initializes a new instance of the WebApiActionDescriptor class.
+        /// Initializes a new instance of the <see cref="WebApiActionDescriptor"/> class.
         /// </summary>
         /// <param name="actionDescriptor">The inner descriptor.</param>
         public WebApiActionDescriptor(HttpActionDescriptor actionDescriptor)
@@ -58,7 +58,12 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public string ControllerName
         {
-            get { return this.innerDescriptor.ControllerDescriptor?.ControllerName; }
+            get
+            {
+                return this.innerDescriptor.ControllerDescriptor != null
+                    ? this.innerDescriptor.ControllerDescriptor.ControllerName
+                    : null;
+            }
         }
 
         /// <summary>
@@ -85,9 +90,9 @@ namespace Microsoft.AspNet.OData.Adapters
         /// </summary>
         public bool IsHttpMethodSupported(ODataRequestMethod method)
         {
-            // Assume all action are supported if not specified.
             if (this.supportedHttpMethods == null)
             {
+                // Assume all methods are supported if not specified.
                 return true;
             }
 

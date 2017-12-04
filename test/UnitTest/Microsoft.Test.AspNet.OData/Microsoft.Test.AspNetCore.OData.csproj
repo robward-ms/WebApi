@@ -4,6 +4,7 @@
   </PropertyGroup>
   <Import Project="..\..\..\tools\WebStack.settings.targets" />
   <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Relaxed.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x;NOT_CLS_COMPLIANT</DefineConstants>
     <RootNamespace>Microsoft.Test.AspNet.OData</RootNamespace>
     <!-- Let's generate our own assembly info -->

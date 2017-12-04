@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -723,7 +722,7 @@ namespace Microsoft.AspNet.OData.Extensions
         }
 
         /// <summary>
-        /// Create the per-route container from the configuration fopr a given route.
+        /// Create the per-route container from the configuration for a given route.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="routeName">The route name.</param>
@@ -747,7 +746,7 @@ namespace Microsoft.AspNet.OData.Extensions
                 PerRouteContainerKey,
                 key =>
                 {
-                    IPerRouteContainer perRouteContainer = new PerRouteContainer();
+                    IPerRouteContainer perRouteContainer = new PerRouteContainer(configuration);
 
                     // Attach the build factory if there is one.
                     object value;
@@ -792,9 +791,9 @@ namespace Microsoft.AspNet.OData.Extensions
         /// <summary>
         /// Configure the default services.
         /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="configureAction"></param>
-        /// <returns></returns>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="configureAction">The configuring action to add the services to the root container.</param>
+        /// <returns>A configuring action to add the services to the root container.</returns>
         private static Action<IContainerBuilder> ConfigureDefaultServices(HttpConfiguration configuration, Action<IContainerBuilder> configureAction)
         {
             return (builder =>
@@ -816,7 +815,10 @@ namespace Microsoft.AspNet.OData.Extensions
                 builder.AddDefaultWebApiServices();
 
                 // Add custom actions.
-                configureAction?.Invoke(builder);
+                if (configureAction != null)
+                {
+                    configureAction.Invoke(builder);
+                }
             });
         }
     }

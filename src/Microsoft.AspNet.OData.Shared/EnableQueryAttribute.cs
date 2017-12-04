@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Interfaces;
@@ -377,7 +376,7 @@ namespace Microsoft.AspNet.OData
             {
                 try
                 {
-                    object queryResult = ExecuteQuery(responseValue, singleResultCollection, actionDescriptor, modelFunction, request, createQueryOptionFunction, createErrorAction);
+                    object queryResult = ExecuteQuery(responseValue, singleResultCollection, actionDescriptor, modelFunction, request, createQueryOptionFunction);
                     if (queryResult == null && (request.Context.Path == null || singleResultCollection != null))
                     {
                         // This is the case in which a regular OData service uses the EnableQuery attribute.
@@ -478,7 +477,7 @@ namespace Microsoft.AspNet.OData
         /// <param name="modelFunction">A function to get the model.</param>
         /// <param name="path">The OData path.</param>
         /// <returns></returns>
-        private ODataQueryContext GetODataQueryContext(
+        private static ODataQueryContext GetODataQueryContext(
             object responseValue,
             IQueryable singleResultCollection,
             IWebApiActionDescriptor actionDescriptor,
@@ -546,7 +545,6 @@ namespace Microsoft.AspNet.OData
         /// <param name="modelFunction">A function to get the model.</param>
         /// <param name="request">The internal request.</param>
         /// <param name="createQueryOptionFunction">A function used to create and validate query options.</param>
-        /// <param name="createErrorAction">A function used to generate error response.</param>
         /// <returns></returns>
         private object ExecuteQuery(
             object responseValue,
@@ -554,8 +552,7 @@ namespace Microsoft.AspNet.OData
             IWebApiActionDescriptor actionDescriptor,
             Func<Type, IEdmModel> modelFunction,
             IWebApiRequestMessage request,
-            Func<ODataQueryContext, ODataQueryOptions> createQueryOptionFunction,
-            Action<HttpStatusCode, string, Exception> createErrorAction)
+            Func<ODataQueryContext, ODataQueryOptions> createQueryOptionFunction)
         {
             ODataQueryContext queryContext = GetODataQueryContext(responseValue, singleResultCollection, actionDescriptor, modelFunction, request.Context.Path);
 
@@ -568,14 +565,6 @@ namespace Microsoft.AspNet.OData
             {
                 // response is not a collection; we only support $select and $expand on single entities.
                 ValidateSelectExpandOnly(queryOptions);
-
-                // This could be a SingleResult, which has the property Queryable.
-                // But it could be a SingleResult() or SingleResult<T>. Sort by number of parameters
-                // on the property and get the one with the most parameters.
-                PropertyInfo propInfo = responseValue.GetType().GetProperties()
-                    .OrderBy(p => p.GetIndexParameters().Count())
-                    .Where(p => p.Name.Equals("Queryable"))
-                    .LastOrDefault();
 
                 if (singleResultCollection == null)
                 {
@@ -627,14 +616,6 @@ namespace Microsoft.AspNet.OData
             IEnumerable enumerable = responseValue as IEnumerable;
             if (enumerable == null)
             {
-                // This could be a SingleResult, which has the property Queryable.
-                // But it could be a SingleResult() or SingleResult<T>. Sort by number of parameters
-                // on the property and get the one with the most parameters.
-                PropertyInfo propInfo = responseValue.GetType().GetProperties()
-                    .OrderBy(p => p.GetIndexParameters().Count())
-                    .Where(p => p.Name.Equals("Queryable"))
-                    .LastOrDefault();
-
                 if (singleResultCollection == null)
                 {
                     return responseValue.GetType();
@@ -687,7 +668,6 @@ namespace Microsoft.AspNet.OData
             }
             finally
             {
-                // Fix for Issue #2097
                 // Ensure any active/open database objects that were created
                 // iterating over the IQueryable object are properly closed.
                 var disposable = enumerator as IDisposable;
@@ -720,7 +700,7 @@ namespace Microsoft.AspNet.OData
         /// <param name="modelFunction">A function to get the model.</param>
         /// <param name="path">The OData path.</param>
         /// <returns></returns>
-        private bool ContainsAutoSelectExpandProperty(
+        private static bool ContainsAutoSelectExpandProperty(
             object responseValue,
             IQueryable singleResultCollection,
             IWebApiActionDescriptor actionDescriptor,

@@ -37,9 +37,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
                 throw Error.ArgumentNull("request");
             }
 
-            SelectControllerResult controllerResult = SelectControllerImpl(
-                odataPath,
-                new WebApiRequestMessage(request));
+            SelectControllerResult controllerResult = SelectControllerImpl(odataPath);
 
             if (controllerResult != null)
             {

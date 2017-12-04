@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNet.OData.Formatter.Serialization
@@ -25,7 +26,7 @@ namespace Microsoft.AspNet.OData.Formatter.Serialization
             {
                 _request = value;
                 InternalRequest = _request != null ? new WebApiRequestMessage(_request) : null;
-                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request) : null;
+                InternalUrlHelper = _request != null ? new WebApiUrlHelper(_request.HttpContext.GetUrlHelper()) : null;
             }
         }
 
