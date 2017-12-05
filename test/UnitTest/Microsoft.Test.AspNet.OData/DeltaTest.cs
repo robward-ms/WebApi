@@ -7,15 +7,21 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+#if !NETCORE
 using System.Net.Http.Formatting;
+#endif
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.Serialization;
+#if !NETCORE
 using System.Web.Http;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
+#if !NETCORE
 using Microsoft.AspNet.OData.Formatter;
+#endif
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -468,6 +474,7 @@ namespace Microsoft.Test.AspNet.OData
             }
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(ODataFormatter_Can_Read_Delta_DataSet))]
         public void ODataFormatter_Can_Read_Delta(string propertyName, string propertyJsonValue, object expectedValue)
@@ -504,6 +511,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.True(delta.TryGetPropertyValue(propertyName, out value));
             Assert.Equal(expectedValue, value);
         }
+#endif
 
         public static TheoryDataSet<string, string, string, object> ODataFormatter_Can_Read_Delta_DataSet_WithAlias
         {
@@ -519,6 +527,7 @@ namespace Microsoft.Test.AspNet.OData
             }
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(ODataFormatter_Can_Read_Delta_DataSet_WithAlias))]
         public void ODataFormatter_CanReadDelta_WithAlias(string propertyName, string propertyNameAlias, string propertyJsonValue, object expectedValue)
@@ -556,6 +565,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.True(delta.TryGetPropertyValue(propertyName, out value));
             Assert.Equal(expectedValue, value);
         }
+#endif
 
         public static TheoryDataSet<Type> TypedDelta_Returns_Correct_ExpectedClrType_And_ActualType_DataSet
         {

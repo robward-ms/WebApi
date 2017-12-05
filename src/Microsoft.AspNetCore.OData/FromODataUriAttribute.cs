@@ -13,8 +13,8 @@ using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 
@@ -49,38 +49,48 @@ namespace Microsoft.AspNet.OData
                     throw Error.Argument("bindingContext", SRResources.ModelBinderUtil_ModelMetadataCannotBeNull);
                 }
 
+                ValueProviderResult valueProviderResult = ValueProviderResult.None;
                 string modelName = ODataParameterValue.ParameterValuePrefix + bindingContext.ModelName;
-                ValueProviderResult value = bindingContext.ValueProvider.GetValue(modelName);
-                if (value == ValueProviderResult.None)
-                {
-                    value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
-                    if (value == ValueProviderResult.None)
-                    {
-                        bindingContext.Result = ModelBindingResult.Failed();
-                        return Task.CompletedTask;
-                    }
-                }
-
-                bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value);
-
                 try
                 {
-                    // Need to serialize/deserialize this.
-                    ODataParameterValue paramValue = value.RawValue as ODataParameterValue;
-                    if (paramValue != null)
+                    // Look in route data for a ODataParameterValue.
+                    object valueAsObject = null;
+                    if (bindingContext.ActionContext.RouteData.Values.TryGetValue(modelName, out valueAsObject))
                     {
-                        HttpRequest request = bindingContext.HttpContext.Request;
-                        object model = ConvertTo(paramValue, bindingContext, request.GetRequestContainer());
-                        bindingContext.Result = ModelBindingResult.Success(model);
-                    }
+                        StringValues stringValues = new StringValues(valueAsObject.ToString());
+                        valueProviderResult = new ValueProviderResult(stringValues);
+                        bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
 
-                    string valueString = value.FirstValue;
-                    if (valueString != null)
+                        ODataParameterValue paramValue = valueAsObject as ODataParameterValue;
+                        if (paramValue != null)
+                        {
+                            HttpRequest request = bindingContext.HttpContext.Request;
+                            object model = ConvertTo(paramValue, bindingContext, request.GetRequestContainer());
+                            bindingContext.Result = ModelBindingResult.Success(model);
+                            return Task.CompletedTask;
+                        }
+                    }
+                    else
                     {
-                        object model = ODataModelBinderConverter.ConvertTo(valueString, bindingContext.ModelType);
+                        // If not in the route data, ask the value provider.
+                        valueProviderResult = bindingContext.ValueProvider.GetValue(modelName);
+                        if (valueProviderResult == ValueProviderResult.None)
+                        {
+                            valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+                            if (valueProviderResult == ValueProviderResult.None)
+                            {
+                                bindingContext.Result = ModelBindingResult.Failed();
+                                return Task.CompletedTask;
+                            }
+                        }
+
+                        bindingContext.ModelState.SetModelValue(bindingContext.ModelName, valueProviderResult);
+
+                        object model = ODataModelBinderConverter.ConvertTo(valueProviderResult.FirstValue, bindingContext.ModelType);
                         if (model != null)
                         {
                             bindingContext.Result = ModelBindingResult.Success(model);
+                            return Task.CompletedTask;
                         }
                     }
 
@@ -93,12 +103,12 @@ namespace Microsoft.AspNet.OData
                 }
                 catch (ValidationException ex)
                 {
-                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, value.FirstValue, ex.Message));
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, valueProviderResult.FirstValue, ex.Message));
                     bindingContext.Result = ModelBindingResult.Failed();
                 }
                 catch (FormatException ex)
                 {
-                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, value.FirstValue, ex.Message));
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, valueProviderResult.FirstValue, ex.Message));
                     bindingContext.Result = ModelBindingResult.Failed();
                 }
                 catch (Exception e)

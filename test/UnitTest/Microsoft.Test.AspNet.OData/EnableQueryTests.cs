@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -340,8 +338,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/OnlyFilterAndEqualsAllowedCustomers";
-            HttpServer server = CreateServer("OnlyFilterAndEqualsAllowedCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("OnlyFilterAndEqualsAllowedCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -365,8 +363,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/FilterDisabledCustomers";
-            HttpServer server = CreateServer("FilterDisabledCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("FilterDisabledCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -385,8 +383,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/EverythingAllowedCustomers";
-            HttpServer server = CreateServer("EverythingAllowedCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("EverythingAllowedCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -408,8 +406,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/OnlyFilterAllowedCustomers";
-            HttpServer server = CreateServer("OnlyFilterAllowedCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("OnlyFilterAllowedCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -436,8 +434,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/EverythingAllowedCustomers";
-            HttpServer server = CreateServer("EverythingAllowedCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("EverythingAllowedCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -453,16 +451,12 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/AutoExpandedCustomers";
-            HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AutoExpandedCustomersController)));
+            Type[] controllers = new Type[] { typeof(AutoExpandedCustomersController) };
             ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<AutoExpandedCustomer>("AutoExpandedCustomers");
             IEdmModel model = builder.GetEdmModel();
-
-            configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("odata", "odata", model);
-            HttpServer server = new HttpServer(configuration);
-            HttpClient client = new HttpClient(server);
+            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -480,8 +474,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/EverythingAllowedCustomers";
-            HttpServer server = CreateServer("EverythingAllowedCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("EverythingAllowedCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -499,8 +493,8 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             string url = "http://localhost/odata/OtherLimitationsCustomers";
-            HttpServer server = CreateServer("OtherLimitationsCustomers");
-            HttpClient client = new HttpClient(server);
+            var server = CreateServer("OtherLimitationsCustomers");
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = client.GetAsync(url + queryString).Result;
@@ -633,22 +627,24 @@ namespace Microsoft.Test.AspNet.OData
             }
         }
 
-        private static HttpServer CreateServer(string customersEntitySet)
+#if NETCORE
+        private static AspNetCore.TestHost.TestServer CreateServer(string customersEntitySet)
+#else
+        private static System.Web.Http.HttpServer CreateServer(string customersEntitySet)
+#endif
         {
-            HttpConfiguration configuration = new HttpConfiguration();
-
             // We need to do this to avoid controllers with incorrect attribute
             // routing configuration in this assembly that cause an exception to
             // be thrown at runtime. With this, we restrict the test to the following
             // set of controllers.
-            configuration.Services.Replace(
-                typeof(IAssembliesResolver),
-                new TestAssemblyResolver(
-                    typeof(OnlyFilterAllowedCustomersController),
-                    typeof(OnlyFilterAndEqualsAllowedCustomersController),
-                    typeof(FilterDisabledCustomersController),
-                    typeof(EverythingAllowedCustomersController),
-                    typeof(OtherLimitationsCustomersController)));
+            Type[] controllers = new Type[]
+            {
+                typeof(OnlyFilterAllowedCustomersController),
+                typeof(OnlyFilterAndEqualsAllowedCustomersController),
+                typeof(FilterDisabledCustomersController),
+                typeof(EverythingAllowedCustomersController),
+                typeof(OtherLimitationsCustomersController),
+            };
 
             ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
 
@@ -667,10 +663,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("odata", "odata", model);
-
-            return new HttpServer(configuration);
+            return TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
         }
 
         // We need to create the data as we need the queries to succeed in one scenario.

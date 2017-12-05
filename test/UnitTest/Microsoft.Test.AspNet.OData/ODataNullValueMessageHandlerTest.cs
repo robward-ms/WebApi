@@ -5,16 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+#if !NETCORE
 using System.Net.Http.Formatting;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -33,6 +35,17 @@ namespace Microsoft.Test.AspNet.OData
             _entitySet = new EdmEntitySet(container, "entities", entityType);
         }
 
+#if NETCORE
+        [Fact]
+        public void SendAsync_ThrowsIfContextIsNull()
+        {
+            // Arrange
+            ODataNullValueMessageHandler handler = CreateHandler();
+
+            // Act & Assert
+            ExceptionAssert.ThrowsArgumentNull(() => handler.OnResultExecuting(null), "context");
+        }
+#else
         [Fact]
         public void SendAsync_ThrowsIfRequestIsNull()
         {
@@ -42,20 +55,18 @@ namespace Microsoft.Test.AspNet.OData
             // Act & Assert
             ExceptionAssert.ThrowsArgumentNull(() => { HttpResponseMessage result = handler.SendAsync(null).Result; }, "request");
         }
+#endif
 
         [Fact]
         public void SendAsync_ReturnsNullIfResponseIsNull()
         {
             // Arrange
-            ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler
-                {
-                    InnerHandler = new TestMessageHandler(null)
-                };
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/any");
-            request.ODataProperties().Path = new ODataPath(new EntitySetSegment(_entitySet));
+            ODataNullValueMessageHandler handler = CreateHandler(null);
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
+            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
 
-            // Act 
-            HttpResponseMessage response = handler.SendAsync(request).Result;
+            // Act
+            var response = SendToHandler(handler, request);
 
             // Assert
             Assert.Null(response);
@@ -65,18 +76,14 @@ namespace Microsoft.Test.AspNet.OData
         public void SendAsync_ReturnsOriginalResponseIfContentIsNull()
         {
             // Arrange
-            HttpResponseMessage originalResponse = new HttpResponseMessage(HttpStatusCode.OK);
+            var originalResponse = ResponseFactory.Create(HttpStatusCode.OK);
+            ODataNullValueMessageHandler handler = CreateHandler(originalResponse);
 
-            ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler
-            {
-                InnerHandler = new TestMessageHandler(originalResponse)
-            };
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
+            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/any");
-            request.ODataProperties().Path = new ODataPath(new EntitySetSegment(_entitySet));
-
-            // Act 
-            HttpResponseMessage response = handler.SendAsync(request).Result;
+            // Act
+            var response = SendToHandler(handler, request);
 
             // Assert
             Assert.Same(originalResponse, response);
@@ -86,24 +93,20 @@ namespace Microsoft.Test.AspNet.OData
         public void SendAsync_ReturnsOriginalResponseIfNoObjectContent()
         {
             // Arrange
-            HttpResponseMessage originalResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            originalResponse.Content = new StringContent("test");
+            var originalResponse = ResponseFactory.Create(HttpStatusCode.OK, "test");
+            ODataNullValueMessageHandler handler = CreateHandler(originalResponse);
 
-            ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler
-            {
-                InnerHandler = new TestMessageHandler(originalResponse)
-            };
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
+            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/any");
-            request.ODataProperties().Path = new ODataPath(new EntitySetSegment(_entitySet));
-
-            // Act 
-            HttpResponseMessage response = handler.SendAsync(request).Result;
+            // Act
+            var response = SendToHandler(handler, request);
 
             // Assert
             Assert.Same(originalResponse, response);
         }
 
+#if !NETCORE
         [Fact]
         public void SendAsync_ReturnsOriginalResponseIfObjectContentHasValue()
         {
@@ -226,10 +229,10 @@ namespace Microsoft.Test.AspNet.OData
                 InnerHandler = new TestMessageHandler(originalResponse)
             };
 
+            var configuration = RoutingConfigurationFactory.Create();
             ODataPath path = new DefaultODataPathHandler().Parse(BuildModel(), "http://localhost/any", "Customers(3)");
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/any");
-            request.SetConfiguration(new HttpConfiguration());
-            request.ODataProperties().Path = path;
+            HttpRequestMessage request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any", configuration);
+            request.SetODataPath(path);
 
             // Act 
             HttpResponseMessage response = handler.SendAsync(request).Result;
@@ -237,6 +240,7 @@ namespace Microsoft.Test.AspNet.OData
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
+#endif
 
         [Theory]
         [InlineData("Customers", null)]
@@ -273,6 +277,42 @@ namespace Microsoft.Test.AspNet.OData
             // Assert
             Assert.Equal(expected, statusCode);
         }
+
+#if NETCORE
+        private ODataNullValueMessageHandler CreateHandler(AspNetCore.Http.HttpResponse originalResponse = null)
+        {
+            return new ODataNullValueMessageHandler();
+        }
+
+        private AspNetCore.Http.HttpResponse SendToHandler(
+            ODataNullValueMessageHandler handler,
+            AspNetCore.Http.HttpRequest request)
+        {
+        //    AspNetCore.Mvc.Filters.ResultExecutingContext context = new AspNetCore.Mvc.Filters.ResultExecutingContext();
+
+        //    handler.OnResultExecuting(context);
+
+            return request.HttpContext.Response;
+        }
+#else
+        private ODataNullValueMessageHandler CreateHandler(HttpResponseMessage originalResponse = null)
+        {
+            ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler();
+            if (originalResponse != null)
+            {
+                handler.InnerHandler = new TestMessageHandler(originalResponse)
+            };
+
+            return handler;
+        }
+
+        private HttpResponseMessage SendToHandler(
+            ODataNullValueMessageHandler handler,
+            AspNetCore.Http.HttpRequest request)
+        {
+            return handler.SendAsync(request).Result;
+        }
+#endif
 
         private static IEdmModel BuildModel()
         {

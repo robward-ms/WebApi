@@ -3,11 +3,14 @@
 
 using System;
 using System.Reflection;
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -20,7 +23,7 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void GetBinding_ReturnsSameBindingTypeAsODataModelBinderProvider()
         {
-            HttpConfiguration config = new HttpConfiguration();
+            var config = RoutingConfigurationFactory.Create();
             Type parameterType = typeof(Guid);
             Mock<ParameterInfo> parameterInfoMock = new Mock<ParameterInfo>();
             parameterInfoMock.Setup(info => info.ParameterType).Returns(parameterType);
@@ -37,7 +40,7 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void GetBinding_DoesnotThrowForNonPrimitives()
         {
-            HttpConfiguration config = new HttpConfiguration();
+            var config = RoutingConfigurationFactory.Create();
             Type parameterType = typeof(FormatterOrder);
             Mock<ParameterInfo> parameterInfoMock = new Mock<ParameterInfo>();
             parameterInfoMock.Setup(info => info.ParameterType).Returns(parameterType);

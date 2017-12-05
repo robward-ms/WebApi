@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.OData.Edm;
 
@@ -62,20 +63,38 @@ namespace Microsoft.AspNet.OData
                 // Get the entity type from the parameter type if it is ODataQueryOptions<T>.
                 // Fall back to the return type if not. Also, note that the entity type from the return type and ODataQueryOptions<T>
                 // can be different (example implementing $select or $expand).
-                Type entityClrType = GetEntityClrTypeFromParameterType(Descriptor) ?? GetEntityClrTypeFromActionReturnType(actionDescriptor);
+                Type entityClrType = null;
+                ParameterDescriptor paramDescriptor = bindingContext.ActionContext.ActionDescriptor.Parameters.FirstOrDefault();
+                if (paramDescriptor != null)
+                {
+                    entityClrType = GetEntityClrTypeFromParameterType(paramDescriptor);
+                }
+
+                if (entityClrType == null)
+                {
+                    entityClrType = GetEntityClrTypeFromActionReturnType(actionDescriptor);
+
+                }
 
                 IEdmModel userModel = request.GetModel();
-                IEdmModel model = userModel != EdmCoreModel.Instance ? userModel : actionDescriptor.GetEdmModel(entityClrType);
+                IEdmModel model = userModel != EdmCoreModel.Instance ? userModel : actionDescriptor.GetEdmModel(request, entityClrType);
                 ODataQueryContext entitySetContext = new ODataQueryContext(model, entityClrType, request.ODataFeature().Path);
 
-                Func<ODataQueryContext, HttpRequest, ODataQueryOptions> createODataQueryOptions =
-                    (Func<ODataQueryContext, HttpRequest, ODataQueryOptions>)Descriptor.Properties.GetOrAdd(CreateODataQueryOptionsCtorKey, _ =>
-                    {
-                        return Delegate.CreateDelegate(typeof(Func<ODataQueryContext, HttpRequestMessage, ODataQueryOptions>), _createODataQueryOptions.MakeGenericMethod(entityClrType));
-                    });
+                Func<ODataQueryContext, HttpRequest, ODataQueryOptions> createODataQueryOptions;
+                object constructorAsObject = null;
+                if (actionDescriptor.Properties.TryGetValue(CreateODataQueryOptionsCtorKey, out constructorAsObject))
+                {
+                    createODataQueryOptions = (Func<ODataQueryContext, HttpRequest, ODataQueryOptions>)constructorAsObject;
+                }
+                else
+                {
+                    createODataQueryOptions = (Func<ODataQueryContext, HttpRequest, ODataQueryOptions>)
+                        Delegate.CreateDelegate(typeof(Func<ODataQueryContext, HttpRequest, ODataQueryOptions>),
+                            _createODataQueryOptions.MakeGenericMethod(entityClrType));
+                };
 
                 ODataQueryOptions parameterValue = createODataQueryOptions(entitySetContext, request);
-                SetValue(actionContext, parameterValue);
+                bindingContext.Result = ModelBindingResult.Success(parameterValue);
 
                 return TaskHelpers.Completed();
             }
@@ -89,15 +108,24 @@ namespace Microsoft.AspNet.OData
             {
                 // It is a developer programming error to use this binding attribute
                 // on actions that return void.
-                if (actionDescriptor.ReturnType == null)
+                ControllerActionDescriptor controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
+                if (controllerActionDescriptor == null)
                 {
                     throw Error.InvalidOperation(
                                     SRResources.FailedToBuildEdmModelBecauseReturnTypeIsNull,
-                                    actionDescriptor.ActionName,
-                                    actionDescriptor.ControllerDescriptor.ControllerName);
+                                    actionDescriptor.DisplayName,
+                                    actionDescriptor.ToString());
                 }
 
-                Type entityClrType = TypeHelper.GetImplementedIEnumerableType(actionDescriptor.ReturnType);
+                if (controllerActionDescriptor.MethodInfo.ReturnType == null)
+                {
+                    throw Error.InvalidOperation(
+                                    SRResources.FailedToBuildEdmModelBecauseReturnTypeIsNull,
+                                    controllerActionDescriptor.ActionName,
+                                    controllerActionDescriptor.ControllerName);
+                }
+
+                Type entityClrType = TypeHelper.GetImplementedIEnumerableType(controllerActionDescriptor.MethodInfo.ReturnType);
 
                 if (entityClrType == null)
                 {
@@ -106,15 +134,15 @@ namespace Microsoft.AspNet.OData
                     // determined, such as a non-generic IQueryable or IEnumerable.
                     throw Error.InvalidOperation(
                                     SRResources.FailedToRetrieveTypeToBuildEdmModel,
-                                    actionDescriptor.ActionName,
-                                    actionDescriptor.ControllerDescriptor.ControllerName,
-                                    actionDescriptor.ReturnType.FullName);
+                                    controllerActionDescriptor.ActionName,
+                                    controllerActionDescriptor.ControllerName,
+                                    controllerActionDescriptor.MethodInfo.ReturnType.FullName);
                 }
 
                 return entityClrType;
             }
 
-            internal static Type GetEntityClrTypeFromParameterType(HttpParameterDescriptor parameterDescriptor)
+            internal static Type GetEntityClrTypeFromParameterType(ParameterDescriptor parameterDescriptor)
             {
                 Contract.Assert(parameterDescriptor != null);
 

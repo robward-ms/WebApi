@@ -23,12 +23,9 @@
     <Compile Remove="ContextUtil.cs" />
     <Compile Remove="DateAndTimeOfDayTest.cs" />
     <Compile Remove="DateTimeTest.cs" />
-    <Compile Remove="DeltaTest.cs" />
     <Compile Remove="DependencyInjectionHelper.cs" />
     <Compile Remove="DependencyInjectionTests.cs" />
     <Compile Remove="DollarFormatTest.cs" />
-    <Compile Remove="EdmDeltaCollectionTypeTest.cs" />
-    <Compile Remove="EdmDeltaTypeTest.cs" />
     <Compile Remove="EdmModelExtensionsTest.cs" />
     <Compile Remove="EdmStructuredObjectTest.cs" />
     <Compile Remove="EdmTypeExtensionsTest.cs" />
@@ -89,7 +86,7 @@
     <Compile Remove="MetadataControllerTest.cs" />
     <Compile Remove="ODataActionParametersTest.cs" />
     <Compile Remove="ODataContainmentTest.cs" />
-    <Compile Remove="ODataNullValueMessageHandlerTest.cs" />
+    <Compile Remove="ODataFormattingAttributeTest.cs" />
     <Compile Remove="ODataSingletonTest.cs" />
     <Compile Remove="ODataSwaggerConverterTest.cs" />
     <Compile Remove="ODataSwaggerUtilitiesTest.cs" />

@@ -3,7 +3,9 @@
 
 #if NETCORE
 using System;
+using System.IO;
 using System.Net;
+using System.Text;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
@@ -27,7 +29,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if NETCORE
-        public static HttpResponse Create(HttpStatusCode statusCode)
+        public static HttpResponse Create(HttpStatusCode statusCode, string content = null)
         {
             // Add the options services.
             IRouteBuilder config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
@@ -40,12 +42,28 @@ namespace Microsoft.Test.AspNet.OData.Factories
             // Get response and return it.
             HttpResponse response = context.Response;
             response.StatusCode = (int)statusCode;
+
+            // Add content
+            if (!string.IsNullOrEmpty(content))
+            {
+                byte[] byteArray = Encoding.ASCII.GetBytes(content);
+                using (MemoryStream contentStream = new MemoryStream(byteArray))
+                {
+                    contentStream.CopyTo(response.Body);
+                }
+            }
+
             return response;
         }
 #else
-        public static HttpResponseMessage Create(HttpStatusCode statusCode)
+        public static HttpResponseMessage Create(HttpStatusCode statusCode, string content = null)
         {
             var response = new HttpResponseMessage(statusCode);
+            if (content != null)
+            {
+                response.Content = new StringContent(content);
+            }
+
             return response;
         }
 #endif

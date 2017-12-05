@@ -283,7 +283,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             Assert.Equal(elementType, TypeHelper.GetImplementedIEnumerableType(collectionType));
         }
-
+#if !NETCORE
         [Fact]
         public void GetLoadedTypes()
         {
@@ -311,6 +311,7 @@ namespace Microsoft.Test.AspNet.OData
 
             Assert.DoesNotContain(typeof(TypeHelperTest), foundTypes);
         }
+#endif
 
         /// <summary>
         /// Custom internal class
