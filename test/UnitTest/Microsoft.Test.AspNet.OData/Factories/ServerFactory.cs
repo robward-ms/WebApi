@@ -62,6 +62,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 app.UseMvc((routeBuilder) =>
                 {
                     routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
+                    routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
 
                     ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
                     applicationPartManager.ApplicationParts.Clear();

@@ -47,7 +47,7 @@ namespace Microsoft.Test.AspNet.OData
             string routeName = HttpRouteCollectionExtensions.RouteName;
 #if NETCORE
             IPerRouteContainer perRouteContainer = configuration.ServiceProvider.GetRequiredService<IPerRouteContainer>();
-            Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(action);
+            Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(configuration, action);
             _rootContainer = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
 
             // Without a proper container, WebApiAssemblyResolved has a problem here. It has no applicationpartManager.

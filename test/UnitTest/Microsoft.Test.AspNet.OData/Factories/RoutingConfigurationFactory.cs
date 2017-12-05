@@ -134,7 +134,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 }
 
                 // Create an service provider for this route. Add the default services to the custom configuration actions.
-                Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(configureAction);
+                Action<IContainerBuilder> builderAction = ODataRouteBuilderExtensions.ConfigureDefaultServices(builder, configureAction);
                 IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
             }
 
@@ -165,6 +165,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         internal static IRouteBuilder CreateWithTypes(params Type[] types)
         {
             IRouteBuilder builder = Create();
+            builder.Count().OrderBy().Filter().Expand().MaxTop(null);
 
             ApplicationPartManager applicationPartManager = builder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             AssemblyPart part = new AssemblyPart(new MockAssembly(types));
