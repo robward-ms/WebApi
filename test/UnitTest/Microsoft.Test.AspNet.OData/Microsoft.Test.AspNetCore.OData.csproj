@@ -32,7 +32,6 @@
     <Compile Remove="EdmModelExtensionsTest.cs" />
     <Compile Remove="EdmStructuredObjectTest.cs" />
     <Compile Remove="EdmTypeExtensionsTest.cs" />
-    <Compile Remove="EnableQueryTests.cs" />
     <Compile Remove="EnumDeserializerTest.cs" />
     <Compile Remove="EnumSerializerTest.cs" />
     <Compile Remove="ETagMessageHandlerTest.cs" />
@@ -81,7 +80,6 @@
     <Compile Remove="Formatter\Serialization\ODataResourceSetSerializerTests.cs" />
     <Compile Remove="Formatter\Serialization\ODataSerializerContextTest.cs" />
     <Compile Remove="Formatter\Serialization\ODataSingletonSerializerTest.cs" />
-    <Compile Remove="FromODataUriTest.cs" />
     <Compile Remove="FunctionActionAdvertisedTest.cs" />
     <Compile Remove="HttpConfigurationExtensions.cs" />
     <Compile Remove="HttpConfigurationExtensionsTest.cs" />
@@ -91,9 +89,7 @@
     <Compile Remove="MetadataControllerTest.cs" />
     <Compile Remove="ODataActionParametersTest.cs" />
     <Compile Remove="ODataContainmentTest.cs" />
-    <Compile Remove="ODataFormattingAttributeTest.cs" />
     <Compile Remove="ODataNullValueMessageHandlerTest.cs" />
-    <Compile Remove="ODataRoutingAttributeTest.cs" />
     <Compile Remove="ODataSingletonTest.cs" />
     <Compile Remove="ODataSwaggerConverterTest.cs" />
     <Compile Remove="ODataSwaggerUtilitiesTest.cs" />
@@ -114,9 +110,7 @@
     <Compile Remove="TestContextBuilder.cs" />
     <Compile Remove="TestResponseFeature.cs" />
     <Compile Remove="TestResponseStream.cs" />
-    <Compile Remove="TestServer.cs" />
     <Compile Remove="TypeExtensions.cs" />
-    <Compile Remove="TypeHelperTest.cs" />
   </ItemGroup>
 
   <ItemGroup>

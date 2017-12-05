@@ -2,9 +2,21 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Deserialization;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.AspNet.OData
 {
@@ -14,27 +26,121 @@ namespace Microsoft.AspNet.OData
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
     public sealed class FromODataUriAttribute : ModelBinderAttribute
     {
-        //private static readonly ModelBinderProvider _provider = new ODataModelBinderProvider();
+        /// <summary>
+        /// Instantiates a new instance of the <see cref="FromODataUriAttribute"/> class.
+        /// </summary>
+        public FromODataUriAttribute()
+            : base(typeof(ODataModelBinder))
+        {
+        }
 
-        //public virtual BindingSource BindingSource { get; protected set; }
+        internal class ODataModelBinder : IModelBinder
+        {
+            [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We don't want to fail in model binding.")]
+            public Task BindModelAsync(ModelBindingContext bindingContext)
+            {
+                if (bindingContext == null)
+                {
+                    throw Error.ArgumentNull("bindingContext");
+                }
 
-        ///// <summary>
-        ///// Gets the binding for a parameter.
-        ///// </summary>
-        ///// <param name="parameter">The parameter to bind.</param>
-        ///// <returns>
-        ///// The <see cref="T:System.Web.Http.Controllers.HttpParameterBinding" />that contains the binding.
-        ///// </returns>
-        //public override HttpParameterBinding GetBinding(HttpParameterDescriptor parameter)
-        //{
-        //    if (parameter == null)
-        //    {
-        //        throw Error.ArgumentNull("parameter");
-        //    }
+                if (bindingContext.ModelMetadata == null)
+                {
+                    throw Error.Argument("bindingContext", SRResources.ModelBinderUtil_ModelMetadataCannotBeNull);
+                }
 
-        //    IModelBinder binder = _provider.GetBinder(parameter.Configuration, parameter.ParameterType);
-        //    IEnumerable<ValueProviderFactory> valueProviderFactories = GetValueProviderFactories(parameter.Configuration);
-        //    return new ModelBinderParameterBinding(parameter, binder, valueProviderFactories);
-        //}
+                string modelName = ODataParameterValue.ParameterValuePrefix + bindingContext.ModelName;
+                ValueProviderResult value = bindingContext.ValueProvider.GetValue(modelName);
+                if (value == ValueProviderResult.None)
+                {
+                    value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+                    if (value == ValueProviderResult.None)
+                    {
+                        bindingContext.Result = ModelBindingResult.Failed();
+                        return Task.CompletedTask;
+                    }
+                }
+
+                bindingContext.ModelState.SetModelValue(bindingContext.ModelName, value);
+
+                try
+                {
+                    // Need to serialize/deserialize this.
+                    ODataParameterValue paramValue = value.RawValue as ODataParameterValue;
+                    if (paramValue != null)
+                    {
+                        HttpRequest request = bindingContext.HttpContext.Request;
+                        object model = ConvertTo(paramValue, bindingContext, request.GetRequestContainer());
+                        bindingContext.Result = ModelBindingResult.Success(model);
+                    }
+
+                    string valueString = value.FirstValue;
+                    if (valueString != null)
+                    {
+                        object model = ODataModelBinderConverter.ConvertTo(valueString, bindingContext.ModelType);
+                        if (model != null)
+                        {
+                            bindingContext.Result = ModelBindingResult.Success(model);
+                        }
+                    }
+
+                    bindingContext.Result = ModelBindingResult.Failed();
+                }
+                catch (ODataException ex)
+                {
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, ex.Message);
+                    bindingContext.Result = ModelBindingResult.Failed();
+                }
+                catch (ValidationException ex)
+                {
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, value.FirstValue, ex.Message));
+                    bindingContext.Result = ModelBindingResult.Failed();
+                }
+                catch (FormatException ex)
+                {
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, Error.Format(SRResources.ValueIsInvalid, value.FirstValue, ex.Message));
+                    bindingContext.Result = ModelBindingResult.Failed();
+                }
+                catch (Exception e)
+                {
+                    bindingContext.ModelState.AddModelError(bindingContext.ModelName, e.Message);
+                    bindingContext.Result = ModelBindingResult.Failed();
+                }
+
+                return Task.CompletedTask;
+            }
+
+            internal static object ConvertTo(ODataParameterValue parameterValue, ModelBindingContext bindingContext, IServiceProvider requestContainer)
+            {
+                Contract.Assert(parameterValue != null && parameterValue.EdmType != null);
+
+                object oDataValue = parameterValue.Value;
+                if (oDataValue == null || oDataValue is ODataNullValue)
+                {
+                    return null;
+                }
+
+                IEdmTypeReference edmTypeReference = parameterValue.EdmType;
+                ODataDeserializerContext readContext = BuildDeserializerContext(bindingContext, edmTypeReference);
+                return ODataModelBinderConverter.Convert(oDataValue, edmTypeReference, bindingContext.ModelType,
+                    bindingContext.ModelName, readContext, requestContainer);
+            }
+
+            internal static ODataDeserializerContext BuildDeserializerContext(ModelBindingContext bindingContext, IEdmTypeReference edmTypeReference)
+            {
+                HttpRequest request = bindingContext.HttpContext.Request;
+                ODataPath path = request.ODataFeature().Path;
+                IEdmModel edmModel = request.GetModel();
+
+                return new ODataDeserializerContext
+                {
+                    Path = path,
+                    Model = edmModel,
+                    Request = request,
+                    ResourceType = bindingContext.ModelType,
+                    ResourceEdmType = edmTypeReference,
+                };
+            }
+        }
     }
 }
