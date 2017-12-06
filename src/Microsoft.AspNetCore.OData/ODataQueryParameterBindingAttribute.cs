@@ -3,7 +3,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -67,7 +66,7 @@ namespace Microsoft.AspNet.OData
                 ParameterDescriptor paramDescriptor = bindingContext.ActionContext.ActionDescriptor.Parameters.FirstOrDefault();
                 if (paramDescriptor != null)
                 {
-                    entityClrType = GetEntityClrTypeFromParameterType(paramDescriptor);
+                    entityClrType = GetEntityClrTypeFromParameterType(paramDescriptor.ParameterType);
                 }
 
                 if (entityClrType == null)
@@ -140,22 +139,6 @@ namespace Microsoft.AspNet.OData
                 }
 
                 return entityClrType;
-            }
-
-            internal static Type GetEntityClrTypeFromParameterType(ParameterDescriptor parameterDescriptor)
-            {
-                Contract.Assert(parameterDescriptor != null);
-
-                Type parameterType = parameterDescriptor.ParameterType;
-                Contract.Assert(parameterType != null);
-
-                if (parameterType.IsGenericType &&
-                    parameterType.GetGenericTypeDefinition() == typeof(ODataQueryOptions<>))
-                {
-                    return parameterType.GetGenericArguments().Single();
-                }
-
-                return null;
             }
         }
     }

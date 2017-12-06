@@ -178,7 +178,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             Assert.Equal(
                 elementType,
-                ODataQueryParameterBindingAttribute.ODataQueryParameterBinding.GetEntityClrTypeFromParameterType(parameter.Object));
+                ODataQueryParameterBindingAttribute.GetEntityClrTypeFromParameterType(parameter.Object.ParameterType));
         }
 
         [Theory]
