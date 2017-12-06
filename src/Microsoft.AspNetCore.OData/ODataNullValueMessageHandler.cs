@@ -28,19 +28,23 @@ namespace Microsoft.AspNet.OData
             HttpRequest request = context.HttpContext.Request;
             HttpResponse response = context.HttpContext.Response;
 
-            // This message handler is intended for helping with queries that return a null value, for example in a
-            // get request for a particular entity on an entity set, for a single valued navigation property or for
-            // a structural property of a given entity. The only case in which a data modification request will result
-            // in a 204 response status code, is when a primitive property is set to null through a PUT request to the
-            // property URL and in that case, the user can return the right status code himself.
-            ObjectResult objectResult = context.Result as ObjectResult;
-            if (request.Method == HttpMethod.Get.ToString() && objectResult != null && objectResult.Value == null &&
-                response.StatusCode == (int)HttpStatusCode.OK)
+            // Only operate on OData requests.
+            if (request.ODataFeature().Path != null)
             {
-                HttpStatusCode? newStatusCode = GetUpdatedResponseStatusCodeOrNull(request.ODataFeature().Path);
-                if (newStatusCode.HasValue)
+                // This message handler is intended for helping with queries that return a null value, for example in a
+                // get request for a particular entity on an entity set, for a single valued navigation property or for
+                // a structural property of a given entity. The only case in which a data modification request will result
+                // in a 204 response status code, is when a primitive property is set to null through a PUT request to the
+                // property URL and in that case, the user can return the right status code himself.
+                ObjectResult objectResult = context.Result as ObjectResult;
+                if (request.Method == HttpMethod.Get.ToString() && objectResult != null && objectResult.Value == null &&
+                    response.StatusCode == (int)HttpStatusCode.OK)
                 {
-                    response.StatusCode = (int)newStatusCode.Value;
+                    HttpStatusCode? newStatusCode = GetUpdatedResponseStatusCodeOrNull(request.ODataFeature().Path);
+                    if (newStatusCode.HasValue)
+                    {
+                        response.StatusCode = (int)newStatusCode.Value;
+                    }
                 }
             }
         }

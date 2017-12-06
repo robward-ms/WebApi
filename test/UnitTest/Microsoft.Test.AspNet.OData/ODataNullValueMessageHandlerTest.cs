@@ -1,13 +1,35 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-#if !NETCORE
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Xunit;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#else
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Formatting;
-#endif
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
@@ -22,6 +44,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -288,20 +311,34 @@ namespace Microsoft.Test.AspNet.OData
             ODataNullValueMessageHandler handler,
             AspNetCore.Http.HttpRequest request)
         {
-        //    AspNetCore.Mvc.Filters.ResultExecutingContext context = new AspNetCore.Mvc.Filters.ResultExecutingContext();
+            var pageContext = new PageContext(new ActionContext(
+                request.HttpContext,
+                new RouteData(),
+                new PageActionDescriptor(),
+                new ModelStateDictionary()));
 
-        //    handler.OnResultExecuting(context);
+            var model = new Mock<PageModel>();
+
+            var modelAsFilter = model.As<IAsyncResultFilter>();
+            modelAsFilter
+                .Setup(f => f.OnResultExecutionAsync(It.IsAny<ResultExecutingContext>(), It.IsAny<ResultExecutionDelegate>()))
+                .Returns(Task.CompletedTask);
+
+            var resultExecutingContext = new ResultExecutingContext(
+               pageContext,
+               Array.Empty<IFilterMetadata>(),
+               new AspNetCore.Mvc.RazorPages.PageResult(),
+               model.Object);
+
+            handler.OnResultExecuting(resultExecutingContext);
 
             return request.HttpContext.Response;
         }
 #else
-        private ODataNullValueMessageHandler CreateHandler(HttpResponseMessage originalResponse = null)
+        private ODataNullValueMessageHandler CreateHandler(HttpResponseMessage originalResponse)
         {
             ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler();
-            if (originalResponse != null)
-            {
-                handler.InnerHandler = new TestMessageHandler(originalResponse);
-            }
+            handler.InnerHandler = new TestMessageHandler(originalResponse);
 
             return handler;
         }

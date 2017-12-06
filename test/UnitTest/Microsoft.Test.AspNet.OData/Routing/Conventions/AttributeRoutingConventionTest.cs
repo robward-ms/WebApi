@@ -375,7 +375,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         private ControllerActionDescriptor Select(AttributeRoutingConvention convention, HttpRequest request)
         {
             RouteContext routeContext = new RouteContext(request.HttpContext);
-            return convention.SelectAction(routeContext).FirstOrDefault();
+            return convention.SelectAction(routeContext)?.FirstOrDefault();
         }
 #else
         private AttributeRoutingConvention CreateAttributeRoutingConvention(

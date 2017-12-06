@@ -4,9 +4,12 @@
 #if NETCORE
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 #else
 using System;
 using System.Collections.Generic;
@@ -44,8 +47,11 @@ namespace Microsoft.Test.AspNet.OData.Factories
 #if NETCORE
         public static IEnumerable<ControllerActionDescriptor> Create(IRouteBuilder routeBuilder, string name, Type controllerType)
         {
+            // Create descriptors. Search for non-public methods to pick up public methods in nested classes
+            // as controllers are usually a nested class for the test class ad by default, this are marked private.
             List<ControllerActionDescriptor> descriptors = new List<ControllerActionDescriptor>();
-            foreach (MethodInfo methodInfo in controllerType.GetMethods(BindingFlags.Public))
+            IEnumerable<MethodInfo> methods = controllerType.GetTypeInfo().DeclaredMethods;
+            foreach (MethodInfo methodInfo in methods)
             {
                 ControllerActionDescriptor descriptor = new ControllerActionDescriptor();
                 descriptor.ControllerName = name;
@@ -54,7 +60,18 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 descriptor.DisplayName = methodInfo.Name;
                 descriptor.MethodInfo = methodInfo;
                 descriptors.Add(descriptor);
+
+                // For attribute routing tests, stash the root service provider on the descriptor.
+                descriptor.Properties["serviceProvider"] = routeBuilder.ServiceProvider;
+
             }
+
+            // Add these descriptors to the global IActionDescriptorCollectionProvider.
+            TestActionDescriptorCollectionProvider actionDescriptorCollectionProvider =
+                    routeBuilder.ServiceProvider.GetRequiredService<IActionDescriptorCollectionProvider>()
+                    as TestActionDescriptorCollectionProvider;
+
+            actionDescriptorCollectionProvider.TestActionDescriptors.AddRange(descriptors);
 
             return descriptors;
         }

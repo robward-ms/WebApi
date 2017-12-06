@@ -53,6 +53,9 @@ namespace Microsoft.Test.AspNet.OData.Factories
             serviceCollection.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
             serviceCollection.AddOData();
 
+            // For routing tests, add an IActionDescriptorCollectionProvider.
+            serviceCollection.AddSingleton<IActionDescriptorCollectionProvider, TestActionDescriptorCollectionProvider>();
+
             // Add an action select to return a default descriptor.
             var mockAction = new Mock<ActionDescriptor>();
             ActionDescriptor actionDescriptor = mockAction.Object;

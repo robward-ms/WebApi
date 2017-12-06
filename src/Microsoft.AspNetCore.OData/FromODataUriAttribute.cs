@@ -55,7 +55,12 @@ namespace Microsoft.AspNet.OData
                 {
                     // Look in route data for a ODataParameterValue.
                     object valueAsObject = null;
-                    if (bindingContext.ActionContext.RouteData.Values.TryGetValue(modelName, out valueAsObject))
+                    if (!bindingContext.HttpContext.Request.ODataFeature().RoutingConventionsStore.TryGetValue(modelName, out valueAsObject))
+                    {
+                        bindingContext.ActionContext.RouteData.Values.TryGetValue(modelName, out valueAsObject);
+                    }
+
+                    if (valueAsObject != null)
                     {
                         StringValues stringValues = new StringValues(valueAsObject.ToString());
                         valueProviderResult = new ValueProviderResult(stringValues);
