@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if !NETCORE
 using System;
 using System.Reflection;
-#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Factories;
@@ -27,6 +26,7 @@ namespace Microsoft.Test.AspNet.OData
             Type parameterType = typeof(Guid);
             Mock<ParameterInfo> parameterInfoMock = new Mock<ParameterInfo>();
             parameterInfoMock.Setup(info => info.ParameterType).Returns(parameterType);
+
             ReflectedHttpParameterDescriptor parameter = new ReflectedHttpParameterDescriptor();
             parameter.Configuration = config;
             parameter.ParameterInfo = parameterInfoMock.Object;
@@ -52,3 +52,4 @@ namespace Microsoft.Test.AspNet.OData
         }
     }
 }
+#endif

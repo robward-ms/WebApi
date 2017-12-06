@@ -300,15 +300,15 @@ namespace Microsoft.Test.AspNet.OData
             ODataNullValueMessageHandler handler = new ODataNullValueMessageHandler();
             if (originalResponse != null)
             {
-                handler.InnerHandler = new TestMessageHandler(originalResponse)
-            };
+                handler.InnerHandler = new TestMessageHandler(originalResponse);
+            }
 
             return handler;
         }
 
         private HttpResponseMessage SendToHandler(
             ODataNullValueMessageHandler handler,
-            AspNetCore.Http.HttpRequest request)
+            HttpRequestMessage request)
         {
             return handler.SendAsync(request).Result;
         }
