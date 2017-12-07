@@ -80,27 +80,33 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override bool CanRead(InputFormatterContext context)
         {
+            HttpRequest request = context.HttpContext.Request;
+            if (request == null)
+            {
+                throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
+            }
+
+            // Ignore non-OData requests.
+            if (request.ODataFeature().Path == null)
+            {
+                return false;
+            }
+
             Type type = context.ModelType;
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
 
-            HttpRequest request = context.HttpContext.Request;
-            if (request != null)
-            {
-                EnsureRequestContainer(request);
+            EnsureRequestContainer(request);
 
-                return ODataInputFormatterHelper.CanReadType(
-                    type,
-                    request.GetModel(),
-                    request.ODataFeature().Path,
-                    _payloadKinds,
-                    (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
-                    (objectType) => _deserializerProvider.GetODataDeserializer(objectType, request));
-            }
-
-            return false;
+            return ODataInputFormatterHelper.CanReadType(
+                type,
+                request.GetModel(),
+                request.ODataFeature().Path,
+                _payloadKinds,
+                (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
+                (objectType) => _deserializerProvider.GetODataDeserializer(objectType, request));
         }
 
         /// <inheritdoc/>

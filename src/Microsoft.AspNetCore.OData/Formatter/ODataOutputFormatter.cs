@@ -87,25 +87,71 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
+            HttpRequest request = context.HttpContext.Request;
+            if (request == null)
+            {
+                throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
+            }
+
+            // Ignore non-OData requests.
+            if (request.ODataFeature().Path == null)
+            {
+                return false;
+            }
+
             Type type = context.Object.GetType();
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
 
-            HttpRequest request = context.HttpContext.Request;
-            if (request != null)
-            {
-                EnsureRequestContainer(request);
+            EnsureRequestContainer(request);
 
-                return ODataOutputFormatterHelper.CanWriteType(
-                    type,
-                    _payloadKinds,
-                    new WebApiRequestMessage(request),
-                    (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, request));
+            return ODataOutputFormatterHelper.CanWriteType(
+                type,
+                _payloadKinds,
+                new WebApiRequestMessage(request),
+                (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, request));
+        }
+
+        /// <inheritdoc/>
+        public override void WriteResponseHeaders(OutputFormatterWriteContext context)
+        {
+            Type type = context.ObjectType;
+            if (type == null)
+            {
+                throw Error.ArgumentNull("type");
             }
 
-            return false;
+            HttpRequest request = context.HttpContext.Request;
+            if (request == null)
+            {
+                throw Error.InvalidOperation(SRResources.WriteToStreamAsyncMustHaveRequest);
+            }
+
+            HttpResponse response = context.HttpContext.Response;
+            MediaTypeHeaderValue contentType = GetContentType(request.GetTypedHeaders()?.ContentType?.MediaType.Value);
+
+            // Determine the content type.
+            MediaTypeHeaderValue newMediaType = null;
+            if (ODataOutputFormatterHelper.TryGetContentHeader(type, contentType, out newMediaType))
+            {
+                response.Headers[ContentTypeHeader] = new StringValues(newMediaType.ToString());
+            }
+
+            // Set the character set.
+            IEnumerable<string> acceptCharsetValues = request.GetTypedHeaders()?.AcceptCharset.Select(cs => cs.Value.Value);
+            MediaTypeHeaderValue currentContentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
+
+            string newCharSet = string.Empty;
+            if (ODataOutputFormatterHelper.TryGetCharSet(currentContentType, acceptCharsetValues, out newCharSet))
+            {
+                currentContentType.CharSet = newCharSet;
+                response.Headers[ContentTypeHeader] = new StringValues(currentContentType.ToString());
+            }
+
+            // Add version header.
+            response.Headers[ODataVersionConstraint.ODataServiceVersionHeader] = ODataUtils.ODataVersionToString(_version);
         }
 
         /// <inheritdoc/>
@@ -126,16 +172,9 @@ namespace Microsoft.AspNet.OData.Formatter
 
             try
             {
-
                 HttpResponse response = context.HttpContext.Response;
                 Uri baseAddress = GetBaseAddressInternal(request);
-
-                string contentTypeValue = request.GetTypedHeaders()?.ContentType?.MediaType.Value;
-                MediaTypeHeaderValue contentType = null;
-                if (!string.IsNullOrEmpty(contentTypeValue))
-                {
-                    MediaTypeHeaderValue.TryParse(contentTypeValue, out contentType);
-                }
+                MediaTypeHeaderValue contentType = GetContentType(request.GetTypedHeaders()?.ContentType?.MediaType.Value);
 
                 Func<ODataSerializerContext> getODataSerializerContext = () =>
                 {
@@ -161,28 +200,6 @@ namespace Microsoft.AspNet.OData.Formatter
                     (edmType) => _serializerProvider.GetEdmTypeSerializer(edmType),
                     (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, request),
                     getODataSerializerContext);
-
-                // Determine the content type.
-                MediaTypeHeaderValue newMediaType = null;
-                if (ODataOutputFormatterHelper.TryGetContentHeader(type, contentType, out newMediaType))
-                {
-                    response.Headers[ContentTypeHeader] = new StringValues(newMediaType.ToString());
-                }
-
-                // Set the character set.
-                IEnumerable<string> acceptCharsetValues = request.GetTypedHeaders()?.AcceptCharset.Select(cs => cs.Value.Value);
-
-                MediaTypeHeaderValue currentContentType = contentType;
-                string newCharSet = string.Empty;
-                if (MediaTypeHeaderValue.TryParse(contentTypeValue, out currentContentType) &&
-                    ODataOutputFormatterHelper.TryGetCharSet(currentContentType, acceptCharsetValues, out newCharSet))
-                {
-                    currentContentType.CharSet = newCharSet;
-                    response.Headers[ContentTypeHeader] = new StringValues(currentContentType.ToString());
-                }
-
-                // Add version header.
-                response.Headers[ODataVersionConstraint.ODataServiceVersionHeader] = ODataUtils.ODataVersionToString(_version);
 
                 return TaskHelpers.Completed();
             }
@@ -239,6 +256,17 @@ namespace Microsoft.AspNet.OData.Formatter
             {
                 serializerProviderProxy.RequestContainer = request.GetRequestContainer();
             }
+        }
+
+        private MediaTypeHeaderValue GetContentType(string contentTypeValue)
+        {
+            MediaTypeHeaderValue contentType = null;
+            if (!string.IsNullOrEmpty(contentTypeValue))
+            {
+                MediaTypeHeaderValue.TryParse(contentTypeValue, out contentType);
+            }
+
+            return contentType;
         }
     }
 }
