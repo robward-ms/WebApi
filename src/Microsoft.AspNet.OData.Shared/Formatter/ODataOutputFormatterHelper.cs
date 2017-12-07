@@ -1,26 +1,18 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License.  See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
+#if NETFX // SingleValue on AspNet comes form the platform.
 using System.Web.Http;
-using System.Web.Http.Routing;
-using Microsoft.AspNet.OData.Adapters;
-using Microsoft.AspNet.OData.Batch;
+#endif
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Interfaces;
-using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
-using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -28,19 +20,16 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
-    internal partial class ODataMediaTypeOutputFormatter
+    internal static class ODataOutputFormatterHelper
     {
-        /// <inheritdoc/>
-        public static bool SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+        internal static bool TryGetContentHeader(Type type, MediaTypeHeaderValue mediaType, out MediaTypeHeaderValue newMediaType)
         {
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
-            if (headers == null)
-            {
-                throw Error.ArgumentNull("headers");
-            }
+
+            newMediaType = null;
 
             // When the user asks for application/json we really need to set the content type to
             // application/json; odata.metadata=minimal. If the user provides the media type and is
@@ -60,7 +49,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     mediaType.Parameters.Add(new NameValueHeaderValue("odata.metadata", "minimal"));
                 }
 
-                headers.ContentType = (MediaTypeHeaderValue)((ICloneable)mediaType).Clone();
+                newMediaType = (MediaTypeHeaderValue)((ICloneable)mediaType).Clone();
                 return true;
             }
             else
@@ -70,29 +59,29 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        // headers are read and manipulated
-        // requestHeaders are read
-        // version needed to call TryAddWithoutValidation on headers.
-        public static void SetCharSetAndVersion(HttpContentHeaders headers, HttpRequestHeaders requestHeaders, ODataVersion version)
+        internal static bool TryGetCharSet(MediaTypeHeaderValue mediaType, IEnumerable<string> acceptCharsetValues, out string charSet)
         {
+            charSet = String.Empty;
+
             // In general, in Web API we pick a default charset based on the supported character sets
             // of the formatter. However, according to the OData spec, the service shouldn't be sending
             // a character set unless explicitly specified, so if the client didn't send the charset we chose
             // we just clean it.
-            if (headers.ContentType != null &&
-                !requestHeaders.AcceptCharset
-                    .Any(cs => cs.Value.Equals(headers.ContentType.CharSet, StringComparison.OrdinalIgnoreCase)))
+            if (mediaType != null &&
+                !acceptCharsetValues
+                    .Any(cs => cs.Equals(mediaType.CharSet, StringComparison.OrdinalIgnoreCase)))
             {
-                headers.ContentType.CharSet = String.Empty;
+                return true;
             }
 
-            headers.TryAddWithoutValidation(
-                ODataVersionConstraint.ODataServiceVersionHeader,
-                ODataUtils.ODataVersionToString(version));
+            return false;
         }
 
-        /// <inheritdoc/>
-        public static bool CanWriteType(Type type,IWebApiRequestMessage internalRequest, IEnumerable<ODataPayloadKind> payloadKinds, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        internal static bool CanWriteType(
+            Type type,
+            IEnumerable<ODataPayloadKind> payloadKinds,
+            IWebApiRequestMessage internalRequest,
+            Func<Type, ODataSerializer> getODataPayloadSerializer)
         {
             if (type == null)
             {
@@ -115,12 +104,21 @@ namespace Microsoft.AspNet.OData.Formatter
             return payloadKind == null ? false : payloadKinds.Contains(payloadKind.Value);
         }
 
-        // content only needed for content headers.
-        // contentHeaders is used for content type.
-        // version is used for GetWriterSettings.
-        // request headers used to get annotationFilter
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
-        public static void WriteToStream(Type type, object value, Stream writeStream, HttpContent content, HttpContentHeaders contentHeaders, IEdmModel model, IWebApiUrlHelper urlHelper, ODataVersion version, IWebApiRequestMessage internalRequest, IWebApiHeaders requestHeaders, Uri baseAddress, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer, Func<ODataSerializerContext> getODataSerializerContext)
+        internal static void WriteToStream(
+            Type type,
+            object value,
+            IEdmModel model,
+            ODataVersion version,
+            Uri baseAddress,
+            MediaTypeHeaderValue contentType,
+            IWebApiUrlHelper internaUrlHelper,
+            IWebApiRequestMessage internalRequest,
+            IWebApiHeaders internalRequestHeaders,
+            Func<IServiceProvider, ODataMessageWrapper> getODataMessageWrapper,
+            Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer,
+            Func<Type, ODataSerializer> getODataPayloadSerializer,
+            Func<ODataSerializerContext> getODataSerializerContext)
         {
             if (model == null)
             {
@@ -133,16 +131,16 @@ namespace Microsoft.AspNet.OData.Formatter
             IEdmNavigationSource targetNavigationSource = path == null ? null : path.NavigationSource;
 
             // serialize a response
-            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(requestHeaders);
+            string preferHeader = RequestPreferenceHelpers.GetRequestPreferHeader(internalRequestHeaders);
             string annotationFilter = null;
             if (!String.IsNullOrEmpty(preferHeader))
             {
-                ODataMessageWrapper messageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers);
+                ODataMessageWrapper messageWrapper = getODataMessageWrapper(null);
                 messageWrapper.SetHeader(RequestPreferenceHelpers.PreferHeaderName, preferHeader);
                 annotationFilter = messageWrapper.PreferHeader().AnnotationFilter;
             }
 
-            ODataMessageWrapper responseMessageWrapper = ODataMessageWrapperHelper.Create(writeStream, content.Headers, internalRequest.RequestContainer);
+            ODataMessageWrapper responseMessageWrapper = getODataMessageWrapper(internalRequest.RequestContainer);
             IODataResponseMessage responseMessage = responseMessageWrapper;
             if (annotationFilter != null)
             {
@@ -154,7 +152,7 @@ namespace Microsoft.AspNet.OData.Formatter
             writerSettings.Version = version;
             writerSettings.Validations = writerSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-            string metadataLink = urlHelper.CreateODataLink(MetadataSegment.Instance);
+            string metadataLink = internaUrlHelper.CreateODataLink(MetadataSegment.Instance);
 
             if (metadataLink == null)
             {
@@ -172,9 +170,8 @@ namespace Microsoft.AspNet.OData.Formatter
             };
 
             ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
-            if (contentHeaders != null && contentHeaders.ContentType != null)
+            if (contentType != null)
             {
-                MediaTypeHeaderValue contentType = contentHeaders.ContentType;
                 IEnumerable<KeyValuePair<string, string>> parameters =
                     contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
                 metadataLevel = ODataMediaTypes.GetMetadataLevel(contentType.MediaType, parameters);
@@ -196,7 +193,7 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         // Also has AspNet-specific class, SingleResult. Could put that check in TypeHelper, which has #Ifdef already.
-        private static ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        private static ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type, ODataSerializer> getODataPayloadSerializer)
         {
             // SingleResult<T> should be serialized as T.
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
@@ -246,7 +243,7 @@ namespace Microsoft.AspNet.OData.Formatter
             return null;
         }
 
-        private static ODataSerializer GetSerializer(Type type, object value, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type,ODataSerializer> getODataPayloadSerializer)
+        private static ODataSerializer GetSerializer(Type type, object value, IWebApiRequestMessage internalRequest, Func<IEdmTypeReference, ODataSerializer> getEdmTypeSerializer, Func<Type, ODataSerializer> getODataPayloadSerializer)
         {
             ODataSerializer serializer;
 

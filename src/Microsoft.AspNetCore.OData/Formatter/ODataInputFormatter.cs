@@ -3,25 +3,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Common;
-using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
-using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
-using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
-using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
@@ -30,16 +24,12 @@ namespace Microsoft.AspNet.OData.Formatter
     /// </summary>
     public class ODataInputFormatter : TextInputFormatter
     {
-        private readonly ODataVersion _version;
-
         /// <summary>
         /// The set of payload kinds this formatter will accept in CanReadType.
         /// </summary>
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
 
         private readonly ODataDeserializerProvider _deserializerProvider;
-
-        private HttpRequest _request;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataInputFormatter"/> class.
@@ -68,48 +58,6 @@ namespace Microsoft.AspNet.OData.Formatter
 
             _deserializerProvider = deserializerProvider;
             _payloadKinds = payloadKinds;
-
-            _version = ODataVersionConstraint.DefaultODataVersion;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ODataInputFormatter"/> class.
-        /// </summary>
-        /// <param name="formatter">The <see cref="ODataInputFormatter"/> to copy settings from.</param>
-        /// <param name="version">The OData version that this formatter supports.</param>
-        /// <param name="request">The <see cref="HttpRequest"/> for the per-request formatter instance.</param>
-        internal ODataInputFormatter(ODataInputFormatter formatter, ODataVersion version, HttpRequest request)
-        {
-            if (request == null)
-            {
-                throw Error.ArgumentNull("request");
-            }
-
-            Contract.Assert(formatter._deserializerProvider != null);
-            Contract.Assert(formatter._payloadKinds != null);
-
-            // Parameter 1: formatter
-
-            // Except for the other two parameters, this constructor is a copy constructor, and we need to copy
-            // everything on the other instance.
-
-            // Copy this class's private fields and internal properties.
-            _deserializerProvider = formatter._deserializerProvider;
-            _payloadKinds = formatter._payloadKinds;
-
-            // Parameter 2: version
-            _version = version;
-
-            // Parameter 3: request
-            Request = request;
-
-            if (_deserializerProvider.GetType() == typeof(ODataDeserializerProviderProxy))
-            {
-                _deserializerProvider = new ODataDeserializerProviderProxy
-                {
-                    RequestContainer = request.GetRequestContainer()
-                };
-            }
         }
 
         /// <summary>
@@ -129,323 +77,100 @@ namespace Microsoft.AspNet.OData.Formatter
         /// </summary>
         public Func<HttpRequest, Uri> BaseAddressFactory { get; set; }
 
-        /// <summary>
-        /// The request message associated with the per-request formatter instance.
-        /// </summary>
-        public HttpRequest Request
-        {
-            get { return _request; }
-            set
-            {
-                ODataDeserializerProviderProxy deserializerProviderProxy = _deserializerProvider as ODataDeserializerProviderProxy;
-                if (deserializerProviderProxy != null && deserializerProviderProxy.RequestContainer == null)
-                {
-                    deserializerProviderProxy.RequestContainer = value.GetRequestContainer();
-                }
-
-                _request = value;
-            }
-        }
-
-        //public override TextOutputFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request, MediaTypeHeaderValue mediaType)
-        //{
-        //    // call base to validate parameters
-        //    base.GetPerRequestFormatterInstance(type, request, mediaType);
-
-        //    if (Request != null && Request == request)
-        //    {
-        //        // If the request is already set on this formatter, return itself.
-        //        return this;
-        //    }
-        //    else
-        //    {
-        //        ODataVersion version = GetODataResponseVersion(request);
-        //        return new ODataInputFormatter(this, version, request);
-        //    }
-        //}
-
-        //public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
-        //{
-        //    if (type == null)
-        //    {
-        //        throw Error.ArgumentNull("type");
-        //    }
-        //    if (headers == null)
-        //    {
-        //        throw Error.ArgumentNull("headers");
-        //    }
-
-        //    // When the user asks for application/json we really need to set the content type to
-        //    // application/json; odata.metadata=minimal. If the user provides the media type and is
-        //    // application/json we are going to add automatically odata.metadata=minimal. Otherwise we are
-        //    // going to fallback to the default implementation.
-
-        //    // When calling this formatter as part of content negotiation the content negotiator will always
-        //    // pick a non null media type. In case the user creates a new ObjectContent<T> and doesn't pass in a
-        //    // media type, we delegate to the base class to rely on the default behavior. It's the user's
-        //    // responsibility to pass in the right media type.
-
-        //    if (mediaType != null)
-        //    {
-        //        if (mediaType.MediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase) &&
-        //            !mediaType.Parameters.Any(p => p.Name.Equals("odata.metadata", StringComparison.OrdinalIgnoreCase)))
-        //        {
-        //            mediaType.Parameters.Add(new NameValueHeaderValue("odata.metadata", "minimal"));
-        //        }
-
-        //        headers.ContentType = (MediaTypeHeaderValue)((ICloneable)mediaType).Clone();
-        //    }
-        //    else
-        //    {
-        //        // This is the case when a user creates a new ObjectContent<T> passing in a null mediaType
-        //        base.SetDefaultContentHeaders(type, headers, mediaType);
-        //    }
-
-        //    // In general, in Web API we pick a default charset based on the supported character sets
-        //    // of the formatter. However, according to the OData spec, the service shouldn't be sending
-        //    // a character set unless explicitly specified, so if the client didn't send the charset we chose
-        //    // we just clean it.
-        //    if (headers.ContentType != null &&
-        //        !Request.Headers.AcceptCharset
-        //            .Any(cs => cs.Value.Equals(headers.ContentType.CharSet, StringComparison.OrdinalIgnoreCase)))
-        //    {
-        //        headers.ContentType.CharSet = String.Empty;
-        //    }
-
-        //    headers.TryAddWithoutValidation(
-        //        HttpRequestProperties.ODataServiceVersionHeader,
-        //        ODataUtils.ODataVersionToString(_version));
-        //}
-
         /// <inheritdoc/>
         public override bool CanRead(InputFormatterContext context)
         {
             Type type = context.ModelType;
-
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
 
-            if (Request != null)
+            HttpRequest request = context.HttpContext.Request;
+            if (request != null)
             {
-                IEdmModel model = Request.GetModel();
-                IEdmTypeReference expectedPayloadType;
-                ODataDeserializer deserializer = GetDeserializer(type, Request.ODataFeature().Path, model,
-                    _deserializerProvider, out expectedPayloadType);
-                if (deserializer != null)
-                {
-                    return _payloadKinds.Contains(deserializer.ODataPayloadKind);
-                }
+                EnsureRequestContainer(request);
+
+                return ODataInputFormatterHelper.CanReadType(
+                    type,
+                    request.GetModel(),
+                    request.ODataFeature().Path,
+                    _payloadKinds,
+                    (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
+                    (objectType) => _deserializerProvider.GetODataDeserializer(objectType, request));
             }
 
             return false;
         }
 
         /// <inheritdoc/>
-        //[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
-            //public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
             Type type = context.ModelType;
-            HttpRequest request = context.HttpContext.Request;
-            HttpResponse response = context.HttpContext.Response;
-
-            if (request == null)
+            if (type == null)
             {
-                throw Error.ArgumentNull("request");
+                throw Error.ArgumentNull("type");
             }
 
-            if (Request == null)
+            HttpRequest request = context.HttpContext.Request;
+            if (request == null)
             {
                 throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
             }
 
+            // If content length is 0 then return default value for this type
+            RequestHeaders contentHeaders = request.GetTypedHeaders();
+            object defaultValue = GetDefaultValueForType(type);
+            if (contentHeaders == null || contentHeaders.ContentLength == 0)
+            {
+                return Task.FromResult(InputFormatterResult.Success(defaultValue));
+            }
+
             try
             {
-                object content = ReadFromStream(type, request.Body, request.Headers, request.ContentType, request.ContentLength);
-                return InputFormatterResult.SuccessAsync(content);
+                Func<ODataDeserializerContext> getODataDeserializerContext = () =>
+                {
+                    return new ODataDeserializerContext
+                    {
+                        Request = request,
+                    };
+                };
+
+                Action<Exception> logErrorAction = (ex) =>
+                {
+                    throw ex;
+                };
+
+                List<IDisposable> toDispose = new List<IDisposable>();
+
+                EnsureRequestContainer(request);
+
+                object result = ODataInputFormatterHelper.ReadFromStream(
+                    type,
+                    defaultValue,
+                    request.GetModel(),
+                    GetBaseAddressInternal(request),
+                    new WebApiRequestMessage(request),
+                    () => ODataMessageWrapperHelper.Create(request.Body, request.Headers, request.GetODataContentIdMapping(), request.GetRequestContainer()),
+                    (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
+                    (objectType) => _deserializerProvider.GetODataDeserializer(objectType, request),
+                    getODataDeserializerContext,
+                    (disposable) => toDispose.Add(disposable),
+                    logErrorAction);
+
+                foreach (IDisposable obj in toDispose)
+                {
+                    obj.Dispose();
+                }
+
+                return Task.FromResult(InputFormatterResult.Success(result));
             }
             catch (Exception ex)
             {
-                return TaskHelpers.FromError<InputFormatterResult>(ex);
+                context.ModelState.AddModelError(context.ModelName, ex, context.Metadata);
+                return Task.FromResult(InputFormatterResult.Failure());
             }
-        }
-
-        /// <inheritdoc/>
-        //[SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "ODataMessageReader disposed later with request.")]
-        private object ReadFromStream(Type type, Stream readStream, IHeaderDictionary requestHeaders, string contentType, long? contentLength)
-        {
-            object result;
-
-            // If content length is 0 then return default value for this type
-            if (!contentLength.HasValue || contentLength.Value == 0)
-            {
-                result = GetDefaultValueForType(type);
-            }
-            else
-            {
-                IEdmModel model = Request.GetModel();
-                IEdmTypeReference expectedPayloadType;
-                ODataDeserializer deserializer = GetDeserializer(type, Request.ODataFeature().Path, model, _deserializerProvider, out expectedPayloadType);
-                if (deserializer == null)
-                {
-                    throw Error.Argument("type", SRResources.FormatterReadIsNotSupportedForType, type.FullName, GetType().FullName);
-                }
-
-                try
-                {
-                    ODataMessageReaderSettings oDataReaderSettings = Request.GetReaderSettings();
-                    oDataReaderSettings.BaseUri = GetBaseAddressInternal(Request);
-                    oDataReaderSettings.Validations = oDataReaderSettings.Validations & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-
-                    IODataRequestMessage oDataRequestMessage = ODataMessageWrapperHelper.Create(readStream, requestHeaders, Request.GetODataContentIdMapping(), Request.GetRequestContainer());
-                    ODataMessageReader oDataMessageReader = new ODataMessageReader(oDataRequestMessage, oDataReaderSettings, model);
-
-                    ODataPath path = Request.ODataFeature().Path;
-                    ODataDeserializerContext readContext = new ODataDeserializerContext
-                    {
-                        Path = path,
-                        Model = model,
-                        Request = Request,
-                        ResourceType = type,
-                        ResourceEdmType = expectedPayloadType,
-                    };
-
-                    result = deserializer.Read(oDataMessageReader, type, readContext);
-                }
-                catch (Exception)
-                {
-                    result = GetDefaultValueForType(type);
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// This method is to get payload kind for untyped scenario.
-        /// </summary>
-        private ODataPayloadKind? GetEdmObjectPayloadKind(Type type)
-        {
-            if (Request.IsCountRequest())
-            {
-                return ODataPayloadKind.Value;
-            }
-
-            Type elementType;
-            if (TypeHelper.IsCollection(type, out elementType))
-            {
-                if (TypeHelper.IsTypeAssignableFrom(typeof(IEdmComplexObject), elementType) || TypeHelper.IsTypeAssignableFrom(typeof(IEdmEnumObject), elementType))
-                {
-                    return ODataPayloadKind.Collection;
-                }
-                else if (TypeHelper.IsTypeAssignableFrom(typeof(IEdmEntityObject), elementType))
-                {
-                    return ODataPayloadKind.ResourceSet;
-                }
-                else if (TypeHelper.IsTypeAssignableFrom(typeof(IEdmChangedObject), elementType))
-                {
-                    return ODataPayloadKind.Delta;
-                }
-            }
-            else
-            {
-                if (TypeHelper.IsTypeAssignableFrom(typeof(IEdmComplexObject), elementType) || TypeHelper.IsTypeAssignableFrom(typeof(IEdmEnumObject), elementType))
-                {
-                    return ODataPayloadKind.Property;
-                }
-                else if (TypeHelper.IsTypeAssignableFrom(typeof(IEdmEntityObject), elementType))
-                {
-                    return ODataPayloadKind.Resource;
-                }
-            }
-
-            return null;
-        }
-
-        private ODataDeserializer GetDeserializer(Type type, ODataPath path, IEdmModel model,
-            ODataDeserializerProvider deserializerProvider, out IEdmTypeReference expectedPayloadType)
-        {
-            expectedPayloadType = EdmLibHelpers.GetExpectedPayloadType(type, path, model);
-
-            // Get the deserializer using the CLR type first from the deserializer provider.
-            ODataDeserializer deserializer = deserializerProvider.GetODataDeserializer(type, Request);
-            if (deserializer == null && expectedPayloadType != null)
-            {
-                // we are in typeless mode, get the deserializer using the edm type from the path.
-                deserializer = deserializerProvider.GetEdmTypeDeserializer(expectedPayloadType);
-            }
-
-            return deserializer;
-        }
-
-        private ODataSerializer GetSerializer(Type type, object value, ODataSerializerProvider serializerProvider)
-        {
-            ODataSerializer serializer;
-
-            IEdmObject edmObject = value as IEdmObject;
-            if (edmObject != null)
-            {
-                IEdmTypeReference edmType = edmObject.GetEdmType();
-                if (edmType == null)
-                {
-                    throw new SerializationException(Error.Format(SRResources.EdmTypeCannotBeNull,
-                        edmObject.GetType().FullName, typeof(IEdmObject).Name));
-                }
-
-                serializer = serializerProvider.GetEdmTypeSerializer(edmType);
-                if (serializer == null)
-                {
-                    string message = Error.Format(SRResources.TypeCannotBeSerialized, edmType.ToTraceString());
-                    throw new SerializationException(message);
-                }
-            }
-            else
-            {
-                var applyClause = Request.ODataFeature().ApplyClause;
-                // get the most appropriate serializer given that we support inheritance.
-                if (applyClause == null)
-                {
-                    type = value == null ? type : value.GetType();
-                }
-
-                serializer = serializerProvider.GetODataPayloadSerializer(type, Request);
-                if (serializer == null)
-                {
-                    string message = Error.Format(SRResources.TypeCannotBeSerialized, type.Name);
-                    throw new SerializationException(message);
-                }
-            }
-
-            return serializer;
-        }
-
-        private static string GetRootElementName(ODataPath path)
-        {
-            if (path != null)
-            {
-                ODataPathSegment lastSegment = path.Segments.LastOrDefault();
-                if (lastSegment != null)
-                {
-                    OperationSegment actionSegment = lastSegment as OperationSegment;
-                    if (actionSegment != null)
-                    {
-                        IEdmAction action = actionSegment.Operations.Single() as IEdmAction;
-                        if (action != null)
-                        {
-                            return action.Name;
-                        }
-                    }
-
-                    PropertySegment propertyAccessSegment = lastSegment as PropertySegment;
-                    if (propertyAccessSegment != null)
-                    {
-                        return propertyAccessSegment.Property.Name;
-                    }
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -502,27 +227,13 @@ namespace Microsoft.AspNet.OData.Formatter
                 ODataVersionConstraint.DefaultODataVersion;
         }
 
-        // This function is used to determine whether an OData path includes operation (import) path segments.
-        // We use this function to make sure the value of ODataUri.Path in ODataMessageWriterSettings is null
-        // when any path segment is an operation. ODL will try to calculate the context URL if the ODataUri.Path
-        // equals to null.
-        private static bool IsOperationPath(ODataPath path)
+        private void EnsureRequestContainer(HttpRequest request)
         {
-            if (path == null)
+            ODataDeserializerProviderProxy deserializerProviderProxy = _deserializerProvider as ODataDeserializerProviderProxy;
+            if (deserializerProviderProxy != null && deserializerProviderProxy.RequestContainer == null)
             {
-                return false;
+                deserializerProviderProxy.RequestContainer = request.GetRequestContainer();
             }
-
-            foreach (ODataPathSegment segment in path.Segments)
-            {
-                if (segment is OperationSegment ||
-                    segment is OperationImportSegment)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

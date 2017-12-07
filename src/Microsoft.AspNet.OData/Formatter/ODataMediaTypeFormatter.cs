@@ -22,12 +22,8 @@ using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
-using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
-using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
-using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
@@ -42,9 +38,6 @@ namespace Microsoft.AspNet.OData.Formatter
         private readonly IEnumerable<ODataPayloadKind> _payloadKinds;
         private readonly ODataDeserializerProvider _deserializerProvider;
         private readonly ODataSerializerProvider _serializerProvider;
-
-        private readonly ODataMediaTypeInputFormatter _inputFormatter;
-        private readonly ODataMediaTypeOutputFormatter _outputFormatter;
 
         private HttpRequestMessage _request;
 
@@ -79,8 +72,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("payloadKinds");
             }
 
-            _inputFormatter = new ODataMediaTypeInputFormatter();
-            _outputFormatter = new ODataMediaTypeOutputFormatter();
             _deserializerProvider = deserializerProvider;
             _serializerProvider = serializerProvider;
             _payloadKinds = payloadKinds;
@@ -103,8 +94,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
-            Contract.Assert(formatter._inputFormatter != null);
-            Contract.Assert(formatter._outputFormatter != null);
             Contract.Assert(formatter._deserializerProvider != null);
             Contract.Assert(formatter._serializerProvider != null);
             Contract.Assert(formatter._payloadKinds != null);
@@ -115,8 +104,6 @@ namespace Microsoft.AspNet.OData.Formatter
             // everything on the other instance.
 
             // Copy this class's private fields and internal properties.
-            _inputFormatter = formatter._inputFormatter;
-            _outputFormatter = formatter._outputFormatter;
             _deserializerProvider = formatter._deserializerProvider;
             _serializerProvider = formatter._serializerProvider;
             _payloadKinds = formatter._payloadKinds;
@@ -190,14 +177,31 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         {
-            if (!ODataMediaTypeOutputFormatter.SetDefaultContentHeaders(type, headers, mediaType))
+            // Determine the content type or let base class handle it.
+            MediaTypeHeaderValue newMediaType = null;
+            if (ODataOutputFormatterHelper.TryGetContentHeader(type, mediaType, out newMediaType))
+            {
+                headers.ContentType = newMediaType;
+            }
+            else
             {
                 // This is the case when a user creates a new ObjectContent<T> passing in a null mediaType
                 base.SetDefaultContentHeaders(type, headers, mediaType);
             }
 
-            ODataMediaTypeOutputFormatter.SetCharSetAndVersion(headers, Request.Headers, _version);
+            // Set the character set.
+            IEnumerable<string> acceptCharsetValues = Request.Headers.AcceptCharset.Select(cs => cs.Value);
 
+            string newCharSet = string.Empty;
+            if (ODataOutputFormatterHelper.TryGetCharSet(headers.ContentType, acceptCharsetValues, out newCharSet))
+            {
+                headers.ContentType.CharSet = newCharSet;
+            }
+
+            // Add version header.
+            headers.TryAddWithoutValidation(
+                ODataVersionConstraint.ODataServiceVersionHeader,
+                ODataUtils.ODataVersionToString(_version));
         }
 
         /// <inheritdoc/>
@@ -210,17 +214,13 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                Func<Type, ODataDeserializer> getODataPayloadDeserializer = (objectType) =>
-                {
-                    return _deserializerProvider.GetODataDeserializer(objectType, Request);
-                };
-
-                Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer = (objectType) =>
-                {
-                    return _deserializerProvider.GetEdmTypeDeserializer(objectType);
-                };
-
-                return ODataMediaTypeInputFormatter.CanReadType(type, Request.GetModel(), Request.ODataProperties().Path, _payloadKinds, getEdmTypeDeserializer, getODataPayloadDeserializer);
+                return ODataInputFormatterHelper.CanReadType(
+                    type,
+                    Request.GetModel(),
+                    Request.ODataProperties().Path,
+                    _payloadKinds,
+                    (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
+                    (objectType) => _deserializerProvider.GetODataDeserializer(objectType, Request));
             }
 
             return false;
@@ -236,8 +236,11 @@ namespace Microsoft.AspNet.OData.Formatter
 
             if (Request != null)
             {
-                return ODataMediaTypeOutputFormatter.CanWriteType(type, new WebApiRequestMessage(Request),
-                    _payloadKinds, (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request));
+                return ODataOutputFormatterHelper.CanWriteType(
+                    type,
+                    _payloadKinds,
+                    new WebApiRequestMessage(Request),
+                    (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request));
             }
 
             return false;
@@ -245,6 +248,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
         /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling results for making ReadFromStream platform-agnostic.")]
         public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
         {
             if (type == null)
@@ -262,19 +266,17 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
             }
 
+            object defaultValue = GetDefaultValueForType(type);
+
+            // If content length is 0 then return default value for this type
+            HttpContentHeaders contentHeaders = (content == null) ? null : content.Headers;
+            if (contentHeaders == null || contentHeaders.ContentLength == 0)
+            {
+                return Task.FromResult(defaultValue);
+            }
+
             try
             {
-                object defaultValue = GetDefaultValueForType(type);
-                Uri baseAddress = GetBaseAddressInternal(Request);
-                Func<IEdmTypeReference, ODataDeserializer> getEdmTypeDeserializer = (objectType) =>
-                {
-                    return _deserializerProvider.GetEdmTypeDeserializer(objectType);
-                };
-
-                Func<Type, ODataDeserializer> getODataPayloadDeserializer = (objectType) =>
-                {
-                    return _deserializerProvider.GetODataDeserializer(objectType, Request);
-                };
                 Func<ODataDeserializerContext> getODataDeserializerContext = () =>
                 {
                     return new ODataDeserializerContext
@@ -283,9 +285,28 @@ namespace Microsoft.AspNet.OData.Formatter
                     };
                 };
 
+                Action<Exception> logErrorAction = (ex) =>
+                {
+                    if (formatterLogger == null)
+                    {
+                        throw ex;
+                    }
 
-                return Task.FromResult(_inputFormatter.ReadFromStream(type, defaultValue, readStream, content, formatterLogger, Request.GetModel(),
-                    baseAddress, Request, new WebApiRequestMessage(Request), getEdmTypeDeserializer, getODataPayloadDeserializer, getODataDeserializerContext));
+                    formatterLogger.LogError(String.Empty, ex);
+                };
+
+                return Task.FromResult(ODataInputFormatterHelper.ReadFromStream(
+                    type,
+                    defaultValue,
+                    Request.GetModel(),
+                    GetBaseAddressInternal(Request),
+                    new WebApiRequestMessage(Request),
+                    () => ODataMessageWrapperHelper.Create(readStream, contentHeaders, Request.GetODataContentIdMapping(), Request.GetRequestContainer()),
+                    (objectType) => _deserializerProvider.GetEdmTypeDeserializer(objectType),
+                    (objectType) => _deserializerProvider.GetODataDeserializer(objectType, Request),
+                    getODataDeserializerContext,
+                    (disposable) => Request.RegisterForDispose(disposable),
+                    logErrorAction));
             }
             catch (Exception ex)
             {
@@ -295,8 +316,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
         /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling",
-            Justification = "The complexity comes from refactoring to make this platform agnostic.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling results for making WriteToStream platform-agnostic.")]
         public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content,
             TransportContext transportContext, CancellationToken cancellationToken)
         {
@@ -317,7 +337,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 return TaskHelpers.Canceled();
             }
 
-            HttpContentHeaders contentHeaders = content == null ? null : content.Headers;
             try
             {
                 HttpConfiguration configuration = Request.GetConfiguration();
@@ -326,7 +345,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     throw Error.InvalidOperation(SRResources.RequestMustContainConfiguration);
                 }
 
-                Uri baseAddress = GetBaseAddressInternal(Request);
+                HttpContentHeaders contentHeaders = (content == null) ? null : content.Headers;
                 UrlHelper urlHelper = Request.GetUrlHelper() ?? new UrlHelper(Request);
 
                 Func<ODataSerializerContext> getODataSerializerContext = () =>
@@ -338,10 +357,20 @@ namespace Microsoft.AspNet.OData.Formatter
                     };
                 };
 
-                ODataMediaTypeOutputFormatter.WriteToStream(type, value, writeStream, content, contentHeaders, Request.GetModel(), new WebApiUrlHelper(urlHelper),
-                    _version, new WebApiRequestMessage(Request), new WebApiRequestHeaders(Request.Headers), baseAddress,
+                ODataOutputFormatterHelper.WriteToStream(
+                    type,
+                    value,
+                    Request.GetModel(),
+                    _version,
+                    GetBaseAddressInternal(Request),
+                    contentHeaders == null ? null : contentHeaders.ContentType,
+                    new WebApiUrlHelper(urlHelper),
+                    new WebApiRequestMessage(Request),
+                    new WebApiRequestHeaders(Request.Headers),
+                    (services) => ODataMessageWrapperHelper.Create(writeStream, contentHeaders, services),
                     (edmType) => _serializerProvider.GetEdmTypeSerializer(edmType),
-                    (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request), getODataSerializerContext);
+                    (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request),
+                    getODataSerializerContext);
 
                 return TaskHelpers.Completed();
             }
