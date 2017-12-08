@@ -7,9 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
-#if NETFX // SingleValue on AspNet comes form the platform.
-using System.Web.Http;
-#endif
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Interfaces;
@@ -80,6 +77,7 @@ namespace Microsoft.AspNet.OData.Formatter
         internal static bool CanWriteType(
             Type type,
             IEnumerable<ODataPayloadKind> payloadKinds,
+            bool isGenericSingleResult,
             IWebApiRequestMessage internalRequest,
             Func<Type, ODataSerializer> getODataPayloadSerializer)
         {
@@ -98,7 +96,7 @@ namespace Microsoft.AspNet.OData.Formatter
             }
             else
             {
-                payloadKind = GetClrObjectResponsePayloadKind(type, getODataPayloadSerializer);
+                payloadKind = GetClrObjectResponsePayloadKind(type, isGenericSingleResult, getODataPayloadSerializer);
             }
 
             return payloadKind == null ? false : payloadKinds.Contains(payloadKind.Value);
@@ -192,11 +190,10 @@ namespace Microsoft.AspNet.OData.Formatter
             }
         }
 
-        // Also has AspNet-specific class, SingleResult. Could put that check in TypeHelper, which has #Ifdef already.
-        private static ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, Func<Type, ODataSerializer> getODataPayloadSerializer)
+        private static ODataPayloadKind? GetClrObjectResponsePayloadKind(Type type, bool isGenericSingleResult, Func<Type, ODataSerializer> getODataPayloadSerializer)
         {
             // SingleResult<T> should be serialized as T.
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>))
+            if (isGenericSingleResult)
             {
                 type = type.GetGenericArguments()[0];
             }

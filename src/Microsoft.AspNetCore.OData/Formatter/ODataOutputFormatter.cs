@@ -24,7 +24,7 @@ namespace Microsoft.AspNet.OData.Formatter
     /// <summary>
     /// <see cref="TextOutputFormatter"/> class to handle OData.
     /// </summary>
-    public class ODataOutputFormatter : TextOutputFormatter
+    public class ODataOutputFormatter : TextOutputFormatter, IMediaTypeMappingCollection
     {
         internal const string ContentTypeHeader = "Content-Type";
 
@@ -84,13 +84,49 @@ namespace Microsoft.AspNet.OData.Formatter
         /// </summary>
         public Func<HttpRequest, Uri> BaseAddressFactory { get; set; }
 
+        /// <summary>
+        /// Gets a collection of <see cref="MediaTypeMapping"/> objects.
+        /// </summary>
+        public ICollection<MediaTypeMapping> MediaTypeMappings { get; } = new List<MediaTypeMapping>();
+
         /// <inheritdoc/>
         public override bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull("context");
+            }
+
+            // Allow the base class to make its determineation, which includes
+            // checks for SupportedMediaTypes.
+            if (!base.CanWriteResult(context))
+            {
+                return false;
+            }
+
+            // Ensure we have a valid request.
             HttpRequest request = context.HttpContext.Request;
             if (request == null)
             {
                 throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
+            }
+
+            // At this point, ContentType has been set by the base class. Let's make sure
+            // that the request satifies the mappings.
+            bool mappingFound = false;
+            foreach (MediaTypeMapping mapping in MediaTypeMappings)
+            {
+                if ((mapping.TryMatchMediaType(request) > 0) &&
+                    (mapping.MediaType == context.ContentType.Value))
+                {
+                    mappingFound = true;
+                    break;
+                }
+            }
+
+            if (!mappingFound)
+            {
+                return false;
             }
 
             // Ignore non-OData requests.
@@ -99,17 +135,21 @@ namespace Microsoft.AspNet.OData.Formatter
                 return false;
             }
 
+            // We need the type in order to write it.
             Type type = context.Object.GetType();
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
             }
 
+            // Ensure the _serializerProvider has the services form the request and see if
+            // the type can be written using the serializer.
             EnsureRequestContainer(request);
 
             return ODataOutputFormatterHelper.CanWriteType(
                 type,
                 _payloadKinds,
+                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>),
                 new WebApiRequestMessage(request),
                 (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, request));
         }
@@ -117,6 +157,11 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override void WriteResponseHeaders(OutputFormatterWriteContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull("context");
+            }
+
             Type type = context.ObjectType;
             if (type == null)
             {

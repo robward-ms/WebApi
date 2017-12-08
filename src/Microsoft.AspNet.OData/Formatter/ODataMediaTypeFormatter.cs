@@ -239,6 +239,7 @@ namespace Microsoft.AspNet.OData.Formatter
                 return ODataOutputFormatterHelper.CanWriteType(
                     type,
                     _payloadKinds,
+                    type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SingleResult<>),
                     new WebApiRequestMessage(Request),
                     (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, Request));
             }

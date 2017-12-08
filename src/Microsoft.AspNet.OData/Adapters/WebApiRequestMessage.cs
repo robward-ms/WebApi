@@ -67,7 +67,7 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public bool IsCountRequest()
         {
-            return ODataCountMediaTypeMapping.IsCountRequest(this.innerRequest);
+            return ODataCountMediaTypeMapping.IsCountRequest(this.innerRequest.ODataProperties().Path);
         }
 
         /// <summary>
