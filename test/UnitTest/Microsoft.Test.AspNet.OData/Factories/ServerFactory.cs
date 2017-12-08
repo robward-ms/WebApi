@@ -24,6 +24,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 #endif
@@ -99,6 +100,26 @@ namespace Microsoft.Test.AspNet.OData.Factories
             // AspNetCore does not have that can be used to append a profix anymore
             // just append the route to the prefix
             return Create(routeName, route + "/" + routePrefix, controllers, getModelFunction);
+        }
+
+
+        /// <summary>
+        /// Create an TestServer with formatters.
+        /// </summary>
+        /// <param name="route">The route.</param>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An TestServer.</returns>
+        public static TestServer CreateWithFormatters(
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
+            Func<IRouteBuilder, IEdmModel> getModelFunction)
+        {
+            // AspNetCore's create adds the formatters by default.
+            return Create(routeName, routePrefix, controllers, getModelFunction);
         }
 
         /// <summary>
@@ -184,6 +205,26 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Func<HttpConfiguration, IEdmModel> getModelFunction)
         {
             HttpConfiguration configuration = new HttpConfiguration(new HttpRouteCollection(route));
+            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+        }
+
+        /// <summary>
+        /// Create an TestServer with formatters.
+        /// </summary>
+        /// <param name="routeName">The route name.</param>
+        /// <param name="routePrefix">The route prefix.</param>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <returns>An HttpServer.</returns>
+        public static HttpServer CreateWithFormatters(
+            string routeName,
+            string routePrefix,
+            Type[] controllers,
+            Func<HttpConfiguration, IEdmModel> getModelFunction)
+        {
+            HttpConfiguration configuration = new HttpConfiguration();
+            configuration.Formatters.Clear();
+            configuration.Formatters.AddRange(ODataMediaTypeFormatters.Create());
             return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
         }
 

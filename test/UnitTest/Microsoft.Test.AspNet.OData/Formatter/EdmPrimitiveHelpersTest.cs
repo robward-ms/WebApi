@@ -3,7 +3,9 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+#if NETFX // Binary only supported on Net Framework
 using System.Data.Linq;
+#endif
 using System.Xml.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter;
@@ -31,7 +33,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                      { (long?)1 ,(ulong?)1, typeof(ulong?)},
                     //(Stream) new MemoryStream(new byte[] { 1 }), // TODO: Enable once we have support for streams
                      { "<element xmlns=\"namespace\" />" ,(XElement) new XElement(XName.Get("element","namespace")), typeof(XElement)},
+#if NETFX // Binary only supported on Net Framework
                      { new byte[] {1}, new Binary(new byte[] {1}), typeof(Binary)}
+#endif
                 };
             }
         }

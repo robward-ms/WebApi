@@ -1,6 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.IO;
+using System.Net.Http;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Deserialization;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Formatter.Serialization;
+using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Xunit;
+#else
 using System;
 using System.Data.Linq;
 using System.IO;
@@ -19,6 +36,7 @@ using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 {
@@ -38,7 +56,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
                     { (UInt32)1, (long)1 },
                     { (UInt64)1, (long)1 },
                     //(Stream) new MemoryStream(new byte[] { 1 }), // TODO: Enable once we have support for streams
+#if NETFX // Binary only supported on Net Framework
                     { new Binary(new byte[] {1}), new byte[] {1} }
+#endif
                 };
             }
         }

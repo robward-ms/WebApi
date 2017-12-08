@@ -1,6 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Linq;
+using System.Net.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Xunit;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#else
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +28,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {

@@ -1,6 +1,30 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Runtime.Serialization;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +48,9 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
+#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
     public class ODataResourceSetSerializerTests
@@ -735,3 +761,4 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         }
     }
 }
+#endif

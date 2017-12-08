@@ -1,6 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,13 +33,13 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
     public class NullCollectionsTests
     {
         private HttpClient _client;
-        private HttpConfiguration _config;
 
         public enum NullCollectionsTestMode
         {
@@ -44,13 +60,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Vehicle>("vehicles");
             IEdmModel model = builder.GetEdmModel();
 
-            _config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullCollectionsTestsController) });
-            _config.Formatters.Clear();
-            _config.Formatters.AddRange(ODataMediaTypeFormatters.Create());
-            _config.MapODataServiceRoute(model);
+            var controllers = new[] { typeof(NullCollectionsTestsController) };
+            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => model);
+            _client = TestServerFactory.CreateClient(server);
 
-            HttpServer server = new HttpServer(_config);
-            _client = new HttpClient(server);
         }
 
         [Theory]

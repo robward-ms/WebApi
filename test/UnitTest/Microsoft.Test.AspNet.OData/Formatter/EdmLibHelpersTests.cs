@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+#if NETFX // Binary only supported on Net Framework
 using System.Data.Linq;
+#endif
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.AspNet.OData.Builder;
@@ -39,10 +41,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [InlineData(typeof(uint?), typeof(long?))]
         [InlineData(typeof(ulong?), typeof(long?))]
         [InlineData(typeof(char[]), typeof(string))]
-        [InlineData(typeof(Binary), typeof(byte[]))]
         [InlineData(typeof(XElement), typeof(string))]
         [InlineData(typeof(DateTime), typeof(DateTimeOffset))]
         [InlineData(typeof(DateTime?), typeof(DateTimeOffset?))]
+#if NETFX // Binary only supported on Net Framework
+        [InlineData(typeof(Binary), typeof(byte[]))]
+#endif
         public void IsNonstandardEdmPrimitive_Returns_True(Type primitiveType, Type mappedType)
         {
             bool isNonstandardEdmPrimtive;

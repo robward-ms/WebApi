@@ -1,6 +1,33 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Deserialization;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +54,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -43,9 +71,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void GetEntryInODataJsonLightFormat(string metadata, string expect)
         {
             // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            using (HttpServer host = new HttpServer(configuration))
-            using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient())
             using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("People(10)",
                 MediaTypeWithQualityHeaderValue.Parse(metadata)))
 
@@ -64,9 +90,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void GetSingletonInODataJsonLightFormat(string metadata, string expect)
         {
             // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            using (HttpServer host = new HttpServer(configuration))
-            using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient())
             using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("President",
                 MediaTypeWithQualityHeaderValue.Parse(metadata)))
 
@@ -131,9 +155,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             // Arrange
             IEdmModel model = CreateModelForFullMetadata(sameLinksForIdAndEdit: false, sameLinksForEditAndRead: false);
 
-            using (HttpConfiguration configuration = CreateConfiguration(model))
-            using (HttpServer host = new HttpServer(configuration))
-            using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient(model))
             using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("MainEntity",
                 MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full")))
             // Act
@@ -151,9 +173,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             // Arrange
             IEdmModel model = CreateModelForFullMetadata(sameLinksForIdAndEdit: false, sameLinksForEditAndRead: false);
 
-            using (HttpConfiguration configuration = CreateConfiguration(model))
-            using (HttpServer host = new HttpServer(configuration))
-            using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient(model))
             using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("MainEntity",
                 MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none")))
             // Act
@@ -167,17 +187,19 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void SupportOnlyODataFormat()
         {
-            // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            {
-                foreach (ODataMediaTypeFormatter odataFormatter in
-                    configuration.Formatters.OfType<ODataMediaTypeFormatter>())
-                {
-                    odataFormatter.SupportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
-                }
+#if !NETCORE
+#endif
 
-                using (HttpServer host = new HttpServer(configuration))
-                using (HttpClient client = new HttpClient(host))
+            // Arrange
+            //using (HttpConfiguration configuration = CreateConfiguration())
+            //{
+            //    foreach (ODataMediaTypeFormatter odataFormatter in
+            //        configuration.Formatters.OfType<ODataMediaTypeFormatter>())
+            //    {
+            //        odataFormatter.SupportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
+            //    }
+
+            using (HttpClient client = CreateClient())
                 {
                     using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("People(10)",
                         ODataTestUtil.ApplicationJsonMediaTypeWithQuality))
@@ -193,24 +215,25 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                         ODataTestUtil.VerifyResponse(response.Content, Resources.PersonEntryInPlainOldJson);
                     }
                 }
-            }
+            //}
         }
 
         [Fact]
         public void ConditionallySupportODataIfQueryStringPresent()
         {
+#if !NETCORE
+#endif
             // Arrange #1, #2 and #3
-            using (HttpConfiguration configuration = CreateConfiguration())
-            {
-                foreach (ODataMediaTypeFormatter odataFormatter in
-                    configuration.Formatters.OfType<ODataMediaTypeFormatter>())
-                {
-                    odataFormatter.SupportedMediaTypes.Clear();
-                    odataFormatter.MediaTypeMappings.Add(new ODataMediaTypeMapping(ODataTestUtil.ApplicationJsonMediaTypeWithQuality));
-                }
+            //using (HttpConfiguration configuration = CreateConfiguration())
+            //{
+            //    foreach (ODataMediaTypeFormatter odataFormatter in
+            //        configuration.Formatters.OfType<ODataMediaTypeFormatter>())
+            //    {
+            //        odataFormatter.SupportedMediaTypes.Clear();
+            //        odataFormatter.MediaTypeMappings.Add(new ODataMediaTypeMapping(ODataTestUtil.ApplicationJsonMediaTypeWithQuality));
+            //    }
 
-                using (HttpServer host = new HttpServer(configuration))
-                using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient())
                 {
                     // Arrange #1: this request should return response in OData json format
                     using (HttpRequestMessage requestWithJsonHeader = ODataTestUtil.GenerateRequestMessage(
@@ -250,16 +273,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                             response);
                     }
                 }
-            }
+            //}
         }
 
         [Fact]
         public void GetFeedInODataJsonFormat_LimitsResults()
         {
             // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            using (HttpServer host = new HttpServer(configuration))
-            using (HttpClient client = new HttpClient(host))
+            using (HttpClient client = CreateClient())
             using (HttpRequestMessage request = CreateRequest("People?$orderby=Name&$count=true",
                     ODataTestUtil.ApplicationJsonMediaTypeWithQuality))
             // Act
@@ -287,12 +308,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void HttpErrorInODataFormat_GetsSerializedCorrectly()
         {
             // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            {
-                configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-                using (HttpServer host = new HttpServer(configuration))
-                using (HttpClient client = new HttpClient(host))
-                using (HttpRequestMessage request = CreateRequest("People?$filter=abc+eq+null",
+            //using (HttpConfiguration configuration = CreateConfiguration())
+            //{
+            //    configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            using (HttpClient client = CreateClient())
+            using (HttpRequestMessage request = CreateRequest("People?$filter=abc+eq+null",
                     MediaTypeWithQualityHeaderValue.Parse("application/json")))
                 // Act
                 using (HttpResponseMessage response = client.SendAsync(request).Result)
@@ -314,20 +334,22 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                     Assert.Equal("Microsoft.OData.ODataException",
                         json["error"]["innererror"]["type"].Value);
                 }
-            }
+            //}
         }
 
         [Fact]
         public void CustomSerializerWorks()
         {
+#if !NETCORE
+#endif
+
             // Arrange
-            using (HttpConfiguration configuration = CreateConfiguration())
-            {
-                configuration.Formatters.InsertRange(
-                    0,
-                    ODataMediaTypeFormatters.Create(new CustomSerializerProvider(), _deserializerProvider));
-                using (HttpServer host = new HttpServer(configuration))
-                using (HttpClient client = new HttpClient(host))
+            //using (HttpConfiguration configuration = CreateConfiguration())
+            //{
+            //    configuration.Formatters.InsertRange(
+            //        0,
+            //        ODataMediaTypeFormatters.Create(new CustomSerializerProvider(), _deserializerProvider));
+            using (HttpClient client = CreateClient())
                 using (HttpRequestMessage request = CreateRequestWithAnnotationFilter("People", "odata.include-annotations=\"*\""))
                 // Act
                 using (HttpResponseMessage response = client.SendAsync(request).Result)
@@ -340,7 +362,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                     Assert.Contains("\"@Custom.Int32Annotation\":321", payload);
                     Assert.Contains("\"@Custom.StringAnnotation\":\"My amazing feed\"", payload);
                 }
-            }
+            //}
         }
 
         [Theory]
@@ -354,11 +376,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             expect = Regex.Replace(Resources.GetString(expect), @"\r\n\s*([""{}\]])", "$1");
 
             // Arrange
-            HttpConfiguration configuration = CreateConfiguration();
-            configuration.Formatters.InsertRange(0,
-                    ODataMediaTypeFormatters.Create(new CustomSerializerProvider(),
-                    _deserializerProvider));
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+#if !NETCORE
+#endif
+
+            //HttpConfiguration configuration = CreateConfiguration();
+            //configuration.Formatters.InsertRange(0,
+            //        ODataMediaTypeFormatters.Create(new CustomSerializerProvider(),
+            //        _deserializerProvider));
+
+            HttpClient client = CreateClient();
 
             HttpRequestMessage request = CreateRequestWithAnnotationFilter("People(2)",
                 String.Format("odata.include-annotations=\"{0}\"", filter));
@@ -383,12 +409,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<EnumCustomer>(entitySet);
             builder.EntityType<EnumCustomer>().HasKey(c => c.Color);
             IEdmModel model = builder.GetEdmModel();
-            var controllers = new[] {typeof(EnumKeyCustomersController), typeof(EnumKeyCustomers2Controller) };
+            var controllers = new[] { typeof(EnumKeyCustomersController), typeof(EnumKeyCustomers2Controller) };
 
             var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
             configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             HttpServer host = new HttpServer(configuration);
             HttpClient client = new HttpClient(host);
+
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
@@ -628,29 +655,29 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             public List<Color> Colors { get; set; }
         }
 
-        public class EnumCustomersController : ODataController
+        public class EnumCustomersController : TestController
         {
-            public IHttpActionResult Post(EnumCustomer customer)
+            public ITestActionResult Post(EnumCustomer customer)
             {
                 return Ok(customer);
             }
 
-            public IHttpActionResult GetColor(int key)
+            public ITestActionResult GetColor(int key)
             {
                 return Ok(Color.Green);
             }
 
             [EnableQuery(PageSize = 2)]
-            public IHttpActionResult GetColors(int key)
+            public ITestActionResult GetColors(int key)
             {
-                IList<Color> colors = new[] {Color.Blue, Color.Green, Color.Red};
+                IList<Color> colors = new[] { Color.Blue, Color.Green, Color.Red };
                 return Ok(colors);
             }
         }
 
-        public class EnumKeyCustomersController : ODataController
+        public class EnumKeyCustomersController : TestController
         {
-            public IHttpActionResult Get([FromODataUri]Color key)
+            public ITestActionResult Get([FromODataUri]Color key)
             {
                 EnumCustomer customer = new EnumCustomer
                 {
@@ -663,9 +690,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
-        public class EnumKeyCustomers2Controller : ODataController
+        public class EnumKeyCustomers2Controller : TestController
         {
-            public IHttpActionResult Get([FromODataUri]EdmEnumObject key)
+            public ITestActionResult Get([FromODataUri]EdmEnumObject key)
             {
                 EnumCustomer customer = new EnumCustomer
                 {
@@ -764,7 +791,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
 
             builder.EntityType<KeyCustomer>().HasKey(c => c.Id);
-            builder.EntityType<KeyOrder>().HasKey(c =>new { c.StringKey, c.DateKey, c.GuidKey});
+            builder.EntityType<KeyOrder>().HasKey(c => new { c.StringKey, c.DateKey, c.GuidKey });
 
             // without [FromODataUri]
             builder.EntitySet<KeyCustomer>("KeyCustomers1").HasManyBinding(c => c.Orders, "KeyOrders1");
@@ -794,19 +821,19 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             public Date DateKey { get; set; }
 
-           // public TimeOfDay TimeKey { get; set; }
+            // public TimeOfDay TimeKey { get; set; }
 
             public Guid GuidKey { get; set; }
         }
 
-        public class KeyCustomers1Controller : ODataController
+        public class KeyCustomers1Controller : TestController
         {
-            public IHttpActionResult Get(int key)
+            public ITestActionResult Get(int key)
             {
                 return Ok(key);
             }
 
-            public IHttpActionResult DeleteRef(int key, string navigationProperty, string relatedKeyStringKey, Guid relatedKeyGuidKey,
+            public ITestActionResult DeleteRef(int key, string navigationProperty, string relatedKeyStringKey, Guid relatedKeyGuidKey,
                 [FromODataUri]Date relatedKeyDateKey)
             {
                 AssertMultipleKey(relatedKeyStringKey, relatedKeyDateKey, relatedKeyGuidKey);
@@ -815,14 +842,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
-        public class KeyCustomers2Controller : ODataController
+        public class KeyCustomers2Controller : TestController
         {
-            public IHttpActionResult Get([FromODataUri]int key)
+            public ITestActionResult Get([FromODataUri]int key)
             {
                 return Ok(key);
             }
 
-            public IHttpActionResult DeleteRef([FromODataUri]int key, [FromODataUri]string navigationProperty,
+            public ITestActionResult DeleteRef([FromODataUri]int key, [FromODataUri]string navigationProperty,
                 [FromODataUri]string relatedKeyStringKey, [FromODataUri]Guid relatedKeyGuidKey, [FromODataUri]Date relatedKeyDateKey)
             {
                 AssertMultipleKey(relatedKeyStringKey, relatedKeyDateKey, relatedKeyGuidKey);
@@ -831,10 +858,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
-        public class KeyOrders1Controller : ODataController
+        public class KeyOrders1Controller : TestController
         {
             // [FromODataUri] before Date type is necessary, otherwise it will use the content binding.
-            public IHttpActionResult Get(string keyStringKey, [FromODataUri]Date keyDateKey, Guid keyGuidKey)
+            public ITestActionResult Get(string keyStringKey, [FromODataUri]Date keyDateKey, Guid keyGuidKey)
             {
                 AssertMultipleKey(keyStringKey, keyDateKey, keyGuidKey);
 
@@ -842,9 +869,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
-        public class KeyOrders2Controller : ODataController
+        public class KeyOrders2Controller : TestController
         {
-            public IHttpActionResult Get([FromODataUri]string keyStringKey, [FromODataUri]Date keyDateKey, [FromODataUri]Guid keyGuidKey)
+            public ITestActionResult Get([FromODataUri]string keyStringKey, [FromODataUri]Date keyDateKey, [FromODataUri]Guid keyGuidKey)
             {
                 AssertMultipleKey(keyStringKey, keyDateKey, keyGuidKey);
 
@@ -852,25 +879,25 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
         }
 
-        public class KeyCustomerOrderController : ODataController
+        public class KeyCustomerOrderController : TestController
         {
             [HttpGet]
             [ODataRoute("KeyCustomers3({customerKey})")]
-            public IHttpActionResult Customers3WithKey(int customerKey)
+            public ITestActionResult Customers3WithKey(int customerKey)
             {
                 return Ok(customerKey);
             }
 
             [HttpGet]
             [ODataRoute("KeyCustomers4({customerKey})")]
-            public IHttpActionResult Customers4WithKey([FromODataUri]int customerKey)
+            public ITestActionResult Customers4WithKey([FromODataUri]int customerKey)
             {
                 return Ok(customerKey);
             }
 
             [HttpGet]
             [ODataRoute("KeyOrders3(StringKey={key1},DateKey={key2},GuidKey={key3})")]
-            public IHttpActionResult Orders3WithKey(string key1, [FromODataUri]Date key2, Guid key3)
+            public ITestActionResult Orders3WithKey(string key1, [FromODataUri]Date key2, Guid key3)
             {
                 AssertMultipleKey(key1, key2, key3);
 
@@ -879,7 +906,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             [HttpGet]
             [ODataRoute("KeyOrders4(StringKey={key1},DateKey={key2},GuidKey={key3})")]
-            public IHttpActionResult Orders4WithKey([FromODataUri]string key1, [FromODataUri]Date key2, [FromODataUri]Guid key3)
+            public ITestActionResult Orders4WithKey([FromODataUri]string key1, [FromODataUri]Date key2, [FromODataUri]Guid key3)
             {
                 AssertMultipleKey(key1, key2, key3);
 
@@ -888,7 +915,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             [HttpDelete]
             [ODataRoute("KeyCustomers3({customerKey})/Orders(StringKey={key1},DateKey={key2},GuidKey={key3})/$ref")]
-            public IHttpActionResult DeleteOrderFromCustomer3(int customerKey, string key1, [FromODataUri]Date key2, Guid key3)
+            public ITestActionResult DeleteOrderFromCustomer3(int customerKey, string key1, [FromODataUri]Date key2, Guid key3)
             {
                 AssertMultipleKey(key1, key2, key3);
 
@@ -897,7 +924,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             [HttpDelete]
             [ODataRoute("KeyCustomers4({customerKey})/Orders(StringKey={key1},DateKey={key2},GuidKey={key3})/$ref")]
-            public IHttpActionResult DeleteOrderFromCustomer4([FromODataUri]int customerKey, [FromODataUri]string key1,
+            public ITestActionResult DeleteOrderFromCustomer4([FromODataUri]int customerKey, [FromODataUri]string key1,
                 [FromODataUri]Date key2, [FromODataUri]Guid key3)
             {
                 AssertMultipleKey(key1, key2, key3);
@@ -919,9 +946,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             public string Name { get; set; }
         }
 
-        public class CollectionSerializerCustomersController : ODataController
+        public class CollectionSerializerCustomersController : TestController
         {
-            public IHttpActionResult Get(ODataQueryOptions<CollectionSerializerCustomer> options)
+            public ITestActionResult Get(ODataQueryOptions<CollectionSerializerCustomer> options)
             {
                 IQueryable<CollectionSerializerCustomer> customers = new[]
                 {
@@ -958,31 +985,19 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return new Uri(new Uri(baseAddress), relativeUri);
         }
 
-        private static HttpConfiguration CreateConfiguration(bool tracingEnabled = false)
+        private static HttpClient CreateClient(IEdmModel model = null)
         {
-            IEdmModel model = ODataTestUtil.GetEdmModel();
-            HttpConfiguration configuration = CreateConfiguration(model);
-
-            if (tracingEnabled)
+            var controllers = new[]
             {
-                configuration.Services.Replace(typeof(ITraceWriter), new Mock<ITraceWriter>().Object);
-            }
+                typeof(MainEntityController), typeof(PeopleController), typeof(EnumCustomersController),
+                typeof(CollectionSerializerCustomersController), typeof(PresidentController)
+            };
 
-            return configuration;
-        }
+            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers,
+                (config) => model != null ? model : ODataTestUtil.GetEdmModel());
 
-        private static HttpConfiguration CreateConfiguration(IEdmModel model)
-        {
-            HttpConfiguration configuration = RoutingConfigurationFactory.CreateWithTypes(
-                new[]
-                {
-                    typeof(MainEntityController), typeof(PeopleController), typeof(EnumCustomersController),
-                    typeof(CollectionSerializerCustomersController), typeof(PresidentController)
-                });
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
-            configuration.MapODataServiceRoute(model);
-            configuration.Formatters.InsertRange(0, ODataMediaTypeFormatters.Create());
-            return configuration;
+            return TestServerFactory.CreateClient(server);
+
         }
 
         private static IEdmModel CreateModelForFullMetadata(bool sameLinksForIdAndEdit, bool sameLinksForEditAndRead)

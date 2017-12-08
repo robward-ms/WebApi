@@ -1,6 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,28 +30,19 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
     public class ODataActionTests
     {
-        HttpServer _server;
         HttpClient _client;
-        IEdmModel _model;
 
         public ODataActionTests()
         {
-            HttpConfiguration configuration = new HttpConfiguration();
-            _model = GetModel();
-            configuration.Formatters.Clear();
-            configuration.Formatters.AddRange(ODataMediaTypeFormatters.Create());
-            configuration.MapODataServiceRoute(_model);
             var controllers = new[] { typeof(CustomersController) };
-            var assembliesResolver = new TestAssemblyResolver(new MockAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), assembliesResolver);
-
-            _server = new HttpServer(configuration);
-            _client = new HttpClient(_server);
+            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => GetModel());
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Fact]
@@ -101,9 +106,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/UntypedCustomers/NS.MyAction");
             request.Headers.Add("accept", "application/json");
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedCustomersController) });
-            configuration.MapODataServiceRoute(GetUntypeModel());
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            var controllers = new[] { typeof(UntypedCustomersController) };
+            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => GetUntypeModel());
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             request.Content = new StringContent(EntityPayload);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -271,10 +276,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
     }
 
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         [HttpGet]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             var customers = Enumerable.Range(1, 6).Select(i => new ODataActionTests.Customer
                     {

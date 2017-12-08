@@ -117,7 +117,7 @@ namespace Microsoft.AspNet.OData.Formatter
             foreach (MediaTypeMapping mapping in MediaTypeMappings)
             {
                 if ((mapping.TryMatchMediaType(request) > 0) &&
-                    (mapping.MediaType == context.ContentType.Value))
+                    (mapping.MediaType.ToString() == context.ContentType.Value))
                 {
                     mappingFound = true;
                     break;

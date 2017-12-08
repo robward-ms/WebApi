@@ -1,6 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Xml.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Moq;
+using Xunit;
+#else
 using System;
 using System.Collections.Generic;
 using System.Data.Linq;
@@ -18,7 +35,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
-
+#endif
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
     public class ODataPrimitiveSerializerTests
@@ -62,7 +79,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                     { (UInt64)1, "Edm.Int64", "1" },
                     //(Stream) new MemoryStream(new byte[] { 1 }), // TODO: Enable once we have support for streams
                     { new XElement(XName.Get("element","namespace")), "Edm.String", "\"<element xmlns=\\\"namespace\\\" />\"" },
+#if NETFX // Binary only supported on Net Framework
                     { new Binary(new byte[] {1}), "Edm.Binary", "\"AQ==\"" },
+#endif
                 };
             }
         }

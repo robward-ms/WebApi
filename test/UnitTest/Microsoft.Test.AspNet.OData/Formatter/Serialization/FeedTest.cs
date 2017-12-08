@@ -1,13 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.TestCommon.Models;
+using Xunit;
+#else
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
@@ -17,6 +25,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
@@ -28,7 +37,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void IEnumerableOfEntityTypeSerializesAsODataFeed()
         {
             // Arrange
-            ODataMediaTypeFormatter formatter = CreateFormatter();
+            IEdmEntitySet entitySet = _model.EntityContainer.FindEntitySet("employees");
+            ODataPath path = new ODataPath(new EntitySetSegment(entitySet));
+
+            var payload = new ODataPayloadKind[] { ODataPayloadKind.ResourceSet };
+            var formatter = FormatterTestHelper.GetFormatter(payload, _model, "Route", path);
 
             IEnumerable<Employee> collectionOfPerson = new Collection<Employee>()
             {
@@ -36,32 +49,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 (Employee)TypeInitializer.GetInstance(SupportedTypes.Employee, 1),
             };
 
-            ObjectContent<IEnumerable<Employee>> content = new ObjectContent<IEnumerable<Employee>>(collectionOfPerson,
-                formatter, MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
+            var content = FormatterTestHelper.GetContent(collectionOfPerson, formatter,
+                ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
             JsonAssert.Equal(Resources.FeedOfEmployee, content.ReadAsStringAsync().Result);
-        }
-
-        private ODataMediaTypeFormatter CreateFormatter()
-        {
-            ODataMediaTypeFormatter formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.ResourceSet });
-            formatter.Request = GetSampleRequest();
-            formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
-            return formatter;
-        }
-
-        private HttpRequestMessage GetSampleRequest()
-        {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/employees");
-            HttpConfiguration configuration = new HttpConfiguration();
-            string routeName = "Route";
-            configuration.MapODataServiceRoute(routeName, null, GetSampleModel());
-            request.SetConfiguration(configuration);
-            IEdmEntitySet entitySet = _model.EntityContainer.FindEntitySet("employees");
-            request.ODataProperties().Path = new ODataPath(new EntitySetSegment(entitySet));
-            request.EnableODataDependencyInjectionSupport(routeName);
-            return request;
         }
 
         private static IEdmModel GetSampleModel()

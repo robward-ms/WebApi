@@ -1,6 +1,27 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Formatter.Deserialization;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Newtonsoft.Json.Linq;
+using Xunit;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#else
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,21 +39,24 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
     public class InheritanceTests
     {
-        HttpServer _server;
         HttpClient _client;
         IEdmModel _model;
 
         public InheritanceTests()
         {
+#if NETCORE
+#else
             HttpConfiguration configuration = new HttpConfiguration();
             _model = GetEdmModel();
             IEnumerable<ODataMediaTypeFormatter> formatters = ODataMediaTypeFormatters.Create();
@@ -44,8 +68,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             configuration.Routes.MapFakeODataRoute();
             configuration.EnableODataDependencyInjectionSupport();
 
-            _server = new HttpServer(configuration);
-            _client = new HttpClient(_server);
+            HttpServer server = new HttpServer(configuration);
+#endif
+
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Fact]

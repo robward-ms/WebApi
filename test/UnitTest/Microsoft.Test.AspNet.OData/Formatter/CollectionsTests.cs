@@ -1,6 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.TestCommon;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,13 +28,13 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -32,13 +49,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             builder.EntitySet<Vehicle>("vehicles");
             IEdmModel model = builder.GetEdmModel();
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(CollectionsTestsController) });
-            configuration.Formatters.Clear();
-            configuration.Formatters.AddRange(ODataMediaTypeFormatters.Create());
-            configuration.MapODataServiceRoute(model);
-
-            HttpServer server = new HttpServer(configuration);
-            _client = new HttpClient(server);
+            var controllers = new[] { typeof(CollectionsTestsController) };
+            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => model);
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Theory]
