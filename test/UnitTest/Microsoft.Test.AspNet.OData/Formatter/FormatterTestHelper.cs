@@ -104,7 +104,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
             else if (model != null)
             {
-                config.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName);
+                config.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName, model);
                 request.EnableODataDependencyInjectionSupport(model);
                 request.GetConfiguration().Routes.MapFakeODataRoute();
             }

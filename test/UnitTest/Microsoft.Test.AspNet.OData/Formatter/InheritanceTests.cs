@@ -33,7 +33,6 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
@@ -57,8 +56,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public InheritanceTests()
         {
             _model = GetEdmModel();
-            var formatters = CreateFormatters();
-            var server = TestServerFactory.CreateWithFormatters(null, formatters, (configuration) =>
+            var server = TestServerFactory.Create(null, (configuration) =>
             {
 #if !NETCORE
                 configuration.Routes.MapHttpRoute("default", "{action}", new { Controller = "Inheritance" });
@@ -410,19 +408,6 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Assert.StartsWith(serverBaseUri, url); // Guard
             return url.Substring(serverBaseUri.Length);
         }
-
-#if NETCORE
-        private static IEnumerable<ODataOutputFormatter> CreateFormatters()
-        {
-            return ODataOutputFormatterFactory.Create();
-        }
-
-#else
-        private static IEnumerable<ODataMediaTypeFormatter> CreateFormatters()
-        {
-            return ODataMediaTypeFormatters.Create();
-        }
-#endif
     }
 
     public class InheritanceController : ODataController

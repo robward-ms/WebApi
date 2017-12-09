@@ -17,12 +17,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <returns>An ODataDeserializerProvider.</returns>
         public static ODataDeserializerProvider Create()
         {
-#if NETCORE
-            var config = RoutingConfigurationFactory.Create();
-            return config.ServiceProvider.GetRequiredService<ODataDeserializerProvider>();
-#else
             return new MockContainer().GetRequiredService<ODataDeserializerProvider>();
-#endif
         }
     }
 }

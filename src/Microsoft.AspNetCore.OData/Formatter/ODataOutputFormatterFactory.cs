@@ -70,9 +70,9 @@ namespace Microsoft.AspNet.OData.Formatter
             {
                 formatter.MediaTypeMappings.Add(mapping);
 
-                // Add the media type of ther mapping to the supported list.
+                // Add the media type of the mapping to the supported list.
                 // A check will occur in CanWriteResult to see if mapping is successful.
-                if (formatter.SupportedMediaTypes.Contains(mapping.MediaType.ToString()))
+                if (!formatter.SupportedMediaTypes.Contains(mapping.MediaType.ToString()))
                 {
                     formatter.SupportedMediaTypes.Add(mapping.MediaType.ToString());
                 }

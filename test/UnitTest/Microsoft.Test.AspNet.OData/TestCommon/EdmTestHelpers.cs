@@ -1,20 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Xml;
-using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Formatter;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-#else
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +14,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
-#endif
 
 namespace Microsoft.Test.AspNet.OData.TestCommon
 {
@@ -55,12 +40,10 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
                 if (CsdlReader.TryParse(XmlReader.Create(new StringReader(GetEdmx())), out edmModel, out edmErrors))
                 {
                     _model = edmModel;
-#if !NETCORE
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Product"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Product)));
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Supplier"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Supplier)));
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Address"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Address)));
                     _model.SetAnnotationValue<ClrTypeAnnotation>(_model.FindDeclaredType("ODataDemo.Category"), new ClrTypeAnnotation(typeof(ODataResourceDeserializerTests.Category)));
-#endif
                     return _model;
                 }
                 else
@@ -76,11 +59,7 @@ namespace Microsoft.Test.AspNet.OData.TestCommon
 
         public static string GetEdmx()
         {
-#if !NETCORE
             return Resources.ProductsCsdl;
-#else
-            return string.Empty;
-#endif
         }
 
         public static EdmStructuralProperty StructuralProperty<TObject, TProperty>(IEdmStructuredType declaringType, Expression<Func<TObject, TProperty>> property, IEdmTypeReference propertyType = null)

@@ -15,6 +15,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
@@ -97,7 +98,7 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("context");
             }
 
-            // Allow the base class to make its determineation, which includes
+            // Allow the base class to make its determination, which includes
             // checks for SupportedMediaTypes.
             if (!base.CanWriteResult(context))
             {
@@ -112,7 +113,8 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             // At this point, ContentType has been set by the base class. Let's make sure
-            // that the request satifies the mappings.
+            // that the request satisfies the mappings.
+#if !NETCORE // Needs work
             bool mappingFound = false;
             foreach (MediaTypeMapping mapping in MediaTypeMappings)
             {
@@ -128,7 +130,7 @@ namespace Microsoft.AspNet.OData.Formatter
             {
                 return false;
             }
-
+#endif
             // Ignore non-OData requests.
             if (request.ODataFeature().Path == null)
             {
@@ -185,14 +187,18 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             // Set the character set.
-            IEnumerable<string> acceptCharsetValues = request.GetTypedHeaders()?.AcceptCharset.Select(cs => cs.Value.Value);
             MediaTypeHeaderValue currentContentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
-
-            string newCharSet = string.Empty;
-            if (ODataOutputFormatterHelper.TryGetCharSet(currentContentType, acceptCharsetValues, out newCharSet))
+            RequestHeaders requestHeader = request.GetTypedHeaders();
+            if (requestHeader != null && requestHeader.AcceptCharset != null)
             {
-                currentContentType.CharSet = newCharSet;
-                response.Headers[ContentTypeHeader] = new StringValues(currentContentType.ToString());
+                IEnumerable<string> acceptCharsetValues = requestHeader.AcceptCharset.Select(cs => cs.Value.Value);
+
+                string newCharSet = string.Empty;
+                if (ODataOutputFormatterHelper.TryGetCharSet(currentContentType, acceptCharsetValues, out newCharSet))
+                {
+                    currentContentType.CharSet = newCharSet;
+                    response.Headers[ContentTypeHeader] = new StringValues(currentContentType.ToString());
+                }
             }
 
             // Add version header.

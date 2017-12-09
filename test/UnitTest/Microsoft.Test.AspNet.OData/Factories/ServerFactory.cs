@@ -102,29 +102,6 @@ namespace Microsoft.Test.AspNet.OData.Factories
         }
 
         /// <summary>
-        /// Create an TestServer.
-        /// </summary>
-        /// <param name="route">The route.</param>
-        /// <param name="controllers">The controllers to use.</param>
-        /// <param name="configureAction">The route configuration action.</param>
-        /// <returns>An TestServer.</returns>
-        public static TestServer CreateWithRoute(
-            string route,
-            Type[] controllers,
-            Action<IRouteBuilder> configureAction)
-        {
-            // AspNetCore does not have that can be used to append a profix anymore
-            // just append the route to the prefix
-            return Create(controllers, configureAction);
-#if !NETCORE
-            {
-                routeBuilder.MapODataServiceRoute(routeName, route + "/" + routePrefix, getModelFunction(routeBuilder));
-                routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            });
-#endif
-        }
-
-        /// <summary>
         /// Create an TestServer with formatters.
         /// </summary>
         /// <param name="controllers">The controllers to use.</param>
@@ -204,22 +181,6 @@ namespace Microsoft.Test.AspNet.OData.Factories
         }
 
         /// <summary>
-        /// Create an HttpServer.
-        /// </summary>
-        /// <param name="route">The route.</param>
-        /// <param name="controllers">The controllers to use.</param>
-        /// <param name="configureAction">The route configuration action.</param>
-        /// <returns>An HttpServer.</returns>
-        public static HttpServer CreateWithRoute(
-            string route,
-            Type[] controllers,
-            Action<HttpConfiguration> configureAction)
-        {
-            HttpConfiguration configuration = new HttpConfiguration(new HttpRouteCollection(route));
-            return Create(configuration, controllers, configureAction);
-        }
-
-        /// <summary>
         /// Create an TestServer with formatters.
         /// </summary>
         /// <param name="routeName">The route name.</param>
@@ -233,8 +194,8 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Action<HttpConfiguration> configureAction)
         {
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Formatters.Clear();
-            configuration.Formatters.AddRange(formatters == null ? ODataMediaTypeFormatters.Create() : formatters);
+            //configuration.Formatters.Clear();
+            configuration.Formatters.InsertRange(0, formatters == null ? ODataMediaTypeFormatters.Create() : formatters);
             return Create(configuration, controllers, configureAction);
         }
 
@@ -250,16 +211,17 @@ namespace Microsoft.Test.AspNet.OData.Factories
             Type[] controllers,
             Action<HttpConfiguration> configureAction)
         {
+            if (controllers != null)
+            {
+                TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
+                configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            }
+
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configureAction(configuration);
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            HttpServer server = new HttpServer(configuration);
             configuration.EnsureInitialized();
 
-            return server;
+            return new HttpServer(configuration);
         }
 
         /// <summary>

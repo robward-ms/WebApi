@@ -49,19 +49,24 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("request");
             }
 
+            double quality = 0;
+
             QueryString queryString = request.QueryString;
-            IDictionary<string, string> queryValues = QueryHelpers.ParseNullableQuery(queryString.Value)
-                .Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.FirstOrDefault()))
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-            double quality = DoesQueryStringMatch(queryValues) ? 1 : 0;
-            if (quality < 1)
+            if (queryString.HasValue)
             {
-                string queryValue = queryValues.Where(kvp => kvp.Key == QueryStringParameterName)
-                    .FirstOrDefault()
-                    .Value;
+                IDictionary<string, string> queryValues = QueryHelpers.ParseNullableQuery(queryString.Value)
+                    .Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.FirstOrDefault()))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                quality = (string.IsNullOrEmpty(queryValue) && (queryValue == QueryStringParameterValue)) ? 1 : 0;
+                quality = DoesQueryStringMatch(queryValues) ? 1 : 0;
+                if (quality < 1)
+                {
+                    string queryValue = queryValues.Where(kvp => kvp.Key == QueryStringParameterName)
+                        .FirstOrDefault()
+                        .Value;
+
+                    quality = (string.IsNullOrEmpty(queryValue) && (queryValue == QueryStringParameterValue)) ? 1 : 0;
+                }
             }
 
             return quality;

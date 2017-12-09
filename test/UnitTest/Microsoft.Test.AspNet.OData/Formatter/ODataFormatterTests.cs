@@ -192,12 +192,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void SupportOnlyODataFormat()
         {
             // Arrange
-            Action<IList<MediaTypeHeaderValue>, IList<MediaTypeMapping>> modifyMediaTypes = ((supportedMediaTypes, mediaTypeMappings) =>
+            using (HttpClient client = CreateClient(null, null, (supportedMediaTypes, mediaTypeMappings) =>
             {
                 supportedMediaTypes.Remove(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJson));
-            });
-
-            using (HttpClient client = CreateClient(null, null, modifyMediaTypes))
+            }))
             using (HttpRequestMessage request = CreateRequestWithDataServiceVersionHeaders("People(10)",
                 ODataTestUtil.ApplicationJsonMediaTypeWithQuality))
 
@@ -606,6 +604,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             var controllers = new[] { typeof(EnumCustomersController) };
             var server = TestServerFactory.Create(controllers, (configuration) =>
             {
+                configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
                 configuration.MapODataServiceRoute("odata", routePrefix: null, model: model);
             });
 
@@ -1014,7 +1013,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         }
 #else
         private static IEnumerable<ODataMediaTypeFormatter> CreateFormatters(
-            ODataSerializerProvider serializerProvider, 
+            ODataSerializerProvider serializerProvider,
             ODataDeserializerProvider deserializerProvider)
         {
             return ODataMediaTypeFormatters.Create(serializerProvider, deserializerProvider);
@@ -1023,6 +1022,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         private static HttpClient CreateClient(IEnumerable<ODataMediaTypeFormatter> formatters = null, IEdmModel model = null,
             Action<IList<MediaTypeHeaderValue>, IList<MediaTypeMapping>> modifyMediaTypes = null)
         {
+            IEdmModel useModel = model != null ? model : ODataTestUtil.GetEdmModel();
+
             var controllers = new[]
             {
                 typeof(MainEntityController), typeof(PeopleController), typeof(EnumCustomersController),
@@ -1032,7 +1033,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             var server = TestServerFactory.CreateWithFormatters(controllers, formatters, (config) =>
             {
                 config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-                config.MapODataServiceRoute("IgnoredRouteName", null, model != null ? model : ODataTestUtil.GetEdmModel());
+                config.MapODataServiceRoute("IgnoredRouteName", null, useModel);
             });
 
 

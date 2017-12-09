@@ -254,10 +254,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataPrimitiveSerializer serializer = new ODataPrimitiveSerializer();
 
             TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-            var configuration = RoutingConfigurationFactory.Create();
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData");
             configuration.SetTimeZoneInfo(tzi);
 
-            var request = RequestFactory.Create(configuration);
+            var request = RequestFactory.Create(configuration, "OData");
 
             ODataSerializerContext context = new ODataSerializerContext{ Request = request };
 

@@ -70,9 +70,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             _nullPrefixClient = TestServerFactory.CreateClient(nullPrefixServer);
 
             // FixedPrefixRoute has both a non-empty virtual path root and a fixed route prefix.
-            var fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", controllers, (config) =>
+            var fixedPrefixServer = TestServerFactory.Create(controllers, (config) =>
             {
-                config.MapODataServiceRoute("FixedPrefixRoute", "odata", model);
+                config.MapODataServiceRoute("FixedPrefixRoute", "MyRoot/odata", model);
             });
 
             _fixedPrefixClient = TestServerFactory.CreateClient(fixedPrefixServer);
