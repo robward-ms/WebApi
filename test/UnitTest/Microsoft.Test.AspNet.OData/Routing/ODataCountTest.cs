@@ -53,7 +53,12 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             IEdmModel model = GetEdmModel();
             var controllers = new[] { typeof(DollarCountEntitiesController) };
-            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", model);
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            });
+
             _client = TestServerFactory.CreateClient(server);
         }
 

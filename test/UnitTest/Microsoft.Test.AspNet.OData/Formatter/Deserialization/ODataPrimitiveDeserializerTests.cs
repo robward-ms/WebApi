@@ -215,7 +215,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             // Arrange
             IEdmModel model = CreateModel();
 
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
+#if !NETCORE
             request.SetConfiguration(new HttpConfiguration());
             if (timeZoneInfo != null)
             {
@@ -225,6 +226,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             {
                 request.GetConfiguration().SetTimeZoneInfo(TimeZoneInfo.Local);
             }
+#else
+            Assert.NotNull(timeZoneInfo);
+#endif
 
             ODataPrimitiveSerializer serializer = new ODataPrimitiveSerializer();
             ODataPrimitiveDeserializer deserializer = new ODataPrimitiveDeserializer();

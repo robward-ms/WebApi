@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
@@ -55,21 +56,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         public InheritanceTests()
         {
-#if NETCORE
-#else
-            HttpConfiguration configuration = new HttpConfiguration();
             _model = GetEdmModel();
-            IEnumerable<ODataMediaTypeFormatter> formatters = ODataMediaTypeFormatters.Create();
-
-            configuration.Formatters.Clear();
-            configuration.Formatters.AddRange(formatters);
-
-            configuration.Routes.MapHttpRoute("default", "{action}", new { Controller = "Inheritance" });
-            configuration.Routes.MapFakeODataRoute();
-            configuration.EnableODataDependencyInjectionSupport();
-
-            HttpServer server = new HttpServer(configuration);
+            var formatters = CreateFormatters();
+            var server = TestServerFactory.CreateWithFormatters(null, formatters, (configuration) =>
+            {
+#if !NETCORE
+                configuration.Routes.MapHttpRoute("default", "{action}", new { Controller = "Inheritance" });
+                configuration.Routes.MapFakeODataRoute();
+                configuration.EnableODataDependencyInjectionSupport();
 #endif
+            });
 
             _client = TestServerFactory.CreateClient(server);
         }
@@ -267,11 +263,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             StringContent content = new StringContent("{ '@odata.type' : '#Microsoft.Test.AspNet.OData.Builder.TestModels.Motorcycle' }");
-            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            IODataRequestMessage oDataRequest = ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, content.Headers);
+            var headers = FormatterTestHelper.GetContentHeaders("application/json");
+            IODataRequestMessage oDataRequest = ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, headers);
             ODataMessageReader reader = new ODataMessageReader(oDataRequest, new ODataMessageReaderSettings(), _model);
 
-            ODataDeserializerProvider deserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            ODataDeserializerProvider deserializerProvider = ODataDeserializerProviderFactory.Create();
 
             ODataDeserializerContext context = new ODataDeserializerContext { Model = _model };
             IEdmActionImport action = _model.EntityContainer
@@ -340,9 +336,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private void AddRequestInfo(HttpRequestMessage request)
         {
+#if !NETCORE
             request.ODataProperties().Path = new DefaultODataPathHandler()
                 .Parse(_model, "http://any/", GetODataPath(request.RequestUri.AbsoluteUri));
             request.EnableODataDependencyInjectionSupport(_model);
+#endif
         }
 
         private static IEdmModel GetEdmModel()
@@ -412,6 +410,19 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Assert.StartsWith(serverBaseUri, url); // Guard
             return url.Substring(serverBaseUri.Length);
         }
+
+#if NETCORE
+        private static IEnumerable<ODataOutputFormatter> CreateFormatters()
+        {
+            return ODataOutputFormatterFactory.Create();
+        }
+
+#else
+        private static IEnumerable<ODataMediaTypeFormatter> CreateFormatters()
+        {
+            return ODataMediaTypeFormatters.Create();
+        }
+#endif
     }
 
     public class InheritanceController : ODataController

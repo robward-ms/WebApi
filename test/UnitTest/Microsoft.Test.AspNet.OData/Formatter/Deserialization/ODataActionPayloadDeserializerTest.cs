@@ -55,7 +55,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
         {
             _model = GetModel();
             _container = _model.EntityContainer;
-            _deserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            _deserializerProvider = ODataDeserializerProviderFactory.Create();
             _deserializer = new ODataActionPayloadDeserializer(_deserializerProvider);
         }
 
@@ -714,8 +714,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 
         private static IEdmModel GetModel()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            config.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(Customer)));
+            var config = RoutingConfigurationFactory.CreateWithTypes(typeof(Customer));
             ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create(config);
             builder.ContainerName = "C";
             builder.Namespace = "A.B";

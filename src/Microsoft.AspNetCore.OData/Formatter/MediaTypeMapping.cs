@@ -35,7 +35,7 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <summary>
         ///  Gets the media type that is associated with request.
         /// </summary>
-        public MediaTypeHeaderValue MediaType { get; }
+        public MediaTypeHeaderValue MediaType { get; protected set; }
 
         /// <summary>
         /// Returns a value indicating whether this instance can provide a

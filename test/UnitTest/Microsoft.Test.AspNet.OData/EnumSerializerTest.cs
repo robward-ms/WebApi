@@ -25,7 +25,7 @@ namespace Microsoft.Test.AspNet.OData
     public class EnumSerializerTest
     {
         private readonly ODataSerializerProvider _serializerProvider =
-            DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            ODataSerializerProviderFactory.Create();
 
         [Fact]
         public void GetEdmTypeSerializer_ReturnODataEnumSerializer_ForEnumType()

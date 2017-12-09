@@ -9,13 +9,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
+using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
@@ -27,6 +27,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public const string Version4NumberString = "4.0";
         public static MediaTypeHeaderValue ApplicationJsonMediaType = MediaTypeHeaderValue.Parse("application/json");
         public static MediaTypeWithQualityHeaderValue ApplicationJsonMediaTypeWithQuality = MediaTypeWithQualityHeaderValue.Parse("application/json");
+
+        internal static ODataMediaTypeMapping ApplicationJsonMediaTypeWithQualityMapping =
+#if NETCORE
+            new ODataMediaTypeMapping(Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json"));
+#else
+            new ODataMediaTypeMapping(ODataTestUtil.ApplicationJsonMediaTypeWithQuality);
+#endif
 
         public static void VerifyResponse(HttpContent actualContent, string expected)
         {
@@ -390,7 +397,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public DateTimeOffset Birthday { get; set; }
     }
 
-    #region Navigation property binding
+#region Navigation property binding
 
     public class BindingCustomer
     {
@@ -429,5 +436,5 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public ICollection<BindingCity> UsCities { get; set; }
     }
 
-    #endregion
+#endregion
 }

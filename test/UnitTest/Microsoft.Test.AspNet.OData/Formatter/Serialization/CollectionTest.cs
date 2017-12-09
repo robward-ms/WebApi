@@ -44,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ArrayOfInt32, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(Resources.ArrayOfInt32, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ArrayOfBoolean, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(Resources.ArrayOfBoolean, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ListOfString, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(Resources.ListOfString, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            dynamic result = JObject.Parse(content.ReadAsStringAsync().Result);
+            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content));
 
             Assert.Equal(2, result["value"].Count);
             DateTimeOffset dto = (DateTimeOffset)result["value"][0];
@@ -219,7 +219,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            dynamic result = JObject.Parse(content.ReadAsStringAsync().Result);
+            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content));
 
             Assert.Equal(3, result["value"].Count);
             DateTimeOffset? dto = (DateTimeOffset?)result["value"][0];
@@ -249,14 +249,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
             var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+#if !NETCORE
             formatter.Request.GetConfiguration()
-
                 .SetTimeZoneInfo(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+#endif
             var content = FormatterTestHelper.GetContent(listOfDateTime, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
         }
 
         private static IEdmModel GetSampleModel()

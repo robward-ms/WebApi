@@ -55,7 +55,6 @@
     <Compile Remove="PublicApi\PublicApiTest.cs" />
     <Compile Remove="QueryableLimitationTest.cs" />
     <Compile Remove="ResourceContextTest.cs" />
-    <Compile Remove="Resources.cs" />
     <Compile Remove="SelectExpandNestedDollarCountTest.cs" />
     <Compile Remove="SelectExpandTest.cs" />
     <Compile Remove="TestContext.cs" />

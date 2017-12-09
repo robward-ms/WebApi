@@ -23,9 +23,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
     {
         private static readonly IEdmModel Model = GetEdmModel();
 
-        private static readonly ODataSerializerProvider SerializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+        private static readonly ODataSerializerProvider SerializerProvider = ODataSerializerProviderFactory.Create();
 
-        private static readonly ODataDeserializerProvider DeserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+        private static readonly ODataDeserializerProvider DeserializerProvider = ODataDeserializerProviderFactory.Create();
 
         private static readonly IEdmEnumTypeReference ColorType =
             new EdmEnumTypeReference(Model.SchemaElements.OfType<IEdmEnumType>().First(c => c.Name == "Color"),

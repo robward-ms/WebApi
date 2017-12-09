@@ -41,7 +41,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public ODataActionTests()
         {
             var controllers = new[] { typeof(CustomersController) };
-            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => GetModel());
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("IgnoredRouteName", null, GetModel());
+            });
+
             _client = TestServerFactory.CreateClient(server);
         }
 
@@ -107,7 +111,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Headers.Add("accept", "application/json");
 
             var controllers = new[] { typeof(UntypedCustomersController) };
-            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => GetUntypeModel());
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("IgnoredRouteName", null, GetUntypeModel());
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
 
             request.Content = new StringContent(EntityPayload);

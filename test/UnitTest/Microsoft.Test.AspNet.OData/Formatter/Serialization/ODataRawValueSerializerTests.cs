@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -128,8 +130,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             Stream stream = new MemoryStream();
             mockRequest.Setup(r => r.GetStream()).Returns(stream);
             var messageWriter = new ODataMessageWriter(mockRequest.Object);
-            var request = new HttpRequestMessage();
-            request.ODataProperties().Path = new ODataPath(CountSegment.Instance);
+            var request = RequestFactory.Create();
+            request.SetODataPath(new ODataPath(CountSegment.Instance));
             var context = new ODataSerializerContext { Request = request };
 
             // Act

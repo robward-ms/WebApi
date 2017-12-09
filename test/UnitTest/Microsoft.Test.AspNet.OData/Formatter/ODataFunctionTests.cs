@@ -72,21 +72,27 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public ODataFunctionTests()
         {
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
-            HttpConfiguration configuration = RoutingConfigurationFactory.CreateWithTypes(
-                new[] { typeof(MetadataController), typeof(FCustomersController) });
+            var controllers = new[] { typeof(MetadataController), typeof(FCustomersController) };
             var model = GetUnTypedEdmModel();
-
-            // without attribute routing
-            configuration.MapODataServiceRoute("odata1", "odata", model, pathHandler, ODataRoutingConventions.CreateDefault());
-
-            // only with attribute routing
-            IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
+            var server = TestServerFactory.Create(controllers, (configuration) =>
             {
-                new AttributeRoutingConvention("odata2", configuration)
-            };
-            configuration.MapODataServiceRoute("odata2", "attribute", model, pathHandler, routingConventions);
+                // without attribute routing
+                configuration.MapODataServiceRoute("odata1", "odata", model, pathHandler, ODataRoutingConventions.CreateDefault());
 
-            _client = new HttpClient(new HttpServer(configuration));
+                // only with attribute routing
+                IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
+                {
+#if NETCORE
+                    new AttributeRoutingConvention("odata2", configuration.ServiceProvider)
+#else
+                    new AttributeRoutingConvention("odata2", configuration)
+#endif
+                };
+
+                configuration.MapODataServiceRoute("odata2", "attribute", model, pathHandler, routingConventions);
+            });
+
+            _client = TestServerFactory.CreateClient(server);
         }
 
         public static TheoryDataSet<string> BoundFunctionRouteData

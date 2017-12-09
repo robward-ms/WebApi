@@ -50,7 +50,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmModel model = builder.GetEdmModel();
 
             var controllers = new[] { typeof(CollectionsTestsController) };
-            var server = TestServerFactory.CreateWithFormatters("IgnoredRouteName", null, controllers, (config) => model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("IgnoredRouteName", null, model);
+            });
+
             _client = TestServerFactory.CreateClient(server);
         }
 
@@ -154,7 +158,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             if (!ModelState.IsValid)
             {
+#if !NETCORE
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
+#endif
             }
 
             // 44 => posting vehicles

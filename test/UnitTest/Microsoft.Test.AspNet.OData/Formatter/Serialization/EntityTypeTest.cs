@@ -6,10 +6,12 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Models;
 using Xunit;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 #else
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -47,7 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.EmployeeEntry, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(Resources.EmployeeEntry, FormatterTestHelper.GetContentResult(content));
         }
 
         private static IEdmModel GetSampleModel()

@@ -32,6 +32,7 @@ using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -749,9 +750,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         private static IEnumerable<ODataMediaTypeFormatter> CreateProductUnderTest(IEdmModel model)
         {
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.RequestUri = new Uri("http://any");
-            request.EnableODataDependencyInjectionSupport(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
             return ODataMediaTypeFormatters.Create().Select(f => f.GetPerRequestFormatterInstance(typeof(void), request, null) as ODataMediaTypeFormatter);
         }
     }

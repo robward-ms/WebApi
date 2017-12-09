@@ -40,9 +40,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
     public class ODataMediaTypeFormatterTests : MediaTypeFormatterTestBase<ODataMediaTypeFormatter>
     {
         private readonly ODataSerializerProvider _serializerProvider =
-            DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            ODataSerializerProviderFactory.Create();
         private readonly ODataDeserializerProvider _deserializerProvider =
-            DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            ODataDeserializerProviderFactory.Create();
 
         [Fact]
         public void Ctor_ThrowsArgumentNull_PayloadKinds()
@@ -253,8 +253,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [InlineData("1.0", "3.0", "4.0")]
         public void SetDefaultContentHeaders_SetsRightODataServiceVersion(string requestDataServiceVersion, string requestMaxDataServiceVersion, string expectedDataServiceVersion)
         {
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableODataDependencyInjectionSupport();
+            var request = RequestFactory.Create();
             if (requestDataServiceVersion != null)
             {
                 request.Headers.TryAddWithoutValidation("OData-Version", requestDataServiceVersion);
@@ -302,8 +301,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 MediaTypeHeaderValue.Parse("application/json; odata.metadata=minimal") :
                 MediaTypeHeaderValue.Parse(acceptHeader);
 
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableODataDependencyInjectionSupport();
+            var request = RequestFactory.Create();
             if (acceptHeader != null)
             {
                 request.Headers.TryAddWithoutValidation("Accept", acceptHeader);

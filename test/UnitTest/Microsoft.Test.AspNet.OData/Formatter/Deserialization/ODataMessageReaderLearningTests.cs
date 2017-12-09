@@ -253,23 +253,20 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
         private static IODataRequestMessage CreateRequest()
         {
-            HttpContentHeaders headers;
+            //HttpContentHeaders headers;
+            //using (HttpContent content = new StreamContent(Stream.Null))
+            //{
+            //    headers = content.Headers;
+            //}
 
-            using (HttpContent content = new StreamContent(Stream.Null))
-            {
-                headers = content.Headers;
-            }
-
-            headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata.metadata=full");
-
+            var headers = FormatterTestHelper.GetContentHeaders("application/json;odata.metadata=full");
             return ODataMessageWrapperHelper.Create(Stream.Null, headers);
         }
 
         private static IODataRequestMessage CreateRequest(string body)
         {
             HttpContent content = new StringContent(body);
-            HttpContentHeaders headers = content.Headers;
-            headers.ContentType = MediaTypeHeaderValue.Parse("application/json;odata.metadata=full");
+            var headers = FormatterTestHelper.GetContentHeaders("application/json;odata.metadata=full");
 
             return ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, headers);
         }

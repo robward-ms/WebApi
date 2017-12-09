@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -219,16 +220,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             Dictionary<string, object> properties = new Dictionary<string, object> { { "DoubleETag", value } };
             EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
 
-            HttpRequestMessage request = new HttpRequestMessage();
-
             var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyETagCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntityType customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(e => e.Name == "MyEtagCustomer");
             IEdmEntitySet customers = model.FindDeclaredEntitySet("Customers");
             ODataPath odataPath = new ODataPath(new[] { new EntitySetSegment(customers) });
-            request.EnableHttpDependencyInjectionSupport(model);
-            request.ODataProperties().Path = odataPath;
+            var request = RequestFactory.CreateFromModel(model);
+            request.SetODataPath(odataPath);
 
             ETag etagCustomer = request.GetETag(etagHeaderValue);
             etagCustomer.EntityType = typeof(MyETagCustomer);
@@ -309,15 +308,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             };
             EntityTagHeaderValue etagHeaderValue = handerl.CreateETag(properties);
 
-            HttpRequestMessage request = new HttpRequestMessage();
-
             var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MyETagOrder>("Orders");
             IEdmModel model = builder.GetEdmModel();
             IEdmEntitySet orders = model.FindDeclaredEntitySet("Orders");
             ODataPath odataPath = new ODataPath(new[] {new EntitySetSegment(orders) });
-            request.ODataProperties().Path = odataPath;
-            request.EnableHttpDependencyInjectionSupport(model);
+            var request = RequestFactory.CreateFromModel(model);
+            request.SetODataPath(odataPath);
 
             ETag etagCustomer = request.GetETag(etagHeaderValue);
             etagCustomer.EntityType = typeof(MyETagOrder);

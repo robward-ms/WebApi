@@ -455,7 +455,12 @@ namespace Microsoft.Test.AspNet.OData
             ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<AutoExpandedCustomer>("AutoExpandedCustomers");
             IEdmModel model = builder.GetEdmModel();
-            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", model);
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
@@ -663,7 +668,12 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            return TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            return TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", model);
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            });
+
         }
 
         // We need to create the data as we need the queries to succeed in one scenario.

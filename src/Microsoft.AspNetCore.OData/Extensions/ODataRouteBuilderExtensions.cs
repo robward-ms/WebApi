@@ -402,6 +402,26 @@ namespace Microsoft.AspNet.OData.Extensions
         }
 
         /// <summary>
+        /// Gets the <see cref="TimeZoneInfo"/> from the configuration.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/>.</param>
+        /// <returns>The <see cref="TimeZoneInfo"/> for the configuration.</returns>
+        public static TimeZoneInfo GetTimeZoneInfo(this IRouteBuilder builder)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="TimeZoneInfo"/> on the configuration.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/>.</param>
+        /// <param name="timeZoneInfo">The <see cref="TimeZoneInfo"/> for the configuration.</param>
+        /// <returns></returns>
+        public static void SetTimeZoneInfo(this IRouteBuilder builder, TimeZoneInfo timeZoneInfo)
+        {
+        }
+
+        /// <summary>
         /// Maps the specified OData route and the OData route attributes.
         /// </summary>
         /// <param name="builder">The <see cref="IRouteBuilder"/> to add the route to.</param>

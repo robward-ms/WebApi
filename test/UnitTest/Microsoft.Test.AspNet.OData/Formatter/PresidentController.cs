@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.AspNet.OData.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -28,9 +29,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return president;
         }
 
-        public HttpResponseMessage Post(FormatterPerson person)
+#if NETCORE
+        public AspNetCore.Http.HttpResponse Post(FormatterPerson person)
         {
             return Request.CreateResponse(HttpStatusCode.Created, person);
         }
+#else
+        public System.Net.Http.HttpResponseMessage Post(FormatterPerson person)
+        {
+            return Request.CreateResponse(HttpStatusCode.Created, person);
+        }
+#endif
     }
 }

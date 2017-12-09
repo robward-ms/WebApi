@@ -39,7 +39,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public void GetValueProvider_ReturnsValueProvider_BackedByRoutingStore()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().RoutingConventionsStore["ID"] = 42;
             HttpActionContext actionContext = new HttpActionContext { ControllerContext = new HttpControllerContext { Request = request } };
             ODataValueProviderFactory factory = new ODataValueProviderFactory();

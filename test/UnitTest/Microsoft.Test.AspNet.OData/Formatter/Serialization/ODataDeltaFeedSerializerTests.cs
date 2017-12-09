@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -71,7 +72,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
              _customersType = _model.GetEdmTypeReference(typeof(Customer[])).AsCollection();
 
             _writeContext = new ODataSerializerContext() { NavigationSource = _customerSet, Model = _model, Path = _path };
-            _serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            _serializerProvider = ODataSerializerProviderFactory.Create();
         }
 
         [Fact]
@@ -192,7 +193,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             // Arrange
             Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             serializerProvider.Setup(s => s.GetODataPayloadSerializer(typeof(int), request)).Returns<ODataSerializer>(null);
             IEnumerable instance = new object[] { 42 };
             ODataDeltaFeedSerializer serializer = new ODataDeltaFeedSerializer(serializerProvider.Object);

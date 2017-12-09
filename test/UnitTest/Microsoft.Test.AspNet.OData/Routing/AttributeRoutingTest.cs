@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Factories;
@@ -64,7 +65,11 @@ namespace Microsoft.Test.AspNet.OData.Routing
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
             var controllers = new[] { typeof(CustomersController), typeof(MetadataAndServiceController), typeof(OrdersController) };
-            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) => model.Model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "", model.Model);
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), requestUri);
@@ -90,7 +95,11 @@ namespace Microsoft.Test.AspNet.OData.Routing
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
 
             var controllers = new[] { typeof(CustomersController) };
-            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) => model.Model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "", model.Model);
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
             //request.ODataProperties().RouteName = HttpRouteCollectionExtensions.RouteName;

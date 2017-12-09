@@ -90,7 +90,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             _customersType = _model.GetEdmTypeReference(typeof(Customer[])).AsCollection();
             _addressesType = _model.GetEdmTypeReference(typeof(Address[])).AsCollection();
             _writeContext = new ODataSerializerContext() { NavigationSource = _customerSet, Model = _model };
-            _serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            _serializerProvider = ODataSerializerProviderFactory.Create();
         }
 
         [Fact]
@@ -298,7 +298,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             // Arrange
             Mock<ODataSerializerProvider> serializerProvider = new Mock<ODataSerializerProvider>();
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             serializerProvider.Setup(s => s.GetODataPayloadSerializer(typeof(int), request)).Returns<ODataSerializer>(null);
             IEnumerable instance = new object[] { 42 };
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(serializerProvider.Object);
@@ -493,7 +493,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             const long ExpectedCountValue = 1000;
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().TotalCount = ExpectedCountValue;
             var result = new object[0];
 
@@ -510,7 +510,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri expectedNextLink = new Uri("http://nextlink.com");
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().NextLink = expectedNextLink;
             var result = new object[0];
 
@@ -527,7 +527,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri expectedDeltaLink = new Uri("http://deltalink.com");
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().DeltaLink = expectedDeltaLink;
             var result = new object[0];
 
@@ -544,7 +544,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri nextLink = new Uri("http://somelink");
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().NextLink = nextLink;
             var result = new object[0];
             IEdmNavigationProperty navProp = _customerSet.EntityType().NavigationProperties().First();
@@ -568,7 +568,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         {
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.ODataProperties().TotalCount = 42;
             var result = new object[0];
             IEdmNavigationProperty navProp = _customerSet.EntityType().NavigationProperties().First();
@@ -688,7 +688,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             string expectedMetadataPrefix = "http://Metadata";
 
             UrlHelper url = CreateMetadataLinkFactory(expectedMetadataPrefix);
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             ResourceSetContext resourceSetContext = new ResourceSetContext
             {
                 EntitySetBase = customers,

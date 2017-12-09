@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.Edm;
@@ -43,10 +44,12 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public AttributeRoutingUnboundTest()
         {
             Type[] controllers = new[] { typeof(ConventionCustomersController) };
-            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) =>
+            var server = TestServerFactory.Create(controllers, (config) =>
             {
-                var builder = ODataModelBuilderMocks.GetModelBuilderMock<ODataConventionModelBuilder>(routingConfig);
-                return GetEdmModel(builder);
+                var builder = ODataModelBuilderMocks.GetModelBuilderMock<ODataConventionModelBuilder>(config);
+                IEdmModel model = GetEdmModel(builder);
+
+                config.MapODataServiceRoute("odata", "", model);
             });
 
             _client = TestServerFactory.CreateClient(server);

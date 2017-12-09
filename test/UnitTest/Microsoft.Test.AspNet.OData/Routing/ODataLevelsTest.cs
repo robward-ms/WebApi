@@ -33,7 +33,12 @@ namespace Microsoft.Test.AspNet.OData.Routing
         {
             IEdmModel model = GetEdmModel();
             Type[] controllers = new[] { typeof(LevelsEntitiesController) };
-            var _nullPrefixServer = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            var _nullPrefixServer = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+                config.MapODataServiceRoute("odata", "odata", model);
+            });
+
             _client = TestServerFactory.CreateClient(_nullPrefixServer);
         }
 

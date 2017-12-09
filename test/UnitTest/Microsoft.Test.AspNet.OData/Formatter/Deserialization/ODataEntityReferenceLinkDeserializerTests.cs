@@ -9,6 +9,7 @@ using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
@@ -66,7 +67,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             ODataMessageReader messageReader = new ODataMessageReader(new MockODataRequestMessage(requestMessage), readSettings, model);
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new HttpRequestMessage(),
+                Request = RequestFactory.Create(),
                 Path = new ODataPath(new NavigationPropertySegment(GetNavigationProperty(model), navigationSource: null))
             };
 
@@ -96,7 +97,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = new HttpRequestMessage(),
+                Request = RequestFactory.Create(),
                 Path = new ODataPath(new NavigationPropertySegment(navigationProperty, navigationSource: null))
             };
 

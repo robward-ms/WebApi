@@ -19,7 +19,7 @@ namespace Microsoft.Test.AspNet.OData
     public class EnumDeserializerTest
     {
         private readonly ODataDeserializerProvider _deserializerProvider =
-            DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            ODataDeserializerProviderFactory.Create();
 
         [Fact]
         public void GetEdmTypeDeserializer_ReturnODataEnumDeserializer_ForEnumType()

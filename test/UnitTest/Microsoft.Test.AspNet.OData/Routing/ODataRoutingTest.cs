@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
@@ -61,14 +62,26 @@ namespace Microsoft.Test.AspNet.OData.Routing
             };
 
             // Separate clients and servers so routes are not ambiguous.
-            var nullPrefixServer = TestServerFactory.Create("NullPrefixRoute", null, controllers, (routingConfig) => model);
+            var nullPrefixServer = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("NullPrefixRoute", null, model);
+            });
+
             _nullPrefixClient = TestServerFactory.CreateClient(nullPrefixServer);
 
             // FixedPrefixRoute has both a non-empty virtual path root and a fixed route prefix.
-            var fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", "FixedPrefixRoute", "odata", controllers, (routingConfig) => model);
+            var fixedPrefixServer = TestServerFactory.CreateWithRoute("MyRoot", controllers, (config) =>
+            {
+                config.MapODataServiceRoute("FixedPrefixRoute", "odata", model);
+            });
+
             _fixedPrefixClient = TestServerFactory.CreateClient(fixedPrefixServer);
 
-            var parameterizedPrefixServer = TestServerFactory.Create("ParameterizedPrefixRoute", "{a}", controllers, (routingConfig) => model);
+            var parameterizedPrefixServer = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("ParameterizedPrefixRoute", "{a}", model);
+            });
+
             _parameterizedPrefixClient = TestServerFactory.CreateClient(parameterizedPrefixServer);
         }
 

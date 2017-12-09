@@ -18,16 +18,6 @@ namespace Microsoft.Test.AspNet.OData
 {
     public static class DependencyInjectionHelper
     {
-        public static ODataSerializerProvider GetDefaultODataSerializerProvider()
-        {
-            return new MockContainer().GetRequiredService<ODataSerializerProvider>();
-        }
-
-        public static ODataDeserializerProvider GetDefaultODataDeserializerProvider()
-        {
-            return new MockContainer().GetRequiredService<ODataDeserializerProvider>();
-        }
-
         public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration)
         {
             configuration.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName);
@@ -44,11 +34,6 @@ namespace Microsoft.Test.AspNet.OData
             configuration.CreateODataRootContainer(routeName, action);
         }
 
-        public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration, IEdmModel model)
-        {
-            configuration.CreateODataRootContainer(HttpRouteCollectionExtensions.RouteName, builder =>
-                builder.AddService(ServiceLifetime.Singleton, sp => model));
-        }
 
         public static void EnableODataDependencyInjectionSupport(this HttpConfiguration configuration, string routeName,
             IEdmModel model)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Expressions;
 using Microsoft.OData;
@@ -803,7 +804,11 @@ namespace Microsoft.Test.AspNet.OData.Query
                             .GetEdmModel();
 
             var controllers = new[] { typeof(MetadataController), typeof(CustomersController) };
-            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", model);
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
 
 
@@ -840,7 +845,11 @@ namespace Microsoft.Test.AspNet.OData.Query
                             .GetEdmModel();
 
             var controllers = new[] { typeof(MetadataController), typeof(CustomersController) };
-            var server = TestServerFactory.Create("odata", "odata", controllers, (routingConfig) => model);
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", model);
+            });
+
             HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,

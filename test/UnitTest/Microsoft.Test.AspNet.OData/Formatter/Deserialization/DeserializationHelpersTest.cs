@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Moq;
@@ -272,7 +273,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
                 EdmLibHelpers.GetEdmPrimitiveTypeReferenceOrNull(typeof(string))));
 
             EdmEntityTypeReference entityTypeReference = new EdmEntityTypeReference(entityType, isNullable: false);
-            ODataDeserializerProvider provider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            ODataDeserializerProvider provider = ODataDeserializerProviderFactory.Create();
 
             var resource = new Mock<IDelta>(MockBehavior.Strict);
             Type propertyType = typeof(string);

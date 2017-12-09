@@ -37,7 +37,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.PersonComplexType, content.ReadAsStringAsync().Result);
+            JsonAssert.Equal(Resources.PersonComplexType, FormatterTestHelper.GetContentResult(content));
         }
 
         private static IEdmModel GetSampleModel()

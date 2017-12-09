@@ -3,10 +3,12 @@
 
 #if NETCORE
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +22,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.TestCommon;
 #else
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
@@ -50,6 +53,24 @@ namespace Microsoft.Test.AspNet.OData.Factories
             string routePrefix,
             Type[] controllers,
             Func<IRouteBuilder, IEdmModel> getModelFunction)
+
+        {
+            return Create(controllers, (routeBuilder) =>
+            {
+                routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
+                routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            });
+        }
+
+        /// <summary>
+        /// Create an TestServer.
+        /// </summary>
+        /// <param name="controllers">The controllers to use.</param>
+        /// <param name="configureAction">The route configuration action.</param>
+        /// <returns>An TestServer.</returns>
+        public static TestServer Create(
+            Type[] controllers,
+            Action<IRouteBuilder> configureAction)
         {
             IWebHostBuilder builder = WebHost.CreateDefaultBuilder();
             builder.ConfigureServices(services =>
@@ -62,8 +83,7 @@ namespace Microsoft.Test.AspNet.OData.Factories
             {
                 app.UseMvc((routeBuilder) =>
                 {
-                    routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
-                    routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+                    configureAction(routeBuilder);
 
                     ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
                     applicationPartManager.ApplicationParts.Clear();
@@ -85,41 +105,40 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// Create an TestServer.
         /// </summary>
         /// <param name="route">The route.</param>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
         /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <param name="configureAction">The route configuration action.</param>
         /// <returns>An TestServer.</returns>
         public static TestServer CreateWithRoute(
             string route,
-            string routeName,
-            string routePrefix,
             Type[] controllers,
-            Func<IRouteBuilder,IEdmModel> getModelFunction)
+            Action<IRouteBuilder> configureAction)
         {
             // AspNetCore does not have that can be used to append a profix anymore
             // just append the route to the prefix
-            return Create(routeName, route + "/" + routePrefix, controllers, getModelFunction);
+            return Create(controllers, configureAction);
+#if !NETCORE
+            {
+                routeBuilder.MapODataServiceRoute(routeName, route + "/" + routePrefix, getModelFunction(routeBuilder));
+                routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            });
+#endif
         }
-
 
         /// <summary>
         /// Create an TestServer with formatters.
         /// </summary>
-        /// <param name="route">The route.</param>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
         /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <param name="formatters">A list of formatters to use.</param>
+        /// <param name="configureAction">The route configuration action.</param>
         /// <returns>An TestServer.</returns>
         public static TestServer CreateWithFormatters(
-            string routeName,
-            string routePrefix,
             Type[] controllers,
-            Func<IRouteBuilder, IEdmModel> getModelFunction)
+            IEnumerable<ODataOutputFormatter> formatters,
+            Action<IRouteBuilder> configureAction)
         {
             // AspNetCore's create adds the formatters by default.
-            return Create(routeName, routePrefix, controllers, getModelFunction);
+            TestServer server = Create(controllers, configureAction);
+            return server;
         }
 
         /// <summary>
@@ -170,42 +189,34 @@ namespace Microsoft.Test.AspNet.OData.Factories
             }
         }
 #else
-        /// <summary>
-        /// Create an HttpServer.
-        /// </summary>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
-        /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
-        /// <returns>An HttpServer.</returns>
-        public static HttpServer Create(
-            string routeName,
-            string routePrefix,
+            /// <summary>
+            /// Create an HttpServer.
+            /// </summary>
+            /// <param name="controllers">The controllers to use.</param>
+            /// <param name="configureAction">The route configuration action.</param>
+            /// <returns>An HttpServer.</returns>
+            public static HttpServer Create(
             Type[] controllers,
-            Func<HttpConfiguration, IEdmModel> getModelFunction)
+            Action<HttpConfiguration> configureAction)
         {
             HttpConfiguration configuration = new HttpConfiguration();
-            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+            return Create(configuration, controllers, configureAction);
         }
 
         /// <summary>
         /// Create an HttpServer.
         /// </summary>
         /// <param name="route">The route.</param>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
         /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
+        /// <param name="configureAction">The route configuration action.</param>
         /// <returns>An HttpServer.</returns>
         public static HttpServer CreateWithRoute(
             string route,
-            string routeName,
-            string routePrefix,
             Type[] controllers,
-            Func<HttpConfiguration, IEdmModel> getModelFunction)
+            Action<HttpConfiguration> configureAction)
         {
             HttpConfiguration configuration = new HttpConfiguration(new HttpRouteCollection(route));
-            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+            return Create(configuration, controllers, configureAction);
         }
 
         /// <summary>
@@ -217,36 +228,30 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <param name="getModelFunction">A function to get the model.</param>
         /// <returns>An HttpServer.</returns>
         public static HttpServer CreateWithFormatters(
-            string routeName,
-            string routePrefix,
             Type[] controllers,
-            Func<HttpConfiguration, IEdmModel> getModelFunction)
+            IEnumerable<ODataMediaTypeFormatter> formatters,
+            Action<HttpConfiguration> configureAction)
         {
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.Formatters.Clear();
-            configuration.Formatters.AddRange(ODataMediaTypeFormatters.Create());
-            return Create(configuration, routeName, routePrefix, controllers, getModelFunction);
+            configuration.Formatters.AddRange(formatters == null ? ODataMediaTypeFormatters.Create() : formatters);
+            return Create(configuration, controllers, configureAction);
         }
 
         /// <summary>
-        /// Create an HttpServer.
+        /// Create an TestServer.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
         /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
-        /// <returns>An HttpServer.</returns>
-        public static HttpServer Create(
+        /// <param name="configureAction">The route configuration.</param>
+        /// <param name="configureAction">The route configuration action.</param>
+        /// <returns>An TestServer.</returns>
+        private static HttpServer Create(
             HttpConfiguration configuration,
-            string routeName,
-            string routePrefix,
             Type[] controllers,
-            Func<HttpConfiguration, IEdmModel> getModelFunction)
+            Action<HttpConfiguration> configureAction)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.MapODataServiceRoute(routeName, routePrefix, getModelFunction(configuration));
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+            configureAction(configuration);
 
             TestAssemblyResolver resolver = new TestAssemblyResolver(new MockAssembly(controllers));
             configuration.Services.Replace(typeof(IAssembliesResolver), resolver);

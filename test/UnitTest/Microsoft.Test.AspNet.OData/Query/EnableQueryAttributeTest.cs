@@ -486,7 +486,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             // Arrange
             EnableQueryAttribute attribute = new EnableQueryAttribute();
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.EnableHttpDependencyInjectionSupport();
             var model = new ODataModelBuilder().Add_Customer_EntityType().Add_Customers_EntitySet().GetEdmModel();
             var options = new ODataQueryOptions(new ODataQueryContext(model, typeof(Microsoft.Test.AspNet.OData.Builder.TestModels.Customer)), request);
@@ -803,7 +803,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             object entity = new object();
             EnableQueryAttribute attribute = new EnableQueryAttribute();
             ODataQueryContext context = new ODataQueryContext(EdmCoreModel.Instance, typeof(int));
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.EnableHttpDependencyInjectionSupport();
             Mock<ODataQueryOptions> queryOptions = new Mock<ODataQueryOptions>(context, request);
 

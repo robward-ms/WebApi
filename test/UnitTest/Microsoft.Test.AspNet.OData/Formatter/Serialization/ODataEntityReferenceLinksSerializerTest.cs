@@ -9,6 +9,8 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -125,8 +127,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataEntityReferenceLinksSerializer serializer = new ODataEntityReferenceLinksSerializer();
             ODataSerializerContext writeContext = new ODataSerializerContext();
-            writeContext.Request = new HttpRequestMessage();
-            writeContext.Request.ODataProperties().TotalCount = 1;
+            writeContext.Request = RequestFactory.Create();
+            writeContext.Request.SetTotalCount(1);
 
             MemoryStream stream = new MemoryStream();
             IODataResponseMessage message = new ODataMessageWrapper(stream);

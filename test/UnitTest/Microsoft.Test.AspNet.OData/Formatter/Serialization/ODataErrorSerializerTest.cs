@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
@@ -30,7 +31,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObject_SupportsHttpError()
         {
             var serializer = new ODataErrorSerializer();
+#if !NETCORE
             var error = new HttpError("bad stuff");
+#else
+            var error = new SerializableError();
+#endif
+
             Mock<IODataResponseMessage> mockResponseMessage = new Mock<IODataResponseMessage>();
             mockResponseMessage.Setup(response => response.GetStream()).Returns(new MemoryStream());
 

@@ -43,6 +43,7 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Batch;
 using Microsoft.Test.AspNet.OData.Builder;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Moq;
@@ -50,6 +51,7 @@ using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 #endif
 
+#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
     public class ODataResourceSerializerTests
@@ -96,7 +98,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ID = 20,
             };
 
-            _serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            _serializerProvider = ODataSerializerProviderFactory.Create();
             _customerType = _model.GetEdmTypeReference(typeof(Customer)).AsEntity();
             _orderType = _model.GetEdmTypeReference(typeof(Order)).AsEntity();
             _specialCustomerType = _model.GetEdmTypeReference(typeof(SpecialCustomer)).AsEntity();
@@ -919,7 +921,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
             HttpConfiguration config = new HttpConfiguration();
             config.SetSerializeNullDynamicProperty(enableNullDynamicProperty);
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
             request.SetConfiguration(config);
             SelectExpandNode selectExpandNode = new SelectExpandNode(null, customerType, model);
             ODataSerializerContext writeContext = new ODataSerializerContext
@@ -2075,3 +2077,4 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 
     }
 }
+#endif

@@ -13,6 +13,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
 using Microsoft.Test.AspNet.OData.Routing;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -25,7 +27,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
     public class DefaultODataSerializerProviderTests
     {
         private ODataSerializerProvider _serializerProvider =
-            DependencyInjectionHelper.GetDefaultODataSerializerProvider();
+            ODataSerializerProviderFactory.Create();
         private IEdmModel _edmModel = EdmTestHelpers.GetModel();
 
         public static TheoryDataSet<Type, EdmPrimitiveTypeKind> EdmPrimitiveMappingData
@@ -60,7 +62,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataPayloadSerializer_ThrowsArgumentNull_Type()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
 
             // Act & Assert
             ExceptionAssert.ThrowsArgumentNull(
@@ -82,8 +84,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_Primitive(Type type, EdmPrimitiveTypeKind edmPrimitiveTypeKind)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport();
+            var request = RequestFactory.Create();
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(type, request);
@@ -100,10 +101,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataPayloadSerializer_ReturnsRawValueSerializer_ForValueRequests(Type type, EdmPrimitiveTypeKind edmPrimitiveTypeKind)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.ODataProperties().Path =
-                new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            ODataPath odataPath = new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
+            var request = RequestFactory.CreateFromModel(_edmModel);
+            request.SetODataPath(odataPath);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(type, request);
@@ -118,8 +118,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_Enum()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(GetEnumModel());
+            var request = RequestFactory.CreateFromModel(GetEnumModel());
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(typeof(TestEnum), request);
@@ -134,10 +133,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataPayloadSerializer_ReturnsRawValueSerializer_ForEnumValueRequests()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.ODataProperties().Path =
-                new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
-            request.EnableHttpDependencyInjectionSupport(GetEnumModel());
+            ODataPath odataPath= new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
+            var request = RequestFactory.CreateFromModel(GetEnumModel());
+            request.SetODataPath(odataPath);
+
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(typeof(TestEnum), request);
@@ -171,11 +170,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             IEdmModel model = ODataCountTest.GetEdmModel();
             Type type = typeof(ICollection<>).MakeGenericType(elementType);
-            var request = new HttpRequestMessage();
             var pathHandler = new DefaultODataPathHandler();
             var path = pathHandler.Parse(model, "http://localhost/", uri);
-            request.ODataProperties().Path = path;
-            request.EnableHttpDependencyInjectionSupport(model);
+            var request = RequestFactory.CreateFromModel(model);
+            request.SetODataPath(path);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(type, request);
@@ -190,8 +188,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_Resource_ForEntity()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            var request = RequestFactory.CreateFromModel(_edmModel);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(typeof(ODataResourceDeserializerTests.Product), request);
@@ -207,8 +204,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_Resource_ForComplex()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            var request = RequestFactory.CreateFromModel(_edmModel);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(typeof(ODataResourceDeserializerTests.Address), request);
@@ -230,8 +226,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_ResourceSet_ForEntityCollection(Type collectionType)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            var request = RequestFactory.CreateFromModel(_edmModel);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(collectionType, request);
@@ -253,8 +248,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_ResourceSet_ForComplexCollection(Type collectionType)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            var request = RequestFactory.CreateFromModel(_edmModel);
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(collectionType, request);
@@ -276,7 +270,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_Returns_ExpectedSerializerType(Type payloadType, Type expectedSerializerType)
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = RequestFactory.Create();
 
             // Act
             ODataSerializer serializer = _serializerProvider.GetODataPayloadSerializer(payloadType, request);
@@ -290,8 +284,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void GetODataSerializer_ReturnsSameSerializer_ForSameType()
         {
             // Arrange
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport(_edmModel);
+            var request = RequestFactory.CreateFromModel(_edmModel);
 
             // Act
             ODataSerializer firstCallSerializer = _serializerProvider.GetODataPayloadSerializer(

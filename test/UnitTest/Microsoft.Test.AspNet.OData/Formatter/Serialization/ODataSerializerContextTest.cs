@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -24,6 +25,7 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
@@ -63,11 +65,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
                 Model = model.Model,
                 Path = new ODataPath(),
-                Request = new HttpRequestMessage(),
+                Request = RequestFactory.Create(),
                 RootElementName = "somename",
                 SelectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true),
                 SkipExpensiveAvailabilityChecks = true,
+#if NETFX // Url is only in AspNet
                 Url = new UrlHelper()
+#endif
             };
             ResourceContext resource = new ResourceContext { SerializerContext = context };
             SelectExpandClause selectExpand = new SelectExpandClause(new SelectItem[0], allSelected: true);
@@ -83,7 +87,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             Assert.Same(context.Request, nestedContext.Request);
             Assert.Equal(context.RootElementName, nestedContext.RootElementName);
             Assert.Equal(context.SkipExpensiveAvailabilityChecks, nestedContext.SkipExpensiveAvailabilityChecks);
+#if NETFX // Url is only in AspNet
             Assert.Same(context.Url, nestedContext.Url);
+#endif
         }
 
         [Fact]

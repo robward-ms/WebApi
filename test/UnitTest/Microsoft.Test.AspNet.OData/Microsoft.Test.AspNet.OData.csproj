@@ -118,7 +118,9 @@
     <Compile Include="Extensions\IHeaderDictionaryExtensions.cs" />
     <Compile Include="Factories\ControllerDescriptorFactory.cs" />
     <Compile Include="Factories\ODataConventionModelBuilderFactory.cs" />
+    <Compile Include="Factories\ODataDeserializerProviderFactory.cs" />
     <Compile Include="Factories\ODataSerializerContextFactory.cs" />
+    <Compile Include="Factories\ODataSerializerProviderFactory.cs" />
     <Compile Include="Factories\RequestFactory.cs" />
     <Compile Include="Factories\ResourceSetContextFactory.cs" />
     <Compile Include="Factories\ResponseFactory.cs" />

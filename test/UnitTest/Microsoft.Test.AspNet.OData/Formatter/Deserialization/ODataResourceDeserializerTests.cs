@@ -46,7 +46,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             _productEdmType = _edmModel.GetEdmTypeReference(typeof(Product)).AsEntity();
             _supplierEdmType = _edmModel.GetEdmTypeReference(typeof(Supplier)).AsEntity();
             _addressEdmType = _edmModel.GetEdmTypeReference(typeof(Address)).AsComplex();
-            _deserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            _deserializerProvider = ODataDeserializerProviderFactory.Create();
         }
 
         [Fact]

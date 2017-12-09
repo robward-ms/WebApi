@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
@@ -19,6 +20,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -35,9 +37,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
         public ODataSingletonRoutingTest()
         {
             var controllers = new[] { typeof(VipCustomerController) };
-            var server = TestServerFactory.Create("odata", "", controllers, (routingConfig) =>
+            var server = TestServerFactory.Create(controllers, (config) =>
             {
-                return new CustomersModelWithInheritance().Model;
+                config.MapODataServiceRoute("odata", "", new CustomersModelWithInheritance().Model);
             });
 
             _client = TestServerFactory.CreateClient(server);

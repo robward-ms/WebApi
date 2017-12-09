@@ -38,8 +38,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             _model = GetEdmModel();
             _customerType = _model.GetEdmTypeReference(typeof(Customer)).AsEntity();
             _customersType = new EdmCollectionTypeReference(new EdmCollectionType(_customerType));
-            _serializerProvider = DependencyInjectionHelper.GetDefaultODataSerializerProvider();
-            _deserializerProvider = DependencyInjectionHelper.GetDefaultODataDeserializerProvider();
+            _serializerProvider = ODataSerializerProviderFactory.Create();
+            _deserializerProvider = ODataDeserializerProviderFactory.Create();
         }
 
         [Fact]
@@ -136,8 +136,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
                 new EdmCollectionTypeReference(new EdmCollectionType(addressType));
 
             HttpContent content = new StringContent("{ 'value': [ {'@odata.type':'Microsoft.Test.AspNet.OData.TestCommon.Models.Address', 'City' : 'Redmond' } ] }");
-            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            IODataRequestMessage request = ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, content.Headers);
+            var headers = FormatterTestHelper.GetContentHeaders("application/json");
+
+            IODataRequestMessage request = ODataMessageWrapperHelper.Create(content.ReadAsStreamAsync().Result, headers);
             ODataMessageReader reader = new ODataMessageReader(request, new ODataMessageReaderSettings(), _model);
             var deserializer = new ODataResourceSetDeserializer(_deserializerProvider);
             ODataDeserializerContext readContext = new ODataDeserializerContext

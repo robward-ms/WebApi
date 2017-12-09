@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
@@ -29,9 +30,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return obj;
         }
 
-        public HttpResponseMessage PostFormatterPerson(FormatterPerson person)
+#if NETCORE
+        public AspNetCore.Http.HttpResponse PostFormatterPerson(FormatterPerson person)
         {
             return Request.CreateResponse(HttpStatusCode.Created, person);
         }
+#else
+        public System.Net.Http.HttpResponseMessage PostFormatterPerson(FormatterPerson person)
+        {
+            return Request.CreateResponse(HttpStatusCode.Created, person);
+        }
+#endif
     }
 }
