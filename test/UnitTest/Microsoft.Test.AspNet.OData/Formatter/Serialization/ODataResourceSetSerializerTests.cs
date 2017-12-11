@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.Serialization;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -18,6 +17,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -42,6 +42,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -50,7 +51,6 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 #endif
 
-#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
 {
     public class ODataResourceSetSerializerTests
@@ -494,7 +494,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             const long ExpectedCountValue = 1000;
             var request = RequestFactory.Create();
-            request.ODataProperties().TotalCount = ExpectedCountValue;
+            request.ODataContext().TotalCount = ExpectedCountValue;
             var result = new object[0];
 
             // Act
@@ -511,7 +511,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri expectedNextLink = new Uri("http://nextlink.com");
             var request = RequestFactory.Create();
-            request.ODataProperties().NextLink = expectedNextLink;
+            request.ODataContext().NextLink = expectedNextLink;
             var result = new object[0];
 
             // Act
@@ -528,7 +528,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri expectedDeltaLink = new Uri("http://deltalink.com");
             var request = RequestFactory.Create();
-            request.ODataProperties().DeltaLink = expectedDeltaLink;
+            request.ODataContext().DeltaLink = expectedDeltaLink;
             var result = new object[0];
 
             // Act
@@ -545,7 +545,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             Uri nextLink = new Uri("http://somelink");
             var request = RequestFactory.Create();
-            request.ODataProperties().NextLink = nextLink;
+            request.ODataContext().NextLink = nextLink;
             var result = new object[0];
             IEdmNavigationProperty navProp = _customerSet.EntityType().NavigationProperties().First();
             SelectExpandClause selectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true);
@@ -569,7 +569,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             var request = RequestFactory.Create();
-            request.ODataProperties().TotalCount = 42;
+            request.ODataContext().TotalCount = 42;
             var result = new object[0];
             IEdmNavigationProperty navProp = _customerSet.EntityType().NavigationProperties().First();
             SelectExpandClause selectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true);
@@ -622,16 +622,20 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void CreateResourceSet_SetsODataOperations()
         {
             // Arrange
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             IEdmCollectionTypeReference customersType = new EdmCollectionTypeReference(new EdmCollectionType(model.Customer.AsReference()));
             ODataResourceSetSerializer serializer = new ODataResourceSetSerializer(_serializerProvider);
             ODataSerializerContext context = new ODataSerializerContext
             {
                 NavigationSource = model.Customers,
-                Request = new HttpRequestMessage(),
+                Request = request,
                 Model = model.Model,
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
+#if NETFX // Only AspNet version as Url property
                 Url = CreateMetadataLinkFactory("http://IgnoreMetadataPath")
+#endif
             };
 
             var result = new object[0];
@@ -687,13 +691,14 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             IEdmFunction edmFunction = model.SchemaElements.OfType<IEdmFunction>().First(f => f.Name == "MyFunction");
             string expectedMetadataPrefix = "http://Metadata";
 
-            UrlHelper url = CreateMetadataLinkFactory(expectedMetadataPrefix);
             var request = RequestFactory.Create();
             ResourceSetContext resourceSetContext = new ResourceSetContext
             {
                 EntitySetBase = customers,
                 Request = request,
-                Url = url
+#if NETFX // Only AspNet version as Url property
+                Url = CreateMetadataLinkFactory(expectedMetadataPrefix)
+#endif
             };
 
             ODataSerializerContext serializerContext = new ODataSerializerContext
@@ -702,7 +707,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 Request = request,
                 Model = model,
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
-                Url = url
+#if NETFX // Only AspNet version as Url property
+                Url = resourceSetContext.Url
+#endif
             };
 
             // Act
@@ -747,6 +754,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             Assert.Equal(expected.AbsoluteUri, actual.AbsoluteUri);
         }
 
+#if NETFX // Only AspNet version as UrlHelper
         private static UrlHelper CreateMetadataLinkFactory(string metadataPath)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, metadataPath);
@@ -754,11 +762,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             request.GetConfiguration().Routes.MapFakeODataRoute();
             return new UrlHelper(request);
         }
-
+#endif
         public class FeedCustomer
         {
             public int Id { get; set; }
         }
     }
 }
-#endif

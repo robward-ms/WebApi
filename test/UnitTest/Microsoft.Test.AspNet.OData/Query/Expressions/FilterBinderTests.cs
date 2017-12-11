@@ -2634,7 +2634,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                WebApiAssembliesResolverFactory.CreateFake(),
+                WebApiAssembliesResolverFactory.Create(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2666,7 +2666,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                WebApiAssembliesResolverFactory.CreateFake(),
+                WebApiAssembliesResolverFactory.Create(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2696,7 +2696,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 filterClause,
                 typeof(DataTypes),
                 model,
-                WebApiAssembliesResolverFactory.CreateFake(),
+                WebApiAssembliesResolverFactory.Create(),
                 new ODataQuerySettings { HandleNullPropagation = HandleNullPropagationOption.False });
 
             // Assert
@@ -2864,7 +2864,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
                 querySettings = CreateSettings();
             }
 
-            return Bind<T>(filterNode, model, WebApiAssembliesResolverFactory.CreateFake(), querySettings);
+            return Bind<T>(filterNode, model, WebApiAssembliesResolverFactory.Create(), querySettings);
         }
 
         private static Expression<Func<TEntityType, bool>> Bind<TEntityType>(FilterClause filterNode, IEdmModel model, IWebApiAssembliesResolver assembliesResolver, ODataQuerySettings querySettings)
@@ -2931,7 +2931,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             IEdmModel model = GetModel<T>();
             FilterClause filterNode = CreateFilterNode(filter, model, typeof(T));
-            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.CreateFake();
+            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.Create();
 
             Func<ODataQuerySettings, ODataQuerySettings> customizeSettings = (settings) =>
             {

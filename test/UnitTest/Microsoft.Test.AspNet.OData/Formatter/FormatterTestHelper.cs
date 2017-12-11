@@ -2,10 +2,15 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
@@ -29,26 +34,18 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 #if NETCORE
         internal static ODataOutputFormatter GetFormatter(
             ODataPayloadKind[] payload,
+            HttpRequest request,
             IEdmModel model = null,
             string routeName = null,
             ODataPath path = null)
         {
+            // request is not needed on AspNetCore.
             ODataOutputFormatter formatter;
             formatter = new ODataOutputFormatter(payload);
             formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
             formatter.SupportedMediaTypes.Add(ODataMediaTypes.ApplicationXml);
-
-            HttpRequest request = null;
-            if (string.IsNullOrEmpty(routeName))
-            {
-                request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property");
-            }
-            else
-            {
-                request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", null, routeName);
-            }
-
-            // _formatter.Request = GetSampleRequest();
+            formatter.SupportedEncodings.Add(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true));
+            formatter.SupportedEncodings.Add(new UnicodeEncoding(bigEndian: false, byteOrderMark: true, throwOnInvalidBytes: true));
 
             return formatter;
         }
@@ -62,11 +59,24 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return objectResult;
         }
 
-        internal static string GetContentResult(ObjectResult content)
+        internal static string GetContentResult(ObjectResult content, HttpRequest request)
         {
-#if !NETCORE
-#endif
-            return string.Empty;
+            var objectType = content.DeclaredType;
+            if (objectType == null || objectType == typeof(object))
+            {
+                objectType = content.Value?.GetType();
+            }
+
+            var formatterContext = new OutputFormatterWriteContext(
+                request.HttpContext,
+                request.HttpContext.RequestServices.GetRequiredService<IHttpResponseStreamWriterFactory>().CreateWriter,
+                objectType,
+                content.Value);
+
+            content.Formatters[0].WriteAsync(formatterContext);
+
+            StreamReader reader = new StreamReader(request.HttpContext.Response.Body);
+            return reader.ReadToEnd();
         }
 
         internal static IHeaderDictionary GetContentHeaders(string contentType = null)
@@ -82,6 +92,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 #else
         internal static ODataMediaTypeFormatter GetFormatter(
             ODataPayloadKind[] payload,
+            HttpRequestMessage request,
             IEdmModel model = null,
             string routeName = null,
             ODataPath path = null)
@@ -91,11 +102,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationJsonODataMinimalMetadata));
             formatter.SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(ODataMediaTypes.ApplicationXml));
 
-            var config = RoutingConfigurationFactory.Create();
-            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             if (model != null && routeName != null)
             {
-                config.MapODataServiceRoute(routeName, null, model);
+                request.GetConfiguration().MapODataServiceRoute(routeName, null, model);
                 request.EnableODataDependencyInjectionSupport(routeName);
             }
             else if (routeName != null)
@@ -104,13 +113,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             }
             else if (model != null)
             {
-                config.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName, model);
+                request.GetConfiguration().EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName, model);
                 request.EnableODataDependencyInjectionSupport(model);
                 request.GetConfiguration().Routes.MapFakeODataRoute();
             }
             else
             {
-                config.EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName);
+                request.GetConfiguration().EnableODataDependencyInjectionSupport(HttpRouteCollectionExtensions.RouteName);
                 request.EnableODataDependencyInjectionSupport();
                 request.GetConfiguration().Routes.MapFakeODataRoute();
             }
@@ -129,8 +138,9 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return new ObjectContent<T>(content, formatter, MediaTypeHeaderValue.Parse(mediaType));
         }
 
-        internal static string GetContentResult(ObjectContent content)
+        internal static string GetContentResult(ObjectContent content, HttpRequestMessage request)
         {
+            // request is not needed on AspNet.
             return content.ReadAsStringAsync().Result;
         }
 

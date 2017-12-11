@@ -60,7 +60,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
             ODataPrimitiveValueMediaTypeMapping mapping = new ODataPrimitiveValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/People(1)/Age/$value");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             double mapResult = mapping.TryMatchMediaType(request);
 
@@ -99,7 +99,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new EntitySetSegment(people), keySegment, propertySegment);
             ODataPrimitiveValueMediaTypeMapping mapping = new ODataPrimitiveValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/People(1)/Age/");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             double mapResult = mapping.TryMatchMediaType(request);
 
@@ -124,7 +124,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new SingletonSegment(president), propertySegment);
             ODataPrimitiveValueMediaTypeMapping mapping = new ODataPrimitiveValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/President/Age/");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act
             double mapResult = mapping.TryMatchMediaType(request);
@@ -153,7 +153,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new EntitySetSegment(enumEntity), keySegment, propertySegment, new ValueSegment(propertySegment.EdmType));
             ODataEnumValueMediaTypeMapping mapping = new ODataEnumValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/EnumEntity(1)/EnumProperty/$value");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act
             double mapResult = mapping.TryMatchMediaType(request);
@@ -181,7 +181,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new EntitySetSegment(enumEntity), keySegment, propertySegment);
             ODataEnumValueMediaTypeMapping mapping = new ODataEnumValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/EnumEntity(1)/EnumProperty/");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act
             double mapResult = mapping.TryMatchMediaType(request);
@@ -209,7 +209,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new EntitySetSegment(rawValues), keySegment, propertySegment, new ValueSegment(propertySegment.EdmType));
             ODataBinaryValueMediaTypeMapping mapping = new ODataBinaryValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/RawValue(1)/BinaryProperty/$value");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             double mapResult = mapping.TryMatchMediaType(request);
 
@@ -233,7 +233,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             ODataPath path = new ODataPath(new SingletonSegment(rawSingletonValue), propertySegment, new ValueSegment(propertySegment.EdmType));
             ODataBinaryValueMediaTypeMapping mapping = new ODataBinaryValueMediaTypeMapping();
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/RawSingletonValue/BinaryProperty/$value");
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act
             double mapResult = mapping.TryMatchMediaType(request);

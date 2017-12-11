@@ -66,7 +66,6 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal("10", query.Top.RawValue);
         }
 
-//#if !NETCORE
         [Theory]
         [InlineData("IfMatch")]
         [InlineData("IfNoneMatch")]
@@ -87,7 +86,7 @@ namespace Microsoft.Test.AspNet.OData.Query
 
             EntitySetSegment entitySetSegment = new EntitySetSegment(customers);
             ODataPath odataPath = new ODataPath(new[] { entitySetSegment });
-            request.SetODataPath(odataPath);
+            request.ODataContext().Path = odataPath;
 
             Dictionary<string, object> properties = new Dictionary<string, object> { { "Name", "Foo" } };
             EntityTagHeaderValue etagHeaderValue = new DefaultODataETagHandler().CreateETag(properties);
@@ -111,7 +110,6 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal("Foo", result["Name"]);
             Assert.Equal("Foo", dynamicResult.Name);
         }
-//#endif
 
         [Theory]
         [InlineData("IfMatch")]

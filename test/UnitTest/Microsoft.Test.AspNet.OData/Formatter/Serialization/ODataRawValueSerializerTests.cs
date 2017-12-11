@@ -131,7 +131,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             mockRequest.Setup(r => r.GetStream()).Returns(stream);
             var messageWriter = new ODataMessageWriter(mockRequest.Object);
             var request = RequestFactory.Create();
-            request.SetODataPath(new ODataPath(CountSegment.Instance));
+            request.ODataContext().Path = new ODataPath(CountSegment.Instance);
             var context = new ODataSerializerContext { Request = request };
 
             // Act

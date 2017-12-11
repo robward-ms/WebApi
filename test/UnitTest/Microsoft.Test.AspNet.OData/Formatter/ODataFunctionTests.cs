@@ -83,7 +83,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
                 {
 #if NETCORE
-                    new AttributeRoutingConvention("odata2", configuration.ServiceProvider)
+                    new AttributeRoutingConvention("odata2", configuration.ServiceProvider, pathHandler)
 #else
                     new AttributeRoutingConvention("odata2", configuration)
 #endif

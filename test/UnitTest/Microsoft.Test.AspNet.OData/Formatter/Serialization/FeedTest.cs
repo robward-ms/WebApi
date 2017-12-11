@@ -4,6 +4,7 @@
 #if NETCORE
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
@@ -17,6 +18,7 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 #else
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
@@ -42,8 +44,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             IEdmEntitySet entitySet = _model.EntityContainer.FindEntitySet("employees");
             ODataPath path = new ODataPath(new EntitySetSegment(entitySet));
 
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("Route");
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.ResourceSet };
-            var formatter = FormatterTestHelper.GetFormatter(payload, _model, "Route", path);
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, _model, "Route", path);
 
             IEnumerable<Employee> collectionOfPerson = new Collection<Employee>()
             {
@@ -55,7 +59,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.FeedOfEmployee, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.FeedOfEmployee, FormatterTestHelper.GetContentResult(content, request));
         }
 
         private static IEdmModel GetSampleModel()

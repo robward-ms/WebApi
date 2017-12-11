@@ -227,7 +227,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmEntitySet customers = model.FindDeclaredEntitySet("Customers");
             ODataPath odataPath = new ODataPath(new[] { new EntitySetSegment(customers) });
             var request = RequestFactory.CreateFromModel(model);
-            request.SetODataPath(odataPath);
+            request.ODataContext().Path = odataPath;
 
             ETag etagCustomer = request.GetETag(etagHeaderValue);
             etagCustomer.EntityType = typeof(MyETagCustomer);
@@ -314,7 +314,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             IEdmEntitySet orders = model.FindDeclaredEntitySet("Orders");
             ODataPath odataPath = new ODataPath(new[] {new EntitySetSegment(orders) });
             var request = RequestFactory.CreateFromModel(model);
-            request.SetODataPath(odataPath);
+            request.ODataContext().Path = odataPath;
 
             ETag etagCustomer = request.GetETag(etagHeaderValue);
             etagCustomer.EntityType = typeof(MyETagOrder);

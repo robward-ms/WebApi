@@ -103,7 +103,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataPath odataPath = new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
             var request = RequestFactory.CreateFromModel(_edmModel);
-            request.SetODataPath(odataPath);
+            request.ODataContext().Path = odataPath;
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(type, request);
@@ -135,7 +135,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             // Arrange
             ODataPath odataPath= new ODataPath(new ValueSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32)));
             var request = RequestFactory.CreateFromModel(GetEnumModel());
-            request.SetODataPath(odataPath);
+            request.ODataContext().Path = odataPath;
 
 
             // Act
@@ -173,7 +173,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             var pathHandler = new DefaultODataPathHandler();
             var path = pathHandler.Parse(model, "http://localhost/", uri);
             var request = RequestFactory.CreateFromModel(model);
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act
             var serializer = _serializerProvider.GetODataPayloadSerializer(type, request);

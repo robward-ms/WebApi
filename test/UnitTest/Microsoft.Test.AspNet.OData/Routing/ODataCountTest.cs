@@ -289,7 +289,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
                     result = options.Filter.ApplyTo(result, new ODataQuerySettings()).Cast<string>();
                 }
 
-                if (Request.GetODataPath().Segments.OfType<CountSegment>().Any())
+                if (Request.ODataContext().Path.Segments.OfType<CountSegment>().Any())
                 {
                     return Ok(result.Count());
                 }

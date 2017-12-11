@@ -43,28 +43,6 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// <summary>
         /// Create an TestServer.
         /// </summary>
-        /// <param name="routeName">The route name.</param>
-        /// <param name="routePrefix">The route prefix.</param>
-        /// <param name="controllers">The controllers to use.</param>
-        /// <param name="getModelFunction">A function to get the model.</param>
-        /// <returns>An TestServer.</returns>
-        public static TestServer Create(
-            string routeName,
-            string routePrefix,
-            Type[] controllers,
-            Func<IRouteBuilder, IEdmModel> getModelFunction)
-
-        {
-            return Create(controllers, (routeBuilder) =>
-            {
-                routeBuilder.MapODataServiceRoute(routeName, routePrefix, getModelFunction(routeBuilder));
-                routeBuilder.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            });
-        }
-
-        /// <summary>
-        /// Create an TestServer.
-        /// </summary>
         /// <param name="controllers">The controllers to use.</param>
         /// <param name="configureAction">The route configuration action.</param>
         /// <returns>An TestServer.</returns>
@@ -88,8 +66,11 @@ namespace Microsoft.Test.AspNet.OData.Factories
                     ApplicationPartManager applicationPartManager = routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
                     applicationPartManager.ApplicationParts.Clear();
 
-                    AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
-                    applicationPartManager.ApplicationParts.Add(part);
+                    if (controllers != null)
+                    {
+                        AssemblyPart part = new AssemblyPart(new MockAssembly(controllers));
+                        applicationPartManager.ApplicationParts.Add(part);
+                    }
 
                     // Insert a custom ControllerFeatureProvider to bypass the IsPublic restriction of controllers
                     // to allow for nested controllers which are excluded by the built-in ControllerFeatureProvider.

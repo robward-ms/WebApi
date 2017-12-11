@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System.Reflection;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Interfaces;
@@ -10,11 +11,13 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.TestCommon;
 #else
 using System.Reflection;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 #endif
 
@@ -30,24 +33,40 @@ namespace Microsoft.Test.AspNet.OData.Factories
         /// </summary>
         /// <returns>A new instance of the routing configuration class.</returns>
 #if NETCORE
-        internal static IWebApiAssembliesResolver CreateFake()
+        internal static IWebApiAssembliesResolver Create(MockAssembly assembly = null)
         {
             IRouteBuilder builder = RoutingConfigurationFactory.Create();
 
             ApplicationPartManager applicationPartManager = builder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             applicationPartManager.ApplicationParts.Clear();
 
+            if (assembly != null)
+            {
+                AssemblyPart part = new AssemblyPart(assembly);
+                applicationPartManager.ApplicationParts.Add(part);
+            }
+
             return new WebApiAssembliesResolver(applicationPartManager);
         }
 #else
-        internal static IWebApiAssembliesResolver CreateFake()
+        internal static IWebApiAssembliesResolver Create(MockAssembly assembly = null)
         {
-            Mock<IAssembliesResolver> mockAssembliesResolver = new Mock<IAssembliesResolver>();
-            mockAssembliesResolver
-                .Setup(r => r.GetAssemblies())
-                .Returns(new Assembly[0]);
+            IAssembliesResolver resolver = null;
+            if (assembly != null)
+            {
+                resolver = new TestAssemblyResolver(assembly);
+            }
+            else
+            {
+                Mock<IAssembliesResolver> mockAssembliesResolver = new Mock<IAssembliesResolver>();
+                mockAssembliesResolver
+                    .Setup(r => r.GetAssemblies())
+                    .Returns(new Assembly[0]);
 
-            return new WebApiAssembliesResolver(mockAssembliesResolver.Object);
+                resolver = mockAssembliesResolver.Object;
+            }
+
+            return new WebApiAssembliesResolver(resolver);
         }
 #endif
     }

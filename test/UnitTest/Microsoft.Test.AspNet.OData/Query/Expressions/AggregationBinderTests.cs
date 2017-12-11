@@ -132,7 +132,7 @@ namespace Microsoft.Test.AspNet.OData.Query.Expressions
         {
             IEdmModel model = GetModel<T>();
             ApplyClause clause = CreateApplyNode(clauseString, model, typeof(T));
-            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.CreateFake();
+            IWebApiAssembliesResolver assembliesResolver = WebApiAssembliesResolverFactory.Create();
 
             Func<ODataQuerySettings, ODataQuerySettings> customizeSettings = (settings) =>
             {

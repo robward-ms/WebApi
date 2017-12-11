@@ -63,11 +63,13 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings);
             messageWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink { Url = new Uri("http://localhost/samplelink") });
 
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             ODataMessageReaderSettings readSettings = new ODataMessageReaderSettings();
             ODataMessageReader messageReader = new ODataMessageReader(new MockODataRequestMessage(requestMessage), readSettings, model);
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = RequestFactory.Create(),
+                Request = request,
                 Path = new ODataPath(new NavigationPropertySegment(GetNavigationProperty(model), navigationSource: null))
             };
 
@@ -95,9 +97,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 
             IEdmNavigationProperty navigationProperty = GetNavigationProperty(model);
 
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             ODataDeserializerContext context = new ODataDeserializerContext
             {
-                Request = RequestFactory.Create(),
+                Request = request,
                 Path = new ODataPath(new NavigationPropertySegment(navigationProperty, navigationSource: null))
             };
 

@@ -58,6 +58,8 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void Ctor_ThatBuildsNestedContext_CopiesProperties()
         {
             // Arrange
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             CustomersModelWithInheritance model = new CustomersModelWithInheritance();
             ODataSerializerContext context = new ODataSerializerContext
             {
@@ -65,7 +67,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 MetadataLevel = ODataMetadataLevel.FullMetadata,
                 Model = model.Model,
                 Path = new ODataPath(),
-                Request = RequestFactory.Create(),
+                Request = request,
                 RootElementName = "somename",
                 SelectExpandClause = new SelectExpandClause(new SelectItem[0], allSelected: true),
                 SkipExpensiveAvailabilityChecks = true,

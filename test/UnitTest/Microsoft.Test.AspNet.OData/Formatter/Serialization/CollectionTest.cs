@@ -4,8 +4,10 @@
 #if NETCORE
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData;
@@ -38,26 +40,30 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void ArrayOfIntsSerializesAsOData()
         {
             // Arrange
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(new int[] { 10, 20, 30, 40, 50 }, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ArrayOfInt32, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.ArrayOfInt32, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
         public void ArrayOfBooleansSerializesAsOData()
         {
             // Arrange
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(new bool[] { true, false, true, false }, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ArrayOfBoolean, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.ArrayOfBoolean, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -70,13 +76,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfStrings.Add("Tom");
             listOfStrings.Add("Chandler");
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfStrings, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.ListOfString, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.ListOfString, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -95,13 +103,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfDates.Add(new Date(2015, 2, 26));
             listOfDates.Add(Date.MaxValue);
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDates, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -121,13 +131,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfDates.Add(null);
             listOfDates.Add(Date.MaxValue);
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDates, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -146,13 +158,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfDates.Add(new TimeOfDay(1, 2, 3, 4));
             listOfDates.Add(TimeOfDay.MaxValue);
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDates, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -172,13 +186,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfDates.Add(null);
             listOfDates.Add(TimeOfDay.MaxValue);
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload,request,  GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDates, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content, request));
         }
 
         [Fact]
@@ -189,13 +205,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             DateTime dt2 = new DateTime(2014, 10, 27, 12, 25, 26, DateTimeKind.Local);
             List<DateTime> listOfDateTime = new List<DateTime> { dt1, dt2 };
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDateTime, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content));
+            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content, request));
 
             Assert.Equal(2, result["value"].Count);
             DateTimeOffset dto = (DateTimeOffset)result["value"][0];
@@ -213,13 +231,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             DateTime dt2 = new DateTime(2014, 10, 27, 12, 25, 26, DateTimeKind.Local);
             List<DateTime?> listOfDateTime = new List<DateTime?> { dt1, null, dt2 };
 
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(listOfDateTime, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content));
+            dynamic result = JObject.Parse(FormatterTestHelper.GetContentResult(content, request));
 
             Assert.Equal(3, result["value"].Count);
             DateTimeOffset? dto = (DateTimeOffset?)result["value"][0];
@@ -247,17 +267,18 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             listOfDateTime.Add(new DateTime(1978, 11, 15, 01, 12, 13, DateTimeKind.Utc));
             listOfDateTime.Add(new DateTime(2014, 10, 27, 12, 25, 26, DateTimeKind.Utc));
 
+            var config = RoutingConfigurationFactory.Create();
+            config.SetTimeZoneInfo(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Collection };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
-#if !NETCORE
-            formatter.Request.GetConfiguration()
-                .SetTimeZoneInfo(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-#endif
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
+
             var content = FormatterTestHelper.GetContent(listOfDateTime, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(expect, FormatterTestHelper.GetContentResult(content, request));
         }
 
         private static IEdmModel GetSampleModel()

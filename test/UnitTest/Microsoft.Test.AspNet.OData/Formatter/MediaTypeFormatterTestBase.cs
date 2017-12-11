@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE
+#if NETCORE
+using System.Runtime.Serialization;
+#else
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,9 +21,11 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Microsoft.Test.AspNet.OData.TestCommon.DataTypes;
 using Moq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
+#if !NETCORE
     /// <summary>
     /// A test class for common <see cref="MediaTypeFormatter"/> functionality across multiple implementations.
     /// </summary>
@@ -553,6 +557,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
                 });
         }
     }
+#endif
 
     [DataContract(Name = "DataContractSampleType")]
     public class SampleType
@@ -561,4 +566,3 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public int Number { get; set; }
     }
 }
-#endif

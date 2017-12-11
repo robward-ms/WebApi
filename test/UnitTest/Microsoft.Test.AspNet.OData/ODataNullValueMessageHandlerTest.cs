@@ -86,7 +86,7 @@ namespace Microsoft.Test.AspNet.OData
             // Arrange
             ODataNullValueMessageHandler handler = CreateHandler(null);
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
-            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
+            request.ODataContext().Path = new ODataPath(new EntitySetSegment(_entitySet));
 
             // Act
             var response = SendToHandler(handler, request);
@@ -103,7 +103,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataNullValueMessageHandler handler = CreateHandler(originalResponse);
 
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
-            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
+            request.ODataContext().Path = new ODataPath(new EntitySetSegment(_entitySet));
 
             // Act
             var response = SendToHandler(handler, request);
@@ -120,7 +120,7 @@ namespace Microsoft.Test.AspNet.OData
             ODataNullValueMessageHandler handler = CreateHandler(originalResponse);
 
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any");
-            request.SetODataPath(new ODataPath(new EntitySetSegment(_entitySet)));
+            request.ODataContext().Path = new ODataPath(new EntitySetSegment(_entitySet));
 
             // Act
             var response = SendToHandler(handler, request);
@@ -255,7 +255,7 @@ namespace Microsoft.Test.AspNet.OData
             var configuration = RoutingConfigurationFactory.Create();
             ODataPath path = new DefaultODataPathHandler().Parse(BuildModel(), "http://localhost/any", "Customers(3)");
             HttpRequestMessage request = RequestFactory.Create(HttpMethod.Get, "http://localhost/any", configuration);
-            request.SetODataPath(path);
+            request.ODataContext().Path = path;
 
             // Act 
             HttpResponseMessage response = handler.SendAsync(request).Result;

@@ -57,27 +57,10 @@ namespace Microsoft.AspNet.OData.Formatter
         private static ODataOutputFormatter CreateRawValue(ODataSerializerProvider serializerProvider)
         {
             ODataOutputFormatter formatter = CreateFormatterWithoutMediaTypes(serializerProvider, ODataPayloadKind.Value);
-
-            MediaTypeMapping[] mappings = new MediaTypeMapping[]
-            {
-                new ODataPrimitiveValueMediaTypeMapping(),
-                new ODataEnumValueMediaTypeMapping(),
-                new ODataBinaryValueMediaTypeMapping(),
-                new ODataCountMediaTypeMapping(),
-            };
-
-            foreach (MediaTypeMapping mapping in mappings)
-            {
-                formatter.MediaTypeMappings.Add(mapping);
-
-                // Add the media type of the mapping to the supported list.
-                // A check will occur in CanWriteResult to see if mapping is successful.
-                if (!formatter.SupportedMediaTypes.Contains(mapping.MediaType.ToString()))
-                {
-                    formatter.SupportedMediaTypes.Add(mapping.MediaType.ToString());
-                }
-            }
-
+            formatter.MediaTypeMappings.Add(new ODataPrimitiveValueMediaTypeMapping());
+            formatter.MediaTypeMappings.Add(new ODataEnumValueMediaTypeMapping());
+            formatter.MediaTypeMappings.Add(new ODataBinaryValueMediaTypeMapping());
+            formatter.MediaTypeMappings.Add(new ODataCountMediaTypeMapping());
             return formatter;
         }
 

@@ -60,12 +60,23 @@ namespace Microsoft.Test.AspNet.OData.Factories
 
             // Assign the route and get the request container, which will initialize
             // the request container if one does not exists.
-            HttpRequest request = context.Request;
-            request.ODataFeature().RouteName = useRouteName;
-            //request.GetRequestContainer();
+            context.Request.ODataFeature().RouteName = useRouteName;
+
+            // Add some routing info
+            IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
+            RouteData routeData = new RouteData();
+            routeData.Routers.Add(defaultRoute);
+
+            var mockAction = new Mock<ActionDescriptor>();
+            ActionDescriptor actionDescriptor = mockAction.Object;
+
+            ActionContext actionContext = new ActionContext(context, routeData, actionDescriptor);
+
+            IActionContextAccessor actionContextAccessor = context.RequestServices.GetRequiredService<IActionContextAccessor>();
+            actionContextAccessor.ActionContext = actionContext;
 
             // Get request and return it.
-            return request;
+            return context.Request;
         }
 #else
         public static HttpRequestMessage Create(HttpConfiguration config = null, string routeName = null)
@@ -107,26 +118,6 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 new HostString(requestUri.Host, requestUri.Port);
             request.QueryString = new QueryString(requestUri.Query);
             request.Path = new PathString(requestUri.AbsolutePath);
-
-            if (routeBuilder != null)
-            {
-                IRouter defaultRoute = routeBuilder.Routes.FirstOrDefault();
-                RouteData routeData = new RouteData();
-                routeData.Routers.Add(defaultRoute);
-
-                var mockAction = new Mock<ActionDescriptor>();
-                ActionDescriptor actionDescriptor = mockAction.Object;
-
-                ActionContext actionContext = new ActionContext(request.HttpContext, routeData, actionDescriptor);
-
-                IActionContextAccessor actionContextAccessor = request.HttpContext.RequestServices.GetRequiredService<IActionContextAccessor>();
-                actionContextAccessor.ActionContext = actionContext;
-
-                if (!string.IsNullOrEmpty(routeName))
-                {
-                    request.ODataFeature().RouteName = routeName;
-                }
-            }
 
             return request;
         }

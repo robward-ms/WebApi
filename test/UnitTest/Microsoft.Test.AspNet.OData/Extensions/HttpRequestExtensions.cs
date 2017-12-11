@@ -4,7 +4,7 @@
 #if NETCORE
 using System.Net;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNetCore.Http;
 #else
 using System.Net.Http;
@@ -21,30 +21,12 @@ namespace Microsoft.Test.AspNet.OData.Extensions
     public static class HttpRequestExtensions
     {
         /// <summary>
-        /// Get the OData path.
+        /// Get the OData feature as context.
         /// </summary>
-        /// <returns>The OData path</returns>
-        public static ODataPath GetODataPath(this HttpRequest request)
+        /// <returns>The OData feature</returns>
+        public static IODataFeature ODataContext(this HttpRequest request)
         {
-            return request.ODataFeature().Path;
-        }
-
-        /// <summary>
-        /// Set the OData path.
-        /// </summary>
-        /// <returns>The OData path</returns>
-        public static void SetODataPath(this HttpRequest request, ODataPath path)
-        {
-            request.ODataFeature().Path = path;
-        }
-
-        /// <summary>
-        /// Set the OData total count.
-        /// </summary>
-        /// <returns>The OData total count.</returns>
-        public static void SetTotalCount(this HttpRequest request, long? count)
-        {
-            request.ODataFeature().TotalCount = count;
+            return request.ODataFeature();
         }
 
         /// <summary>
@@ -65,31 +47,13 @@ namespace Microsoft.Test.AspNet.OData.Extensions
     /// </summary>
     public static class HttpRequestMessageExtensions
     {
-       /// <summary>
-        /// Get the OData path.
-        /// </summary>
-        /// <returns>The OData path</returns>
-        public static ODataPath GetODataPath(this HttpRequestMessage request)
-        {
-            return request.ODataProperties().Path;
-        }
-
         /// <summary>
-        /// Get the OData path.
+        /// Get the OData properties as context.
         /// </summary>
-        /// <returns>The OData path</returns>
-        public static void SetODataPath(this HttpRequestMessage request, ODataPath path)
+        /// <returns>The OData feature</returns>
+        public static HttpRequestMessageProperties ODataContext(this HttpRequestMessage request)
         {
-            request.ODataProperties().Path = path;
-        }
-
-        /// <summary>
-        /// Set the OData total count.
-        /// </summary>
-        /// <returns>The OData total count.</returns>
-        public static void SetTotalCount(this HttpRequestMessage request, long? count)
-        {
-            request.ODataProperties().TotalCount = count;
+            return request.ODataProperties();
         }
     }
 #endif

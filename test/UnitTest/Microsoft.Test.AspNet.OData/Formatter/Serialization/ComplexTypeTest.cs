@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System.Net.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
@@ -31,13 +32,15 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void ComplexTypeSerializesAsOData()
         {
             // Arrange
+            var config = RoutingConfigurationFactory.Create();
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Resource };
-            var formatter = FormatterTestHelper.GetFormatter(payload, GetSampleModel());
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, GetSampleModel());
             var content = FormatterTestHelper.GetContent(new Person(0, new ReferenceDepthContext(7)), formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.PersonComplexType, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.PersonComplexType, FormatterTestHelper.GetContentResult(content, request));
         }
 
         private static IEdmModel GetSampleModel()

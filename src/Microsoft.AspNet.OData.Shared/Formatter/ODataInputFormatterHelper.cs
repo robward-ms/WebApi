@@ -57,7 +57,6 @@ namespace Microsoft.AspNet.OData.Formatter
         {
             object result;
 
-
             IEdmTypeReference expectedPayloadType;
             ODataDeserializer deserializer = GetDeserializer(type, internalRequest.Context.Path, model, getEdmTypeDeserializer, getODataPayloadDeserializer, out expectedPayloadType);
             if (deserializer == null)

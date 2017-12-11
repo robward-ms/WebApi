@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 #else
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,9 +20,9 @@ namespace Microsoft.Test.AspNet.OData
 {
     /// <summary>
     /// TestController is a controller designed to be used in UnitTests to abstract the controller
-    /// semantics between AspNet and AspNet core. TestController implments (and hides) the convienience
+    /// semantics between AspNet and AspNet core. TestController implements (and hides) the convenience
     /// methods for generating responses and surfaces those as a common type, ITestActionResult.
-    /// ITestActionResult is derived from the AspNet/AspNetCore and implments the correct ActionResult
+    /// ITestActionResult is derived from the AspNet/AspNetCore and implements the correct ActionResult
     /// interface.
     /// </summary>
     public class TestController : ODataController

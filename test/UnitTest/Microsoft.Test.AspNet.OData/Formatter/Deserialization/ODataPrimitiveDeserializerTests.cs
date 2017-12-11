@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
@@ -215,20 +216,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             // Arrange
             IEdmModel model = CreateModel();
 
-            var request = RequestFactory.Create();
-#if !NETCORE
-            request.SetConfiguration(new HttpConfiguration());
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             if (timeZoneInfo != null)
             {
-                request.GetConfiguration().SetTimeZoneInfo(timeZoneInfo);
+                config.SetTimeZoneInfo(timeZoneInfo);
             }
             else
             {
-                request.GetConfiguration().SetTimeZoneInfo(TimeZoneInfo.Local);
+                config.SetTimeZoneInfo(TimeZoneInfo.Local);
             }
-#else
-            Assert.NotNull(timeZoneInfo);
-#endif
 
             ODataPrimitiveSerializer serializer = new ODataPrimitiveSerializer();
             ODataPrimitiveDeserializer deserializer = new ODataPrimitiveDeserializer();

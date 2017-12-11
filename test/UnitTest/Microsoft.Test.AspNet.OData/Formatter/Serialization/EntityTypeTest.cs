@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System.Net.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData;
@@ -42,14 +43,16 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
             IEdmEntitySet entitySet = _model.EntityContainer.FindEntitySet("employees");
             ODataPath path = new ODataPath(new EntitySetSegment(entitySet));
 
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("Route");
+            var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/property", config);
             var payload = new ODataPayloadKind[] { ODataPayloadKind.Resource };
-            var formatter = FormatterTestHelper.GetFormatter(payload, _model, "Route", path);
+            var formatter = FormatterTestHelper.GetFormatter(payload, request, _model, "Route", path);
             Employee employee = (Employee)TypeInitializer.GetInstance(SupportedTypes.Employee);
             var content = FormatterTestHelper.GetContent(employee, formatter,
                 ODataMediaTypes.ApplicationJsonODataMinimalMetadata);
 
             // Act & Assert
-            JsonAssert.Equal(Resources.EmployeeEntry, FormatterTestHelper.GetContentResult(content));
+            JsonAssert.Equal(Resources.EmployeeEntry, FormatterTestHelper.GetContentResult(content, request));
         }
 
         private static IEdmModel GetSampleModel()

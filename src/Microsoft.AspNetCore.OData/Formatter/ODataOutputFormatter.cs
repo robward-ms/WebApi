@@ -98,13 +98,6 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.ArgumentNull("context");
             }
 
-            // Allow the base class to make its determination, which includes
-            // checks for SupportedMediaTypes.
-            if (!base.CanWriteResult(context))
-            {
-                return false;
-            }
-
             // Ensure we have a valid request.
             HttpRequest request = context.HttpContext.Request;
             if (request == null)
@@ -112,27 +105,28 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
             }
 
-            // At this point, ContentType has been set by the base class. Let's make sure
-            // that the request satisfies the mappings.
-#if !NETCORE // Needs work
-            bool mappingFound = false;
-            foreach (MediaTypeMapping mapping in MediaTypeMappings)
+            // Allow the base class to make its determination, which includes
+            // checks for SupportedMediaTypes.
+            bool contentTypeSpecified = context.ContentType.HasValue;
+            bool suportedMediaTypeFound = false;
+            if (SupportedMediaTypes.Any())
             {
-                if ((mapping.TryMatchMediaType(request) > 0) &&
-                    (mapping.MediaType.ToString() == context.ContentType.Value))
-                {
-                    mappingFound = true;
-                    break;
-                }
+                suportedMediaTypeFound = base.CanWriteResult(context);
             }
 
-            if (!mappingFound)
+            // See if the request satisfies any mappings.
+            MediaTypeMapping matchedMapping = (MediaTypeMappings == null) ? null : MediaTypeMappings
+                .Where(m => (m.TryMatchMediaType(request) > 0) && (m.MediaType.ToString() == context.ContentType.Value))
+                .FirstOrDefault();
+
+            // Now pick the bets content type. If the media type was specified, use that. If not, use the
+            // media type from the matched mapping if there is one. Otherwise, let the base class make the
+            // determination.
+            if (!contentTypeSpecified && matchedMapping != null)
             {
-                return false;
+                context.ContentType = matchedMapping.MediaType.MediaType;
             }
-#endif
-            // Ignore non-OData requests.
-            if (request.ODataFeature().Path == null)
+            else if (!suportedMediaTypeFound)
             {
                 return false;
             }
@@ -177,7 +171,9 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             HttpResponse response = context.HttpContext.Response;
-            MediaTypeHeaderValue contentType = GetContentType(request.GetTypedHeaders()?.ContentType?.MediaType.Value);
+            response.ContentType = context.ContentType.Value;
+
+            MediaTypeHeaderValue contentType = GetContentType(response.GetTypedHeaders()?.ContentType?.MediaType.Value);
 
             // Determine the content type.
             MediaTypeHeaderValue newMediaType = null;

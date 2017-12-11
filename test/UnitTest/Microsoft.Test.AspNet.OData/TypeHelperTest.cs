@@ -8,8 +8,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
 
@@ -283,7 +283,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             Assert.Equal(elementType, TypeHelper.GetImplementedIEnumerableType(collectionType));
         }
-#if !NETCORE
+
         [Fact]
         public void GetLoadedTypes()
         {
@@ -298,7 +298,7 @@ namespace Microsoft.Test.AspNet.OData
                 .BaseType(baseType);
 
             MockAssembly assembly = new MockAssembly(baseType, derivedType);
-            IWebApiAssembliesResolver resolver = new WebApiAssembliesResolver(new TestAssemblyResolver(assembly));
+            IWebApiAssembliesResolver resolver = WebApiAssembliesResolverFactory.Create(assembly);
             IEnumerable<Type> foundTypes = TypeHelper.GetLoadedTypes(resolver);
 
             IEnumerable<string> definedNames = assembly.GetTypes().Select(t => t.FullName);
@@ -311,7 +311,6 @@ namespace Microsoft.Test.AspNet.OData
 
             Assert.DoesNotContain(typeof(TypeHelperTest), foundTypes);
         }
-#endif
 
         /// <summary>
         /// Custom internal class

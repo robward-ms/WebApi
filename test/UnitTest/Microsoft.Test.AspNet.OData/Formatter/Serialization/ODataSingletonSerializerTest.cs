@@ -62,7 +62,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
 #if NETFX // Url is only in AspNet
                 Url = new UrlHelper(request),
 #endif
-                Path = request.GetODataPath(),
+                Path = request.ODataContext().Path,
                 Model = model,
                 NavigationSource = singleton
             };
@@ -96,7 +96,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Deserialization
             var config = RoutingConfigurationFactory.Create();
             config.MapODataServiceRoute("odata", "odata", model);
             var request = RequestFactory.Create(HttpMethod.Get, "http://localhost/odata/Boss", config, "odata");
-            request.SetODataPath(new ODataPath(new[] { new SingletonSegment(singleton) }));
+            request.ODataContext().Path = new ODataPath(new[] { new SingletonSegment(singleton) });
             return request;
         }
 

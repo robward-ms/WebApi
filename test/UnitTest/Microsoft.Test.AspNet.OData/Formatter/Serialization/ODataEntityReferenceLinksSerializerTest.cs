@@ -125,10 +125,12 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void ODataEntityReferenceLinkSerializer_Serializes_UrisAndEntityReferenceLinks_WithCount(object uris)
         {
             // Arrange
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = RequestFactory.Create(config, "OData");
             ODataEntityReferenceLinksSerializer serializer = new ODataEntityReferenceLinksSerializer();
             ODataSerializerContext writeContext = new ODataSerializerContext();
-            writeContext.Request = RequestFactory.Create();
-            writeContext.Request.SetTotalCount(1);
+            writeContext.Request = request;
+            writeContext.Request.ODataContext().TotalCount = 1;
 
             MemoryStream stream = new MemoryStream();
             IODataResponseMessage message = new ODataMessageWrapper(stream);

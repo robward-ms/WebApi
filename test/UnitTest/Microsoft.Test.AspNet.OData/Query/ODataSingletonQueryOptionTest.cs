@@ -5,37 +5,30 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-#if !NETCORE
-using System.Web.Http;
-#else
-using Microsoft.AspNetCore.Mvc;
-#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter.Serialization.Models;
-using Microsoft.Test.AspNet.OData.TestCommon;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
     public class ODataSingletonQueryOptionTest
     {
-#if !NETCORE
         private HttpClient _client;
 
         public ODataSingletonQueryOptionTest()
         {
             var controllers = new[] { typeof(MeController) };
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(controllers);
-            configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            
-            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
-            HttpServer server = new HttpServer(configuration);
-            _client = new HttpClient(server);
+            var server = TestServerFactory.Create(controllers, (configuration) =>
+            {
+                configuration.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+                configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            });
+
+            _client = TestServerFactory.CreateClient(server);
         }
 
         private static IEdmModel GetEdmModel()
@@ -140,6 +133,5 @@ namespace Microsoft.Test.AspNet.OData.Query
         {
             return Ok(me);
         }
-#endif
     }
 }
