@@ -173,7 +173,7 @@ namespace Microsoft.AspNet.OData.Formatter
             HttpResponse response = context.HttpContext.Response;
             response.ContentType = context.ContentType.Value;
 
-            MediaTypeHeaderValue contentType = GetContentType(response.GetTypedHeaders()?.ContentType?.MediaType.Value);
+            MediaTypeHeaderValue contentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
 
             // Determine the content type.
             MediaTypeHeaderValue newMediaType = null;
@@ -221,7 +221,7 @@ namespace Microsoft.AspNet.OData.Formatter
             {
                 HttpResponse response = context.HttpContext.Response;
                 Uri baseAddress = GetBaseAddressInternal(request);
-                MediaTypeHeaderValue contentType = GetContentType(request.GetTypedHeaders()?.ContentType?.MediaType.Value);
+                MediaTypeHeaderValue contentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
 
                 Func<ODataSerializerContext> getODataSerializerContext = () =>
                 {
@@ -243,7 +243,7 @@ namespace Microsoft.AspNet.OData.Formatter
                     new WebApiUrlHelper(request.HttpContext.GetUrlHelper()),
                     new WebApiRequestMessage(request),
                     new WebApiRequestHeaders(request.Headers),
-                    (services) => ODataMessageWrapperHelper.Create(response.Body, request.Headers, services),
+                    (services) => ODataMessageWrapperHelper.Create(response.Body, response.Headers, services),
                     (edmType) => _serializerProvider.GetEdmTypeSerializer(edmType),
                     (objectType) => _serializerProvider.GetODataPayloadSerializer(objectType, request),
                     getODataSerializerContext);
