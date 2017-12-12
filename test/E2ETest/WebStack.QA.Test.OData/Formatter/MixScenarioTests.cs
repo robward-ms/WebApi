@@ -141,7 +141,7 @@ namespace WebStack.QA.Test.OData.Formatter
             var rand = new Random(RandomSeedGenerator.GetRandomSeed());
             var entitySetName = "MixScenarioTests_OData";
             var uri = new Uri(this.BaseAddress + "/odata");
-            this.ClearRepository(entitySetName);
+            await this.ClearRepository(entitySetName);
 
             // post new entity to repository
             var baseline = InstanceCreator.CreateInstanceOf<Vehicle>(rand);

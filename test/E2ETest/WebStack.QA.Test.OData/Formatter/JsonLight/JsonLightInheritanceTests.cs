@@ -117,10 +117,10 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json")]
-        public void AddAndRemoveBaseNavigationPropertyInDerivedTypeJsonLight(string acceptHeader)
+        public async Task AddAndRemoveBaseNavigationPropertyInDerivedTypeJsonLight(string acceptHeader)
         {
             AcceptHeader = acceptHeader;
-            AddAndRemoveBaseNavigationPropertyInDerivedType();
+            await AddAndRemoveBaseNavigationPropertyInDerivedType();
         }
 
         [NuwaTheory]
@@ -133,10 +133,10 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json")]
-        public void AddAndRemoveDerivedNavigationPropertyInDerivedTypeJsonLight(string acceptHeader)
+        public async Task AddAndRemoveDerivedNavigationPropertyInDerivedTypeJsonLight(string acceptHeader)
         {
             AcceptHeader = acceptHeader;
-            AddAndRemoveDerivedNavigationPropertyInDerivedType();
+            await AddAndRemoveDerivedNavigationPropertyInDerivedType();
         }
 
         [NuwaTheory]
@@ -149,10 +149,10 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json")]
-        public void CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySetJsonLight(string acceptHeader)
+        public async Task CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySetJsonLight(string acceptHeader)
         {
             AcceptHeader = acceptHeader;
-            CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySet();
+            await CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySet();
         }
     }
 }

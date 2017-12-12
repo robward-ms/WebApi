@@ -31,7 +31,7 @@ namespace WebStack.QA.Test.OData.SxS
         public HttpClient Client { get; set; }
 
         [NuwaConfiguration]
-        public static void UpdateConfiguration(HttpConfiguration configuration)
+        internal static void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[]
             {
@@ -69,7 +69,7 @@ namespace WebStack.QA.Test.OData.SxS
 
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             Assert.Equal("4.0", responseMessage.Headers.GetValues("OData-Version").ElementAt(0));
-            Assert.True(jObject.Property("@odata.context").ToString().Contains(expectedTypeName));
+            Assert.Contains(expectedTypeName, jObject.Property("@odata.context").ToString());
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace WebStack.QA.Test.OData.SxS
 
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
             Assert.Equal("3.0", responseMessage.Headers.GetValues("DataServiceVersion").ElementAt(0));
-            Assert.True(jObject.Property("odata.metadata").ToString().Contains(expectedTypeName));
+            Assert.Contains(expectedTypeName, jObject.Property("odata.metadata").ToString());
         }
 
         [Theory]
@@ -108,7 +108,7 @@ namespace WebStack.QA.Test.OData.SxS
             //Assert
             var metaData = await responseMessage.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.OK, responseMessage.StatusCode);
-            Assert.True(metaData.Contains(expectedVersion));
+            Assert.Contains(expectedVersion, metaData);
         }
     }
 }

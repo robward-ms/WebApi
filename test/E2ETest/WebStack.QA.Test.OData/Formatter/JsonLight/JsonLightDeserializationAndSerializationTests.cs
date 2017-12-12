@@ -4,6 +4,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.OData.Client;
 using Nuwa;
@@ -78,7 +79,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
 
         [NuwaTheory]
         [MemberData(nameof(EntityData))]
-        public void PutAndGetShouldReturnSameEntityJsonLight(string acceptHeader)
+        public Task PutAndGetShouldReturnSameEntityJsonLight(string acceptHeader)
         {
             var entity = new UniverseEntity()
             {
@@ -96,7 +97,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
             };
 
             AcceptHeader = acceptHeader;
-            PostAndGetShouldReturnSameEntity(entity);
+            return PostAndGetShouldReturnSameEntity(entity);
         }
 
         [NuwaFact]

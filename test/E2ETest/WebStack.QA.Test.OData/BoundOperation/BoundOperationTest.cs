@@ -410,24 +410,6 @@ namespace WebStack.QA.Test.OData.BoundOperation
             Assert.Equal(expectedCount, int.Parse(responseString));
         }
 
-        // [Theory(Skip = "On IIS host, if a invalid OData path is requested, stack overflow is triggered.")]
-        // [InlineData("ConventionRouting/Employees(1)/Default.GetEmails()/$count", 1)]
-        // [InlineData("AttributeRouting/Employees(1)/Default.GetEmails()/$count", 2)]
-        public async Task DollarCountFollowsNotComposibleFunction(string url, int expectedCount)
-        {
-            // Arrange
-            var requestUri = string.Format("{0}/{1}", this.BaseAddress, url);
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
-            // Act
-            HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
-
-            // Assert
-            // It should return 400 instead of 404, and bug https://aspnetwebstack.codeplex.com/workitem/2105 is reported.
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
         [NuwaTheory]
         [InlineData("ConventionRouting/Employees(1)/Default.GetOptionalAddresses()/$count", 1)]
         [InlineData("AttributeRouting/Employees(1)/Default.GetOptionalAddresses()/$count", 2)]

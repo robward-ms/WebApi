@@ -139,20 +139,6 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             Assert.True(4 == vertexes.Count, "The returned OptionalShapes is not as expected");
         }
 
-        // [Theory(Skip = "[Client] Client cant deserialize a property which is declared as abstract, but the payload is concrete.")]
-        // [MemberData(nameof(MediaTypes))]
-        // GET ~/Windows(1)
-        public async Task QuerySingleContainingEntity(string mode, string mime)
-        {
-            string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
-            Proxy.Container container = new Proxy.Container(new Uri(serviceRootUri));
-            container.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mime);
-            Proxy.Window window = await container.Windows.ByKey(new Dictionary<string, object>() { { "Id", 1 } }).GetValueAsync();
-            Proxy.Circle expectedShape = new Proxy.Circle() { Center = new Proxy.Point(), Radius = 2 };
-            Assert.Equal(expectedShape, window.CurrentShape);
-            Assert.Single(window.OptionalShapes);
-        }
-
         [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$select=...&$orderby=...&$expand=...

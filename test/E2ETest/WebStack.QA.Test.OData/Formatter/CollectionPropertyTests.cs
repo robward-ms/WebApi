@@ -64,7 +64,7 @@ namespace WebStack.QA.Test.OData.Formatter
             var entitySetName = "CollectionProperty_Entity";
 
             // clear respository
-            this.ClearRepository("CollectionProperty_Entity");
+            await this.ClearRepository("CollectionProperty_Entity");
 
             var rand = new Random(RandomSeedGenerator.GetRandomSeed());
 

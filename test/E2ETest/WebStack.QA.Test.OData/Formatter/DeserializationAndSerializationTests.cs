@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
@@ -73,29 +74,29 @@ namespace WebStack.QA.Test.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        public void PostAndGetShouldReturnSameEntity(UniverseEntity entity)
+        public async Task PostAndGetShouldReturnSameEntity(UniverseEntity entity)
         {
             var uri = new Uri(this.BaseAddress);
             const string entitySetName = "UniverseEntity";
-            this.ClearRepository(entitySetName);
+            await this.ClearRepository(entitySetName);
 
             var ctx = WriterClient(uri, ODataProtocolVersion.V4);
             ctx.AddObject(entitySetName, entity);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             // get collection of entities from repository
             ctx = ReaderClient(uri, ODataProtocolVersion.V4);
             DataServiceQuery<UniverseEntity> query = ctx.CreateQuery<UniverseEntity>(entitySetName);
-            IAsyncResult asyncResult = query.BeginExecute(null, null);
-            asyncResult.AsyncWaitHandle.WaitOne();
-
-            var entities = query.EndExecute(asyncResult);
+            var entities = await Task.Factory.FromAsync(query.BeginExecute(null, null), (asyncResult) =>
+            {
+                return query.EndExecute(asyncResult);
+            });
 
             var beforeUpdate = entities.ToList().First();
             AssertExtension.DeepEqual(entity, beforeUpdate);
 
             // clear repository
-            this.ClearRepository(entitySetName);
+            await this.ClearRepository(entitySetName);
         }
     }
 }

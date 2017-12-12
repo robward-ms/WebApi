@@ -1231,26 +1231,6 @@ namespace WebStack.QA.Test.OData.OpenType
 
         #region Function & Action
 
-        // [Fact(Skip = "Potencially a client bug, and the owner is investigating it.")]
-        public async Task GetAddressFunctionClientTest()
-        {
-            foreach (string routing in Routings)
-            {
-                await ResetDatasource();
-
-                Uri serviceUrl = new Uri(string.Format(this.BaseAddress + "/{0}/", routing));
-                var client = new TypedProxy.Container(serviceUrl);
-                client.MergeOption = MergeOption.OverwriteChanges;
-
-                client.Format.UseJson();
-
-                var address = client.Accounts.Where(a => a.Id == 1).Single().GetAddressFunction().GetValue();
-
-                Assert.Equal("Redmond", address.City);
-                Assert.Equal("US", address.CountryOrRegion);
-            }
-        }
-
         [NuwaFact]
         public async Task GetShipAddressesFunctionClientTest()
         {
@@ -1537,7 +1517,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         // [Fact(Skip = "Used to generate csdl file")]
-        public void GetMetadata()
+        internal void GetMetadata()
         {
             var directory = Directory.GetCurrentDirectory();
             var strArray = directory.Split(new string[] { "bin" }, StringSplitOptions.None);

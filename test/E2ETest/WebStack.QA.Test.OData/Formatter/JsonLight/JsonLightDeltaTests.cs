@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.OData.Client;
 using Nuwa;
@@ -52,10 +53,10 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json")]
-        public void TestApplyPatchOnIndividualPropertyJsonLight(string acceptHeader)
+        public Task TestApplyPatchOnIndividualPropertyJsonLight(string acceptHeader)
         {
             AcceptHeader = acceptHeader;
-            TestApplyPatchOnIndividualProperty();
+            return TestApplyPatchOnIndividualProperty();
         }
     }
 }

@@ -314,7 +314,7 @@ namespace WebStack.QA.Test.OData.Formatter
             where T : class
         {
             // clear respository
-            this.ClearRepository(entitySetName);
+            await this.ClearRepository(entitySetName);
 
             // post new entity to repository
             T baseline = CreateNewEntity<T>(rand);
@@ -378,10 +378,10 @@ namespace WebStack.QA.Test.OData.Formatter
             return await client.SaveChangesAsync();
         }
 
-        public virtual void AddAndRemoveBaseNavigationPropertyInDerivedType()
+        public virtual async Task AddAndRemoveBaseNavigationPropertyInDerivedType()
         {
             // clear respository
-            this.ClearRepository("InheritanceTests_Cars");
+            await this.ClearRepository("InheritanceTests_Cars");
 
             Random r = new Random(RandomSeedGenerator.GetRandomSeed());
 
@@ -395,12 +395,12 @@ namespace WebStack.QA.Test.OData.Formatter
             DataServiceContext ctx = WriterClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             ctx.AddObject("InheritanceTests_Cars", car);
             ctx.AddRelatedObject(car, "BaseTypeNavigationProperty", vehicle);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             var cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
             var actual = cars.ExecuteAsync().Result.First();
-            ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty").Wait();
+            await ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty");
 
             AssertExtension.PrimitiveEqual(vehicle, actual.BaseTypeNavigationProperty[0]);
 
@@ -408,22 +408,22 @@ namespace WebStack.QA.Test.OData.Formatter
             ctx.AttachTo("InheritanceTests_Cars", actual);
             ctx.AttachTo("InheritanceTests_Vehicles", actual.BaseTypeNavigationProperty[0]);
             ctx.DeleteLink(actual, "BaseTypeNavigationProperty", actual.BaseTypeNavigationProperty[0]);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
             actual = cars.ExecuteAsync().Result.First();
-            ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty").Wait();
+            await ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty");
 
             Assert.Empty(actual.BaseTypeNavigationProperty);
 
-            this.ClearRepository("InheritanceTests_Cars");
+            await this.ClearRepository("InheritanceTests_Cars");
         }
 
-        public virtual void AddAndRemoveDerivedNavigationPropertyInDerivedType()
+        public virtual async Task AddAndRemoveDerivedNavigationPropertyInDerivedType()
         {
             // clear respository
-            this.ClearRepository("InheritanceTests_Cars");
+            await this.ClearRepository("InheritanceTests_Cars");
 
             Random r = new Random(RandomSeedGenerator.GetRandomSeed());
 
@@ -436,12 +436,12 @@ namespace WebStack.QA.Test.OData.Formatter
             DataServiceContext ctx = WriterClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             ctx.AddObject("InheritanceTests_Cars", car);
             ctx.AddRelatedObject(car, "DerivedTypeNavigationProperty", miniSportBike);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             var cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
             var actual = cars.ExecuteAsync().Result.First();
-            ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty").Wait();
+            await ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty");
 
             AssertExtension.PrimitiveEqual(miniSportBike, actual.DerivedTypeNavigationProperty[0]);
 
@@ -449,22 +449,22 @@ namespace WebStack.QA.Test.OData.Formatter
             ctx.AttachTo("InheritanceTests_Cars", actual);
             ctx.AttachTo("InheritanceTests_MiniSportBikes", actual.DerivedTypeNavigationProperty[0]);
             ctx.DeleteLink(actual, "DerivedTypeNavigationProperty", actual.DerivedTypeNavigationProperty[0]);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
             actual = cars.ExecuteAsync().Result.First();
-            ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty").Wait();
+            await ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty");
 
             Assert.Empty(actual.DerivedTypeNavigationProperty);
 
-            this.ClearRepository("InheritanceTests_Cars");
+            await this.ClearRepository("InheritanceTests_Cars");
         }
 
-        public virtual void CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySet()
+        public virtual async Task CreateAndDeleteLinkToDerivedNavigationPropertyOnBaseEntitySet()
         {
             // clear respository
-            this.ClearRepository("InheritanceTests_Vehicles");
+            await this.ClearRepository("InheritanceTests_Vehicles");
 
             Random r = new Random(RandomSeedGenerator.GetRandomSeed());
 
@@ -477,18 +477,18 @@ namespace WebStack.QA.Test.OData.Formatter
             DataServiceContext ctx = WriterClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             ctx.AddObject("InheritanceTests_Vehicles", car);
             ctx.AddObject("InheritanceTests_Vehicles", vehicle);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx.SetLink(car, "SingleNavigationProperty", vehicle);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             var cars = ctx.CreateQuery<Vehicle>("InheritanceTests_Vehicles").ExecuteAsync().Result.ToList().OfType<Car>();
             var actual = cars.First();
-            ctx.LoadPropertyAsync(actual, "SingleNavigationProperty").Wait();
+            await ctx.LoadPropertyAsync(actual, "SingleNavigationProperty");
             AssertExtension.PrimitiveEqual(vehicle, actual.SingleNavigationProperty);
 
-            this.ClearRepository("InheritanceTests_Vehicles");
+            await this.ClearRepository("InheritanceTests_Vehicles");
         }
 
         public virtual void InvokeActionWithOverloads(string actionUrl)

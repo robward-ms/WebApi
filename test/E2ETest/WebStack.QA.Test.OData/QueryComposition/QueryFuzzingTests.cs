@@ -147,15 +147,5 @@ namespace WebStack.QA.Test.OData.QueryComposition
                 Assert.False(true);
             }
         }
-
-        //[Theory(Skip = "It is not stable, now disable it to prevent it from hiding other test failures.")]
-        //[MemberData(nameof(FuzzingQueries))]
-        public void TestFuzzingQueriesWithMultipleThreads(string filter)
-        {
-            Parallel.For(0, 3, i =>
-            {
-                TestFuzzingQueries(filter);
-            });
-        }
     }
 }

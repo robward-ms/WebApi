@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Routing;
@@ -19,9 +20,9 @@ namespace WebStack.QA.Test.OData.Common
 {
     public static class ODataTestExtension
     {
-        public static void ClearRepository(this NuwaTestBase test, string entityName)
+        public static Task ClearRepository(this NuwaTestBase test, string entityName)
         {
-            test.Client.DeleteAsync(test.BaseAddress + "/" + entityName).Wait();
+            return test.Client.DeleteAsync(test.BaseAddress + "/" + entityName);
         }
 
         public static void EnableODataSupport(this HttpConfiguration configuration, IEdmModel model, string routePrefix)

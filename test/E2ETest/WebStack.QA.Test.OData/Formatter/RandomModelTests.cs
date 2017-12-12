@@ -77,7 +77,7 @@ namespace WebStack.QA.Test.OData.Formatter
         public async Task TestRandomEntityTypes<T>(string entitySetName)
         {
             // clear respository
-            this.ClearRepository(entitySetName);
+            await this.ClearRepository(entitySetName);
 
             // TODO: Get ride of random generator in test codes. It's bad idea to introduce random factors in functional test
             var rand = new Random(RandomSeedGenerator.GetRandomSeed());

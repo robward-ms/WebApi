@@ -228,6 +228,7 @@ namespace Nuwa.Sdk.Elements
                     config.Invoke(null, new object[] { configuration });
                 }
 
+                // No choice but to wait.
                 _server.OpenAsync().Wait();
             }
 
@@ -235,6 +236,7 @@ namespace Nuwa.Sdk.Elements
             {
                 if (_server != null)
                 {
+                    // No choice but to wait.
                     _server.CloseAsync().Wait();
                 }
             }

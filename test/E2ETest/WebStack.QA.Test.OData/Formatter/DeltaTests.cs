@@ -8,6 +8,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml.Linq;
 using Microsoft.AspNet.OData;
@@ -182,12 +183,12 @@ namespace WebStack.QA.Test.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        public void TestApplyPatchOnIndividualProperty()
+        public async Task TestApplyPatchOnIndividualProperty()
         {
             // clear respository
-            this.ClearRepository("DeltaTests_Todoes");
+            await this.ClearRepository("DeltaTests_Todoes");
 
-            this.Client.GetStringAsync(this.BaseAddress + "/$metadata").Wait();
+            await this.Client.GetStringAsync(this.BaseAddress + "/$metadata");
 
             Random r = new Random(RandomSeedGenerator.GetRandomSeed());
 
@@ -212,7 +213,7 @@ namespace WebStack.QA.Test.OData.Formatter
             ctx.ResolveName = ResolveName;
             ctx.ResolveType = ResolveType;
             ctx.AddObject("DeltaTests_Todoes", todo);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             int id = todo.ID;
             //todo.ID = InstanceCreator.CreateInstanceOf<int>(r, s);
@@ -241,7 +242,7 @@ namespace WebStack.QA.Test.OData.Formatter
             todo.XElement = @"<b><a/></b>";
 
             ctx.UpdateObject(todo);
-            ctx.SaveChangesAsync().Wait();
+            await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             ctx.ResolveName = ResolveName;
@@ -275,7 +276,7 @@ namespace WebStack.QA.Test.OData.Formatter
                 actual.XElement.Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty));
 
             // clear respository
-            this.ClearRepository("DeltaTests_Todoes");
+            await this.ClearRepository("DeltaTests_Todoes");
         }
 
         public static string ResolveName(Type type)

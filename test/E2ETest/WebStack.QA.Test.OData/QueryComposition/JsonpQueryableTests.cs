@@ -45,12 +45,12 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
                 if (!String.IsNullOrEmpty(jsonpCallback))
                 {
-                    return Task.Factory.StartNew(() =>
+                    return Task.Factory.StartNew(async () =>
                     {
                         var streamWriter = new StreamWriter(writeStream);
                         streamWriter.Write(jsonpCallback + "(");
                         streamWriter.Flush();
-                        base.WriteToStreamAsync(type, value, writeStream, content, transportContext).Wait();
+                        await base.WriteToStreamAsync(type, value, writeStream, content, transportContext);
                         streamWriter.Write(")");
                         streamWriter.Flush();
                     });

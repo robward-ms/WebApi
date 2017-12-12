@@ -23,7 +23,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         }
 
         [NuwaConfiguration]
-        public static void Configuration(HttpConfiguration config)
+        internal static void Configuration(HttpConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
             config.Routes.MapHttpRoute("api", "{controller}");

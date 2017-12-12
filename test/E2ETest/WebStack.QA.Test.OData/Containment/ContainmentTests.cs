@@ -981,23 +981,6 @@ namespace WebStack.QA.Test.OData.Containment
             Assert.Equal(originCount - deletedCount, currentCount);
         }
 
-        // [Theory(Skip = "Should support Action/Function returns contained entities.")]
-        // [InlineData("convention")]
-        // [InlineData("explicit")]
-        // Action bound to a collection of contained entity.
-        public async Task DuplicatePayinPI(string mode)
-        {
-            await ResetDatasource();
-            string requestUriBase = string.Format("{0}/{1}/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Duplicate",
-                BaseAddress, mode);
-
-            string requestUri = string.Format("{0}", requestUriBase);
-            HttpResponseMessage response = await Client.PostAsync(requestUri, null);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject content = await response.Content.ReadAsAsync<JObject>();
-            Assert.Equal("101 first PI - Copy", (string)content["FriendlyName"]);
-        }
-
         [NuwaTheory]
         [InlineData("convention/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete")]
         [InlineData("convention/Accounts(100)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete")]

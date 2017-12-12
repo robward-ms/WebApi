@@ -85,7 +85,7 @@ namespace WebStack.QA.Test.OData.DollarId
         }
 
         // [Fact(Skip = "Used to generate csdl file")]
-        public void GetMetadata()
+        internal void GetMetadata()
         {
             var directory = Directory.GetCurrentDirectory();
             var strArray = directory.Split(new string[] { "bin" }, StringSplitOptions.None);

@@ -454,7 +454,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [NuwaFact]
-        public virtual void CanSetLinksInABatchWithDataServicesClient()
+        public virtual Task CanSetLinksInABatchWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
             UnbufferedBatchProxy.Container client = new UnbufferedBatchProxy.Container(serviceUrl);
@@ -467,7 +467,7 @@ Content-Type: application/json;odata.metadata=minimal
 
             client.AddLink(customer, "Orders", order);
 
-            client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset).Wait();
+            return client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
         }
     }
 
