@@ -735,15 +735,23 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
                 .Setup(s => s.CreateStructuralProperty(selectExpandNode.SelectedStructuralProperties.ElementAt(1), _entityContext))
                 .Returns(properties[1]);
 
-            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("Route");
-            var request = RequestFactory.Create(configuration, "Route");
             Mock<IETagHandler> mockETagHandler = new Mock<IETagHandler>();
             string tag = "\"'anycity'\"";
             EntityTagHeaderValue etagHeaderValue = new EntityTagHeaderValue(tag, isWeak: true);
             mockETagHandler.Setup(e => e.CreateETag(It.IsAny<IDictionary<string, object>>())).Returns(etagHeaderValue);
-#if !NETCORE
+
+            var configuration = RoutingConfigurationFactory.CreateWithRootContainer("Route", (config) =>
+            {
+#if NETCORE
+                config.AddService<IETagHandler>(ServiceLifetime.Singleton, (services) => mockETagHandler.Object);
+            });
+#else
+            });
+
             configuration.SetETagHandler(mockETagHandler.Object);
 #endif
+
+            var request = RequestFactory.Create(configuration, "Route");
             _entityContext.Request = request;
 
             // Act

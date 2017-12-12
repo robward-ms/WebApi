@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Factories;
@@ -18,6 +20,7 @@ using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json.Linq;
 using Xunit;
 #else
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -147,18 +150,31 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             request.Content = new StringContent(message);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            HttpResponseMessage response = _client.SendAsync(request).Result;
-            Assert.Equal(HttpStatusCode.ExpectationFailed, response.StatusCode);
+            try
+            {
+                // AspNet wil not throw, validate the response code.
+                HttpResponseMessage response = _client.SendAsync(request).Result;
+                Assert.Equal(HttpStatusCode.ExpectationFailed, response.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                // AspNetCore will throw, validate the exception.
+                Assert.Equal(typeof(AggregateException), ex.GetType());
+                Assert.Equal(typeof(InvalidOperationException), ex.InnerException.GetType());
+            }
         }
     }
 
     public class CollectionsTestsController : ODataController
     {
-        public CollectionsTestsModel Post(CollectionsTestsModel model)
+        public CollectionsTestsModel Post([FromBody]CollectionsTestsModel model)
         {
             if (!ModelState.IsValid)
             {
-#if !NETCORE
+
+#if NETCORE
+                throw new InvalidOperationException();
+#else
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
 #endif
             }

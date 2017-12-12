@@ -80,6 +80,11 @@ namespace Microsoft.AspNet.OData.Formatter
         /// <inheritdoc/>
         public override bool CanRead(InputFormatterContext context)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull("context");
+            }
+
             HttpRequest request = context.HttpContext.Request;
             if (request == null)
             {
@@ -113,6 +118,11 @@ namespace Microsoft.AspNet.OData.Formatter
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull("context");
+            }
+
             Type type = context.ModelType;
             if (type == null)
             {

@@ -128,7 +128,6 @@
     <Compile Include="Factories\ServerFactory.cs" />
     <Compile Include="Factories\WebApiAssembliesResolverFactory.cs" />
     <Compile Include="Formatter\FormatterTestHelper.cs" />
-    <Compile Include="Formatter\MediaTypeFormatterTestBase.cs" />
     <Compile Include="ContextUtil.cs" />
     <Compile Include="EdmDeltaCollectionTypeTest.cs" />
     <Compile Include="EdmDeltaTypeTest.cs" />

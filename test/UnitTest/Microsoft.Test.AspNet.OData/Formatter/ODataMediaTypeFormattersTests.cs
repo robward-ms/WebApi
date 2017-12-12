@@ -4,21 +4,27 @@
 #if NETCORE
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Moq;
 using Xunit;
+using MediaTypeHeaderValue = System.Net.Http.Headers.MediaTypeHeaderValue;
 #else
 using System;
 using System.Collections.Generic;
@@ -40,7 +46,6 @@ using Moq;
 using Xunit;
 #endif
 
-#if !NETCORE
 namespace Microsoft.Test.AspNet.OData.Formatter
 {
     public class ODataMediaTypeFormattersTests
@@ -49,7 +54,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void TestCreate_CombinedFormatters_SupportedEncodings()
         {
             // Arrange
-            var formatters = CreateProductUnderTest();
+            var formatters = CreateOutputFormatters();
             Assert.NotNull(formatters); // Guard assertion
 
             // Act
@@ -69,7 +74,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         public void TestCreate_CombinedFormatters_SupportedMediaTypes()
         {
             // Arrange
-            var formatters = CreateProductUnderTest();
+            var formatters = CreateOutputFormatters();
             Assert.NotNull(formatters); // Guard assertion
 
             // Act
@@ -102,10 +107,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var feedFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(IEnumerable<SampleType>)));
+                f => CanWriteType(f, typeof(IEnumerable<SampleType>), request));
 
             // Act
             var supportedMediaTypes = feedFormatters.SelectMany(
@@ -136,10 +142,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var entryFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(SampleType)));
+                f => CanWriteType(f, typeof(SampleType), request));
 
             // Act
             var supportedMediaTypes = entryFormatters.SelectMany(
@@ -170,10 +177,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var propertyFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(int)));
+                f => CanWriteType(f, typeof(int), request));
 
             // Act
             var supportedMediaTypes = propertyFormatters.SelectMany(
@@ -204,10 +212,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var entityReferenceLinkFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(Uri)));
+                f => CanWriteType(f, typeof(Uri), request));
 
             // Act
             var supportedMediaTypes = entityReferenceLinkFormatters.SelectMany(
@@ -238,10 +247,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var collectionFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(IEnumerable<int>)));
+                f => CanWriteType(f, typeof(IEnumerable<int>), request));
 
             // Act
             var supportedMediaTypes = collectionFormatters.SelectMany(
@@ -272,10 +282,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var serviceDocumentFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(ODataServiceDocument)));
+                f => CanWriteType(f, typeof(ODataServiceDocument), request));
 
             // Act
             var supportedMediaTypes = serviceDocumentFormatters.SelectMany(
@@ -306,20 +317,21 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var metadataDocumentFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(IEdmModel)));
+                f => CanWriteType(f, typeof(IEdmModel), request));
 
             // Act
-            IEnumerable<MediaTypeHeaderValue> supportedMediaTypes = metadataDocumentFormatters.SelectMany(
+            var supportedMediaTypes = metadataDocumentFormatters.SelectMany(
                 f => f.SupportedMediaTypes).Distinct();
 
             // Assert
-            IEnumerable<MediaTypeHeaderValue> expectedMediaTypes = new MediaTypeHeaderValue[]
+            var expectedMediaTypes = GetMediaTypes(new string[]
             {
-                MediaTypeHeaderValue.Parse("application/xml")
-            };
+                "application/xml",
+            });
 
             Assert.True(expectedMediaTypes.SequenceEqual(supportedMediaTypes));
         }
@@ -329,10 +341,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateOutputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var errorFormatters = formatters.Where(
-                f => f.CanWriteType(typeof(ODataError)));
+                f => CanWriteType(f, typeof(ODataError), request));
 
             // Act
             var supportedMediaTypes = errorFormatters.SelectMany(
@@ -363,10 +376,11 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         {
             // Arrange
             IEdmModel model = CreateModelWithEntity<SampleType>();
-            var formatters = CreateProductUnderTest(model);
+            var request = RequestFactory.CreateFromModel(model, "http://any");
+            var formatters = CreateInputFormatters(model);
             Assert.NotNull(formatters); // Guard assertion
             var parameterFormatters = formatters.Where(
-                f => f.CanReadType(typeof(ODataActionParameters)));
+                f => CanReadType(f, typeof(ODataActionParameters), request));
 
             // Act
             var supportedMediaTypes = parameterFormatters.SelectMany(
@@ -677,7 +691,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void Create_UsesODataSerializerProviderProxyInstance()
         {
-            var formatters = ODataMediaTypeFormatters.Create();
+            var formatters = CreateOutputFormatters();
 
             Assert.Same(formatters.First().SerializerProvider, ODataSerializerProviderProxy.Instance);
         }
@@ -685,7 +699,7 @@ namespace Microsoft.Test.AspNet.OData.Formatter
         [Fact]
         public void Create_UsesODataDeserializerProviderProxyInstance()
         {
-            var formatters = ODataMediaTypeFormatters.Create();
+            var formatters = CreateInputFormatters();
 
             Assert.Same(formatters.First().DeserializerProvider, ODataDeserializerProviderProxy.Instance);
         }
@@ -702,84 +716,166 @@ namespace Microsoft.Test.AspNet.OData.Formatter
             return model.GetEdmModel();
         }
 
-        private static MediaTypeHeaderValue GetDefaultContentType(IEdmModel model, Type type)
-        {
-            var formatters = CreateProductUnderTest(model);
-            var feedFormatters = formatters.Where(f => f.CanWriteType(type));
-            IContentNegotiator negotiator = new DefaultContentNegotiator(false);
-            MediaTypeHeaderValue mediaType;
-
-            using (HttpRequestMessage request = new HttpRequestMessage())
-            {
-                request.RequestUri = new Uri("http://any");
-                request.EnableODataDependencyInjectionSupport(model);
-                ContentNegotiationResult result = negotiator.Negotiate(type, request, formatters);
-                mediaType = result.MediaType;
-            }
-
-            // We don't care what the charset is for these tests.
-            mediaType.Parameters.Remove(mediaType.Parameters.Single(p => p.Name == "charset"));
-
-            return mediaType;
-        }
-
-        private static MediaTypeHeaderValue GetContentTypeFromQueryString(IEdmModel model, Type type, string dollarFormat)
-        {
-            var formatters = CreateProductUnderTest(model);
-            var feedFormatters = formatters.Where(f => f.CanWriteType(type));
-            IContentNegotiator negotiator = new DefaultContentNegotiator(false);
-            MediaTypeHeaderValue mediaType;
-
-            using (HttpRequestMessage request = new HttpRequestMessage())
-            {
-                request.RequestUri = new Uri("http://any/?$format=" + dollarFormat);
-                request.EnableODataDependencyInjectionSupport(model);
-                ContentNegotiationResult result = negotiator.Negotiate(type, request, formatters);
-                mediaType = result.MediaType;
-            }
-
-            // We don't care what the charset is for these tests.
-            mediaType.Parameters.Remove(mediaType.Parameters.Single(p => p.Name == "charset"));
-
-            return mediaType;
-        }
-
 #if NETCORE
-        private static IEnumerable<ODataOutputFormatter> CreateProductUnderTest()
+        private static IEnumerable<ODataOutputFormatter> CreateOutputFormatters(IEdmModel model = null)
         {
-            IEdmModel model = CreateModel();
-            return CreateProductUnderTest(model);
-        }
-
-        private static IEnumerable<ODataOutputFormatter> CreateProductUnderTest(IEdmModel model)
-        {
-            var request = RequestFactory.CreateFromModel(model, "http://any");
+            // Model is not used in AspNetCore.
             return ODataOutputFormatterFactory.Create();
         }
 
-        private IEnumerable<string> GetMediaTypes(string[] mediaTypes)
+        private static IEnumerable<ODataInputFormatter> CreateInputFormatters(IEdmModel model = null)
+        {
+            // Model is not used in AspNetCore.
+            return ODataInputFormatterFactory.Create();
+        }
+
+        private static IEnumerable<string> GetMediaTypes(string[] mediaTypes)
         {
             return mediaTypes;
         }
 
-#else
-        private static IEnumerable<ODataMediaTypeFormatter> CreateProductUnderTest()
+        private static bool CanWriteType(ODataOutputFormatter formatter, Type type, HttpRequest request)
         {
-            IEdmModel model = CreateModel();
-            return CreateProductUnderTest(model);
+            var context = new OutputFormatterWriteContext(
+                request.HttpContext,
+                new TestHttpResponseStreamWriterFactory().CreateWriter,
+                objectType: type,
+                @object: null);
+
+            return formatter.CanWriteResult(context);
         }
 
-        private static IEnumerable<ODataMediaTypeFormatter> CreateProductUnderTest(IEdmModel model)
+        private static bool CanReadType(ODataInputFormatter formatter, Type type, HttpRequest request)
+        {
+            var context = new InputFormatterContext(
+                request.HttpContext,
+                "modelName",
+                new ModelStateDictionary(),
+                new EmptyModelMetadataProvider().GetMetadataForType(typeof(object)),
+                (stream, encoding) => new StreamReader(stream, encoding));
+
+            return formatter.CanRead(context);
+        }
+
+        private static MediaTypeHeaderValue GetDefaultContentType(IEdmModel model, Type type)
+        {
+            return GetContentTypeFromQueryString(model, type, null);
+        }
+
+        private static MediaTypeHeaderValue GetContentTypeFromQueryString(IEdmModel model, Type type, string dollarFormat)
+        {
+            var formatters = CreateOutputFormatters(model);
+
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("OData");
+            var request = string.IsNullOrEmpty(dollarFormat)
+                ? RequestFactory.CreateFromModel(model, "http://any", "OData")
+                : RequestFactory.CreateFromModel(model, "http://any/?$format=" + dollarFormat, "OData");
+
+            var context = new OutputFormatterWriteContext(
+                request.HttpContext,
+                new TestHttpResponseStreamWriterFactory().CreateWriter,
+                type,
+                new MemoryStream());
+
+            foreach (var formatter in formatters)
+            {
+                context.ContentType = new StringSegment();
+                context.ContentTypeIsServerDefined = false;
+
+                if (formatter.CanWriteResult(context))
+                {
+                    MediaTypeHeaderValue mediaType = MediaTypeHeaderValue.Parse(context.ContentType.ToString());
+
+                    // We don't care what the charset is for these tests.
+                    if (mediaType.Parameters.Where(p => p.Name == "charset").Any())
+                    {
+                        mediaType.Parameters.Remove(mediaType.Parameters.Single(p => p.Name == "charset"));
+                    }
+
+                    return mediaType;
+                }
+            }
+
+            return null;
+        }
+
+        private class TestHttpResponseStreamWriterFactory : IHttpResponseStreamWriterFactory
+        {
+            public const int DefaultBufferSize = 16 * 1024;
+
+            public TextWriter CreateWriter(Stream stream, Encoding encoding)
+            {
+                return new HttpResponseStreamWriter(stream, encoding, DefaultBufferSize);
+            }
+        }
+#else
+        private static IEnumerable<ODataMediaTypeFormatter> CreateOutputFormatters()
+        {
+            IEdmModel model = CreateModel();
+            return CreateOutputFormatters(model);
+        }
+
+        private static IEnumerable<ODataMediaTypeFormatter> CreateOutputFormatters(IEdmModel model)
         {
             var request = RequestFactory.CreateFromModel(model, "http://any");
             return ODataMediaTypeFormatters.Create().Select(f => f.GetPerRequestFormatterInstance(typeof(void), request, null) as ODataMediaTypeFormatter);
         }
 
-        private IEnumerable<MediaTypeHeaderValue> GetMediaTypes(string[] mediaTypes)
+        private static IEnumerable<ODataMediaTypeFormatter> CreateInputFormatters()
+        {
+            return CreateOutputFormatters();
+        }
+
+        private static IEnumerable<ODataMediaTypeFormatter> CreateInputFormatters(IEdmModel model)
+        {
+            return CreateOutputFormatters(model);
+        }
+
+        private static IEnumerable<MediaTypeHeaderValue> GetMediaTypes(string[] mediaTypes)
         {
             return mediaTypes.Select(m => MediaTypeHeaderValue.Parse(m));
+        }
+
+        private static bool CanWriteType(ODataMediaTypeFormatter formatter, Type type, HttpRequestMessage request)
+        {
+            // request is not used in AspNet.
+            return formatter.CanWriteType(type);
+        }
+
+        private static bool CanReadType(ODataMediaTypeFormatter formatter, Type type, HttpRequestMessage request)
+        {
+            // request is not used in AspNet.
+            return formatter.CanReadType(type);
+        }
+
+        private static MediaTypeHeaderValue GetDefaultContentType(IEdmModel model, Type type)
+        {
+            return GetContentTypeFromQueryString(model, type, null);
+        }
+
+        private static MediaTypeHeaderValue GetContentTypeFromQueryString(IEdmModel model, Type type, string dollarFormat)
+        {
+            var formatters = CreateOutputFormatters(model);
+            var feedFormatters = formatters.Where(f => f.CanWriteType(type));
+            IContentNegotiator negotiator = new DefaultContentNegotiator(false);
+            MediaTypeHeaderValue mediaType;
+
+            using (HttpRequestMessage request = new HttpRequestMessage())
+            {
+                request.RequestUri = string.IsNullOrEmpty(dollarFormat)
+                    ? request.RequestUri = new Uri("http://any")
+                    : new Uri("http://any/?$format=" + dollarFormat);
+
+                request.EnableODataDependencyInjectionSupport(model);
+                ContentNegotiationResult result = negotiator.Negotiate(type, request, formatters);
+                mediaType = result.MediaType;
+            }
+
+            // We don't care what the charset is for these tests.
+            mediaType.Parameters.Remove(mediaType.Parameters.Single(p => p.Name == "charset"));
+
+            return mediaType;
         }
 #endif
     }
 }
-#endif

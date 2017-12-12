@@ -65,7 +65,7 @@ namespace Microsoft.AspNet.OData.Formatter
                         .FirstOrDefault()
                         .Value;
 
-                    quality = (string.IsNullOrEmpty(queryValue) && (queryValue == QueryStringParameterValue)) ? 1 : 0;
+                    quality = (!string.IsNullOrEmpty(queryValue) && (queryValue == QueryStringParameterValue)) ? 1 : 0;
                 }
             }
 

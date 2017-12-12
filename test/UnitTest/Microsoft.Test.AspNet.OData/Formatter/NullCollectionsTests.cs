@@ -226,13 +226,6 @@ namespace Microsoft.Test.AspNet.OData.Formatter
 
         public NullCollectionsTestsModel Get()
         {
-            if (!ModelState.IsValid)
-            {
-#if !NETCORE
-                throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
-#endif
-            }
-
             return TestObject;
         }
     }

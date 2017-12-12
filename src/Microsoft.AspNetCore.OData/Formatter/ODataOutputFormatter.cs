@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +17,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OData;
+using MediaTypeHeaderValue = System.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
@@ -27,8 +28,6 @@ namespace Microsoft.AspNet.OData.Formatter
     /// </summary>
     public class ODataOutputFormatter : TextOutputFormatter, IMediaTypeMappingCollection
     {
-        internal const string ContentTypeHeader = "Content-Type";
-
         private readonly ODataVersion _version;
 
         /// <summary>
@@ -115,16 +114,16 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             // See if the request satisfies any mappings.
-            MediaTypeMapping matchedMapping = (MediaTypeMappings == null) ? null : MediaTypeMappings
-                .Where(m => (m.TryMatchMediaType(request) > 0) && (m.MediaType.ToString() == context.ContentType.Value))
-                .FirstOrDefault();
+            IEnumerable<MediaTypeMapping> matchedMappings = (MediaTypeMappings == null) ? null : MediaTypeMappings
+                //.Where(m => (m.TryMatchMediaType(request) > 0) && (m.MediaType.ToString() == context.ContentType.Value))
+                .Where(m => (m.TryMatchMediaType(request) > 0));
 
             // Now pick the bets content type. If the media type was specified, use that. If not, use the
             // media type from the matched mapping if there is one. Otherwise, let the base class make the
             // determination.
-            if (!contentTypeSpecified && matchedMapping != null)
+            if (!contentTypeSpecified && matchedMappings != null && matchedMappings.Any())
             {
-                context.ContentType = matchedMapping.MediaType.MediaType;
+                context.ContentType = matchedMappings.First().MediaType.ToString();
             }
             else if (!suportedMediaTypeFound)
             {
@@ -132,7 +131,7 @@ namespace Microsoft.AspNet.OData.Formatter
             }
 
             // We need the type in order to write it.
-            Type type = context.Object.GetType();
+            Type type = context.ObjectType ?? context.Object?.GetType();
             if (type == null)
             {
                 throw Error.ArgumentNull("type");
@@ -173,17 +172,17 @@ namespace Microsoft.AspNet.OData.Formatter
             HttpResponse response = context.HttpContext.Response;
             response.ContentType = context.ContentType.Value;
 
-            MediaTypeHeaderValue contentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
+            MediaTypeHeaderValue contentType = GetContentType(response.Headers[HeaderNames.ContentType].FirstOrDefault());
 
             // Determine the content type.
             MediaTypeHeaderValue newMediaType = null;
             if (ODataOutputFormatterHelper.TryGetContentHeader(type, contentType, out newMediaType))
             {
-                response.Headers[ContentTypeHeader] = new StringValues(newMediaType.ToString());
+                response.Headers[HeaderNames.ContentType] = new StringValues(newMediaType.ToString());
             }
 
             // Set the character set.
-            MediaTypeHeaderValue currentContentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
+            MediaTypeHeaderValue currentContentType = GetContentType(response.Headers[HeaderNames.ContentType].FirstOrDefault());
             RequestHeaders requestHeader = request.GetTypedHeaders();
             if (requestHeader != null && requestHeader.AcceptCharset != null)
             {
@@ -193,7 +192,7 @@ namespace Microsoft.AspNet.OData.Formatter
                 if (ODataOutputFormatterHelper.TryGetCharSet(currentContentType, acceptCharsetValues, out newCharSet))
                 {
                     currentContentType.CharSet = newCharSet;
-                    response.Headers[ContentTypeHeader] = new StringValues(currentContentType.ToString());
+                    response.Headers[HeaderNames.ContentType] = new StringValues(currentContentType.ToString());
                 }
             }
 
@@ -221,7 +220,7 @@ namespace Microsoft.AspNet.OData.Formatter
             {
                 HttpResponse response = context.HttpContext.Response;
                 Uri baseAddress = GetBaseAddressInternal(request);
-                MediaTypeHeaderValue contentType = GetContentType(response.Headers[ContentTypeHeader].FirstOrDefault());
+                MediaTypeHeaderValue contentType = GetContentType(response.Headers[HeaderNames.ContentType].FirstOrDefault());
 
                 Func<ODataSerializerContext> getODataSerializerContext = () =>
                 {

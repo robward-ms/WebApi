@@ -31,10 +31,10 @@ namespace Microsoft.Test.AspNet.OData.Formatter.Serialization
         public void WriteObject_SupportsHttpError()
         {
             var serializer = new ODataErrorSerializer();
-#if !NETCORE
-            var error = new HttpError("bad stuff");
-#else
+#if NETCORE
             var error = new SerializableError();
+#else
+            var error = new HttpError("bad stuff");
 #endif
 
             Mock<IODataResponseMessage> mockResponseMessage = new Mock<IODataResponseMessage>();
