@@ -9,29 +9,18 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Cast
 {
-    [NuwaFramework]
-    public class CastTest : NuwaTestBase
+    public class CastTest : WebHostTestBase
     {
-        private readonly string _namespaceOfEdmSchema = null;
         private static string[] dataSourceTypes = new string[] { "IM", "EF" };// In Memory and Entity Framework
 
-        public CastTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-            _namespaceOfEdmSchema = typeof(Product).Namespace;
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(ProductsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -89,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Cast
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(Combinations))]
         public async Task Query(string dataSourceMode, string dollarFormat, int expectedEntityCount)
         {

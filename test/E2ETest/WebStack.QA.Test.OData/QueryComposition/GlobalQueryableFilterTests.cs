@@ -11,9 +11,8 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -166,15 +165,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class GlobalQueryableFilterWithoutResultLimitTests : NuwaTestBase
+    public class GlobalQueryableFilterWithoutResultLimitTests : WebHostTestBase
     {
-        public GlobalQueryableFilterWithoutResultLimitTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
@@ -182,7 +175,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableWithQAttr")]
@@ -195,7 +188,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
             Assert.Single(actual);
         }
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
@@ -208,7 +201,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.NotEqual(1, actual.Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithQAttr")]
         public void TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
@@ -218,7 +211,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Contains("The requested resource is not a collection.", response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithResultLimit")]
         public virtual void TestQueryableAttributeShouldWinGlobalQueryableFilter(string url)
         {
@@ -228,7 +221,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(5, actual.Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProduct")]
         public virtual void TestQueryableAttributeWontAffectOtherActions(string url)
         {
@@ -239,12 +232,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class GlobalQueryableFilterWithResultLimitTests : GlobalQueryableFilterWithoutResultLimitTests
     {
-        public GlobalQueryableFilterWithResultLimitTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
         internal static void UpdateConfiguration1(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
@@ -254,15 +241,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : NuwaTestBase
+    public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : WebHostTestBase
     {
-        public GlobalQueryableFilterWithDerivedEnableQueryAttribute(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new DerivedQueryableAttribute());
@@ -270,7 +251,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedQAttrResultLimit")]
@@ -283,7 +264,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(3, actual.Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable?$top=4&$customQuery=1")]
         public void TestCustomQueryWorksUnderGlobalFilter(string url)
         {
@@ -293,7 +274,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(3, actual.Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
@@ -306,7 +287,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.NotEqual(4, actual.Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithDerivedQAttr")]
         public void TestActionsThatNotAllowedByQueryableAttribute(string url)
         {

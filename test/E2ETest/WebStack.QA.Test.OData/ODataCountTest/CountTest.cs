@@ -8,24 +8,17 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 {
-    [NuwaFramework]
-    public class ODataCountTest : NuwaTestBase
+    public class ODataCountTest : WebHostTestBase
     {
-        public ODataCountTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(HeroesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -44,7 +37,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/odata/Heroes/$count", 1)]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()/$count", 5)]
         [InlineData("{0}/odata/Heroes/Default.GetNames()/$count", 2)]
@@ -62,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
             Assert.Equal(expectedCount, actualCount);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/odata/Heroes?$count=true", 1)]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()?$count=true", 5)]
         [InlineData("{0}/odata/Heroes/Default.GetNames()?$count=true", 2)]
@@ -80,7 +73,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
             Assert.Equal(expectedCount, result["@odata.count"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/odata/Heroes")]
         [InlineData("{0}/odata/Heroes/Default.GetWeapons()")]
         [InlineData("{0}/odata/Heroes/Default.GetNames()")]

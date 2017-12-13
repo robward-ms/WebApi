@@ -21,10 +21,10 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
+using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
@@ -161,16 +161,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
     }
 
-    [NuwaFramework]
-    public class SerializeEntityReferenceLinksTest : NuwaTestBase
+    public class SerializeEntityReferenceLinksTest : WebHostTestBase
     {
-        public SerializeEntityReferenceLinksTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.InsertRange(0,
@@ -194,7 +187,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanExtendTheFormatterToSerializeEntityReferenceLinks()
         {
             string requestUrl = BaseAddress + "/EntityReferenceLinks/ParentEntity(1)/Children/$ref";

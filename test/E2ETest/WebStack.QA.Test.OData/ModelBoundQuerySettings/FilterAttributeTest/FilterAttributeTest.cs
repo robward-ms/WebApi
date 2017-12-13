@@ -8,13 +8,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest
 {
-    public class FilterAttributeTest : NuwaTestBase
+    public class FilterAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
@@ -23,13 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
 
-        public FilterAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -45,7 +38,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
                 FilterAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$filter=Id eq 1")]
         [InlineData(CustomerBaseUrl + "?$filter=Id eq 1 and Name eq 'test'")]
         [InlineData(OrderBaseUrl + "?$expand=UnFilterableCustomers($filter=Id eq 1)")]
@@ -69,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             Assert.Contains("cannot be used in the $filter query option.", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$filter=Name eq 'test'", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$filter=Id eq 1", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$filter=Id eq 1 and Name eq 'test'", (int)HttpStatusCode.BadRequest)]
@@ -122,7 +115,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$expand=Customers($filter=Id eq 1 and Name eq 'test')", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "(1)/Customers?$filter=Id eq 1 and Name eq 'test'", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "?$expand=Orders($filter=Name eq 'test')", (int)HttpStatusCode.BadRequest)]
@@ -155,7 +148,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$filter=AutoExpandOrder/Name eq 'test'", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "?$filter=AutoExpandOrder/Id eq 1", (int)HttpStatusCode.BadRequest)]
         [InlineData(CustomerBaseUrl + "?$filter=Address/Name eq 'test'", (int)HttpStatusCode.OK)]

@@ -13,23 +13,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    [NuwaFramework]
-    public class OrderByTests : NuwaTestBase
+    public class OrderByTests : WebHostTestBase
     {
-        public OrderByTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -43,7 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanOrderByNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/ZipCode desc";
@@ -61,7 +53,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanOrderByMultipleNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/CountryOrRegion/Name asc, Address/ZipCode asc";
@@ -80,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanOrderByDuplicatePropertiesSimiliarPath()
         {
             string query =

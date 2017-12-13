@@ -12,24 +12,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
-    [NuwaFramework]
-    public class SingletonClientTest : NuwaTestBase
+    public class SingletonClientTest : WebHostTestBase
     {
-        public SingletonClientTest(NuwaClassFixture fixture)
-            : base(fixture)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
-        {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             if (server == null)
             {
@@ -49,7 +41,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                 new DefaultODataBatchHandler(server));
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task SingletonClientQueryTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -116,7 +108,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             Assert.Single(umbrella.Partners);
         }
 
-        [NuwaFact]
+        [Fact]
         public void SingletonQueryInBatchTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -151,7 +143,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task SingletonUpdateInBatchTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";

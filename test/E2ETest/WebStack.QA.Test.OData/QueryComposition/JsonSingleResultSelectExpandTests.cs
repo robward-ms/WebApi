@@ -10,22 +10,15 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class JsonSingleResultExpandTests : NuwaTestBase
+    public class JsonSingleResultExpandTests : WebHostTestBase
     {
-        public JsonSingleResultExpandTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -35,7 +28,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryJustThePropertiesOfTheEntriesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1?$select=*", BaseAddress);
@@ -59,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, result.Properties().Count());
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1/?$select=Name", BaseAddress);
@@ -83,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(result.Properties().Count() == 1 && result.Properties().All(p => p.Name == "Name"));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1/?$select=Id,Name&$expand=JsonSingleResultOrders($select=Id)", BaseAddress);
@@ -108,7 +101,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal((int)result["Id"], ((JArray)result["JsonSingleResultOrders"]).Count);
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10/?" +
@@ -132,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, result.Properties().Count());
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInlineOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1?$select=Id&$expand=JsonSingleResultOrders", BaseAddress);
@@ -162,7 +155,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationPropertiesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?" +
@@ -203,7 +196,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPathOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?$select=Id,JsonSingleResultOrders&$expand=JsonSingleResultOrders($expand=OrderDetails)", BaseAddress);
@@ -241,7 +234,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntriesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?" +

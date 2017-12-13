@@ -5,27 +5,19 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
-using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class QueryFuzzingTests : NuwaTestBase
+    public class QueryFuzzingTests : WebHostTestBase
     {
-        public QueryFuzzingTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string> FuzzingQueries
         {
             get
@@ -63,8 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -78,7 +69,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(FuzzingQueries))]
         public void TestFuzzingQueries(string filter)
         {

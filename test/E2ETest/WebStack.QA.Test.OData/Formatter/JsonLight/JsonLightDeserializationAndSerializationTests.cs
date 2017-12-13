@@ -7,21 +7,13 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.OData.Client;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightDeserializationAndSerializationTests : DeserializationAndSerializationTests
     {
-        public JsonLightDeserializationAndSerializationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public string AcceptHeader { get; set; }
 
         public override DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
@@ -68,8 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -77,7 +68,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             configuration.EnableODataSupport(GetEdmModel());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(EntityData))]
         public Task PutAndGetShouldReturnSameEntityJsonLight(string acceptHeader)
         {
@@ -100,7 +91,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             return PostAndGetShouldReturnSameEntity(entity);
         }
 
-        [NuwaFact]
+        [Fact]
         public void SerializationTests()
         {
             string requestUri = this.BaseAddress + "/UniverseEntity";

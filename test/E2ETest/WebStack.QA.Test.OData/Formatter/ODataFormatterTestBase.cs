@@ -3,7 +3,7 @@
 
 using System;
 using Microsoft.OData.Client;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -13,13 +13,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         DataServiceContext WriterClient(Uri serviceRoot, ODataProtocolVersion protocolVersion);
     }
 
-    public class ODataFormatterTestBase : NuwaTestBase, IODataFormatterTestBase
+    public abstract class ODataFormatterTestBase : WebHostTestBase, IODataFormatterTestBase
     {
-        public ODataFormatterTestBase(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public virtual DataServiceContext ReaderClient(Uri serviceRoot, ODataProtocolVersion protocolVersion)
         {
             //By default reader uses the same configuration as writer. Reading is a more important scenario than writing

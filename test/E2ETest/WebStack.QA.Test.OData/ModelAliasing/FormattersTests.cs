@@ -13,24 +13,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using ModelAliasing;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
-    [NuwaFramework]
-    public class FormattersTests : NuwaTestBase
+    public class FormattersTests : WebHostTestBase
     {
-        public FormattersTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -70,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=false")]
         [InlineData("application/json;odata.streaming=true")]

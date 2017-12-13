@@ -8,22 +8,16 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
-    public class AutoExpandTests : NuwaTestBase
+    public class AutoExpandTests : WebHostTestBase
     {
         private const string AutoExpandTestBaseUrl = "{0}/autoexpand/Customers(5)";
-
-        public AutoExpandTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
 
         public static TheoryDataSet<string, int> AutoExpandTestData
         {
@@ -40,8 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -59,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
                 AutoExpandEdmModel.GetEdmModel(configuration));
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AutoExpandTestData))]
         public void QueryForAnEntryIncludeTheAutoExpandNavigationProperty(string url, int propCount)
         {
@@ -93,7 +86,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Null(friend["Order"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public void LevelsWithAutoExpandInSameNavigationProperty()
         {
             // Arrange
@@ -113,7 +106,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Null(customer["Friend"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("1", 1)]
         [InlineData("3", 3)]
         [InlineData("max", 4)]
@@ -146,7 +139,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Null(friend["Friend"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryIncludeTheDerivedAutoExpandNavigationProperty()
         {
             // Arrange
@@ -174,7 +167,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Null(order["Choice"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryIncludeTheMultiDerivedAutoExpandNavigationProperty()
         {
             // Arrange
@@ -202,7 +195,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Null(order["Choice"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/autoexpand/NormalOrders")]
         [InlineData("{0}/autoexpand/NormalOrders(1)")]
         public void DerivedAutoExpandNavigationPropertyTest(string url)
@@ -225,7 +218,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             Assert.Contains("OrderDetail", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/autoexpand/NormalOrders?$select=Id", true)]
         [InlineData("{0}/autoexpand/NormalOrders", false)]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$select=Id", true)]
@@ -259,7 +252,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder($select=Id)", true)]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder", false)]
         public void DisableAutoExpandWhenSelectIsPresentDollarExpandTest(string url, bool isSelectPresent)

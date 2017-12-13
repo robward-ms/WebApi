@@ -11,23 +11,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-    [NuwaFramework]
-    public class PatchUpdatedEntryWithIfMatchETagsTest : NuwaTestBase
+    public class PatchUpdatedEntryWithIfMatchETagsTest : WebHostTestBase
     {
-        public PatchUpdatedEntryWithIfMatchETagsTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             var model = GetEdmModel();
@@ -54,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)?$format=json";

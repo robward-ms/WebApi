@@ -13,24 +13,16 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
-    [NuwaFramework]
-    public class ComplexTypeInheritanceSerializeTest : NuwaTestBase
+    public class ComplexTypeInheritanceSerializeTest : WebHostTestBase
     {
-        public ComplexTypeInheritanceSerializeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(MetadataController), typeof(InheritanceCustomersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -44,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             configuration.EnsureInitialized();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CanQueryInheritanceComplexInComplexProperty()
         {
             string requestUri = string.Format("{0}/odata/InheritanceCustomers?$format=application/json;odata.metadata=full", BaseAddress);

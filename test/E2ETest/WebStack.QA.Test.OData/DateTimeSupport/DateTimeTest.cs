@@ -14,26 +14,18 @@ using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
-    [NuwaFramework]
-    public class DateTimeTest : NuwaTestBase
+    public class DateTimeTest : WebHostTestBase
     {
-        public DateTimeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(FilesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -61,7 +53,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -94,7 +86,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         #region CRUD on DateTime related entity
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CreateFileTest(string mode)
@@ -121,7 +113,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Equal(expect, response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task QueryFileEntitySetTest(string mode)
@@ -168,7 +160,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryFileEntityTest(string mode, string mime)
         {
@@ -194,7 +186,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Equal(DateTimeOffset.Parse("2014-12-24T01:02:03-08:00"), content["ModifiedDates"][2]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task UpdateFileEntityTestRoundTrip(string mode)
@@ -225,7 +217,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Contains("\"DeleteDate\":\"2014-12-30T15:01:03-08:00\"", response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CreateDeleteFileEntityRoundTrip(string mode)
@@ -253,7 +245,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 
         #region Query option on DateTime
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanSelectDateTimeProperty(string mode)
@@ -267,7 +259,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Contains("\"CreatedDate\":\"2017-12-23T17:02:03-08:00\"", response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanFilterDateTimeProperty(string mode)
@@ -290,7 +282,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Equal(3, content["value"][0]["ModifiedDates"].Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanOrderByDateTimeProperty(string mode)
@@ -316,7 +308,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 
         #region function/action on DateTime
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanCallFunctionOnDateTime(string mode)
@@ -334,7 +326,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Equal(5, content["value"].Count());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanCallActionOnDateTime(string mode)

@@ -11,8 +11,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
@@ -105,17 +104,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    // Skip webhost as it denies most of the special characters
-    [NuwaFramework]
-    public class SpecialCharactersLinkGenerationTests : NuwaTestBase
+    public class SpecialCharactersLinkGenerationTests : WebHostTestBase
     {
-        public SpecialCharactersLinkGenerationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -130,7 +121,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var context = new DataServiceContext(new Uri(this.BaseAddress));
@@ -161,15 +152,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    public class SpecialCharactersLinkGenerationWebTests : NuwaTestBase
+    public class SpecialCharactersLinkGenerationWebTests : WebHostTestBase
     {
-        public SpecialCharactersLinkGenerationWebTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -184,7 +169,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));

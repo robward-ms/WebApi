@@ -14,8 +14,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
@@ -59,16 +58,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
     }
 
-    [NuwaFramework]
-    public class SupportDollarValueTest : NuwaTestBase
+    public class SupportDollarValueTest : WebHostTestBase
     {
-        public SupportDollarValueTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.
@@ -87,7 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanExtendTheFormatterToSupportPrimitiveRawValues()
         {
             // Arrange
@@ -103,7 +95,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             Assert.Equal(long.MaxValue, result);
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanExtendTheFormatterToSupportBinaryRawValues()
         {
             // Arrange
@@ -120,7 +112,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             Assert.True(new HashSet<byte>(Enumerable.Range(1, 10).Select(x => (byte)x)).SetEquals(result));
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanExtendTheFormatterToSupportNullRawValues()
         {
             // Arrange

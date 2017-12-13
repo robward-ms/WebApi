@@ -11,23 +11,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using WebStack.QA.Common.WebHost;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class ODataRouteTests : NuwaTestBase
+    public class ODataRouteTests : WebHostTestBase
     {
-        public ODataRouteTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -44,13 +36,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("")]
         [InlineData("prefix/")]
         [InlineData("parameter/")]

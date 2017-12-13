@@ -16,22 +16,15 @@ using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 using Container = ModelBuilder.ActionTest.Default.Container;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
-    public class ODataActionTests : NuwaTestBase
+    public class ODataActionTests : WebHostTestBase
     {
-        public ODataActionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -40,7 +33,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         // ExtendSupportDate of a single Product
-        [NuwaTheory]
+        [Theory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDate1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDate2")]
         public void SingleEntityBoundActionTest(string entitySetName, string actionName)
@@ -61,7 +54,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         // ExtendSupportDates of a collection of Products
-        [NuwaTheory]
+        [Theory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDates1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDates2")]
         public void CollectionOfEntitiesBoundActionTest(string entitySetName, string actionName)
@@ -86,7 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         // UpdateRating of a single RatedProduct
-        [NuwaTheory]
+        [Theory]
         [InlineData("ODataActionTests_Products1", "UpdateRating1")]
         [InlineData("ODataActionTests_Products2", "UpdateRating2")]
         public void SingleInheritedEntityBoundActionTest(string entitySetName, string actionName)
@@ -106,7 +99,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         // UpdateRatings of a collection of inherited RatedProducts
-        [NuwaTheory]
+        [Theory]
         [InlineData("ODataActionTests_Products1", "UpdateRatings1")]
         [InlineData("ODataActionTests_Products2", "UpdateRatings2")]
         public void CollectionOfInheritedEntitiesBoundActionTest(string entitySetName, string actionName)

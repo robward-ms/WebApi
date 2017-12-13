@@ -9,24 +9,16 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
 {
-    [NuwaFramework]
-    public class ParameterAliasTest : NuwaTestBase
+    public class ParameterAliasTest : WebHostTestBase
     {
-        public ParameterAliasTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(TradesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -67,7 +59,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
         }
 
         #region Test
-        [NuwaFact]
+        [Fact]
         public async Task ParameterAliasInFunctionCall()
         {
             //Unbound function
@@ -85,7 +77,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             Assert.Equal(1000, (long)json["value"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$filter=contains(@p1, @p2)&@p1=Description&@p2='Export'", 3)]   //Reference property and primitive type
         [InlineData("?@p1=startswith(Description,'Import')&$filter=@p1", 3)]  //Reference expression
         [InlineData("?$filter=TradingVolume eq @p1", 1)]  //Reference nullable value
@@ -100,7 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             Assert.Equal(expectedResult, result.Count);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$orderby=@p1&@p1=PortingCountryOrRegion", "Australia")]
         [InlineData("?$orderby=ProductName,@p2 desc,PortingCountryOrRegion desc&@p2=TradingVolume", "USA")]
         public async Task ParameterAliasInOrderby(string queryOption, string expectedPortingCountry)
@@ -116,7 +108,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             Assert.Equal(8000, result.First["TradingVolume"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         //Use multi times in different place
         [InlineData("/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'&$filter=PortingCountryOrRegion eq @p1 and @p2 gt 1000&$orderby=@p2&@p2=TradingVolume", 1, 0)]
         //Reference property under complex type
@@ -133,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             Assert.Equal(expectedZipCode, result.First["TradeLocation"]["ZipCode"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ParameterAliasWithUnresolvedPathSegment()
         {
             string requestBaseUri = this.BaseAddress;

@@ -11,8 +11,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
@@ -203,15 +202,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
     }
     #endregion
 
-    public class SpecialPrimaryKeyTypesInLinkGenerationTests : NuwaTestBase
+    public class SpecialPrimaryKeyTypesInLinkGenerationTests : WebHostTestBase
     {
-        public SpecialPrimaryKeyTypesInLinkGenerationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -229,7 +222,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestGuidTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -251,7 +244,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestStringTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -273,7 +266,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestUIntTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
@@ -295,7 +288,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestLongTypeAsPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));

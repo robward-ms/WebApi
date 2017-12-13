@@ -13,29 +13,21 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 {
-    [NuwaFramework]
-    public class UnboundOperationTest : NuwaTestBase
+    public class UnboundOperationTest : WebHostTestBase
     {
         #region Set up
 
         private readonly string EdmSchemaNamespace = typeof(ConventionCustomer).Namespace;
 
-        public UnboundOperationTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(ConventionCustomersController), 
@@ -69,7 +61,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
         #region Model Builder
 
-        [NuwaFact]
+        [Fact]
         public async Task MetaDataTest()
         {
             // Act
@@ -140,7 +132,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             #endregion
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json")]
         public async Task ServiceDocumentTest(string format)
         {
@@ -171,7 +163,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
         #region functions and function imports
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportWithoutParameters()
         {
             // Act
@@ -191,7 +183,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportOverload()
         {
             // Act
@@ -209,7 +201,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.DoesNotContain("\"ID\":409", responseString);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/odata/GetAllConventionCustomersImport(CustomerName='Name 1')/$count", "2")] // returns collection of entity.
         [InlineData("/odata/GetDefinedGenders()/$count", "2")] // returns collection of enum
         public async Task DollarCountFollowingFunctionImport(string url, string expectedCount)
@@ -225,7 +217,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Equal("2", responseString);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportWithOneParameters()
         {
             // Arrange
@@ -247,7 +239,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Contains(expect, responseString);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportWithMoreThanOneParameters()
         {
             // Arrange
@@ -268,7 +260,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Contains("\"Price@odata.type\":\"#Decimal\",\"Price\":5", responseString);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportFollowedByProperty()
         {
             // Arrange
@@ -287,7 +279,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Contains(expect, responseString);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("GetAllConventionCustomersImport()")]
         [InlineData("GetAllConventionCustomersImport(CustomerName='Name%201')")]
         public async Task FunctionImportFollowedByQueryOption(string functionImport)
@@ -310,7 +302,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
         }
 
         // Negative: Unbound function in query option is not supported
-        [NuwaFact]
+        [Fact]
         public async Task UnboundFunctionInFilter()
         {
             // Arrange
@@ -327,7 +319,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionImportInFilter()
         {
             // Arrange
@@ -355,7 +347,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task UnboundFunction_WithPrimitiveEnumComplexEntity_AndCollectionOfThemParameters()
         {
             // Arrange
@@ -376,7 +368,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             response.EnsureSuccessStatusCode();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task UnboundAction_WithPrimitiveEnumComplexEntity_AndCollectionOfThemParameters()
         {
             // Arrange
@@ -406,7 +398,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
         #region action imports
 
-        [NuwaFact]
+        [Fact]
         public async Task ActionImportWithParameters()
         {
             await ResetDatasource();
@@ -420,7 +412,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             Assert.Contains("Street 11", responseString);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ActionImportFollowedByQueryOption()
         {
             await this.ResetDatasource();

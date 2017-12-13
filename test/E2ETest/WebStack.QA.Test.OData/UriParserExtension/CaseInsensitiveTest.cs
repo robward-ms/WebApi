@@ -12,24 +12,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
 {
-    [NuwaFramework]
-    public class CaseInsensitiveTest : NuwaTestBase
+    public class CaseInsensitiveTest : WebHostTestBase
     {
-        public CaseInsensitiveTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -75,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(CaseInsensitiveCases))]
         public async Task EnableCaseInsensitiveTest(string method, string caseSensitive, string caseInsensitive)
         {

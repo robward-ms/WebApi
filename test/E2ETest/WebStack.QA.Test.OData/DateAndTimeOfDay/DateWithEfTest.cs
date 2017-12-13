@@ -11,24 +11,16 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
-    [NuwaFramework]
-    public class DateWithEfTest : NuwaTestBase
+    public class DateWithEfTest : WebHostTestBase
     {
-        public DateWithEfTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] {typeof (EfPeopleController)};
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -48,7 +40,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$filter=Birthday eq null", "2,4")]
         [InlineData("$filter=Birthday ne null", "1,3,5")]
         [InlineData("$filter=Birthday eq 2015-10-01", "1")]

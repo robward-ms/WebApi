@@ -8,26 +8,19 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 {
-    public class CombinedTest : NuwaTestBase
+    public class CombinedTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
-        public CombinedTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -41,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
                 CombinedEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$expand=NoExpandOrders", "expand")]
         [InlineData(CustomerBaseUrl + "?$count=true", "count")]
         [InlineData(CustomerBaseUrl + "?$filter=Id eq 1", "filter")]
@@ -69,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "Orders($count=true)", "count")]
         [InlineData(CustomerBaseUrl, "Orders($filter=Id eq 1)", "filter")]
         [InlineData(CustomerBaseUrl, "Orders($orderby=Id)", "orderby")]
@@ -94,7 +87,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "CountableOrders($count=true)")]
         [InlineData(CustomerBaseUrl, "Orders($filter=Name eq 'test')")]
         [InlineData(CustomerBaseUrl, "Orders($orderby=Name)")]
@@ -117,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
@@ -138,7 +131,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             Assert.Contains(error, result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($count=true)")]
         [InlineData(OrderBaseUrl, "?$expand=Customers2($top=1)")]
         [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($count=true)")]

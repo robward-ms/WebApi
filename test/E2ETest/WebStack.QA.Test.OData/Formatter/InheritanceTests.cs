@@ -19,7 +19,6 @@ using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -214,13 +213,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     #endregion
 
-    public class InheritanceTests : ODataFormatterTestBase
+    public abstract class InheritanceTests : ODataFormatterTestBase
     {
-        public InheritanceTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var builder = new ODataConventionModelBuilder(configuration);

@@ -9,8 +9,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Client;
-using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator
 {

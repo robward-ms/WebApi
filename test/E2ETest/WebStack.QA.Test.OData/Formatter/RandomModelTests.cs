@@ -11,23 +11,16 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
 using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
-    [NuwaFramework]
-    public class RandomModelTests : NuwaTestBase, IODataFormatterTestBase
+    public abstract class RandomModelTests : WebHostTestBase, IODataFormatterTestBase
     {
         private static ODataModelTypeCreator creator = null;
-
-        public RandomModelTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
 
         public static ODataModelTypeCreator Creator
         {

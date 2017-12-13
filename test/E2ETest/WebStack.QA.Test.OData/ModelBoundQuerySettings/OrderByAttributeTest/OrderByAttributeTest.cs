@@ -8,13 +8,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttributeTest
 {
-    public class OrderByAttributeTest : NuwaTestBase
+    public class OrderByAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
@@ -23,13 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
 
-        public OrderByAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -45,7 +38,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
                 OrderByAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$orderby=Id")]
         [InlineData(CustomerBaseUrl + "?$orderby=Id,Name")]
         [InlineData(OrderBaseUrl + "?$expand=UnSortableCustomers($orderby=Id,Name)")]
@@ -69,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             Assert.Contains("cannot be used in the $orderby query option.", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$orderby=Name", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$orderby=Id", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$orderby=Id,Name", (int)HttpStatusCode.BadRequest)]
@@ -122,7 +115,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$expand=Customers($orderby=Id,Name)", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "(1)/Customers?$orderby=Id,Name", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "?$expand=Orders($orderby=Name)", (int)HttpStatusCode.BadRequest)]
@@ -155,7 +148,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$orderby=AutoExpandOrder/Name", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "?$orderby=AutoExpandOrder/Id", (int)HttpStatusCode.BadRequest)]
         [InlineData(CustomerBaseUrl + "?$orderby=Address/Name", (int)HttpStatusCode.OK)]

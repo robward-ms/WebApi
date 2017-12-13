@@ -9,22 +9,14 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightInheritanceTests : InheritanceTests
     {
-        public JsonLightInheritanceTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public string AcceptHeader { get; set; }
 
         public static TheoryDataSet<Type, string, string> PostGetUpdateAndDeleteData
@@ -78,8 +70,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             return ctx;
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -98,7 +89,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             configuration.AddODataQueryFilter();
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(PostGetUpdateAndDeleteData))]
         public async Task PostGetUpdateAndDeleteJsonLight(Type entityType, string entitySetName, string acceptHeader)
         {
@@ -107,7 +98,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             await PostGetUpdateAndDelete(entityType, entitySetName);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -123,7 +114,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             await AddAndRemoveBaseNavigationPropertyInDerivedType();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -139,7 +130,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             await AddAndRemoveDerivedNavigationPropertyInDerivedType();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=minimal")]

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -66,15 +66,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class JsonpQueryableTests : NuwaTestBase
+    public class JsonpQueryableTests : WebHostTestBase
     {
-        public JsonpQueryableTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var f = new JsonpMediaTypeFormatter();
@@ -84,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryableShouldWorkWithJsonp()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$top=1&callback=test");

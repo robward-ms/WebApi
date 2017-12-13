@@ -12,11 +12,9 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -100,13 +98,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class HttpAndODataErrorAlwaysIncludeDetailsTests : NuwaTestBase
+    public class HttpAndODataErrorAlwaysIncludeDetailsTests : WebHostTestBase
     {
-        public HttpAndODataErrorAlwaysIncludeDetailsTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<ErrorType, int, string, string> TestData
         {
             get
@@ -213,8 +206,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return request;
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -231,7 +223,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(TestData))]
         public virtual void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {
@@ -253,13 +245,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class HttpAndODataErrorNeverIncludeDetailsTests : NuwaTestBase
+    public class HttpAndODataErrorNeverIncludeDetailsTests : WebHostTestBase
     {
-        public HttpAndODataErrorNeverIncludeDetailsTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<ErrorType, int, string, string> TestData
         {
             get
@@ -300,8 +287,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -310,7 +296,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 100 });
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(TestData))]
         public void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {

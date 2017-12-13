@@ -18,9 +18,9 @@ using System.Web.Http.Filters;
 using System.Web.Http.Hosting;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -194,7 +194,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return sb.ToString();
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(TypeData))]
         public void RunQueryableOnAllPossibleTypes(Type type, string queryString)
         {

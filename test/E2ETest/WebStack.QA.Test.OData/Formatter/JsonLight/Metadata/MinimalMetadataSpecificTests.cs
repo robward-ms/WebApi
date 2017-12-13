@@ -11,32 +11,18 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
-    [NuwaFramework]
-    public class MinimalMetadataSpecificTests : NuwaTestBase
+    public class MinimalMetadataSpecificTests : WebHostTestBase
     {
-        public MinimalMetadataSpecificTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
-
-        //[NuwaWebConfig]
-        //internal static void UpdateWebConfig(WebConfigHelper webConfig)
-        //{
-        //    webConfig.AddRAMFAR(true);
-        //}
 
         private static IEdmModel GetModel()
         {
@@ -46,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryWithCastDoesntContainODataType()
         {
             // Arrange
@@ -64,7 +50,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             Assert.DoesNotContain("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.BigPet", payload);
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryWithoutCastContainsODataType()
         {
             // Arrange

@@ -10,22 +10,15 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class JsonSelectExpandTests : NuwaTestBase
+    public class JsonSelectExpandTests : WebHostTestBase
     {
-        public JsonSelectExpandTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -34,7 +27,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=*", BaseAddress);
@@ -58,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=Name", BaseAddress);
@@ -82,7 +75,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 1 && x.Properties().All(p => p.Name == "Name")));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/?$select=Id,Name&$expand=JsonSelectOrders($select=Id)", BaseAddress);
@@ -108,7 +101,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => (int)x["Id"] == ((JArray)x["JsonSelectOrders"]).Count));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +
@@ -134,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(result.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer?$select=Id&$expand=JsonSelectOrders($select=*)", BaseAddress);
@@ -168,7 +161,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +
@@ -211,7 +204,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer?$select=Id,JsonSelectOrders&$expand=JsonSelectOrders($expand=OrderDetails)", BaseAddress);
@@ -251,7 +244,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/api/JsonSelectCustomer/PremiumCustomers?" +

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -16,11 +15,4 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public EnumType_Type Type { get; set; }
     }
 
-    public class EnumTypeTests : NuwaTestBase
-    {
-        public EnumTypeTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-    }
 }

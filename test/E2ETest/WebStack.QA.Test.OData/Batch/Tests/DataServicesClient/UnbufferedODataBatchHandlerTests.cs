@@ -18,11 +18,10 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using WebStack.QA.Common.WebHost;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using WebStack.QA.Common.WebHost;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
@@ -91,16 +90,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
         }
     }
 
-    [NuwaFramework]
-    public class CUDBatchTests : NuwaTestBase
+    public class CUDBatchTests : WebHostTestBase
     {
-        public CUDBatchTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -125,13 +117,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CanPerformCudOperationsOnABatch()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -166,7 +157,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
             Assert.Single(changedCustomerList, x => x.Id == 10);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CanHandleAbsoluteAndRelativeUrls()
         {
             // Arrange
@@ -257,16 +248,9 @@ Content-Type: application/json;odata.metadata=minimal
         }
     }
 
-    [NuwaFramework]
-    public class QueryBatchTests : NuwaTestBase
+    public class QueryBatchTests : WebHostTestBase
     {
-        public QueryBatchTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -291,13 +275,12 @@ Content-Type: application/json;odata.metadata=minimal
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaFact]
+        [Fact]
         public void CanBatchQueriesWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -332,16 +315,9 @@ Content-Type: application/json;odata.metadata=minimal
         }
     }
 
-    [NuwaFramework]
-    public class ErrorsBatchTests : NuwaTestBase
+    public class ErrorsBatchTests : WebHostTestBase
     {
-        public ErrorsBatchTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -367,13 +343,12 @@ Content-Type: application/json;odata.metadata=minimal
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaFact]
+        [Fact]
         public void SendsIndividualErrorWhenOneOfTheRequestsFails()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -406,16 +381,9 @@ Content-Type: application/json;odata.metadata=minimal
         }
     }
 
-    [NuwaFramework]
-    public class LinksBatchTests : NuwaTestBase
+    public class LinksBatchTests : WebHostTestBase
     {
-        public LinksBatchTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -439,13 +407,12 @@ Content-Type: application/json;odata.metadata=minimal
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaFact]
+        [Fact]
         public virtual Task CanSetLinksInABatchWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
@@ -463,16 +430,9 @@ Content-Type: application/json;odata.metadata=minimal
         }
     }
 
-    [NuwaFramework]
-    public class ContinueOnErrorBatchTests : NuwaTestBase
+    public class ContinueOnErrorBatchTests : WebHostTestBase
     {
-        public ContinueOnErrorBatchTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
 
@@ -497,13 +457,12 @@ Content-Type: application/json;odata.metadata=minimal
             return builder.GetEdmModel();
         }
 
-        [NuwaWebConfig]
         internal static void UpdateWebConfig(WebConfigHelper webConfig)
         {
             webConfig.AddAppSection("aspnet:UseTaskFriendlySynchronizationContext", "true");
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CanNotContinueOnErrorWhenHeaderNotSet()
         {
             // Arrange
@@ -567,7 +526,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
             Assert.Equal(2, subResponseCount);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CanContinueOnErrorWhenHeaderSet()
         {
             // Arrange

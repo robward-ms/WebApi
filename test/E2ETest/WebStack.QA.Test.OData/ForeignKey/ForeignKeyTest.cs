@@ -12,25 +12,18 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
-    [NuwaFramework]
-    public class ForeignKeyTest : NuwaTestBase
+    public class ForeignKeyTest : WebHostTestBase
     {
-        public ForeignKeyTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(ForeignKeyCustomersController),
                 typeof(ForeignKeyOrdersController),
@@ -58,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ReferentialConstraintModelBuilderTest(string modelMode)
@@ -92,7 +85,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             Assert.Same(idProperty, principalProperty);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ReferentialConstraintPresentsOnMetadataDocument(string modelMode)
@@ -111,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             Assert.Contains(expect, response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ReferentialConstraintDoesnotPresentsOnMetadataDocument()
         {
             string requestUri = string.Format("{0}/noncascade/$metadata", this.BaseAddress);
@@ -121,7 +114,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             Assert.DoesNotContain("ReferentialConstraint", response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task CanDeleteTheRelatedOrders_IfDeleteTheCustomer(string modelMode)
@@ -162,7 +155,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task CannotDeleteTheRelatedOrders_IfDeleteTheCustomer()
         {
             await ResetDatasource("/noncascade/ResetDataSourceNonCacade");

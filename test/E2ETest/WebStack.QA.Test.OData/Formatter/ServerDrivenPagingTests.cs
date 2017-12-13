@@ -7,9 +7,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -39,15 +38,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class ServerDrivenPagingTests : NuwaTestBase
+    public class ServerDrivenPagingTests : WebHostTestBase
     {
-        public ServerDrivenPagingTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.Clear();
@@ -62,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        // [NuwaFact]
+        // [Fact]
         public void VerifyNextPageLinkAndInlineCountGeneratedCorrect()
         {
             // Arrange & Act

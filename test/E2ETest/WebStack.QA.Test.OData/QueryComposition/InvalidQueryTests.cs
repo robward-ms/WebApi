@@ -10,23 +10,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    [NuwaFramework]
-    public class InvalidQueryTests : NuwaTestBase
+    public class InvalidQueryTests : WebHostTestBase
     {
-        public InvalidQueryTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -40,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/odata/InvalidQueryCustomers?$filter=id eq 5")]
         [InlineData("/odata/InvalidQueryCustomers(5)?$filter=id eq 5")]
         [InlineData("/odata/InvalidQueryCustomers?$orderby=id")]

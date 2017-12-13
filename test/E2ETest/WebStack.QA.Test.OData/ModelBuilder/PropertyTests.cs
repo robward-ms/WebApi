@@ -13,22 +13,14 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
-    [NuwaFramework]
-    public class PropertyTestsUsingConventionModelBuilder : NuwaTestBase
+    public class PropertyTestsUsingConventionModelBuilder : WebHostTestBase
     {
-        public PropertyTestsUsingConventionModelBuilder(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -42,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void ConventionModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
@@ -56,16 +48,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    [NuwaFramework]
-    public class PropertyTestsUsingODataModelBuilder : NuwaTestBase
+    public class PropertyTestsUsingODataModelBuilder : WebHostTestBase
     {
-        public PropertyTestsUsingODataModelBuilder(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -81,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void ODataModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");

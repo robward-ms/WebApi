@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Microsoft.Test.E2E.AspNet.OData.Common.Xunit
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     /// <summary>
     /// Helper class for generating test data for XUnit's <see cref="Xunit.Extensions.TheoryAttribute"/>-based tests.

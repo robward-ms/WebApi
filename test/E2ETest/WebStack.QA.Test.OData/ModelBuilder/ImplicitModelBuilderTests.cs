@@ -12,10 +12,9 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
@@ -170,15 +169,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    public class ImplicitModelBuilderE2ETests : NuwaTestBase
+    public class ImplicitModelBuilderE2ETests : WebHostTestBase
     {
-        public ImplicitModelBuilderE2ETests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -197,7 +190,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return model;
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {
             var response = await Client.GetAsync(BaseAddress + "/$metadata");

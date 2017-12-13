@@ -7,9 +7,9 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
@@ -29,15 +29,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    public class MultipleEntitySetOnSameClrTypeTests : NuwaTestBase
+    public class MultipleEntitySetOnSameClrTypeTests : WebHostTestBase
     {
-        public MultipleEntitySetOnSameClrTypeTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var repo = MultipleEntitySetOnSameClrType_Products1Controller.Repository;
             repo.TryAdd(
@@ -74,7 +68,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return model;
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryableShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products1?$top=1").Result;

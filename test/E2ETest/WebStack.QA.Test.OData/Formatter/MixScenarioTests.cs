@@ -12,13 +12,12 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nop.Core.Domain.Blogs;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Nop.Core.Domain.Blogs;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -71,15 +70,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class MixScenarioTestsWebApi : NuwaTestBase
+    public class MixScenarioTestsWebApi : WebHostTestBase
     {
-        public MixScenarioTestsWebApi(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.EnableODataSupport(GetEdmModel(configuration), "odata");
@@ -94,7 +87,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return mb.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void WebAPIShouldWorkWithPrimitiveTypeCollectionInJSON()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/Get").Result;
@@ -104,7 +97,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("value1", result.First());
         }
 
-        [NuwaFact]
+        [Fact]
         public void WebAPIShouldWorkWithHttpErrorInJSON()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/ThrowExceptionInAction").Result;
@@ -113,7 +106,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Contains("Something wrong", result["ExceptionMessage"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void WebAPIQueryableShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/GetQueryableData?$filter=Id gt 1").Result;
@@ -123,13 +116,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class MixScenarioTestsOData : ODataFormatterTestBase
+    public abstract class MixScenarioTestsOData : ODataFormatterTestBase
     {
-        public MixScenarioTestsOData(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);

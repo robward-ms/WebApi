@@ -5,21 +5,14 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class SecurityTests : NuwaTestBase
+    public class SecurityTests : WebHostTestBase
     {
-        public SecurityTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string> DoSAttackData
         {
             get
@@ -74,15 +67,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(DoSAttackData))]
         public void TestDosAttack(string filter)
         {
@@ -91,7 +83,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var result = response.Content.ReadAsStringAsync().Result;
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(DoSAttackData))]
         public void TestDosAttackWithMultipleThreads(string filter)
         {
@@ -101,7 +93,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             });
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AnyAllDoSAttackData))]
         public void TestAnyAllDosAttack(string filter)
         {
@@ -110,7 +102,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var result = response.Content.ReadAsStringAsync().Result;
         }
 
-        //[NuwaTheory]
+        //[Theory]
         //[MemberData(nameof(AnyAllDoSAttackData))]
         //public void TestAnyAllDosAttackWithMultipleThreads(string filter)
         //{
@@ -120,7 +112,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         //    });
         //}
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(InvalidUnicodeData))]
         public void TestInvalidUnicodeAttack(string query)
         {

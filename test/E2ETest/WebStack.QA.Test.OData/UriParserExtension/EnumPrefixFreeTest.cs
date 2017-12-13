@@ -13,22 +13,14 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
 {
-    [NuwaFramework]
-    public class EnumPrefixFreeTest : NuwaTestBase
+    public class EnumPrefixFreeTest : WebHostTestBase
     {
-        public EnumPrefixFreeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -48,12 +40,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
             configuration.EnsureInitialized();
         }
 
-        //[NuwaWebConfig]
-        //internal static void UpdateWebConfig(WebConfigHelper webConfig)
-        //{
-        //    webConfig.AddRAMFAR(true);
-        //}
-
         public static TheoryDataSet<string, string, int> EnumPrefixFreeCases
         {
             get
@@ -66,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(EnumPrefixFreeCases))]
         public async Task EnableEnumPrefixFreeTest(string prefix, string prefixFree, int statusCode)
         {

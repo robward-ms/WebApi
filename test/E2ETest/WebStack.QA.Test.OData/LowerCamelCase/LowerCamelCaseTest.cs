@@ -12,26 +12,17 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 {
-    [NuwaFramework]
-    public class LowerCamelCaseTest : NuwaTestBase
+    public class LowerCamelCaseTest : WebHostTestBase
     {
-        public LowerCamelCaseTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -73,7 +64,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ModelBuilderTest()
         {
             string requestUri = string.Format("{0}/odata/$metadata", this.BaseAddress);
@@ -100,7 +91,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             addressType.Properties().All(p => this.IsCamelCase(p.Name));
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySet(string format)
         {
@@ -116,7 +107,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(empolyee);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithDerivedType(string format)
         {
@@ -142,7 +133,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(employee);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntity(string format)
         {
@@ -156,7 +147,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualZero(string format)
         {
@@ -169,7 +160,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Null(result["manager"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualNegativeOne(string format)
         {
@@ -183,7 +174,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
                 result["error"]["innererror"]["message"].Value<string>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsGreaterThanTheMaxExpansionDepth(string format)
         {
@@ -199,7 +190,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
                 result["error"]["message"].Value<string>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithDollarLevelsEqualToTheMaxExpansionDepth(string format)
         {
@@ -218,7 +209,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Null(manager8["manager"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpand(string format)
         {
@@ -246,7 +237,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Null(employee8["directReports"]);// The levels value is 2, but ID 8 is at the third level: 8->9->10
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpandToSameType(string format)
         {
@@ -271,7 +262,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.True(10 == employee8["next"]["next"]["id"].Value<int>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWhereCircularExists(string format)
         {
@@ -288,7 +279,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.True(1 == content["next"]["next"]["id"].Value<int>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntityWithExpandToSameTypeWithNestedExpand(string format)
         {
@@ -305,7 +296,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.True(6 == content["next"]["next"]["next"]["id"].Value<int>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployee(string format)
         {
@@ -329,7 +320,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Null(employee10);
         }
         
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromSingleManagerToSingleEmployeeWithNestedExpand(string format)
         {
@@ -348,7 +339,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Equal(10,employee10["id"].Value<int>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandFromCollectionEmployeeToSingleManager(string format)
         {
@@ -376,7 +367,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Null(thirdLevelManager);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyInEntityType(string format)
         {
@@ -395,7 +386,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryPropertyValueInEntityType(string format)
         {
@@ -407,7 +398,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Equal("Name1", content);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithFilter(string format)
         {
@@ -424,7 +415,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithSelect(string format)
         {
@@ -455,7 +446,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             AssertPropertyNamesAreCamelCase(employee);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitiesWithOrderBy(string format)
         {
@@ -476,7 +467,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
         }
 
 
-        [NuwaFact]
+        [Fact]
         public async Task AddEntity()
         {
             var postUri = this.BaseAddress + "/odata/Employees";
@@ -500,7 +491,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task UpdateEntity()
         {
             var putUri = this.BaseAddress + "/odata/Employees(2)";
@@ -531,7 +522,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteEntity()
         {
             var uriDelete = this.BaseAddress + "/odata/Employees(1)";
@@ -542,7 +533,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ActionCall()
         {
             var postUri = this.BaseAddress + "/odata/SetAddress";
@@ -570,7 +561,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             Assert.Equal("Street20", street);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task FunctionCall()
         {
             var getUri = this.BaseAddress + "/odata/GetAddress(id=1)";

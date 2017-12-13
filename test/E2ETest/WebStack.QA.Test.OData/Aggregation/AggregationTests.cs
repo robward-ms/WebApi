@@ -9,26 +9,19 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
-    public class AggregationTests : NuwaTestBase
+    public class AggregationTests : WebHostTestBase
     {
         private const string AggregationTestBaseUrl = "{0}/aggregation/Customers";
 
-        public AggregationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -41,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
                 AggregationEdmModel.GetEdmModel(configuration));
         }
 
-        [NuwaFact]
+        [Fact]
         public void AggregateNavigationPropertyWorks()
         {
             // Arrange
@@ -71,7 +64,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("Customer1", results[2]["Name"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void GroupByNavigationPropertyWorks()
         {
             // Arrange
@@ -99,7 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("Order1", order1["Name"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void GroupByComplexPropertyWorks()
         {
             // Arrange
@@ -127,7 +120,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("City1", address1["Name"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void GroupByMultipleNestedPropertiesWorks()
         {
             // Arrange
@@ -159,7 +152,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("Order1", order2["Name"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void AggregateAggregatedPropertyWorks()
         {
             // Arrange
@@ -184,7 +177,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("4500", results[0]["TotalAmount"].ToString());
         }
 
-        [NuwaFact]
+        [Fact]
         public void AggregateVirtualCountWorks()
         {
             // Arrange
@@ -210,7 +203,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal(10, responseObj.Count);
         }
 
-        [NuwaFact]
+        [Fact]
         public void GroupByVirtualCountWorks()
         {
             // Arrange
@@ -243,7 +236,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
 
-        [NuwaFact]
+        [Fact]
         public void AggregateAggregatedWithGRoupByPropertyWorks()
         {
             // Arrange
@@ -274,7 +267,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal("Customer1", results[2]["Name"].ToString());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with sum as TotalPrice))" +
                     "/filter(TotalPrice ge 2001)")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with sum as TotalId))" +
@@ -307,7 +300,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Single(results);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
@@ -329,7 +322,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.Sum as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.YetAnotherMethod as IdStdDev))")]
@@ -351,7 +344,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with YetAnotherMethod as IdStdDev))")]
@@ -373,7 +366,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=aggregate(Order/Price with sum as Result)", "4500")]
         [InlineData("?$apply=aggregate(Order/Price with min as Result)", "0")]
         [InlineData("?$apply=aggregate(Order/Price with max as Result)", "900")]

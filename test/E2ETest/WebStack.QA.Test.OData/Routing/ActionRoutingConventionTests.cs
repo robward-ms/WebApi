@@ -9,23 +9,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class ActionRoutingConventionTests : NuwaTestBase
+    public class ActionRoutingConventionTests : WebHostTestBase
     {
-        public ActionRoutingConventionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -43,7 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/odata/ActionCars(5)/Microsoft.Test.E2E.AspNet.OData.Routing.ActionFerrari/Default.Wash", "Ferrari")]
         [InlineData("/odata/ActionCars(5)/Default.Wash", "Car")]
         [InlineData("/odata/ActionFerraris(5)/Microsoft.Test.E2E.AspNet.OData.Routing.ActionCar/Default.Wash", "Car")]

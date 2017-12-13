@@ -13,24 +13,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using ModelAliasing;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
-    [NuwaFramework]
-    public class QueryTests : NuwaTestBase
+    public class QueryTests : WebHostTestBase
     {
-        public QueryTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -69,7 +61,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueriesWorkOnAliasedModels()
         {
             IEnumerable<Customer> customers = Enumerable.Range(0, 10).Select(i => new Customer

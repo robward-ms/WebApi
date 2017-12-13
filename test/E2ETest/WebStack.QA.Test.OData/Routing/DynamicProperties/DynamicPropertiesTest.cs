@@ -10,22 +10,15 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
 {
-    [NuwaFramework]
-    public class DynamicPropertiesTest : NuwaTestBase
+    public class DynamicPropertiesTest : WebHostTestBase
     {
-        public DynamicPropertiesTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(DynamicCustomersController),
@@ -46,7 +39,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("DynamicCustomers(1)/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty_1")]
         [InlineData("DynamicCustomers(2)/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount_2")]
         [InlineData("DynamicCustomers(3)/Order/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromOrder_3")]
@@ -68,7 +61,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
             Assert.Contains(expected, response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("Put")]
         [InlineData("Patch")]
         [InlineData("Post")]
@@ -84,7 +77,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("DynamicCustomers(2)/SecondAccount/DynamicPropertyName")]
         [InlineData("DynamicSingleCustomer/SecondAccount/DynamicPropertyName")]
         public void AccessDynamicPropertyWithoutImplementMethod(string uri)

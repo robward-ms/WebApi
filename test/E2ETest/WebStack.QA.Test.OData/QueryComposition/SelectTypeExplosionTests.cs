@@ -7,23 +7,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    [NuwaFramework]
-    public class SelectTypeExplosionTests : NuwaTestBase
+    public class SelectTypeExplosionTests : WebHostTestBase
     {
-        public SelectTypeExplosionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void Configuration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
             config.Routes.MapHttpRoute("api", "{controller}");
@@ -167,7 +159,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        //[NuwaFact]
+        //[Fact]
         //public void CombinatorsWork()
         //{
         //    char[] letters = "abcdef".ToCharArray();
@@ -178,7 +170,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         //    }
         //}
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(Queries))]
         public void ServerDoesntCreateAnInfiniteAmmountOfTypes(string query)
         {

@@ -12,22 +12,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
 {
-    [NuwaFramework]
-    public class DollarFormatOverrideAcceptMediaTypeTests : NuwaTestBase
+    public class DollarFormatOverrideAcceptMediaTypeTests : WebHostTestBase
     {
-        public DollarFormatOverrideAcceptMediaTypeTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string, string, string> BasicMediaTypes
         {
             get
@@ -192,8 +185,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
            configuration.Routes.Clear();
            configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -213,7 +205,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(FeedMediaTypes))]
         public async Task QueryFeedWithDollarFormatOverrideAcceptMediaTypeTests(
             string contentType,
@@ -271,7 +263,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(EntryMediaTypes))]
         public async Task QueryEntryWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -321,7 +313,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryPropertyWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -364,7 +356,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryNavigationPropertyWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -407,7 +399,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(BasicMediaTypes))]
         public async Task QueryCollectionWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -451,7 +443,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ServiceDocumentMediaTypes))]
         public async Task QueryServiceDocumentWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {
@@ -494,7 +486,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MetadataDocumentMediaTypes))]
         public async Task QueryMetadataDocumentWithDollarFormatOverrideAcceptMediaTypeTests(string contentType, string dollarFormat, string expectMediaType)
         {

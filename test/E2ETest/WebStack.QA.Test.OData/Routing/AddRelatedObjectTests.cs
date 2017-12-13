@@ -12,23 +12,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class AddRelatedObjectTests : NuwaTestBase
+    public class AddRelatedObjectTests : WebHostTestBase
     {
-        public AddRelatedObjectTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -57,7 +49,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AddRelatedObjectConventionsWorkPropertyData))]
         public void AddRelatedObjectConventionsWork(string method, string url)
         {

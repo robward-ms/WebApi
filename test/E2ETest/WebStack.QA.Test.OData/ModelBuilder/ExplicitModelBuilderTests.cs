@@ -12,23 +12,15 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
-    [NuwaFramework]
-    public class ExplicitModelBuilderTests : NuwaTestBase
+    public class ExplicitModelBuilderTests : WebHostTestBase
     {
-        public ExplicitModelBuilderTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -174,7 +166,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return modelBuilder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
 
         public async Task VerifyMetaDataIsGeneratedCorrectly()
         {

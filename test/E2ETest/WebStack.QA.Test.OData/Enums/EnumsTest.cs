@@ -15,25 +15,17 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Enums
 {
-    [NuwaFramework]
-    public class EnumsTest : NuwaTestBase
+    public class EnumsTest : WebHostTestBase
     {
-        public EnumsTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -50,7 +42,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region ModelBuilder
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -133,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region Query
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -158,7 +150,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/convention/Employees/$count", 3)]
         [InlineData("/convention/Employees/$count?$filter=Name eq 'Name1'", 1)]
         public async Task QueryEntitySetCount(string url, int expectedCount)
@@ -176,7 +168,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal<int>(expectedCount, int.Parse(count));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/convention/Employees(1)/SkillSet/$count", 2)]
         [InlineData("/convention/Employees(1)/SkillSet/$count?$filter=$it eq Microsoft.Test.E2E.AspNet.OData.Enums.Skill'Sql'", 1)]
         public async Task QuerySkillSetCount(string url, int expectedCount)
@@ -194,7 +186,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal<int>(expectedCount, int.Parse(count));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -230,7 +222,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -247,7 +239,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal(AccessLevel.Execute, actual);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -277,7 +269,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal("Pingpong", value);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -300,7 +292,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -335,7 +327,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -353,7 +345,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal(3, value.Count);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -381,7 +373,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region Update
 
-        [NuwaFact]
+        [Fact]
         public async Task AddEntity()
         {
             await ResetDatasource();
@@ -422,7 +414,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task UpdateEntity()
         {
             await ResetDatasource();
@@ -481,7 +473,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("PUT")]
         [InlineData("PATCH")]
         public async Task UpsertEntity(string method)
@@ -515,7 +507,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region Delete
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteEntity()
         {
             await ResetDatasource();
@@ -550,7 +542,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region Enum with action
 
-        [NuwaFact]
+        [Fact]
         public async Task EnumInActionParameter()
         {
             await ResetDatasource();
@@ -562,7 +554,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             response.EnsureSuccessStatusCode();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task EnumInActionOutput()
         {
             await ResetDatasource();
@@ -583,7 +575,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         #region Enum with function
 
-        [NuwaFact]
+        [Fact]
         public async Task EnumInFunctionOutput()
         {
             await ResetDatasource();
@@ -596,7 +588,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
             Assert.Equal("Execute", value);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/convention/HasAccessLevel(ID=1,AccessLevel=Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'Read')", false)]
         [InlineData("/convention/HasAccessLevel(ID=2,AccessLevel=Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'1')", true)]
         public async Task EnumInFunctionParameter(string url, bool expectedValue)

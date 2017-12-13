@@ -12,24 +12,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Validation
 {
-    [NuwaFramework]
-    public class DeltaOfTValidationTests : NuwaTestBase
+    public class DeltaOfTValidationTests : WebHostTestBase
     {
-        public DeltaOfTValidationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -55,7 +47,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(CanValidatePatchesData))]
         public void CanValidatePatches(int expectedResponseCode, string message)
         {

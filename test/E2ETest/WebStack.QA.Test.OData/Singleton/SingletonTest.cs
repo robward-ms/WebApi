@@ -13,28 +13,20 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 using HttpClientExtensions = System.Net.Http.HttpClientExtensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
-    [NuwaFramework]
-    public class SingletonTest : NuwaTestBase
+    public class SingletonTest : WebHostTestBase
     {
         private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.Singleton";
 
-        public SingletonTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(UmbrellaController), typeof(MonstersIncController), typeof(MetadataController), typeof(PartnersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -53,7 +45,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
         #region Test
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -75,7 +67,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella/Partners/$count")]
         [InlineData("conCon", "Umbrella/Partners/$count")]
         public async Task NotCountable(string model, string url)
@@ -100,7 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                 "The query specified in the URI is not valid. The property 'Partners' cannot be used for $count.");
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expAttr/MonstersInc/Branches/$count", 2)]
         [InlineData("conAttr/MonstersInc/Branches/$count?$filter=City eq 'Shanghai'", 1)]
         public async Task QueryBranchesCount(string url, int expectedCount)
@@ -122,7 +114,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                 string.Format("Expected: {0}; Actual: {1}; Request URL: {2}", expectedCount, responseString, requestUri));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -175,7 +167,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         }
 
         // Navigation link CRUD, singleton is navigation source and entityset is navigation target
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]
@@ -258,7 +250,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         }
 
         // Navigation link CRUD, where entityset is navigation source and singleton is navigation target
-        [NuwaTheory]
+        [Theory]
         [InlineData("expAttr", "application/json;odata.metadata=full")]
         [InlineData("conAttr", "application/json;odata.metadata=minimal")]
         public async Task EntitySetNavigationLinkCRUD(string model, string format)
@@ -321,7 +313,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella", "application/json;odata.metadata=full")]
         [InlineData("expAttr", "MonstersInc", "application/json;odata.metadata=minimal")]
         [InlineData("conCon", "Umbrella", "application/json;odata.metadata=full")]
@@ -358,7 +350,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             Assert.Equal(company.Location, (string)result["Location"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("expCon", "Umbrella")]
         [InlineData("expAttr", "MonstersInc")]
         [InlineData("conCon", "Umbrella")]

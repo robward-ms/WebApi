@@ -15,23 +15,16 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class SelectExpandTests : NuwaTestBase
+    public class SelectExpandTests : WebHostTestBase
     {
-        public SelectExpandTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                   typeof(IAssembliesResolver),
@@ -64,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return model;
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=*", BaseAddress);
@@ -89,7 +82,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().All(p => p.Name != "#Container.CreditRating")));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryJustTheActionsOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Default.*", BaseAddress);
@@ -114,7 +107,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Any(p => p.Name == "#Default.CreditRating")));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Name", BaseAddress);
@@ -139,7 +132,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 1 && x.Properties().All(p => p.Name == "Name")));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Id,Name&$expand=SelectOrders($select=Id)", BaseAddress);
@@ -165,7 +158,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => (int)x["Id"] == ((JArray)x["SelectOrders"]).Count));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -187,7 +180,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.True(customers.OfType<JObject>().All(x => x.Properties().Count() == 2));
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id&$expand=SelectOrders", BaseAddress);
@@ -221,7 +214,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -260,7 +253,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id,SelectOrders&$expand=SelectOrders($expand=OrderDetails)", BaseAddress);
@@ -300,7 +293,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
@@ -332,7 +325,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
         {
             // Arrange
@@ -359,7 +352,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, expandProp[1]["Id"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true)", BaseAddress);
@@ -390,7 +383,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedDollarCountInDollarExpandWithNestedDollarFilterWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($filter=Id lt 1;$count=true)", BaseAddress);
@@ -435,7 +428,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedNestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true;$expand=OrderDetails($count=true))", BaseAddress);
@@ -468,7 +461,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedNestedSkipInDollarExpandWorks()
         {
             // Arrange
@@ -503,7 +496,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedNestedTopInDollarExpandWorks()
         {
             // Arrange
@@ -538,7 +531,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedNestedOrderByInDollarExpandWorks()
         {
             // Arrange
@@ -567,7 +560,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(0, orderdetails[0]["Id"]);
         }
 
-        [NuwaFact]
+        [Fact]
         public void NestedTopSkipOrderByInDollarExpandWorksWithEF()
         {
             // Arrange

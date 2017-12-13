@@ -14,26 +14,17 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
-    [NuwaFramework]
-    public class ActionMetadataTests : NuwaTestBase
+    public class ActionMetadataTests : WebHostTestBase
     {
-        public ActionMetadataTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Actions", "Actions", GetActionsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -119,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void AlwaysAvailableActionsGetAdvertisedOnFullMetadataOnly(string acceptHeader)
         {
@@ -162,7 +153,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void TransientActionsDontGetAdvertisedWhenTheyArentAvailable(string acceptHeader)
         {
@@ -188,7 +179,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsGetAdvertisedWhenTheyAreAvailable(string acceptHeader)
         {
@@ -236,7 +227,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void AlwaysAvailableActionsGetAdvertisedForDerivedTypesOnFullMetadataOnly(string acceptHeader)
         {
@@ -294,7 +285,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsDontGetAdvertisedForDerivedTypesWhenTheyArentAvailable(string acceptHeader)
         {
@@ -322,7 +313,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientActionsGetAdvertisedForDerivedTypesWhenTheyAreAvailable(string acceptHeader)
         {

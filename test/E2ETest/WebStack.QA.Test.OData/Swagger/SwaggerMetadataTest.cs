@@ -16,25 +16,17 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
-    [NuwaFramework]
-    public class SwaggerMetadataTest : NuwaTestBase
+    public class SwaggerMetadataTest : WebHostTestBase
     {
-        public SwaggerMetadataTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SwaggerController), typeof(MetadataController)};
 
@@ -69,7 +61,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Swagger
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$swagger")]
         [InlineData("swagger.json")]
         public void SwaggerPathHandlerWorksForSwaggerMetadataUri(string swaggerMetadataUri)
@@ -88,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Swagger
             Assert.IsType<SwaggerPathSegment>(segment);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task EnableSwaggerMetadataTest()
         {
             JObject expectObj = JObject.Parse(@"{

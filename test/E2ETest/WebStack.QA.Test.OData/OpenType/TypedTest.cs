@@ -21,29 +21,21 @@ using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using TypedProxy = Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client;
 
 namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 {
-    [NuwaFramework]
-    public class TypedOpenTypeTest : NuwaTestBase
+    public class TypedOpenTypeTest : WebHostTestBase
     {
         private static string[] Routings = new string[] { "convention", "AttributeRouting" };
         int expectedValueOfInt, actualValueOfInt;
         int? expectedValueOfNullableInt, actualValueOfNullableInt;
         string expectedValueOfString, actualValueOfString;
 
-        public TypedOpenTypeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(AccountsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -68,7 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Query
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -103,7 +95,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -136,7 +128,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -157,7 +149,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -182,7 +174,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal("Male", gender);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -208,7 +200,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal("US", countryCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -230,7 +222,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal("US", countryOrRegion);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -255,7 +247,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -278,7 +270,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Update
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -345,7 +337,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -399,7 +391,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task PatchOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -446,7 +438,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task PatchOpenDerivedComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -491,7 +483,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task PutOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -543,7 +535,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Insert
 
-        [NuwaFact]
+        [Fact]
         public async Task InsertEntityWithOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -601,7 +593,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Delete
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -632,7 +624,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteOpenComplexTypeProperty()
         {
             foreach (string routing in Routings)
@@ -666,7 +658,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Function & Action
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -694,7 +686,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -722,7 +714,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=none")]
@@ -757,7 +749,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Query
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntitySetClientTest()
         {
             foreach (string routing in Routings)
@@ -788,7 +780,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntitySetClientTestWithSelect()
         {
             foreach (string routing in Routings)
@@ -810,7 +802,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntityClientTest()
         {
             foreach (string routing in Routings)
@@ -839,7 +831,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryDerivedEntityClientTest()
         {
             foreach (string routing in Routings)
@@ -869,7 +861,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryOpenComplexTypePropertyAccountInfoClientTest()
         {
             await ResetDatasource();
@@ -884,7 +876,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal(10, accountInfo.Age);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryOpenComplexTypePropertyAddressClientTest()
         {
             await ResetDatasource();
@@ -899,7 +891,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal("US", address.CountryOrRegion);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryOpenComplexTypePropertyTagsClientTest()
         {
             await ResetDatasource();
@@ -914,7 +906,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal("Value 2", tags.Tag2);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryNonDynamicPropertyClientTest()
         {
             await ResetDatasource();
@@ -932,7 +924,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Update
 
-        [NuwaFact]
+        [Fact]
         public async Task PatchEntityWithOpenComplexTypeClientTest()
         {
             foreach (string routing in Routings)
@@ -993,7 +985,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task PutEntityWithOpenComplexTypeClientTest()
         {
             foreach (string routing in Routings)
@@ -1061,7 +1053,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Insert
 
-        [NuwaFact]
+        [Fact]
         public async Task InsertBaseEntityWithOpenTypePropertyClientTest()
         {
             await ResetDatasource();
@@ -1130,7 +1122,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal(TypedProxy.Gender.Male, insertedAccount.OwnerGender);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task InsertDerivedEntityWithOpenComplexTypePropertyClientTest()
         {
             await ResetDatasource();
@@ -1205,7 +1197,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Delete
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteEntityWithOpenComplexTypePropertyClientTest()
         {
             foreach (string routing in Routings)
@@ -1231,7 +1223,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         #region Function & Action
 
-        [NuwaFact]
+        [Fact]
         public async Task GetShipAddressesFunctionClientTest()
         {
             foreach (string routing in Routings)
@@ -1250,7 +1242,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task IncreaseAgeActionClientTest2()
         {
             foreach (string routing in Routings)
@@ -1270,7 +1262,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task AddShipAddressActionClientTest()
         {
             foreach (string routing in Routings)
@@ -1297,7 +1289,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task UpdateAddressActionClientTest()
         {
             await ResetDatasource();
@@ -1322,7 +1314,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         #endregion
 
         #endregion
-        [NuwaFact]
+        [Fact]
         public async Task QueryBaseEntityType()
         {
             await ResetDatasource();
@@ -1340,7 +1332,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
                 string.Format("Employee count is in-correct, expected: {0}, actual: {1}", expectedInt, actualInt));
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryDerivedEntityType()
         {
             await ResetDatasource();
@@ -1370,7 +1362,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
                 string.Format("Manager count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task ExpandOpenEntityType()
         {
             await ResetDatasource();
@@ -1394,7 +1386,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
             Assert.Equal(2, account.ShipAddresses.Count);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task InsertBaseEntity()
         {
             await ResetDatasource();
@@ -1416,7 +1408,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         // POST ~/Employees
-        [NuwaFact]
+        [Fact]
         public async Task InsertDerivedEntityType()
         {
             await ResetDatasource();
@@ -1447,7 +1439,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
                 string.Format("Manager PhoneNumbers count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [NuwaFact]
+        [Fact]
         // PUT ~/Employees(1)/Namespace.Manager
         public async Task ReplaceDerivedEntityType()
         {
@@ -1483,7 +1475,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
                 string.Format("Manager PhoneNumbers count is in-correct, expected: {0}, actual: {1}", expectedValueOfInt, actualValueOfInt));
         }
 
-        [NuwaFact]
+        [Fact]
         // PATCH ~/Employees(1)/Namespace.Manager
         public async Task UpdateDerivedEntityType()
         {

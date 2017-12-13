@@ -10,8 +10,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -101,15 +100,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class ODataQueryOptionsTests : NuwaTestBase
+    public class ODataQueryOptionsTests : WebHostTestBase
     {
-        public ODataQueryOptionsTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -118,7 +111,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaFact]
+        [Fact]
         public void OptionsOnIEnumerableTShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnIEnumerableT?$filter=ID ge 50").Result;
@@ -126,7 +119,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(50, actual.Count());
         }
 
-        [NuwaFact]
+        [Fact]
         public void OptionsOnStringShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnString?$filter=ID ge 50").Result;
@@ -134,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal("Test50", actual);
         }
 
-        [NuwaFact]
+        [Fact]
         public void GetTopValueShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/GetTopValue?$top=50").Result;
@@ -142,7 +135,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(50, actual);
         }
 
-        [NuwaFact]
+        [Fact]
         public void OptionsOnHttpResponseMessageShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnHttpResponseMessage?$filter=ID ge 50").Result;
@@ -150,7 +143,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Console.WriteLine(actual);
         }
 
-        [NuwaFact]
+        [Fact]
         public void UnitTestOptionsShouldWork()
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();
@@ -165,7 +158,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal("Test99", result);
         }
 
-        [NuwaFact]
+        [Fact]
         public void UnitTestOptionsOfStringShouldWork()
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();

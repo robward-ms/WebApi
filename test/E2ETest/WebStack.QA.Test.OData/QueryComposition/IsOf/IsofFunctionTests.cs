@@ -11,27 +11,18 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
-    [NuwaFramework]
-    public class IsofFunctionTests : NuwaTestBase
+    public class IsofFunctionTests : WebHostTestBase
     {
         private static readonly string[] DataSourceTypes = new string[] {"IM", "EF"}; // In Memory or Entity Framework
 
-        public IsofFunctionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[]
             {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};
@@ -112,7 +103,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(PrimitivePropertyFilters))]
         [MemberData(nameof(EnumPropertyFilters))]
         [MemberData(nameof(ComplexPropertyFilters))]
@@ -144,7 +135,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(PrimitivePropertyFilters))]
         [MemberData(nameof(EnumPropertyFilters))]
         public async Task QueryEntitySetUsingPropertyFailed_UsingEFDataForPrimitiveAndEnum(string filter, string expected)
@@ -163,7 +154,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
                 response.Content.ReadAsStringAsync().Result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(EntityPropertyFilters))]
         [InlineData("?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3")]
         public async Task QueryEntitySetUsingProperty_UsingEFData(string filter, string expected)
@@ -192,7 +183,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("IM", true)]
         [InlineData("EF", false)] // EF does not support complex type inheritance.
         public async Task IsOfFilterQueryWithComplexTypeProperty(string dataSourceMode, bool work)
@@ -240,7 +231,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(IsOfFilterOnType))]
         public async Task IsOfFilterQueryOnTypeWorks(string filter, string expected)
         {
@@ -265,7 +256,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("IM", true)]
         [InlineData("EF", false)] // EF does not work.
         public async Task IsOfFilterQueryOnTypeDifferentResultUsingDifferentData(string dataSourceMode, bool work)
@@ -299,7 +290,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("IM")]
         [InlineData("EF")]
         public async Task IsOfFilterQueryFailedOnUnquotedType(string dataSourceMode)

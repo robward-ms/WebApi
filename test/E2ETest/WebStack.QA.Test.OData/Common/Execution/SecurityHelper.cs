@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 
-namespace WebStack.QA.Common.WebHost
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
     public static class SecurityHelper
     {

@@ -8,26 +8,19 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest
 {
-    public class PageAttributeTest : NuwaTestBase
+    public class PageAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
-        public PageAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -42,7 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
                 PageAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$top=3", 2)]
         [InlineData(ModelBoundOrderBaseUrl + "?$top=3", 2)]
         public void DefaultMaxTop(string url, int maxTop)
@@ -64,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             Assert.Contains(string.Format("The limit of '{0}' for Top query has been exceeded", maxTop), result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$top=10")]
         [InlineData(OrderBaseUrl + "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$top=10")]
@@ -87,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             Assert.Contains("The limit of '5' for Top query has been exceeded", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$expand=Orders($top=3)", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$expand=Customers($top=10)", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "(1)/Orders?$top=3", (int)HttpStatusCode.BadRequest)]
@@ -117,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
         public void PageSizeOnEntityType(string url)
@@ -134,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             Assert.Contains(string.Format(url, "") + "?$skip=1", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders")]
         [InlineData(CustomerBaseUrl, "(1)/Orders")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders")]

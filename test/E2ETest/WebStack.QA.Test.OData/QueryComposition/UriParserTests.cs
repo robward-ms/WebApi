@@ -5,8 +5,8 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -16,15 +16,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public UriParser_Model1 Self { get; set; }
     }
 
-    public class UriParserTests : NuwaTestBase
+    public class UriParserTests : WebHostTestBase
     {
-        public UriParserTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -39,7 +33,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return mb.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestDeepNestedUri()
         {
             var url = new AttackStringBuilder().Append("/UriParser_Model1(0)/").Repeat("Self/", 150).ToString();

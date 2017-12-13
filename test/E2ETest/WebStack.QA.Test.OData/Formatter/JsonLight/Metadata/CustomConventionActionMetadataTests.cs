@@ -13,26 +13,17 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
-    [NuwaFramework]
-    public class CustomConventionActionMetadataTests : NuwaTestBase
+    public class CustomConventionActionMetadataTests : WebHostTestBase
     {
-        public CustomConventionActionMetadataTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -163,7 +154,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsGetAlwaysAdvertised(string acceptHeader)
         {
@@ -201,7 +192,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedWithTheTargetWhenAvailable(string acceptHeader)
         {
@@ -241,7 +232,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedWhenNotAvailable(string acceptHeader)
         {
@@ -265,7 +256,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task AlwaysAvailableCustomActionsInDerivedTypesGetAlwaysAdvertised(string acceptHeader)
         {
@@ -317,7 +308,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsGetAdvertisedInDerivedTypesWithTheTargetWhenAvailable(string acceptHeader)
         {
@@ -369,7 +360,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public async Task TransientCustomActionsDontGetAdvertisedInDerivedTypesWhenNotAvailable(string acceptHeader)
         {

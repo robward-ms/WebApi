@@ -14,23 +14,15 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-    [NuwaFramework]
-    public class ETagsOtherTypesTest : NuwaTestBase
+    public class ETagsOtherTypesTest : WebHostTestBase
     {
-        public ETagsOtherTypesTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -56,7 +48,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task GetEntryWithIfNoneMatchShouldReturnNotModifiedETagsTest_ForDouble()
         {
             string eTag;
@@ -93,7 +85,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task GetEntryWithIfNoneMatchShouldReturnNotModifiedETagsTest_ForShort()
         {
             string eTag;

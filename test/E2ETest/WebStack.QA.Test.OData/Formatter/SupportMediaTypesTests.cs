@@ -10,11 +10,10 @@ using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
-using Nop.Core.Domain.Blogs;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Nop.Core.Domain.Blogs;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -41,15 +40,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class SupportMediaTypeTests : NuwaTestBase
+    public class SupportMediaTypeTests : WebHostTestBase
     {
-        public SupportMediaTypeTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -67,7 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void RequestJsonLightShouldWork()
         {
             // Arrange
@@ -86,7 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [NuwaFact]
+        [Fact]
         public void RequestAtomShouldNotWork()
         {
             // Arrange
@@ -105,7 +98,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [NuwaFact]
+        [Fact]
         public void RequestHasNoAcceptHeaderShouldNotWork()
         {
             // Arrange
@@ -123,7 +116,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("minimal", response.Content.Headers.ContentType.Parameters.First().Value);
         }
 
-        [NuwaFact]
+        [Fact]
         public void RequestXmlShouldWorkWithMetadata()
         {
             // Arrange

@@ -3,11 +3,11 @@
 
 using System.Web.Http;
 
-namespace Microsoft.Test.E2E.AspNet.OData.Common.Nuwa
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Extensions
 {
     public static class HttpConfigurationExtensions
     {
-        private const string HttpServerKey = "Nuwa.HttpServerKey";
+        private const string HttpServerKey = "HttpServerKey";
 
         public static HttpServer GetHttpServer(this HttpConfiguration configuration)
         {

@@ -8,26 +8,19 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest
 {
-    public class CountAttributeTest : NuwaTestBase
+    public class CountAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
-        public CountAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -42,7 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
                 CountAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$count=true", "entity set 'Customers'")]
         [InlineData(CustomerBaseUrl + "(1)/Addresses?$count=true", "property 'Addresses'")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$count=true", "entity set 'Customers'")]
@@ -64,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             Assert.Contains(error + " cannot be used for $count", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(CustomerBaseUrl + "?$expand=CountableOrders($count=true)", (int)HttpStatusCode.OK, "")]
         [InlineData(CustomerBaseUrl + "(1)/CountableOrders?$count=true", (int)HttpStatusCode.OK, "")]
@@ -105,7 +98,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "(1)/Orders?$count=true", "property 'Orders'")]
         [InlineData(CustomerBaseUrl + "?$expand=Orders($count=true)", "property 'Orders'")]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$count=true", "property 'Orders'")]

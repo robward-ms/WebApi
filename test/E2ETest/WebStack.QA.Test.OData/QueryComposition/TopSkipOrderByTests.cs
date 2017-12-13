@@ -8,22 +8,15 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class TopSkipOrderByTests : NuwaTestBase
+    public class TopSkipOrderByTests : WebHostTestBase
     {
-        public TopSkipOrderByTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string> ActionNames
         {
             get
@@ -37,15 +30,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ActionNames))]
         public void TestTop(string actionName)
         {
@@ -57,7 +49,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(1, result.First().Id);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ActionNames))]
         public void TestSkip(string actionName)
         {
@@ -69,7 +61,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, result.First().Id);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ActionNames))]
         public void TestOrderBy(string actionName)
         {
@@ -93,7 +85,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal("Mike", result.First().Name);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task TestOtherQueries()
         {
             var response = await Client.GetAsync(BaseAddress + "/api/TopSkipOrderByTests/GetODataQueryOptions?$skiptoken=abc&$expand=abc&$select=abc&$count=abc&$deltatoken=abc");

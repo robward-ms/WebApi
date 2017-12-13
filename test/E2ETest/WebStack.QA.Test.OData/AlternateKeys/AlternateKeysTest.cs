@@ -15,24 +15,15 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 {
-    [NuwaFramework]
-    public class AlternateKeysTest : NuwaTestBase
+    public class AlternateKeysTest : WebHostTestBase
     {
-        public AlternateKeysTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[]
             {
@@ -61,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             configuration.EnsureInitialized();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task AlteranteKeysMetadata()
         {
             string expect = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
@@ -200,7 +191,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             Assert.Equal(expect, responseContent);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntityWithSingleAlternateKeysWorks()
         {
             // query with alternate keys
@@ -232,7 +223,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(SingleAlternateKeysCases))]
         public async Task EntityWithSingleAlternateKeys_ReturnsSame_WithPrimitiveKey(string declaredKeys, string alternatekeys)
         {
@@ -253,7 +244,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             Assert.Equal(primitiveResponse, alternatekeyResponse);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntityWithMultipleAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             // query with declared key
@@ -279,7 +270,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             Assert.Equal(primitiveResponse, tokenResponse);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntityWithComposedAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             // query with declared key
@@ -298,7 +289,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
             Assert.Equal(primitiveResponse, composedResponse);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task QueryFailedIfMissingAnyOfComposedAlternateKeys()
         {
             var requestUri = string.Format("{0}/odata/People(Country_Region='United States')", this.BaseAddress);
@@ -308,7 +299,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 
         /* Not supported now: see github issue: https://github.com/OData/odata.net/issues/294
          * if supported. modify the following test
-        [NuwaFact]
+        [Fact]
         public async Task QueryEntityWithComplexPropertyAlternateKeys_Returns_SameEntityWithPrimitiveKey()
         {
             var requestUri = string.Format("{0}/odata/Companies(2)", this.BaseAddress);
@@ -327,7 +318,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
         }
          * */
 
-        [NuwaFact]
+        [Fact]
         public async Task CanUpdateEntityWithSingleAlternateKeys()
         {
             string expect = "{" +

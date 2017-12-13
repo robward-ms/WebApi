@@ -16,25 +16,18 @@ using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
-    [NuwaFramework]
-    public class DateAndTimeOfDayTest : NuwaTestBase
+    public class DateAndTimeOfDayTest : WebHostTestBase
     {
-        public DateAndTimeOfDayTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(DCustomersController), typeof(MetadataController), typeof(EfCustomersController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -62,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -126,7 +119,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryDCustomerEntityTest(string mode, string mime)
         {
@@ -230,7 +223,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(FilterData))]
         public async Task CanFilterDateAndTimeOfDayProperty(string mode, string filter, IList<int> expect)
         {
@@ -294,7 +287,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(OrderByData))]
         public async Task CanOrderByDateAndTimeOfDayProperty(string mode, string orderby, string expect)
         {
@@ -341,7 +334,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(FunctionData))]
         public async Task CanCallFunctionWithDateAndTimeOfDayParameters(string mode, string function)
         {
@@ -382,7 +375,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ActionData))]
         public async Task CanCallActionWithDateAndTimeOfDayParameters(string mode, string action)
         {
@@ -411,7 +404,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             Assert.Equal(isNullable, property.Type.IsNullable);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("json")]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
@@ -526,7 +519,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(FilterDataForEf))]
         public async Task CanFilterDateAndTimeOfDayPropertyOnEf(string filter, IList<int> expect)
         {
@@ -575,7 +568,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(OrderByDataEf))]
         public async Task CanOrderByDateAndTimeOfDayPropertyOnEf(string orderby, string expect)
         {

@@ -17,25 +17,17 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
-    [NuwaFramework]
-    public class ContainmentTests : NuwaTestBase
+    public class ContainmentTests : WebHostTestBase
     {
-        public ContainmentTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string, string> MediaTypes
         {
             get
@@ -59,8 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(AccountsController), typeof(AnonymousAccountController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -85,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task ModelBuilderTest(string modelMode)
@@ -136,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         }
 
         #region CRUD on containing entity
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test whether it is able to add a containing Entity.
@@ -163,7 +154,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(serviceRootUri + "/Accounts(300)", response.Headers.Location.OriginalString);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to expand the containment navigation properties(mutiplicity is optional and many) from the containing entity
         // GET ~/Accounts?$expand=PayinPIs,PayoutPI
@@ -260,7 +251,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/convention/Accounts(100)/PayinPIs/$count?", 2)]
         [InlineData("/explicit/Accounts(100)/PayinPIs/$count?$filter=PaymentInstrumentID gt 101", 1)]
         public async Task QueryPayinPIsCount(string url, int expectedCount)
@@ -278,7 +269,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(expectedCount, int.Parse(count));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/convention/Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/$count", 1)]
         [InlineData("/explicit/Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/$count?$filter=AccountID gt 1000", 0)]
         public async Task QueryPremiumAccountCount(string url, int expectedCount)
@@ -296,7 +287,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(expectedCount, int.Parse(count));
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test 
         //      1. it is able to expand containment navigation properties from an entity that derived from the containing entity.
@@ -411,7 +402,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to update a containing entity.
@@ -441,7 +432,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to update a drived containing entity.
@@ -459,7 +450,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(200, (int)json["AccountID"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to delete a containing entity.
@@ -475,7 +466,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         #endregion
 
         #region CRUD on containment navigation properties
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to add a contained entity to a navigation property(multiplicity is many)
@@ -501,7 +492,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(103)", response.Headers.Location.OriginalString);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query a containing navigation property of collection type.
         public async Task QueryPayinPIsFromAccount(string mode, string mime)
@@ -538,7 +529,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query ONE entity of a collectiona containment navigation property
         // GET ~/Accounts(1)/PayinPIs(1)
@@ -571,7 +562,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test is is able to query a nullable containment navigation property.
         // GET ~/Accounts(1)/PayoutPI
@@ -600,7 +591,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query a non-nullable containment navigation property defined on a derived entity.
         // GET ~/Accounts(1)/Namespace.PremiumAccount/GiftCard
@@ -629,7 +620,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a non-nullable navigation property defined on a derived entity
         // GET ~/Accounts(1)/Namespace.PremiumAccount/GiftCard/$ref
@@ -658,7 +649,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.id"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a collection navigation property
         // GET ~/Accounts(1)/PayinPIs/$ref
@@ -694,7 +685,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(serviceRootUri + "/Accounts(200)/PayinPIs(201)", (string)json["value"][0]["@odata.id"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query the association link of a single-valued navigation property
         // GET ~/Accounts(1)/PayoutPI/$ref
@@ -726,7 +717,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(serviceRootUri + "/Accounts(200)/PayoutPI", (string)json["@odata.id"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to PUT to ONE entity of a collection containment navigation property
@@ -751,7 +742,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(101, (int)json["PaymentInstrumentID"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to put to a nullable containment navigation property
@@ -776,7 +767,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(1000, (int)json["PaymentInstrumentID"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to patch to a non-nullable containment navigation property defined on a derived entity
@@ -804,7 +795,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(amount, (double)json["Amount"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to delete ONE entity of a collection containment navigation property
@@ -819,7 +810,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to delete ONE entity through collection association link
@@ -834,7 +825,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to delete a nullable containment navigation property
@@ -854,7 +845,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Null(account["PayoutPI"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // To test it is able to query a contained entity which is navigated from a containment navigation property
         // GET ~/Accounts(1)/PayinPIs(101)/Statement
@@ -893,7 +884,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(1, (int)json["StatementID"]);
 
         }
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to put a contained entity which is navigated from a containment navigation property
@@ -928,7 +919,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(1010, (int)json["StatementID"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // To test it is able to delete a contained entity which is navigated from a containment navigation property
@@ -950,7 +941,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         #endregion
 
         #region Actions and Functions
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // Action bound to a collection of contained entity.
@@ -980,7 +971,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(originCount - deletedCount, currentCount);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
         [InlineData("convention/Accounts(100)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
         [InlineData("explicit/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
@@ -995,7 +986,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // Function bound to a single contained entity.
@@ -1014,7 +1005,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         #endregion
 
         #region singleton
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandContainmentNavigationPropertyOnSingleton(string mode, string mime)
         {
@@ -1061,7 +1052,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task QueryNullableContainmentNavigationPropertyFromSingleton(string mode, string mime)
         {
@@ -1090,7 +1081,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         #endregion
 
         #region batch
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task PerformCUDInBatch(string modelBuilderMode)

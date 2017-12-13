@@ -8,13 +8,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest
 {
-    public class SelectAttributeTest : NuwaTestBase
+    public class SelectAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
@@ -25,13 +24,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
         private const string ModelBoundAutoSelectCustomerBaseUrl = "{0}/modelboundapi/AutoSelectCustomers";
 
-        public SelectAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -47,7 +40,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
                 SelectAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$select=*")]
         [InlineData(CustomerBaseUrl + "?$select=Id")]
         [InlineData(CustomerBaseUrl + "?$select=Id,Name")]
@@ -71,7 +64,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("cannot be used in the $select query option.", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$select=Name", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$select=Id", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.BadRequest)]
@@ -130,7 +123,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(OrderBaseUrl + "?$expand=Customers($select=Id,Name)", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "(1)/Customers?$select=Id,Name", (int)HttpStatusCode.OK)]
         [InlineData(CustomerBaseUrl + "?$expand=Orders($select=Name)", (int)HttpStatusCode.BadRequest)]
@@ -163,7 +156,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectWithAutoExpand(string url)
@@ -186,7 +179,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("Name", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectPropertyAccessWithAutoExpand(string url)
@@ -210,7 +203,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("Name", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void AutoSelectByDefault(string url)
@@ -232,7 +225,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("Id", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void DollarSelectGetPrecedenceWithAutoSelect(string url)
@@ -255,7 +248,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("CarNumber", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         public void NestedDollarSelectGetPrecedenceWithAutoSelect(string url)
@@ -276,7 +269,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             Assert.Contains("CarNumber", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(AutoSelectCustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]

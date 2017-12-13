@@ -14,23 +14,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class ODataValueProviderTests : NuwaTestBase
+    public class ODataValueProviderTests : WebHostTestBase
     {
-        public ODataValueProviderTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();
@@ -46,7 +38,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/odata/BindCustomers({1})", 5, (int)HttpStatusCode.OK)]
         [InlineData("{0}/odata/BindCustomers({1})", 0, (int)HttpStatusCode.BadRequest)]
         public void CanModelBindNonStringDataFromUri(string urlTemplate, int key, int expectedStatusCode)
@@ -59,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             Assert.Equal(key, (int)content.Id);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("{0}/api/BindCustomersApi/", (int)HttpStatusCode.BadRequest)]
         public void CanModelBindNonStringDataFromUriWebAPI(string urlTemplate, int expectedStatusCode)
         {

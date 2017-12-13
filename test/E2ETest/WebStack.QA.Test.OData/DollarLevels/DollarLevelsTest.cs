@@ -7,26 +7,18 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 {
-    [NuwaFramework]
-    public class DollarLevelsTest : NuwaTestBase
+    public class DollarLevelsTest : WebHostTestBase
     {
         private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.DollarLevels";
 
-        public DollarLevelsTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(DLManagersController), typeof(DLEmployeesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -40,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             configuration.EnsureInitialized();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$expand=Manager($levels=-1)", 
             "Levels option must be a non-negative integer or 'max', it is set to '-1' instead.")]
         [InlineData("$expand=Manager($levels=2;$expand=DirectReports($levels=-1))", 
@@ -63,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
                 result["error"]["innererror"]["message"].Value<string>());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$expand=Manager($levels=3)", 
             "$expand=Manager($expand=Manager($expand=Manager))")]
         [InlineData("$expand=Manager($levels=0)", 
@@ -90,7 +82,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$expand=Manager($levels=max)",
             "$expand=Manager($expand=Manager($expand=Manager($expand=Manager)))")]
         [InlineData("$expand=Manager($levels=max;$expand=DirectReports($levels=2))",
@@ -118,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$expand=Manager($levels=max)", "$expand=Manager")]
         [InlineData("$expand=Manager($levels=1)", "$expand=Manager")]
         public async Task LevelsWithValidator(string originalQuery, string expandedQuery)
@@ -139,7 +131,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("$expand=Manager($levels=2)", 
             "The request includes a $expand path which is too deep. The maximum depth allowed is 1.")]
         public async Task InvalidLevelsWithValidator(string query, string errorMessage)
@@ -154,7 +146,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
                 result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("DLEmployees?$expand=Friend($levels=max)",
             "DLEmployees?$expand=Friend($expand=Friend)")]
         [InlineData("DLEmployees?$expand=Friend($levels=1)",
@@ -181,7 +173,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             Assert.True(JToken.DeepEquals(baseline, result));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("DLEmployees?$expand=Friend($levels=5)",
             "The request includes a $expand path which is too deep. The maximum depth allowed is 4.")]
         [InlineData("DLEmployees(1)?$expand=Friend($levels=4)",

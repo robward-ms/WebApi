@@ -13,7 +13,6 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -46,11 +45,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public abstract class CollectionPropertyTests : ODataFormatterTestBase
     {
-        public CollectionPropertyTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);

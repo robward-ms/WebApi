@@ -2,7 +2,6 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,25 +13,16 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
-    [NuwaFramework]
-    public class ComplexTypeInheritanceTests : NuwaTestBase
+    public class ComplexTypeInheritanceTests : WebHostTestBase
     {
-        public ComplexTypeInheritanceTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string, string> MediaTypes
         {
             get
@@ -56,8 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(WindowsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -83,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 
 
         #region CRUD on the entity
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // POST ~/Windows
@@ -138,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.True(4 == vertexes.Count, "The returned OptionalShapes is not as expected");
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$select=...&$orderby=...&$expand=...
         public async Task QueryCollectionContainingEntity(string mode, string mime)
@@ -166,7 +155,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.Equal("1", (string)window2["Parent"]["Id"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows?$filter=CurrentShape/HasBorder eq true
         public async Task QueryEntitiesFilteredByComplexType(string mode, string mime)
@@ -188,7 +177,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Windows(3)
@@ -241,7 +230,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // Patch ~/Widnows(1)
@@ -286,7 +275,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // DELETE ~/Windows(1)
@@ -302,7 +291,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 
         #region RUD on complex type
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape
         public async Task QueryComplexTypeProperty(string mode, string mime)
@@ -327,7 +316,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 2, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // GET ~/Windows(1)/OptionalShapes/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle
@@ -349,7 +338,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.True(1 == optionalShapes.Count);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // GET ~/Windows(3)/OptionalShapes
@@ -371,7 +360,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.True(2 == optionalShapes.Count);
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/HasBorder
         public async Task QueryPropertyDefinedInComplexTypeProperty(string mode, string mime)
@@ -393,7 +382,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected that HasBorder is true, but actually not,\n request uri: {0},\n response payload: {1}", requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(MediaTypes))]
         // GET ~/Windows(1)/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle/Radius
         public async Task QueryComplexTypePropertyDefinedOnDerivedType(string mode, string mime)
@@ -415,7 +404,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 2, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Windows(3)/OptionalShapes
@@ -462,7 +451,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PUT ~/Widnows(1)/CurrentShape
@@ -497,7 +486,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 String.Format("\nExpected that Radius: 5, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         // PATCH ~/Windows(3)/OptionalShapes
@@ -514,7 +503,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.True(HttpStatusCode.NotFound == response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task PatchToSingleComplexTypeProperty(string modelMode)
@@ -543,7 +532,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.Equal(15, radius);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
         public async Task DeleteToNullableComplexTypeProperty(string modelMode)

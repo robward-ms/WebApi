@@ -14,11 +14,9 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -170,13 +168,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class ValidatorTests : NuwaTestBase
+    public class ValidatorTests : WebHostTestBase
     {
-        public ValidatorTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         public static TheoryDataSet<string, bool> ValidateOptionsData
         {
             get
@@ -233,8 +226,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -242,7 +234,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/ValidatorTests/OnlySupportTopAndSkip?$top=1&$skip=10", true)]
         [InlineData("/api/ValidatorTests/OnlySupportTopAndSkip?$orderby=ID", false)]
         [InlineData("/api/ValidatorTests/MaxTopSkipIs10?$top=9&$skip=10", true)]
@@ -273,7 +265,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(ValidateOptionsData))]
         public void VerifyValidateOptions(string query, bool success)
         {
@@ -302,14 +294,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllowedFunctionsData))]
         public void VerifyAllowedFunctions(AllowedFunctions value1, AllowedFunctions value2)
         {
             Assert.Equal(value2, value1 & value2);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=ID gt 2", (int)HttpStatusCode.OK)]
         [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=Name eq 'One'", (int)HttpStatusCode.BadRequest)]
         public void VerifyCustomValidator(string url, int statusCode)

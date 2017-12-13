@@ -10,9 +10,8 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -174,15 +173,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class InheritanceQueryableTests : NuwaTestBase
+    public class InheritanceQueryableTests : WebHostTestBase
     {
-        public InheritanceQueryableTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var types = new[] { 
                 typeof(InheritanceQueryable_Customer), 
@@ -206,7 +199,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Id eq 1")]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle.MiniSportBike/CanDoAWheelie eq false")]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle.MiniSportBike/TopSpeed gt 20")]
@@ -217,7 +210,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var actual = response.Content.ReadAsAsync<IEnumerable<Motorcycle>>().Result;
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryOnDerivedTypeWithAbstractBaseShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=Microsoft.Test.E2E.AspNet.OData.QueryComposition.InheritanceQueryable_DerivedType/ID eq 1").Result;
@@ -241,7 +234,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, actual.Count());
         }
 
-        [NuwaFact]
+        [Fact]
         public void QueryOnReadOnlyPropertShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetReadOnlyPropertyType?$filter=ReadOnlyProperty eq 8").Result;

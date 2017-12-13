@@ -7,25 +7,18 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
-    public class PagedAggregationTests : NuwaTestBase
+    public class PagedAggregationTests : WebHostTestBase
     {
         private const string AggregationTestBaseUrl = "{0}/pagedaggregation/Customers";
 
-        public PagedAggregationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -38,7 +31,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
                 AggregationEdmModel.GetEdmModel(configuration));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +
                     "/filter(Order/Name ne 'Order0')&$orderby=Order/Name")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +

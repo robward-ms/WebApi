@@ -17,25 +17,15 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
 {
-    [NuwaFramework]
-    public class UntypedSerializationTests : NuwaTestBase
+    public class UntypedSerializationTests : WebHostTestBase
     {
-        public UntypedSerializationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -66,7 +56,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -80,7 +70,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             response.EnsureSuccessStatusCode();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("PrimitiveCollection")]
         [InlineData("ComplexObjectCollection")]
         [InlineData("EntityCollection")]
@@ -107,7 +97,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             Assert.Equal(JToken.FromObject(expectedPayload), result, JToken.EqualityComparer);
         }
 
-        [NuwaFact]
+        [Fact]
         public void RoundTripEntityWorks()
         {
             int i = 10;
@@ -136,7 +126,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         }
 
 
-        [NuwaFact]
+        [Fact]
         public void UntypedActionParametersRoundtrip()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + "/untyped/UntypedCustomers/Default.UntypedParameters");

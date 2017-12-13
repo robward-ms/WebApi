@@ -7,24 +7,16 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
-    [NuwaFramework]
-    public class DollarIdTest : NuwaTestBase
+    public class DollarIdTest : WebHostTestBase
     {
-        public DollarIdTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -37,7 +29,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
             configuration.EnsureInitialized();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Singers(0)/Albums";
@@ -66,7 +58,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
             Assert.Single(result);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteContainedNavigationLink()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/Sales";
@@ -92,7 +84,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
             Assert.Empty(result);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task GetSingersNameOfAlbum()
         {
             var requestBaseUri = this.BaseAddress + "/Albums(5)/Microsoft.Test.E2E.AspNet.OData.DollarId.GetSingers()?$filter=MasterPiece eq 'def'&$select=Name";

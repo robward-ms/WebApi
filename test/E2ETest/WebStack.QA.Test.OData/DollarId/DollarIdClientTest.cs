@@ -12,22 +12,14 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
-    [NuwaFramework]
-    public class DollarIdClientTest : NuwaTestBase
+    public class DollarIdClientTest : WebHostTestBase
     {
-        public DollarIdClientTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -40,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
             configuration.EnsureInitialized();
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteNavigationLink()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
@@ -62,7 +54,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
             Assert.Equal(2, singer.Albums.Count);
         }
 
-        [NuwaFact]
+        [Fact]
         public async Task DeleteContainedNavigationLink()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";

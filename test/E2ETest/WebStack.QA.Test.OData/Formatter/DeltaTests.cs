@@ -18,12 +18,11 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -170,13 +169,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class DeltaTests : ODataFormatterTestBase
+    public abstract class DeltaTests : ODataFormatterTestBase
     {
-        public DeltaTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
         {
             var mb = new ODataConventionModelBuilder(configuration);
@@ -301,16 +295,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    [NuwaFramework]
-    public class PutDeltaOfTTests : NuwaTestBase
+    public class PutDeltaOfTTests : WebHostTestBase
     {
-        public PutDeltaOfTTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -325,7 +312,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void PutShouldntOverrideNavigationProperties()
         {
             HttpRequestMessage put = new HttpRequestMessage(HttpMethod.Put, BaseAddress + "/odata/DeltaCustomers(5)");
@@ -342,16 +329,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    [NuwaFramework]
-    public class PatchtDeltaOfTTests : NuwaTestBase
+    public class PatchtDeltaOfTTests : WebHostTestBase
     {
-        public PatchtDeltaOfTTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -366,7 +346,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void PatchShouldSupportNonSettableCollectionProperties()
         {
             HttpRequestMessage patch = new HttpRequestMessage(new HttpMethod("MERGE"), BaseAddress + "/odata/DeltaCustomers(5)");

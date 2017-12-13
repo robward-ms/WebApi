@@ -14,14 +14,14 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     public static class ODataTestExtension
     {
-        public static Task ClearRepository(this NuwaTestBase test, string entityName)
+        public static Task ClearRepository(this WebHostTestBase test, string entityName)
         {
             return test.Client.DeleteAsync(test.BaseAddress + "/" + entityName);
         }

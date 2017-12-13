@@ -7,30 +7,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV3.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Controllers;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 using ODataV3Stack = System.Web.Http.OData;
 using ODataV4Stack = Microsoft.AspNet.OData;
 
-
 namespace Microsoft.Test.E2E.AspNet.OData.SxS
 {
-    [NuwaFramework]
-    public class SxSODataV3AndV4Test
+    public class SxSODataV3AndV4Test : WebHostTestBase
     {
-        [NuwaBaseAddress]
-        public string BaseAddress { get; set; }
-
-        [NuwaHttpClient]
-        public HttpClient Client { get; set; }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             var controllers = new[]
             {

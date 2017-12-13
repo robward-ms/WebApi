@@ -15,23 +15,16 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
 {
-    public class CustomizeSerializerTest : NuwaTestBase
+    public class CustomizeSerializerTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/dependencyinjection/Customers";
 
-        public CustomizeSerializerTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),
@@ -47,7 +40,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
                        .AddService<ODataResourceSerializer, AnnotatingEntitySerializer>(ServiceLifetime.Singleton));
         }
 
-        [NuwaFact]
+        [Fact]
         public void CutomizeSerializerProvider()
         {
             string queryUrl =
@@ -65,7 +58,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
             Assert.Contains(MyODataSerializerProvider.EnumNotSupportError, result);
         }
 
-        [NuwaFact]
+        [Fact]
         public void CutomizeSerializer()
         {
             string queryUrl =

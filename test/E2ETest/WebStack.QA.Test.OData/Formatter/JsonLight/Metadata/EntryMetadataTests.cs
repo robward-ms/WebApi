@@ -11,26 +11,17 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Newtonsoft.Json.Linq;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
-    [NuwaFramework]
-    public class EntryMetadataTests : NuwaTestBase
+    public class EntryMetadataTests : WebHostTestBase
     {
-        public EntryMetadataTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Relationships", "Relationships", GetRelationshipsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -121,7 +112,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
             string acceptHeader)
@@ -170,7 +161,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
         {
@@ -197,7 +188,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -224,7 +215,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -251,7 +242,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
         public void CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
@@ -278,7 +269,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]

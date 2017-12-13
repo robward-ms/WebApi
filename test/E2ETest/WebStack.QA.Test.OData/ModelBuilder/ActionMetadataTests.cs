@@ -11,22 +11,14 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
-    [NuwaFramework]
-    public class ActionMetadataTests : NuwaTestBase
+    public class ActionMetadataTests : WebHostTestBase
     {
-        public ActionMetadataTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
@@ -43,7 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void ProvideOverloadToSupplyEntitySetConfiguration()
         {
             IEdmModel model = null;

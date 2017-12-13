@@ -12,23 +12,16 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class FilterTests : NuwaTestBase
+    public class FilterTests : WebHostTestBase
     {
-        public FilterTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         #region Test Data
         public static TheoryDataSet<string, IEnumerable<Product>> SpecialCharacterData
         {
@@ -217,8 +210,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return name.Replace("'", "''").Replace("&", "%26").Replace("/", "%2F").Replace("?", "%3F");
         }
 
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -226,7 +218,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.EnableDependencyInjection();
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestFilters()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
@@ -280,7 +272,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestFiltersWithXmlSerializer()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
@@ -312,7 +304,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestFiltersOnHttpResponse()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
@@ -342,7 +334,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestFiltersAsync()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
@@ -372,7 +364,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestFiltersOnAnonymousType()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
@@ -402,7 +394,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        [NuwaFact]
+        [Fact]
         public void TestAnyAll()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Movie> would need to be serialize-able in

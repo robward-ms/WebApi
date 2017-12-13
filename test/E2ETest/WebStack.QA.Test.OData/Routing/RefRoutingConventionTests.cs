@@ -15,23 +15,15 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.UriParserExtension;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class RefRoutingConventionTests : NuwaTestBase
+    public class RefRoutingConventionTests : WebHostTestBase
     {
-        public RefRoutingConventionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(AddressesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -60,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("POST", "/Customers(5)/Orders/$ref")]
         [InlineData("POST", "/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Orders/$ref")]
         [InlineData("PUT", "/Addresses(5)/VipCustomer/$ref")]
@@ -75,7 +67,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/Customers(5)/Orders(25)/$ref")]
         [InlineData("/Orders(25)/Customer/$ref")]
         [InlineData("/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Addresses(25)/$ref")]

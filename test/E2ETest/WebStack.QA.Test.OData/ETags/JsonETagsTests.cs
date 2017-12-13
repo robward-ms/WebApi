@@ -14,24 +14,16 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-    [NuwaFramework]
-    public class JsonETagsTests : NuwaTestBase
+    public class JsonETagsTests : WebHostTestBase
     {
-        public JsonETagsTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -63,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return builder.GetEdmModel();
         }
 
-        [NuwaFact]
+        [Fact]
         public void ModelBuilderTest()
         {
             string expectMetadata =
@@ -135,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
                 collection.Elements.Select(e => ((IEdmPathExpression) e).PathSegments.Single()));
         }
 
-        [NuwaFact]
+        [Fact]
         public void JsonWithDifferentMetadataLevelsHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers";

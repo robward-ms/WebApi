@@ -10,7 +10,6 @@ using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -57,13 +56,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class DeserializationAndSerializationTests : ODataFormatterTestBase
+    public abstract class DeserializationAndSerializationTests : ODataFormatterTestBase
     {
-        public DeserializationAndSerializationTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
         protected static IEdmModel GetEdmModel()
         {
             var builder = new ODataConventionModelBuilder();

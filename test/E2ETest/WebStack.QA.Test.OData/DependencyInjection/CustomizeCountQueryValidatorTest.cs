@@ -13,24 +13,17 @@ using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
 {
-    public class CustomizeCountQueryValidatorTest : NuwaTestBase
+    public class CustomizeCountQueryValidatorTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/dependencyinjection/Customers";
         private const string OrderBaseUrl = "{0}/dependencyinjection/Orders";
 
-        public CustomizeCountQueryValidatorTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),
@@ -45,7 +38,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
                        .AddService<CountQueryValidator, MyCountQueryValidator>(ServiceLifetime.Singleton));
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$count=true", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$count=true", (int)HttpStatusCode.OK)]
         public void CutomizeCountValidator(string entitySetUrl, int statusCode)

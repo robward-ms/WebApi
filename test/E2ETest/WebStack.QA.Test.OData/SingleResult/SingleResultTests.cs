@@ -8,23 +8,16 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
 {
-    public class SingleResultTests : NuwaTestBase
+    public class SingleResultTests : WebHostTestBase
     {
         private const string BaseUrl = "{0}/singleresult/Customers";
 
-        public SingleResultTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof(IAssembliesResolver),
@@ -37,7 +30,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
                 SingleResultEdmModel.GetEdmModel(configuration));
         }
 
-        [NuwaFact]
+        [Fact]
         public void EmptySingleResultReturnsNotFound()
         {
             // Arrange

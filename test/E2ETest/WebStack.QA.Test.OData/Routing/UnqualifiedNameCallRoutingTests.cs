@@ -13,24 +13,16 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Newtonsoft.Json.Linq;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
-    [NuwaFramework]
-    public class UnqualifiedNameCallRoutingTests : NuwaTestBase
+    public class UnqualifiedNameCallRoutingTests : WebHostTestBase
     {
-        public UnqualifiedNameCallRoutingTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(HttpConfiguration config)
         {
             var controllers = new[] { typeof(UnqualifiedCarsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
@@ -55,7 +47,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/odata/UnqualifiedCars(5)/Wash", "WashSingle5")]
         [InlineData("/odata/UnqualifiedCars(5)/Default.Wash", "WashSingle5")]
         [InlineData("/odata/UnqualifiedCars/Wash", "WashCollection")]
@@ -70,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             Assert.Equal(expectedResult, (string)response.Content.ReadAsAsync<JObject>().Result["value"]);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("/odata/UnqualifiedCars(5)/Check", "CheckSingle5")]
         [InlineData("/odata/UnqualifiedCars(5)/Default.Check", "CheckSingle5")]
         [InlineData("/odata/UnqualifiedCars/Check", "CheckCollection")]

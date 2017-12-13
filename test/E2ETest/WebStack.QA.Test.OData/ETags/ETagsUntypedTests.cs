@@ -13,24 +13,16 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-    [NuwaFramework]
-    public class ETagsUntypedTests : NuwaTestBase
+    public class ETagsUntypedTests : WebHostTestBase
     {
-        public ETagsUntypedTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -58,7 +50,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return model;
         }
 
-        [NuwaFact]
+        [Fact]
         public void ModelBuilderTest()
         {
             string expectMetadata =
@@ -105,7 +97,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             Assert.Equal(new[] { "Name" }, collection.Elements.Select(e => ((IEdmPathExpression) e).PathSegments.Single()));
         }
 
-        [NuwaFact]
+        [Fact]
         public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagUntypedCustomers(1)?$format=json";

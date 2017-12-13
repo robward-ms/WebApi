@@ -8,26 +8,19 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttributeTest
 {
-    public class ExpandAttributeTest : NuwaTestBase
+    public class ExpandAttributeTest : WebHostTestBase
     {
         private const string CustomerBaseUrl = "{0}/enablequery/Customers";
         private const string OrderBaseUrl = "{0}/enablequery/Orders";
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
-        public ExpandAttributeTest(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Services.Replace(
                 typeof (IAssembliesResolver),
@@ -41,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
                 ExpandAttributeEdmModel.GetEdmModelByModelBoundAPI());
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl + "?$expand=NoExpandOrders")]
         [InlineData(CustomerBaseUrl + "?$expand=Order")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=NoExpandOrders")]
@@ -63,7 +56,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             Assert.Contains("cannot be used in the $expand query option", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "Orders", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl, "Customers", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl, "Customers2", (int)HttpStatusCode.OK)]
@@ -86,7 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             Assert.Equal(statusCode, (int)response.StatusCode);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers2)", (int)HttpStatusCode.BadRequest)]
         [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers)", (int)HttpStatusCode.OK)]
@@ -130,7 +123,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             }
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers($expand=Orders($expand=Customers)))", 3)]
         [InlineData(CustomerBaseUrl, "(1)/Orders?$expand=Customers($expand=Orders($expand=Customers))", 2)]
         [InlineData(CustomerBaseUrl, "?$expand=AutoExpandOrder($expand=RelatedOrder($levels=3)),Friend($levels=3)", 3)]
@@ -160,7 +153,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             Assert.Contains("The maximum depth allowed is " + maxDepth, result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
         public void AutomaticExpand(string url)
@@ -177,7 +170,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             Assert.Contains("AutoExpandOrder", result);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(CustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundCustomerBaseUrl)]

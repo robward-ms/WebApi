@@ -11,23 +11,15 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    [NuwaFramework]
-    public class ComplextTypeCollectionTests : NuwaTestBase
+    public class ComplextTypeCollectionTests : WebHostTestBase
     {
-        public ComplextTypeCollectionTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.Routes.Clear();
 
@@ -40,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.MapODataServiceRoute("odataRoute", "odata", builder.GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        [NuwaFact]
+        [Fact]
         public void OrderByTest()
         {
             HttpResponseMessage response = Client.GetAsync(BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/Addresses?$orderby=City").Result;
@@ -59,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(expectedData, actualData);
         }
 
-        [NuwaFact]
+        [Fact]
         public void PageSizeWorksOnCollectionOfComplexProperty()
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos";
@@ -83,7 +75,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(new[] {"Company 1", "Company 2"}, actualData);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("", false)]
         [InlineData("?$count=false", false)]
         [InlineData("?$count=true", true)]

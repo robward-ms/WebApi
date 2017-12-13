@@ -12,8 +12,7 @@ using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
-using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
-using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -57,15 +56,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class DosSecurityTests : NuwaTestBase
+    public class DosSecurityTests : WebHostTestBase
     {
-        public DosSecurityTests(NuwaClassFixture fixture)
-            : base(fixture)
-        {
-        }
-
-        [NuwaConfiguration]
-        internal static void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var selfConfig = configuration as HttpSelfHostConfiguration;
@@ -87,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return builder.GetEdmModel();
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -110,7 +103,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Contains("The depth limit for entries in nested expanded navigation links was reached", content);
         }
 
-        [NuwaTheory]
+        [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
@@ -138,7 +131,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             response.EnsureSuccessStatusCode();
         }
 
-        [NuwaFact]
+        [Fact]
         public void BigDataServiceVersionHeaderShouldBeRejected()
         {
             var model = new Security_ArrayModel();
