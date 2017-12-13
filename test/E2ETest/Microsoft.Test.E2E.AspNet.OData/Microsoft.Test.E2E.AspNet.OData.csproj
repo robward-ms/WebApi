@@ -5,7 +5,7 @@
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5516EA5D-350A-447A-9399-61A22A9C4F4B}</ProjectGuid>
+    <ProjectGuid>{436F2E52-4CBC-41E5-BD47-66C16184A214}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.E2E.AspNet.OData</RootNamespace>
