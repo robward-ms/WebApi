@@ -41,7 +41,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
             HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            PropertyCustomer customer = response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter())).Result;
+            PropertyCustomer customer = await response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter()));
             Assert.NotNull(customer);
             Assert.Equal(1, customer.Id);
             Assert.Equal("Name 1", customer.Name);
@@ -73,7 +73,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
             HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            PropertyCustomer customer = response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter())).Result;
+            PropertyCustomer customer = await response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter()));
             Assert.NotNull(customer);
             Assert.Equal(1, customer.Id);
             Assert.Equal("Name 1", customer.Name);

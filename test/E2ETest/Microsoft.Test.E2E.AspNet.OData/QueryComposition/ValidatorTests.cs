@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
@@ -252,9 +253,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/ValidatorTests/OnlySupportDateAndTime?$filter=date(DateTime) eq 2015-02-28", true)]
         [InlineData("/api/ValidatorTests/OnlySupportDateAndTime?$filter=time(DateTime) eq 01:02:03.0040000", true)]
         [InlineData("/api/ValidatorTests/OnlySupportDateAndTime?$filter=year(DateTime) eq 2015", false)]
-        public void VerifyQueryResult(string query, bool success)
+        public async Task VerifyQueryResult(string query, bool success)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + query).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + query);
             if (success)
             {
                 response.EnsureSuccessStatusCode();
@@ -267,7 +268,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(ValidateOptionsData))]
-        public void VerifyValidateOptions(string query, bool success)
+        public async Task VerifyValidateOptions(string query, bool success)
         {
             var settings = new ODataValidationSettings
             {
@@ -281,9 +282,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             settings.AllowedOrderByProperties.Add("ID");
             settings.AllowedOrderByProperties.Add("DateTime");
 
-            var response = this.Client.PostAsync(
+            var response = await this.Client.PostAsync(
                 this.BaseAddress + "/api/ValidatorTests/ValidateOptions?" + query,
-                new ObjectContent<ODataValidationSettings>(settings, new JsonMediaTypeFormatter())).Result;
+                new ObjectContent<ODataValidationSettings>(settings, new JsonMediaTypeFormatter()));
             if (success)
             {
                 response.EnsureSuccessStatusCode();
@@ -304,9 +305,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [Theory]
         [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=ID gt 2", (int)HttpStatusCode.OK)]
         [InlineData("/api/ValidatorTests/ValidateWithCustomValidator?$filter=Name eq 'One'", (int)HttpStatusCode.BadRequest)]
-        public void VerifyCustomValidator(string url, int statusCode)
+        public async Task VerifyCustomValidator(string url, int statusCode)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
             Assert.Equal(statusCode, (int)response.StatusCode);
         }
     }

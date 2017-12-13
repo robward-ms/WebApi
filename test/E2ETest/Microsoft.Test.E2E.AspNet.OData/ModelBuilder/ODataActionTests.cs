@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.OData;
@@ -36,17 +37,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Theory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDate1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDate2")]
-        public void SingleEntityBoundActionTest(string entitySetName, string actionName)
+        public async Task SingleEntityBoundActionTest(string entitySetName, string actionName)
         {
             Container cntr = new Container(new Uri(BaseAddress));
 
             DateTimeOffset dt = new DateTimeOffset(Convert.ToDateTime("2025-01-01T00:00:00"));
 
-            var product = cntr.ExecuteAsync<ODataActionTests_Product>(
+            var product = (await cntr.ExecuteAsync<ODataActionTests_Product>(
                 new Uri(string.Format("{0}/odata/{1}(1)/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
-                new BodyOperationParameter("newDate", dt)).Result.Single();
+                new BodyOperationParameter("newDate", dt))).Single();
 
             Assert.NotNull(product);
             Assert.Equal(1, product.ID);
@@ -57,17 +58,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Theory]
         [InlineData("ODataActionTests_Products1", "ExtendSupportDates1")]
         [InlineData("ODataActionTests_Products2", "ExtendSupportDates2")]
-        public void CollectionOfEntitiesBoundActionTest(string entitySetName, string actionName)
+        public async Task CollectionOfEntitiesBoundActionTest(string entitySetName, string actionName)
         {
             Container cntr = new Container(new Uri(BaseAddress));
 
             DateTimeOffset dt = new DateTimeOffset(Convert.ToDateTime("2025-01-01T00:00:00"));
-            var products = cntr.ExecuteAsync<ODataActionTests_Product>(
+            var products = (await cntr.ExecuteAsync<ODataActionTests_Product>(
                 new Uri(string.Format("{0}/odata/{1}/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
                 new BodyOperationParameter("productIds", new int[] { 1, 2, 3, 4 }),
-                new BodyOperationParameter("newDate", dt)).Result.ToList();
+                new BodyOperationParameter("newDate", dt))).ToList();
 
             Assert.NotNull(products);
             Assert.Equal(4, products.Count());
@@ -82,16 +83,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Theory]
         [InlineData("ODataActionTests_Products1", "UpdateRating1")]
         [InlineData("ODataActionTests_Products2", "UpdateRating2")]
-        public void SingleInheritedEntityBoundActionTest(string entitySetName, string actionName)
+        public async Task SingleInheritedEntityBoundActionTest(string entitySetName, string actionName)
         {
             Container cntr = new Container(new Uri(BaseAddress));
 
             int newRating = 8;
-            var product = cntr.ExecuteAsync<ODataActionTests_Product>(
+            var product = (await cntr.ExecuteAsync<ODataActionTests_Product>(
                 new Uri(string.Format("{0}/odata/{1}(4)/Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
-                new BodyOperationParameter("newRating", newRating)).Result.Single();
+                new BodyOperationParameter("newRating", newRating))).Single();
 
             Assert.NotNull(product);
             Assert.Equal(4, product.ID);
@@ -102,17 +103,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Theory]
         [InlineData("ODataActionTests_Products1", "UpdateRatings1")]
         [InlineData("ODataActionTests_Products2", "UpdateRatings2")]
-        public void CollectionOfInheritedEntitiesBoundActionTest(string entitySetName, string actionName)
+        public async Task CollectionOfInheritedEntitiesBoundActionTest(string entitySetName, string actionName)
         {
             Container cntr = new Container(new Uri(BaseAddress));
 
             int newRating = 10;
-            var products = cntr.ExecuteAsync<ODataActionTests_Product>(
+            var products = (await cntr.ExecuteAsync<ODataActionTests_Product>(
                 new Uri(string.Format("{0}/odata/{1}/Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
                 new BodyOperationParameter("productIds", new int[] { 4 }),
-                new BodyOperationParameter("newRating", newRating)).Result.ToList();
+                new BodyOperationParameter("newRating", newRating))).ToList();
 
             Assert.NotNull(products);
             Assert.Single(products);

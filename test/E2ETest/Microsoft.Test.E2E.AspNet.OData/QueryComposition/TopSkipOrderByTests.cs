@@ -39,11 +39,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(ActionNames))]
-        public void TestTop(string actionName)
+        public async Task TestTop(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$top=1").Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$top=1");
+            var result = await response.Content.ReadAsAsync<IEnumerable<Customer>>();
 
             Assert.Single(result);
             Assert.Equal(1, result.First().Id);
@@ -51,11 +51,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(ActionNames))]
-        public void TestSkip(string actionName)
+        public async Task TestSkip(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$skip=1").Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$skip=1");
+            var result = await response.Content.ReadAsAsync<IEnumerable<Customer>>();
 
             Assert.Equal(2, result.Count());
             Assert.Equal(2, result.First().Id);
@@ -63,23 +63,23 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(ActionNames))]
-        public void TestOrderBy(string actionName)
+        public async Task TestOrderBy(string actionName)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Name").Result;
-            var result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Name");
+            var result = await response.Content.ReadAsAsync<IEnumerable<Customer>>();
 
             Assert.Equal(3, result.Count());
             Assert.Equal(2, result.First().Id);
             Assert.Equal("Jerry", result.First().Name);
 
-            response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Name desc").Result;
-            result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
+            response = await this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Name desc");
+            result = await response.Content.ReadAsAsync<IEnumerable<Customer>>();
 
             Assert.Equal(1, result.First().Id);
 
-            response = this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Id desc,Name desc").Result;
-            result = response.Content.ReadAsAsync<IEnumerable<Customer>>().Result;
+            response = await this.Client.GetAsync(this.BaseAddress + "/api/TopSkipOrderByTests/" + actionName + "?$orderby=Id desc,Name desc");
+            result = await response.Content.ReadAsAsync<IEnumerable<Customer>>();
 
             Assert.Equal(2, result.First().Id);
             Assert.Equal("Mike", result.First().Name);

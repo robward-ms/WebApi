@@ -394,7 +394,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             var cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
-            var actual = cars.ExecuteAsync().Result.First();
+            var actual = (await cars.ExecuteAsync()).First();
             await ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty");
 
             AssertExtension.PrimitiveEqual(vehicle, actual.BaseTypeNavigationProperty[0]);

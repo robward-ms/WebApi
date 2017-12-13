@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
@@ -44,10 +45,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void ReturnIQueryableOfAnonymousTypeShouldWork()
+        public async Task ReturnIQueryableOfAnonymousTypeShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/AnonymousType/Get?$filter=FirstName eq 'John'").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<AnonymousType_Person>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/AnonymousType/Get?$filter=FirstName eq 'John'");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<AnonymousType_Person>>();
             Assert.Single(actual);
             Assert.Equal("John", actual.First().FirstName);
         }

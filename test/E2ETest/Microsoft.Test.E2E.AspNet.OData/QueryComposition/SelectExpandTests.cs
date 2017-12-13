@@ -330,7 +330,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public async Task QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
         {
             // Arrange
-            RestoreData();
+            await RestoreData();
             string queryUrl = string.Format("{0}/selectexpand/EFSelectCustomers?$expand=SelectOrders", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
@@ -565,7 +565,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public async Task NestedTopSkipOrderByInDollarExpandWorksWithEF()
         {
             // Arrange
-            RestoreData();
+            await RestoreData();
             string queryUrl = string.Format("{0}/selectexpand/EFSelectCustomers?$expand=SelectOrders($orderby=Id desc;$skip=1;$top=1)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
@@ -587,11 +587,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal(2, expandProp[0]["Id"]);
         }
 
-        private void RestoreData()
+        private async Task RestoreData()
         {
             string requestUri = BaseAddress + "/selectexpand/ResetDataSource";
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = client.GetAsync(requestUri).Result;
+            HttpResponseMessage response = await client.GetAsync(requestUri);
             response.EnsureSuccessStatusCode();
         }
     }

@@ -113,33 +113,33 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void OptionsOnIEnumerableTShouldWork()
+        public async Task OptionsOnIEnumerableTShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnIEnumerableT?$filter=ID ge 50").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<ODataQueryOptions_Todo>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnIEnumerableT?$filter=ID ge 50");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<ODataQueryOptions_Todo>>();
             Assert.Equal(50, actual.Count());
         }
 
         [Fact]
-        public void OptionsOnStringShouldWork()
+        public async Task OptionsOnStringShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnString?$filter=ID ge 50").Result;
-            var actual = response.Content.ReadAsAsync<string>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnString?$filter=ID ge 50");
+            var actual = await response.Content.ReadAsAsync<string>();
             Assert.Equal("Test50", actual);
         }
 
         [Fact]
         public async Task GetTopValueShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/GetTopValue?$top=50").Result;
-            var actual = response.Content.ReadAsAsync<int>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/GetTopValue?$top=50");
+            var actual = await response.Content.ReadAsAsync<int>();
             Assert.Equal(50, actual);
         }
 
         [Fact]
         public async Task OptionsOnHttpResponseMessageShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnHttpResponseMessage?$filter=ID ge 50").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnHttpResponseMessage?$filter=ID ge 50");
             var actual = await response.Content.ReadAsStringAsync();
             Console.WriteLine(actual);
         }

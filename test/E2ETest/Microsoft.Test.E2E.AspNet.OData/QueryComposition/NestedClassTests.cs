@@ -2,6 +2,7 @@
 
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
@@ -62,23 +63,23 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryOnNestClassShouldWork()
+        public async Task QueryOnNestClassShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=Name eq 'aaa'").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=Name eq 'aaa'");
             response.EnsureSuccessStatusCode();
 
-            var actual = response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
+            var actual = await response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>();
 
             Assert.Equal("aaa", actual.Single().Name);
         }
 
         [Fact]
-        public void QueryOnPropertyWithNestedTypeShouldWork()
+        public async Task QueryOnPropertyWithNestedTypeShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=NestProperty/Name eq 'aaa'").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=NestProperty/Name eq 'aaa'");
             response.EnsureSuccessStatusCode();
 
-            var actual = response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
+            var actual = await response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>();
 
             Assert.Equal("aaa", actual.Single().NestProperty.Name);
         }

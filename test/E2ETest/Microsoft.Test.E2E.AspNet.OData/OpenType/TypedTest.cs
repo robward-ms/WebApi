@@ -295,7 +295,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
                   }");
 
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                using (var patchResponse = this.Client.SendAsync(request).Result)
+                using (var patchResponse = await this.Client.SendAsync(request))
                 {
                     Assert.Equal(HttpStatusCode.OK, patchResponse.StatusCode);
 

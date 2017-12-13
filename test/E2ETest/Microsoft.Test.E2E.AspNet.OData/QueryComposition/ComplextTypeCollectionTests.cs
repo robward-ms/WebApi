@@ -36,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [Fact]
         public async Task OrderByTest()
         {
-            HttpResponseMessage response = Client.GetAsync(BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/Addresses?$orderby=City").Result;
+            HttpResponseMessage response = await Client.GetAsync(BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/Addresses?$orderby=City");
 
             response.EnsureSuccessStatusCode();
 
@@ -56,7 +56,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public async Task PageSizeWorksOnCollectionOfComplexProperty()
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos";
-            HttpResponseMessage response = Client.GetAsync(resquestUri).Result;
+            HttpResponseMessage response = await Client.GetAsync(resquestUri);
 
             response.EnsureSuccessStatusCode();
 
@@ -83,7 +83,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public async Task DollarCountWorksOnCollectionOfComplexProperty(string countOption, bool expect)
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos" + countOption;
-            HttpResponseMessage response = Client.GetAsync(resquestUri).Result;
+            HttpResponseMessage response = await Client.GetAsync(resquestUri);
 
             response.EnsureSuccessStatusCode();
 

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
@@ -90,11 +91,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/StableOrder/GetEnumerable?a=b")]
         [InlineData("/api/StableOrder/GetQueryable?a=b")]
         [InlineData("/api/StableOrder/GetQueryable?$filter=true")]
-        public void TestNoOrderChange(string url)
+        public async Task TestNoOrderChange(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
             response.EnsureSuccessStatusCode();
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result.ToList();
+            var actual = (await response.Content.ReadAsAsync<IEnumerable<Product>>()).ToList();
             var expected = StableOrderController.Products;
             for (int i = 0; i < expected.Count(); i++)
             {
@@ -107,11 +108,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/StableOrder/GetEnumerable?$skip=1")]
         [InlineData("/api/StableOrder/GetQueryable?$skip=1")]
         [InlineData("/api/StableOrder/GetEnumerableWithResultLimit?$skip=1")]
-        public void TestHasStableOrder(string url)
+        public async Task TestHasStableOrder(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
             response.EnsureSuccessStatusCode();
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result.ToList();
+            var actual = (await response.Content.ReadAsAsync<IEnumerable<Product>>()).ToList();
             var expected = StableOrderController.Products.OrderBy(p => p.ID).Skip(1).ToList();
             for (int i = 0; i < expected.Count(); i++)
             {

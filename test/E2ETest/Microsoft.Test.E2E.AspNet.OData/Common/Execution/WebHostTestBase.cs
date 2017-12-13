@@ -19,7 +19,7 @@ using Xunit;
 // web servers running at any point during the test run, currently ~500. Without this, there would be a
 // web server per test case since Xunit 2.0 spans a new test class instance for each test case.
 //
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
@@ -103,7 +103,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 
             // set up the server. If this throws an exception, it will be reported in
             // the test output.
-            WebApp.Start(baseAddress, DefaultKatanaConfigure);
+            _katanaSelfHostServer = WebApp.Start(baseAddress, DefaultKatanaConfigure);
 
             // setup client, nothing special.
             this.Client = new HttpClient();

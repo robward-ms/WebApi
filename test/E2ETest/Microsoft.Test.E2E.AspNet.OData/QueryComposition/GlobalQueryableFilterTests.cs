@@ -181,10 +181,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableWithQAttr")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithResultLimit")]
         [InlineData("/api/GlobalQueryableFilter/GetTaskIQueryableT")]
-        public void TestQueryableWorksUnderGlobalFilter(string url)
+        public async Task TestQueryableWorksUnderGlobalFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=1");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.Single(actual);
         }
@@ -193,10 +193,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
         [InlineData("/api/GlobalQueryableFilter/GetHttpResponseMessage")]
-        public void TestActionsThatAreIgnoredByGlobalFilter(string url)
+        public async Task TestActionsThatAreIgnoredByGlobalFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=1");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.NotEqual(1, actual.Count());
         }
@@ -205,7 +205,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetProductWithQAttr")]
         public async Task TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=1");
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             Assert.Contains("The requested resource is not a collection.", await response.Content.ReadAsStringAsync());
@@ -213,19 +213,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithResultLimit")]
-        public virtual void TestQueryableAttributeShouldWinGlobalQueryableFilter(string url)
+        public virtual async Task TestQueryableAttributeShouldWinGlobalQueryableFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.Equal(5, actual.Count());
         }
 
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProduct")]
-        public virtual void TestQueryableAttributeWontAffectOtherActions(string url)
+        public virtual async Task TestQueryableAttributeWontAffectOtherActions(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
             response.EnsureSuccessStatusCode();
         }
     }
@@ -256,20 +256,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetQueryableT")]
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithDerivedQAttrResultLimit")]
         [InlineData("/api/GlobalQueryableFilter/GetTaskIQueryableT")]
-        public void TestQueryableWorksUnderGlobalFilter(string url)
+        public async Task TestQueryableWorksUnderGlobalFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=4").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=4");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.Equal(3, actual.Count());
         }
 
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetQueryable?$top=4&$customQuery=1")]
-        public void TestCustomQueryWorksUnderGlobalFilter(string url)
+        public async Task TestCustomQueryWorksUnderGlobalFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.Equal(3, actual.Count());
         }
@@ -279,10 +279,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetQueryableTWithOptions")]
         [InlineData("/api/GlobalQueryableFilter/GetEnumerableT")]
         [InlineData("/api/GlobalQueryableFilter/GetHttpResponseMessage")]
-        public void TestActionsThatAreIgnoredByGlobalFilter(string url)
+        public async Task TestActionsThatAreIgnoredByGlobalFilter(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=4").Result;
-            var actual = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=4");
+            var actual = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
             Assert.NotEqual(4, actual.Count());
         }
@@ -291,7 +291,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/GlobalQueryableFilter/GetProductWithDerivedQAttr")]
         public async Task TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url + "?$top=1");
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             Assert.Contains("The requested resource is not a collection.", await response.Content.ReadAsStringAsync());

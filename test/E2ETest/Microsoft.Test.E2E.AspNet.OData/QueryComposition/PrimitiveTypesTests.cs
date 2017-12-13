@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
@@ -53,11 +54,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/api/PrimitiveTypes/GetIEnumerableOfString?$filter=indexof($it, 'Two') ne -1")]
         [InlineData("/api/PrimitiveTypes/GetIEnumerableOfString?$orderby=$it desc&$top=1")]
         [InlineData("/api/PrimitiveTypes/GetIEnumerableOfString?$filter=$it gt 'Three'")]
-        public void TestSkipAndTopOnString(string url)
+        public async Task TestSkipAndTopOnString(string url)
         {
-            var response = this.Client.GetAsync(this.BaseAddress + url).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + url);
             response.EnsureSuccessStatusCode();
-            var actual = response.Content.ReadAsAsync<IEnumerable<string>>().Result;
+            var actual = await response.Content.ReadAsAsync<IEnumerable<string>>();
 
             Assert.Equal("Two", actual.First());
         }

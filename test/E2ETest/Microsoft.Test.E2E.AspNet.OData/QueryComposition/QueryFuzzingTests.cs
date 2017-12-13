@@ -78,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             this.Client = new HttpClient(handler);
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/Fuzzing?$top=1&" + filter).Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/Fuzzing?$top=1&" + filter);
             sw.Stop();
             Console.WriteLine("Time cost: " + sw.ElapsedMilliseconds);
 

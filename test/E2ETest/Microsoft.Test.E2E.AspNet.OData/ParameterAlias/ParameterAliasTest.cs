@@ -65,7 +65,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             //Unbound function
             string query = "/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'";
 
-            HttpResponseMessage response = this.Client.GetAsync(this.BaseAddress + query).Result;
+            HttpResponseMessage response = await this.Client.GetAsync(this.BaseAddress + query);
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json["value"] as JArray;
             Assert.Equal(3, result.Count);

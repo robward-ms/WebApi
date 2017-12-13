@@ -52,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);
-            Assert.Equal(expectedResult, (string)response.Content.ReadAsAsync<JObject>().Result["value"]);
+            Assert.Equal(expectedResult, (string)(await response.Content.ReadAsAsync<JObject>())["value"]);
         }
     }
 

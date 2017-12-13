@@ -137,7 +137,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             response.EnsureSuccessStatusCode();
 
             // GET singleton/Revenue
-            response = this.Client.GetAsync(requestUri + "/Revenue").Result;
+            response = await this.Client.GetAsync(requestUri + "/Revenue");
             result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2000, (int)result["value"]);
 
@@ -157,12 +157,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             // POST singleton
             var company = new Company();
             var content = new ObjectContent(company.GetType(), company, new JsonMediaTypeFormatter());
-            response = this.Client.PostAsync(requestUri, content).Result;
+            response = await this.Client.PostAsync(requestUri, content);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             // Negative: Delete singleton
             // DELETE singleton
-            response = this.Client.DeleteAsync(requestUri).Result;
+            response = await this.Client.DeleteAsync(requestUri);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -282,7 +282,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             response.EnsureSuccessStatusCode();
 
             // GET Partners(1)/Company/Revenue
-            response = this.Client.GetAsync(requestUri + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + formatQuery);
             result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2000, (int)result["Revenue"]);
 
@@ -294,22 +294,22 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             response.EnsureSuccessStatusCode();
 
             // GET Partners(1)/Company/Revenue
-            response = this.Client.GetAsync(requestUri + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + formatQuery);
             result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(3000, (int)result["Revenue"]);
 
             // DELETE Partners(1)/Company/$ref
-            response = Client.DeleteAsync(navigationUri).Result;
+            response = await Client.DeleteAsync(navigationUri);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // GET Partners(1)/Company
-            response = this.Client.GetAsync(requestUri + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + formatQuery);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
             // Negative: POST Partners(1)/Company
             var company = new Company();
             var content = new ObjectContent(company.GetType(), company, new JsonMediaTypeFormatter());
-            response = this.Client.PostAsync(requestUri, content).Result;
+            response = await this.Client.PostAsync(requestUri, content);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
@@ -334,18 +334,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             response.EnsureSuccessStatusCode();
 
             // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Location
-            response = this.Client.GetAsync(requestUri + "/Location?" + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + "/Location?" + formatQuery);
             var result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Location, (string)result["value"]);
 
             // Query complex type
             // GET GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Office
-            response = this.Client.GetAsync(requestUri + "/Office?" + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + "/Office?" + formatQuery);
             result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Office.City, (string)result["City"]);
 
             // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany?$select=Location
-            response = this.Client.GetAsync(requestUri + "?$select=Location&" + formatQuery).Result;
+            response = await this.Client.GetAsync(requestUri + "?$select=Location&" + formatQuery);
             result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Location, (string)result["Location"]);
         }
@@ -362,7 +362,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             await ResetDataSource(model, singletonName);
 
             // GET /singleton?$select=Name
-            var response = this.Client.GetAsync(requestUri + "?$select=Name").Result;
+            var response = await this.Client.GetAsync(requestUri + "?$select=Name");
             var result = await response.Content.ReadAsAsync<JObject>();
             int i = 0;
             foreach (var pro in result.Properties())
@@ -386,7 +386,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             response.EnsureSuccessStatusCode();
 
             // GET /singleton?$expand=Partners($select=Name)
-            response = this.Client.GetAsync(requestUri + "?$expand=Partners($select=Name)").Result;
+            response = await this.Client.GetAsync(requestUri + "?$expand=Partners($select=Name)");
             result = await response.Content.ReadAsAsync<JObject>();
             var json = result.GetValue("Partners") as JArray;
             Assert.Equal(2, json.Count);
@@ -401,7 +401,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
             // GET /Partners(1)?$expand=Company($select=Name)
             requestUri = string.Format(this.BaseAddress + "/{0}/Partners(1)", model);
-            response = this.Client.GetAsync(requestUri + "?$expand=Company($select=Name)").Result;
+            response = await this.Client.GetAsync(requestUri + "?$expand=Company($select=Name)");
             result = await response.Content.ReadAsAsync<JObject>();
             var company = result.GetValue("Company") as JObject;
             Assert.Equal(singletonName, company.GetValue("Name"));

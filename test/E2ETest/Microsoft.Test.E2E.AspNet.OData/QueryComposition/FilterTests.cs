@@ -260,7 +260,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                     traceListener.Close();
                     Assert.True(false);
                 }
-                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                var result = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
@@ -292,7 +292,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter);
                 request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/xml"));
                 var response = await this.Client.SendAsync(request);
-                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                var result = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
@@ -305,7 +305,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestFiltersOnHttpResponse()
+        public async Task TestFiltersOnHttpResponse()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -321,8 +321,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 string filter = (string)testCase[0];
                 IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
 
-                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsHttpResponse?$filter=" + filter).Result;
-                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                var response = await this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsHttpResponse?$filter=" + filter);
+                var result = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
@@ -335,7 +335,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestFiltersAsync()
+        public async Task TestFiltersAsync()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -351,8 +351,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 string filter = (string)testCase[0];
                 IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
 
-                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetAsyncProducts?$filter=" + filter).Result;
-                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                var response = await this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetAsyncProducts?$filter=" + filter);
+                var result = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
@@ -365,7 +365,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestFiltersOnAnonymousType()
+        public async Task TestFiltersOnAnonymousType()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -381,8 +381,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 string filter = (string)testCase[0];
                 IEnumerable<Product> expected = (IEnumerable<Product>)testCase[1];
 
-                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsAsAnonymousType?$filter=" + filter).Result;
-                var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
+                var response = await this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProductsAsAnonymousType?$filter=" + filter);
+                var result = await response.Content.ReadAsAsync<IEnumerable<Product>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
@@ -395,7 +395,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestAnyAll()
+        public async Task TestAnyAll()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Movie> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -405,8 +405,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 string filter = (string)testCase[0];
                 IEnumerable<Movie> expected = (IEnumerable<Movie>)testCase[1];
 
-                var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMovies?$filter=" + filter).Result;
-                var result = response.Content.ReadAsAsync<IEnumerable<Movie>>().Result;
+                var response = await this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMovies?$filter=" + filter);
+                var result = await response.Content.ReadAsAsync<IEnumerable<Movie>>();
 
                 Assert.Equal(expected.Count(), result.Count());
                 for (int i = 0; i < expected.Count(); i++)
