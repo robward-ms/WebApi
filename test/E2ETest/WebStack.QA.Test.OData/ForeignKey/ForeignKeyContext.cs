@@ -4,7 +4,7 @@
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
-namespace WebStack.QA.Test.OData.ForeignKey
+namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
     public class ForeignKeyContext : DbContext
     {

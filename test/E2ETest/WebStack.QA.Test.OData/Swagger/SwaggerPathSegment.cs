@@ -5,7 +5,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 
-namespace WebStack.QA.Test.OData.Swagger
+namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
     public class SwaggerPathSegment : ODataPathSegment
     {

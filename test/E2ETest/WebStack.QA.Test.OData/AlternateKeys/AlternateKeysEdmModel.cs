@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.AlternateKeys
+namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 {
     public static class AlternateKeysEdmModel
     {

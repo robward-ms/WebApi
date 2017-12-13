@@ -9,9 +9,9 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     /// <summary>
     /// Present a singleton named "MonstersInc"
@@ -50,7 +50,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         [HttpGet]
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.SubCompany")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany")]
         public IHttpActionResult QueryCompanyFromDerivedType()
         {
             var subCompany = MonstersInc as SubCompany;
@@ -79,7 +79,7 @@ namespace WebStack.QA.Test.OData.Singleton
             return Ok(eligibleBranches.Count());
         }
 
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.SubCompany/Location")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Location")]
         public IHttpActionResult GetDerivedTypeProperty()
         {
             var subCompany = MonstersInc as SubCompany;
@@ -91,7 +91,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         [HttpGet]
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.SubCompany/Office")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Office")]
         public IHttpActionResult QueryDerivedTypeComplexProperty()
         {
             var subCompany = MonstersInc as SubCompany;
@@ -120,7 +120,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         [HttpPut]
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.SubCompany")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany")]
         public IHttpActionResult UpdateCompanyByPutWithDerivedTypeObject(SubCompany newCompany)
         {
             MonstersInc = newCompany;
@@ -185,7 +185,7 @@ namespace WebStack.QA.Test.OData.Singleton
 
         #region Action and function
         [HttpPost]
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.ResetDataSource")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource")]
         public IHttpActionResult CallActionResetDataSource()
         {
             InitData();
@@ -193,7 +193,7 @@ namespace WebStack.QA.Test.OData.Singleton
         }
 
         [HttpGet]
-        [ODataRoute("WebStack.QA.Test.OData.Singleton.GetPartnersCount()")]
+        [ODataRoute("Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount()")]
         public IHttpActionResult CallFunctionGetPartnersCount()
         {
             return Ok(MonstersInc.Partners.Count);

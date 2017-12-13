@@ -2,9 +2,9 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Collections.Generic;
-using WebStack.QA.Common.XUnit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     public class ODataAcceptHeaderTestSet
     {

@@ -12,17 +12,14 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
-using Nuwa;
-using WebStack.QA.Common.WebHost;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.UriParserExtension
+namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class EnumPrefixFreeTest : NuwaTestBase
     {
         public EnumPrefixFreeTest(NuwaClassFixture fixture)
@@ -51,11 +48,11 @@ namespace WebStack.QA.Test.OData.UriParserExtension
             configuration.EnsureInitialized();
         }
 
-        [NuwaWebConfig]
-        internal static void UpdateWebConfig(WebConfigHelper webConfig)
-        {
-            webConfig.AddRAMFAR(true);
-        }
+        //[NuwaWebConfig]
+        //internal static void UpdateWebConfig(WebConfigHelper webConfig)
+        //{
+        //    webConfig.AddRAMFAR(true);
+        //}
 
         public static TheoryDataSet<string, string, int> EnumPrefixFreeCases
         {
@@ -63,8 +60,8 @@ namespace WebStack.QA.Test.OData.UriParserExtension
             {
                 return new TheoryDataSet<string, string, int>()
                 {
-                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'Male'", "gender='Male'", (int)HttpStatusCode.OK },
-                    { "gender=WebStack.QA.Test.OData.UriParserExtension.Gender'UnknownValue'", "gender='UnknownValue'", (int)HttpStatusCode.NotFound },
+                    { "gender=Microsoft.Test.E2E.AspNet.OData.UriParserExtension.Gender'Male'", "gender='Male'", (int)HttpStatusCode.OK },
+                    { "gender=Microsoft.Test.E2E.AspNet.OData.UriParserExtension.Gender'UnknownValue'", "gender='UnknownValue'", (int)HttpStatusCode.NotFound },
                 };
             }
         }

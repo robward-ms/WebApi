@@ -10,7 +10,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.BoundOperation
+namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 {
     public class EmployeesController : ODataController
     {
@@ -134,8 +134,8 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
         // ~/Employees(1)/OptionalAddresses
         // ~/Employees(1)/OptionalAddresses/$count
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetOptionalAddresses()")]
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetOptionalAddresses()/$count")]
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetOptionalAddresses()")]
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetOptionalAddresses()/$count")]
         [HttpGet]
         [EnableQuery]
         public IHttpActionResult GetOptionalAddresses(int key)
@@ -147,8 +147,8 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
         // ~/Employees(1)/OptionalAddresses
         // ~/Employees(1)/OptionalAddresses/$count
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetOptionalAddresses()")]
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetOptionalAddresses()/$count")]
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetOptionalAddresses()")]
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetOptionalAddresses()/$count")]
         [HttpGet]
         [EnableQuery]
         [ODataRoute("Employees({key})/OptionalAddresses")]
@@ -165,8 +165,8 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
         // ~/Employees(1)/Emails
         // ~/Employees(1)/Emails/$count
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetEmails()
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetEmails()/$count
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetEmails()
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetEmails()/$count
         [HttpGet]
         [EnableQuery]
         public IHttpActionResult GetEmails(int key)
@@ -178,8 +178,8 @@ namespace WebStack.QA.Test.OData.BoundOperation
 
         // ~/Employees(1)/Emails
         // ~/Employees(1)/Emails/$count
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetEmails()
-        // ~/Employees(1)/WebStack.QA.Test.OData.BoundOperation.GetEmails()/$count
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetEmails()
+        // ~/Employees(1)/Microsoft.Test.E2E.AspNet.OData.BoundOperation.GetEmails()/$count
         [HttpGet]
         [EnableQuery]
         [ODataRoute("Employees({key})/Emails")]

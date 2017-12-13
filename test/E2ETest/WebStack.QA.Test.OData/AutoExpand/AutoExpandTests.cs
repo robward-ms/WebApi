@@ -9,12 +9,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.AutoExpand
+namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
     public class AutoExpandTests : NuwaTestBase
     {

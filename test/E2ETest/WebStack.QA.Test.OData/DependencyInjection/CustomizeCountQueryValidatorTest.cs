@@ -12,12 +12,12 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.DependencyInjection
+namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
 {
     public class CustomizeCountQueryValidatorTest : NuwaTestBase
     {

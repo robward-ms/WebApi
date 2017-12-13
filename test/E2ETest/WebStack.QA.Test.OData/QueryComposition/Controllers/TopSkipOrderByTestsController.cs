@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
-using WebStack.QA.Test.OData.Common.Models.Products;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
 
-namespace WebStack.QA.Test.OData.QueryComposition.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Controllers
 {
     public class TopSkipOrderByTestsController : ApiController
     {

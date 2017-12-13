@@ -9,10 +9,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Client;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator
 {
     public class ODataModelTypeCreator
     {

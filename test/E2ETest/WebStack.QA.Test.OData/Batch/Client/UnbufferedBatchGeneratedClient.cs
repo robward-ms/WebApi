@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 4/9/2014 5:50:55 AM
-namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
+namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -38,7 +38,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.Batch.Tests.DataServicesClient", "WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient", "Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -53,9 +53,9 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy", global::System.StringComparison.Ordinal))
             {
-                return string.Concat("WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.", clientType.Name);
             }
             return null;
         }
@@ -117,14 +117,14 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""UnbufferedBatchCustomer"">
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Orders"" Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.UnbufferedBatchOrder)"" />
+        <NavigationProperty Name=""Orders"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.UnbufferedBatchOrder)"" />
       </EntityType>
       <EntityType Name=""UnbufferedBatchOrder"">
         <Key>
@@ -134,14 +134,14 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
         <Property Name=""PurchaseDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </EntityType>
       <Action Name=""OddCustomers"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer)"" />
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer)"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer)"" />
       </Action>
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""UnbufferedBatchCustomer"" EntityType=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer"">
+        <EntitySet Name=""UnbufferedBatchCustomer"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.UnbufferedBatchCustomer"">
           <NavigationPropertyBinding Path=""Orders"" Target=""UnbufferedBatchOrder"" />
         </EntitySet>
-        <EntitySet Name=""UnbufferedBatchOrder"" EntityType=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.UnbufferedBatchOrder"" />
+        <EntitySet Name=""UnbufferedBatchOrder"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.UnbufferedBatchOrder"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
@@ -237,7 +237,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
         /// There are no comments for Property Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> Orders
+        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> Orders
         {
             get
             {
@@ -251,8 +251,8 @@ namespace WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> _Orders = new global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder>();
-        partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> value);
+        private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> _Orders = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder>();
+        partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.UnbufferedBatchProxy.UnbufferedBatchOrder> value);
         partial void OnOrdersChanged();
     }
     /// <summary>

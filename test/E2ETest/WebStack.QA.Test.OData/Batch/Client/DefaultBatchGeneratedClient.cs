@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 4/9/2014 5:52:38 AM
-namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
+namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -38,7 +38,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.Batch.Tests.DataServicesClient", "WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient", "Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -53,9 +53,9 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy", global::System.StringComparison.Ordinal))
             {
-                return string.Concat("WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.", clientType.Name);
             }
             return null;
         }
@@ -117,14 +117,14 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""DefaultBatchCustomer"">
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Orders"" Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.DefaultBatchOrder)"" />
+        <NavigationProperty Name=""Orders"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.DefaultBatchOrder)"" />
       </EntityType>
       <EntityType Name=""DefaultBatchOrder"">
         <Key>
@@ -134,14 +134,14 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
         <Property Name=""PurchaseDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </EntityType>
       <Action Name=""OddCustomers"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer)"" />
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer)"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer)"" />
       </Action>
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""DefaultBatchCustomer"" EntityType=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer"">
+        <EntitySet Name=""DefaultBatchCustomer"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.DefaultBatchCustomer"">
           <NavigationPropertyBinding Path=""Orders"" Target=""DefaultBatchOrder"" />
         </EntitySet>
-        <EntitySet Name=""DefaultBatchOrder"" EntityType=""WebStack.QA.Test.OData.Batch.Tests.DataServicesClient.DefaultBatchOrder"" />
+        <EntitySet Name=""DefaultBatchOrder"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient.DefaultBatchOrder"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
@@ -237,7 +237,7 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
         /// There are no comments for Property Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> Orders
+        public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> Orders
         {
             get
             {
@@ -251,8 +251,8 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> _Orders = new global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder>();
-        partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::WebStack.QA.Test.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> value);
+        private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> _Orders = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder>();
+        partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DefaultBatchProxy.DefaultBatchOrder> value);
         partial void OnOrdersChanged();
     }
     /// <summary>

@@ -6,7 +6,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 {
     [Expand("Orders", "Friend", "CountableOrders", MaxDepth = 10)]
     [Expand("AutoExpandOrder", ExpandType = SelectExpandType.Automatic, MaxDepth = 8)]

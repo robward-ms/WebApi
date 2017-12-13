@@ -15,11 +15,11 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using ModelAliasing;
 using Newtonsoft.Json.Linq;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelAliasing
+namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
     [NuwaFramework]
     public class FormattersTests : NuwaTestBase

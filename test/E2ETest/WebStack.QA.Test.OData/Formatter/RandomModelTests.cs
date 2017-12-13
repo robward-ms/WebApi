@@ -4,25 +4,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     [NuwaFramework]
-    [NuwaHost(HostType.WcfSelf)]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class RandomModelTests : NuwaTestBase, IODataFormatterTestBase
     {
         private static ODataModelTypeCreator creator = null;

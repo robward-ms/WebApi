@@ -7,7 +7,7 @@ using System.Web.Http.Controllers;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     public static class HttpControllerContextExtensions
     {

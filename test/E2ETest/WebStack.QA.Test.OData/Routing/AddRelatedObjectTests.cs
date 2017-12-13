@@ -12,12 +12,12 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Routing
+namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     [NuwaFramework]
     public class AddRelatedObjectTests : NuwaTestBase
@@ -50,9 +50,9 @@ namespace WebStack.QA.Test.OData.Routing
             {
                 TheoryDataSet<string, string> dataSet = new TheoryDataSet<string, string>();
                 dataSet.Add("POST", "/AROCustomers(5)/Orders");
-                dataSet.Add("POST", "/AROCustomers(5)/WebStack.QA.Test.OData.Routing.AROVipCustomer/Orders");
+                dataSet.Add("POST", "/AROCustomers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.AROVipCustomer/Orders");
                 // ConventionRouting does not support PUT to single-value navigation property
-                // dataSet.Add("PUT", "/AROCustomers(5)/WebStack.QA.Test.OData.Routing.AROVipCustomer/Address", new AROAddress() { Id = 5 });
+                // dataSet.Add("PUT", "/AROCustomers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.AROVipCustomer/Address", new AROAddress() { Id = 5 });
                 return dataSet;
             }
         }

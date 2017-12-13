@@ -10,7 +10,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.Common.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 {
     [ModelStateErrorHandling]
     public abstract class InMemoryODataController<TEntity, TKey> : ODataController

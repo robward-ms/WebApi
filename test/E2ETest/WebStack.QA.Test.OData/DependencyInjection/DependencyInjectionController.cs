@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.DependencyInjection
+namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
 {
     public class CustomersController : ODataController
     {

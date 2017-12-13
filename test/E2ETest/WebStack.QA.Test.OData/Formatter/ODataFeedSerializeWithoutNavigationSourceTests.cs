@@ -13,14 +13,14 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ODataFeedSerializeWithoutNavigationSourceTests : NuwaTestBase
     {
         public ODataFeedSerializeWithoutNavigationSourceTests(NuwaClassFixture fixture)
@@ -66,16 +66,16 @@ namespace WebStack.QA.Test.OData.Formatter
             Assert.NotNull(response.Content);
 
             JObject content = response.Content.ReadAsAsync<JObject>().Result;
-            Assert.Contains("/odata/$metadata#Collection(WebStack.QA.Test.OData.Formatter.BaseType)", content["@odata.context"].ToString());
+            Assert.Contains("/odata/$metadata#Collection(Microsoft.Test.E2E.AspNet.OData.Formatter.BaseType)", content["@odata.context"].ToString());
 
             Assert.Equal(2, content["value"].Count());
 
             // #1
-            Assert.Equal("#WebStack.QA.Test.OData.Formatter.DerivedTypeA", content["value"][0]["@odata.type"].ToString());
+            Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Formatter.DerivedTypeA", content["value"][0]["@odata.type"].ToString());
             Assert.Equal(1, content["value"][0]["Id"]);
 
             // #2
-            Assert.Equal("#WebStack.QA.Test.OData.Formatter.DerivedTypeB", content["value"][1]["@odata.type"].ToString());
+            Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Formatter.DerivedTypeB", content["value"][1]["@odata.type"].ToString());
             Assert.Equal(2, content["value"][1]["Id"]);
         }
     }

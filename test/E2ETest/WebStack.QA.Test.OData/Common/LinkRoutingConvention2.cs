@@ -11,7 +11,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     public class LinkRoutingConvention2 : EntitySetRoutingConvention
     {

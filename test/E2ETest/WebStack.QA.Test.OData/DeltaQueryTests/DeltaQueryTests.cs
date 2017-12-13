@@ -14,13 +14,13 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData
+namespace Microsoft.Test.E2E.AspNet.OData
 {
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
     public class DeltaQueryTests : NuwaTestBase
     {
         public DeltaQueryTests(NuwaClassFixture fixture)
@@ -58,7 +58,7 @@ namespace WebStack.QA.Test.OData
             Assert.True(((JToken)changeEntity).Count() == 7, "The changed customer should have 6 properties plus type written.");
             string changeEntityType = changeEntity["@odata.type"].Value as string;
             Assert.True(changeEntityType != null, "The changed customer should have type written");
-            Assert.True(changeEntityType.Contains("#WebStack.QA.Test.OData.TestCustomerWithAddress"), "The changed order should be a TestCustomerWithAddress");
+            Assert.True(changeEntityType.Contains("#Microsoft.Test.E2E.AspNet.OData.TestCustomerWithAddress"), "The changed order should be a TestCustomerWithAddress");
             Assert.True(changeEntity.Id.Value == 1, "The ID Of changed customer should be 1.");
             Assert.True(changeEntity.OpenProperty.Value == 10, "The OpenProperty property of changed customer should be 10.");
             Assert.True(changeEntity.NullOpenProperty.Value == null, "The NullOpenProperty property of changed customer should be null.");
@@ -129,10 +129,10 @@ namespace WebStack.QA.Test.OData
 
         public IHttpActionResult Get()
         {
-            IEdmEntityType customerType = Request.GetModel().FindDeclaredType("WebStack.QA.Test.OData.TestCustomer") as IEdmEntityType;
-            IEdmEntityType customerWithAddressType = Request.GetModel().FindDeclaredType("WebStack.QA.Test.OData.TestCustomerWithAddress") as IEdmEntityType;
-            IEdmComplexType addressType = Request.GetModel().FindDeclaredType("WebStack.QA.Test.OData.TestAddress") as IEdmComplexType;
-            IEdmEntityType orderType = Request.GetModel().FindDeclaredType("WebStack.QA.Test.OData.TestOrder") as IEdmEntityType;
+            IEdmEntityType customerType = Request.GetModel().FindDeclaredType("Microsoft.Test.E2E.AspNet.OData.TestCustomer") as IEdmEntityType;
+            IEdmEntityType customerWithAddressType = Request.GetModel().FindDeclaredType("Microsoft.Test.E2E.AspNet.OData.TestCustomerWithAddress") as IEdmEntityType;
+            IEdmComplexType addressType = Request.GetModel().FindDeclaredType("Microsoft.Test.E2E.AspNet.OData.TestAddress") as IEdmComplexType;
+            IEdmEntityType orderType = Request.GetModel().FindDeclaredType("Microsoft.Test.E2E.AspNet.OData.TestOrder") as IEdmEntityType;
             IEdmEntitySet ordersSet = Request.GetModel().FindDeclaredEntitySet("TestOrders") as IEdmEntitySet;
             EdmChangedObjectCollection changedObjects = new EdmChangedObjectCollection(customerType);
 

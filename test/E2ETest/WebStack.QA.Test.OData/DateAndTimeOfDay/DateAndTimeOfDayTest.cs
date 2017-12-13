@@ -17,17 +17,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class DateAndTimeOfDayTest : NuwaTestBase
     {
         public DateAndTimeOfDayTest(NuwaClassFixture fixture)

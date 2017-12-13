@@ -17,13 +17,13 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace WebStack.QA.Test.OData.Swagger
+namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
     [NuwaFramework]
     public class SwaggerMetadataTest : NuwaTestBase
@@ -161,7 +161,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Customer""
             }
           },
           ""default"": {
@@ -185,7 +185,7 @@ namespace WebStack.QA.Test.OData.Swagger
             ""in"": ""body"",
             ""description"": ""The entity to post"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Customer""
             }
           }
         ],
@@ -193,7 +193,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Customer""
             }
           },
           ""default"": {
@@ -232,7 +232,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Customers"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Customer""
             }
           },
           ""default"": {
@@ -263,7 +263,7 @@ namespace WebStack.QA.Test.OData.Swagger
             ""in"": ""body"",
             ""description"": ""The entity to patch"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Customer""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Customer""
             }
           }
         ],
@@ -364,7 +364,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Order""
             }
           },
           ""default"": {
@@ -388,7 +388,7 @@ namespace WebStack.QA.Test.OData.Swagger
             ""in"": ""body"",
             ""description"": ""The entity to post"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Order""
             }
           }
         ],
@@ -396,7 +396,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Order""
             }
           },
           ""default"": {
@@ -435,7 +435,7 @@ namespace WebStack.QA.Test.OData.Swagger
           ""200"": {
             ""description"": ""EntitySet Orders"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Order""
             }
           },
           ""default"": {
@@ -466,7 +466,7 @@ namespace WebStack.QA.Test.OData.Swagger
             ""in"": ""body"",
             ""description"": ""The entity to patch"",
             ""schema"": {
-              ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.Order""
+              ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.Order""
             }
           }
         ],
@@ -567,7 +567,7 @@ namespace WebStack.QA.Test.OData.Swagger
            ""200"": {
              ""description"": ""EntitySet CompositeKeyItems"",
              ""schema"": {
-               ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.CompositeKeyItem""
+               ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem""
              }
            },
            ""default"": {
@@ -591,7 +591,7 @@ namespace WebStack.QA.Test.OData.Swagger
              ""in"": ""body"",
              ""description"": ""The entity to post"",
              ""schema"": {
-               ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.CompositeKeyItem""
+               ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem""
              }
            }
          ],
@@ -599,7 +599,7 @@ namespace WebStack.QA.Test.OData.Swagger
            ""200"": {
              ""description"": ""EntitySet CompositeKeyItems"",
              ""schema"": {
-               ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.CompositeKeyItem""
+               ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem""
              }
            },
            ""default"": {
@@ -645,7 +645,7 @@ namespace WebStack.QA.Test.OData.Swagger
            ""200"": {
              ""description"": ""EntitySet CompositeKeyItems"",
              ""schema"": {
-               ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.CompositeKeyItem""
+               ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem""
              }
            },
            ""default"": {
@@ -683,7 +683,7 @@ namespace WebStack.QA.Test.OData.Swagger
              ""in"": ""body"",
              ""description"": ""The entity to patch"",
              ""schema"": {
-               ""$ref"": ""#/definitions/WebStack.QA.Test.OData.Swagger.CompositeKeyItem""
+               ""$ref"": ""#/definitions/Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem""
              }
            }
          ],
@@ -849,7 +849,7 @@ namespace WebStack.QA.Test.OData.Swagger
     }
   },
   ""definitions"": {
-    ""WebStack.QA.Test.OData.Swagger.Customer"": {
+    ""Microsoft.Test.E2E.AspNet.OData.Swagger.Customer"": {
       ""properties"": {
         ""CustomerId"": {
           ""description"": ""CustomerId"",
@@ -858,7 +858,7 @@ namespace WebStack.QA.Test.OData.Swagger
         }
       }
     },
-    ""WebStack.QA.Test.OData.Swagger.Order"": {
+    ""Microsoft.Test.E2E.AspNet.OData.Swagger.Order"": {
       ""properties"": {
         ""OrderId"": {
           ""description"": ""OrderId"",
@@ -867,7 +867,7 @@ namespace WebStack.QA.Test.OData.Swagger
         }
       }
     },
-    ""WebStack.QA.Test.OData.Swagger.CompositeKeyItem"": {
+    ""Microsoft.Test.E2E.AspNet.OData.Swagger.CompositeKeyItem"": {
       ""properties"": {
         ""FirstKey"": {
           ""description"": ""FirstKey"",

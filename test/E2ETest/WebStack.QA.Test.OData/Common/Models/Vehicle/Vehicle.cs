@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OData.Client;
 
-namespace WebStack.QA.Test.OData.Common.Models.Vehicle
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle
 {
     #region Models
     [EntitySet("InheritanceTests_MovingObject")]

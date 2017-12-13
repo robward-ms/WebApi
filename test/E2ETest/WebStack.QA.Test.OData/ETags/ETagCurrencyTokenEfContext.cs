@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ETags
+namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     public class ETagCurrencyTokenEfContext : DbContext
     {

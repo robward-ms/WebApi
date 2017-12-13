@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.QueryComposition.Fuzzing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class QueryFuzzingTests : NuwaTestBase
     {

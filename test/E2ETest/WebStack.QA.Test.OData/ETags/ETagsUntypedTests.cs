@@ -14,11 +14,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ETags
+namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     [NuwaFramework]
     public class ETagsUntypedTests : NuwaTestBase

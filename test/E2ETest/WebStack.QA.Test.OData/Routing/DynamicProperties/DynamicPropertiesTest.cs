@@ -9,15 +9,14 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Routing.DynamicProperties
+namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class DynamicPropertiesTest : NuwaTestBase
     {
         public DynamicPropertiesTest(NuwaClassFixture fixture)
@@ -51,8 +50,8 @@ namespace WebStack.QA.Test.OData.Routing.DynamicProperties
         [InlineData("DynamicCustomers(1)/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty_1")]
         [InlineData("DynamicCustomers(2)/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount_2")]
         [InlineData("DynamicCustomers(3)/Order/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromOrder_3")]
-        [InlineData("DynamicCustomers(4)/WebStack.QA.Test.OData.Routing.DynamicProperties.DynamicVipCustomer/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty_4")]
-        [InlineData("DynamicCustomers(5)/WebStack.QA.Test.OData.Routing.DynamicProperties.DynamicVipCustomer/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount_5")]
+        [InlineData("DynamicCustomers(4)/Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties.DynamicVipCustomer/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty_4")]
+        [InlineData("DynamicCustomers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties.DynamicVipCustomer/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount_5")]
         [InlineData("DynamicSingleCustomer/DynamicPropertyName", "DynamicPropertyName_GetDynamicProperty")]
         [InlineData("DynamicSingleCustomer/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount")]
         [InlineData("DynamicSingleCustomer/Order/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromOrder")]

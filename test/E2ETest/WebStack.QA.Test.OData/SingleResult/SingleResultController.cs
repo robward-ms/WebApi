@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.SingleResultTest
+namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
 {
     public class CustomersController : ODataController
     {

@@ -4,9 +4,9 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using WebStack.QA.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public static class MetadataTestHelpers
     {

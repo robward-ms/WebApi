@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.BoundOperation
+namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 {
     public class Employee
     {

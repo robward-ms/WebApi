@@ -6,7 +6,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest
 {
     public class Customer
     {

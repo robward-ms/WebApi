@@ -14,13 +14,13 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Query.Validators;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class ValidatorTests_Todo
     {

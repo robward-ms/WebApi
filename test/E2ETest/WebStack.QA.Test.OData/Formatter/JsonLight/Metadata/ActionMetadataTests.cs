@@ -15,18 +15,16 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class ActionMetadataTests : NuwaTestBase
     {
         public ActionMetadataTests(NuwaClassFixture fixture)
@@ -148,7 +146,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
                 JsonAssert.PropertyEquals(expectedTargetUrl, "target", container);
                 JsonAssert.PropertyEquals(expectedAlwaysAvailableActionName, "title", container);
                 JsonAssert.PropertyEquals(expectedContextUrl, "@odata.context", result);
-                JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.BaseEntity", "@odata.type", result);
+                JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.BaseEntity", "@odata.type", result);
             }
             else if (acceptHeader.Contains("odata.metadata=none"))
             {
@@ -220,7 +218,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
                 var actualContextUrl = result["@odata.context"].ToString();
                 ODataUrlAssert.UrlEquals(expectedContextUrl, actualContextUrl, BaseAddress);
 
-                JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.BaseEntity", "@odata.type", result);
+                JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.BaseEntity", "@odata.type", result);
             }
             else if (acceptHeader.Contains("odata.metadata=none"))
             {
@@ -249,10 +247,10 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             string expectedAlwaysAvailableActionName = "AlwaysAvailableActionBaseType";
             string expectedAlwaysAvailableActionContainer = "#Default." + expectedAlwaysAvailableActionName;
 
-            string expectedDerivedTypeTargetUrl = BaseAddress.ToLowerInvariant() + "/Actions/BaseEntity(9)/WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity/Default.AlwaysAvailableActionDerivedType";
+            string expectedDerivedTypeTargetUrl = BaseAddress.ToLowerInvariant() + "/Actions/BaseEntity(9)/Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity/Default.AlwaysAvailableActionDerivedType";
             string expectedAlwaysAvailableDerivedTypeActionName = "AlwaysAvailableActionDerivedType";
             string expectedAlwaysAvailableDerivedTypeActionContainer = "#Default." + expectedAlwaysAvailableDerivedTypeActionName;
-            string expectedContextUrl = BaseAddress.ToLowerInvariant() + "/Actions/$metadata#BaseEntity/WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity/$entity";
+            string expectedContextUrl = BaseAddress.ToLowerInvariant() + "/Actions/$metadata#BaseEntity/Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity/$entity";
             JObject container;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
             request.SetAcceptHeader(acceptHeader);
@@ -276,7 +274,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
                 JsonAssert.PropertyEquals(expectedAlwaysAvailableDerivedTypeActionName, "title", container);
 
                 JsonAssert.PropertyEquals(expectedContextUrl, "@odata.context", result);
-                JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity", "@odata.type", result);
+                JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity", "@odata.type", result);
             }
             else if (acceptHeader.Contains("odata.metadata=none"))
             {
@@ -289,7 +287,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
             {
                 // minimal metadata, "application/json" equal to "application/json;odata.metadata=minimal"
                 JsonAssert.PropertyEquals(expectedContextUrl, "@odata.context", result);
-                JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity", "@odata.type", result);
+                JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.DerivedEntity", "@odata.type", result);
 
                 JsonAssert.DoesNotContainProperty(expectedAlwaysAvailableActionContainer, result);
                 JsonAssert.DoesNotContainProperty(expectedAlwaysAvailableDerivedTypeActionContainer, result);

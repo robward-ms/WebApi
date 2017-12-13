@@ -9,7 +9,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.DateTimeSupport
+namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
     public class FilesController : ODataController
     {

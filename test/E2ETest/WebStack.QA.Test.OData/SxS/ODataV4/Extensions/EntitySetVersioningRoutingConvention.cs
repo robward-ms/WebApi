@@ -4,7 +4,7 @@
 using System.Linq;
 using Microsoft.AspNet.OData.Routing.Conventions;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4.Extensions
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Extensions
 {
     public class EntitySetVersioningRoutingConvention : IODataRoutingConvention
     {

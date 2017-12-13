@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common.Models.Products;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
 
-namespace WebStack.QA.Test.OData.Common.Models
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Models
 {
     public static class ModelHelper
     {

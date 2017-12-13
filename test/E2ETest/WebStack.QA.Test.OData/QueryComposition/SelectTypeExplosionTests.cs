@@ -7,12 +7,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     [NuwaFramework]
     public class SelectTypeExplosionTests : NuwaTestBase

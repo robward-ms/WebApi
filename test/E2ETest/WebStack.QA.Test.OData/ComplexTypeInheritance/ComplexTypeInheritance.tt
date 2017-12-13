@@ -6,14 +6,14 @@ public static class Configuration
     // eg : "http://services.odata.org/V4/OData/OData.svc/", "File:///C:/Odata.edmx", or @"C:\Odata.edmx"
     // ### Notice ### If the OData service requires authentication for accessing the metadata document, the value of
     // MetadataDocumentUri has to be set to a local file path, or the client code generation process will fail.
-	public const string MetadataDocumentUri = @"D:\WebApi\DevDiv\Offcycle\WPT\WebStackRuntime\QA\Branches\v4-Odata\src\WebStack.QA.Test.OData\ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.csdl.xml";
+	public const string MetadataDocumentUri = @"D:\WebApi\DevDiv\Offcycle\WPT\WebStackRuntime\QA\Branches\v4-Odata\src\Microsoft.Test.E2E.AspNet.OData\ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.csdl.xml";
 
 	// The use of DataServiceCollection enables entity and property tracking. The value must be set to true or false.
 	public const bool UseDataServiceCollection = true;
 
 	// The namespace of the client code generated. It replaces the original namspace in the metadata document, 
     // unless the model has several namespaces.
-	public const string NamespacePrefix = "WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy";
+	public const string NamespacePrefix = "Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy";
 
 	// The target language of the generated client code. The value must be set to "CSharp" or "VB".
 	public const string TargetLanguage = "CSharp";

@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 4/15/2014 1:48:03 PM
-namespace WebStack.QA.Test.OData.Singleton.Client
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton.Client
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -38,7 +38,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.Singleton", "WebStack.QA.Test.OData.Singleton.Client");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.Singleton", "Microsoft.Test.E2E.AspNet.OData.Singleton.Client");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -53,9 +53,9 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.Singleton.Client", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.Singleton.Client", global::System.StringComparison.Ordinal))
             {
-                return string.Concat("WebStack.QA.Test.OData.Singleton.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.Singleton.", clientType.Name);
             }
             return clientType.FullName;
         }
@@ -109,14 +109,14 @@ namespace WebStack.QA.Test.OData.Singleton.Client
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""WebStack.QA.Test.OData.Singleton"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.Singleton"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""Partner"">
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Company"" Type=""WebStack.QA.Test.OData.Singleton.Company"" Nullable=""false"" />
+        <NavigationProperty Name=""Company"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.Company"" Nullable=""false"" />
       </EntityType>
       <EntityType Name=""Company"">
         <Key>
@@ -125,17 +125,17 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""Revenue"" Type=""Edm.Int64"" Nullable=""false"" />
-        <Property Name=""Category"" Type=""WebStack.QA.Test.OData.Singleton.CompanyCategory"" Nullable=""false"" />
-        <NavigationProperty Name=""Partners"" Type=""Collection(WebStack.QA.Test.OData.Singleton.Partner)"" />
+        <Property Name=""Category"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.CompanyCategory"" Nullable=""false"" />
+        <NavigationProperty Name=""Partners"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Singleton.Partner)"" />
       </EntityType>
       <ComplexType Name=""Office"">
         <Property Name=""City"" Type=""Edm.String"" />
         <Property Name=""Address"" Type=""Edm.String"" />
       </ComplexType>
-      <EntityType Name=""SubCompany"" BaseType=""WebStack.QA.Test.OData.Singleton.Company"">
+      <EntityType Name=""SubCompany"" BaseType=""Microsoft.Test.E2E.AspNet.OData.Singleton.Company"">
         <Property Name=""Location"" Type=""Edm.String"" />
         <Property Name=""Description"" Type=""Edm.String"" />
-        <Property Name=""Office"" Type=""WebStack.QA.Test.OData.Singleton.Office"" Nullable=""false"" />
+        <Property Name=""Office"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.Office"" Nullable=""false"" />
       </EntityType>
       <EnumType Name=""CompanyCategory"">
         <Member Name=""IT"" Value=""0"" />
@@ -144,20 +144,20 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         <Member Name=""Others"" Value=""3"" />
       </EnumType>
       <Action Name=""ResetDataSource"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.Singleton.Partner)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Singleton.Partner)"" />
       </Action>
       <Action Name=""ResetDataSource"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.Singleton.Company"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.Company"" />
       </Action>
       <Function Name=""GetPartnersCount"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.Singleton.Company"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.Company"" />
         <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
       </Function>
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""Partners"" EntityType=""WebStack.QA.Test.OData.Singleton.Partner"">
+        <EntitySet Name=""Partners"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Singleton.Partner"">
           <NavigationPropertyBinding Path=""Company"" Target=""Umbrella"" />
         </EntitySet>
-        <Singleton Name=""Umbrella"" Type=""WebStack.QA.Test.OData.Singleton.Company"">
+        <Singleton Name=""Umbrella"" Type=""Microsoft.Test.E2E.AspNet.OData.Singleton.Company"">
           <NavigationPropertyBinding Path=""Partners"" Target=""Partners"" />
         </Singleton>
       </EntityContainer>
@@ -205,7 +205,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// <param name="ID">Initial value of ID.</param>
         /// <param name="company">Initial value of Company.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public static Partner CreatePartner(int ID, global::WebStack.QA.Test.OData.Singleton.Client.Company company)
+        public static Partner CreatePartner(int ID, global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Company company)
         {
             Partner partner = new Partner();
             partner.ID = ID;
@@ -264,7 +264,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// There are no comments for Property Company in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Singleton.Client.Company Company
+        public global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Company Company
         {
             get
             {
@@ -279,8 +279,8 @@ namespace WebStack.QA.Test.OData.Singleton.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Singleton.Client.Company _Company;
-        partial void OnCompanyChanging(global::WebStack.QA.Test.OData.Singleton.Client.Company value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Company _Company;
+        partial void OnCompanyChanging(global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Company value);
         partial void OnCompanyChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -316,7 +316,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// <param name="revenue">Initial value of Revenue.</param>
         /// <param name="category">Initial value of Category.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public static Company CreateCompany(int ID, long revenue, global::WebStack.QA.Test.OData.Singleton.Client.CompanyCategory category)
+        public static Company CreateCompany(int ID, long revenue, global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory category)
         {
             Company company = new Company();
             company.ID = ID;
@@ -394,7 +394,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// There are no comments for Property Category in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Singleton.Client.CompanyCategory Category
+        public global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory Category
         {
             get
             {
@@ -409,14 +409,14 @@ namespace WebStack.QA.Test.OData.Singleton.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Singleton.Client.CompanyCategory _Category;
-        partial void OnCategoryChanging(global::WebStack.QA.Test.OData.Singleton.Client.CompanyCategory value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory _Category;
+        partial void OnCategoryChanging(global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory value);
         partial void OnCategoryChanged();
         /// <summary>
         /// There are no comments for Property Partners in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Singleton.Client.Partner> Partners
+        public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Partner> Partners
         {
             get
             {
@@ -431,8 +431,8 @@ namespace WebStack.QA.Test.OData.Singleton.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Singleton.Client.Partner> _Partners = new global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Singleton.Client.Partner>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnPartnersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Singleton.Client.Partner> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Partner> _Partners = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Partner>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnPartnersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Partner> value);
         partial void OnPartnersChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -463,7 +463,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
                 throw new System.Exception("cannot find entity");
             }
 
-            global::System.Uri requestUri = new global::System.Uri(resource.Identity.OriginalString.Trim('/') + "/WebStack.QA.Test.OData.Singleton.GetPartnersCount");
+            global::System.Uri requestUri = new global::System.Uri(resource.Identity.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount");
             return global::System.Linq.Enumerable.Single(Context.Execute<int>(requestUri, "GET", true,
                 new global::Microsoft.OData.Client.OperationParameter[] {  }));
         }
@@ -478,7 +478,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
                 throw new System.Exception("cannot find entity");
             }
 
-            global::System.Uri requestUri = new global::System.Uri(resource.EditLink.OriginalString.Trim('/') + "/WebStack.QA.Test.OData.Singleton.ResetDataSource");
+            global::System.Uri requestUri = new global::System.Uri(resource.EditLink.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource");
             Context.Execute(requestUri, "POST",
                 new global::Microsoft.OData.Client.OperationParameter[] {  });
         }
@@ -568,7 +568,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// <param name="category">Initial value of Category.</param>
         /// <param name="office">Initial value of Office.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public static SubCompany CreateSubCompany(int ID, long revenue, global::WebStack.QA.Test.OData.Singleton.Client.CompanyCategory category, global::WebStack.QA.Test.OData.Singleton.Client.Office office)
+        public static SubCompany CreateSubCompany(int ID, long revenue, global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory category, global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Office office)
         {
             SubCompany subCompany = new SubCompany();
             subCompany.ID = ID;
@@ -629,7 +629,7 @@ namespace WebStack.QA.Test.OData.Singleton.Client
         /// There are no comments for Property Office in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Singleton.Client.Office Office
+        public global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Office Office
         {
             get
             {
@@ -644,8 +644,8 @@ namespace WebStack.QA.Test.OData.Singleton.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Singleton.Client.Office _Office;
-        partial void OnOfficeChanging(global::WebStack.QA.Test.OData.Singleton.Client.Office value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Office _Office;
+        partial void OnOfficeChanging(global::Microsoft.Test.E2E.AspNet.OData.Singleton.Client.Office value);
         partial void OnOfficeChanged();
     }
     /// <summary>

@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.AlternateKeys
+namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 {
     public static class AlternateKeysDataSource
     {

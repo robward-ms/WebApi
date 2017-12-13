@@ -10,12 +10,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
 using Microsoft.OData.Client;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.TypeCreator;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightRandomModelTests : RandomModelTests
     {

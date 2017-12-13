@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 5/5/2014 3:29:35 PM
-namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId.Client
 {
     /// <summary>
     /// There are no comments for Singer in the schema.
@@ -83,7 +83,7 @@ namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Albums")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album> Albums
+        public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album> Albums
         {
             get
             {
@@ -98,8 +98,8 @@ namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album> _Albums = new global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnAlbumsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album> _Albums = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnAlbumsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album> value);
         partial void OnAlbumsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -191,7 +191,7 @@ namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Sales")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.AreaSales> Sales
+        public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.AreaSales> Sales
         {
             get
             {
@@ -206,8 +206,8 @@ namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.AreaSales> _Sales = new global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.AreaSales>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnSalesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.AreaSales> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.AreaSales> _Sales = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.AreaSales>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnSalesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.AreaSales> value);
         partial void OnSalesChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -338,7 +338,7 @@ namespace WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId
         }
     }
 }
-namespace WebStack.QA.Test.OData.DollarId.Client.Default
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Default
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -368,12 +368,12 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.DollarId", "WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.DollarId", "Microsoft.Test.E2E.AspNet.OData.DollarId.Client");
             if ((resolvedType != null))
             {
                 return resolvedType;
             }
-            resolvedType = this.DefaultResolveType(typeName, "Default", "WebStack.QA.Test.OData.DollarId.Client.Default");
+            resolvedType = this.DefaultResolveType(typeName, "Default", "Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Default");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -389,15 +389,15 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (Microsoft.OData.Client.OriginalNameAttribute)System.Linq.Enumerable.SingleOrDefault(clientType.GetCustomAttributes(typeof(Microsoft.OData.Client.OriginalNameAttribute), true));
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.DollarId.Client", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
-                    return string.Concat("WebStack.QA.Test.OData.DollarId.", originalNameAttribute.OriginalName);
+                    return string.Concat("Microsoft.Test.E2E.AspNet.OData.DollarId.", originalNameAttribute.OriginalName);
                 }
-                return string.Concat("WebStack.QA.Test.OData.DollarId.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.DollarId.", clientType.Name);
             }
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.DollarId.Client.Default", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Default", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
@@ -411,41 +411,41 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
         /// There are no comments for Singers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Singer> Singers
+        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Singer> Singers
         {
             get
             {
                 if ((this._Singers == null))
                 {
-                    this._Singers = base.CreateQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Singer>("Singers");
+                    this._Singers = base.CreateQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Singer>("Singers");
                 }
                 return this._Singers;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Singer> _Singers;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Singer> _Singers;
         /// <summary>
         /// There are no comments for Albums in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album> Albums
+        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album> Albums
         {
             get
             {
                 if ((this._Albums == null))
                 {
-                    this._Albums = base.CreateQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album>("Albums");
+                    this._Albums = base.CreateQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album>("Albums");
                 }
                 return this._Albums;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album> _Albums;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album> _Albums;
         /// <summary>
         /// There are no comments for Singers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public void AddToSingers(global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Singer singer)
+        public void AddToSingers(global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Singer singer)
         {
             base.AddObject("Singers", singer);
         }
@@ -453,7 +453,7 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
         /// There are no comments for Albums in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public void AddToAlbums(global::WebStack.QA.Test.OData.DollarId.Client.WebStack.QA.Test.OData.DollarId.Album album)
+        public void AddToAlbums(global::Microsoft.Test.E2E.AspNet.OData.DollarId.Client.Album album)
         {
             base.AddObject("Albums", album);
         }
@@ -465,14 +465,14 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""WebStack.QA.Test.OData.DollarId"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.DollarId"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""Singer"">
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Albums"" Type=""Collection(WebStack.QA.Test.OData.DollarId.Album)"" />
+        <NavigationProperty Name=""Albums"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.DollarId.Album)"" />
       </EntityType>
       <EntityType Name=""Album"">
         <Key>
@@ -480,7 +480,7 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
         </Key>
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Sales"" Type=""Collection(WebStack.QA.Test.OData.DollarId.AreaSales)"" ContainsTarget=""true"" />
+        <NavigationProperty Name=""Sales"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.DollarId.AreaSales)"" ContainsTarget=""true"" />
       </EntityType>
       <EntityType Name=""AreaSales"">
         <Key>
@@ -493,16 +493,16 @@ namespace WebStack.QA.Test.OData.DollarId.Client.Default
     </Schema>
     <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <Action Name=""ResetDataSource"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.DollarId.Singer)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.DollarId.Singer)"" />
       </Action>
       <Action Name=""ResetDataSource"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.DollarId.Album)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.DollarId.Album)"" />
       </Action>
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""Singers"" EntityType=""WebStack.QA.Test.OData.DollarId.Singer"">
+        <EntitySet Name=""Singers"" EntityType=""Microsoft.Test.E2E.AspNet.OData.DollarId.Singer"">
           <NavigationPropertyBinding Path=""Albums"" Target=""Albums"" />
         </EntitySet>
-        <EntitySet Name=""Albums"" EntityType=""WebStack.QA.Test.OData.DollarId.Album"" />
+        <EntitySet Name=""Albums"" EntityType=""Microsoft.Test.E2E.AspNet.OData.DollarId.Album"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>

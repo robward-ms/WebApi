@@ -4,7 +4,7 @@
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.ETags
+namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     public class DominiosController : ODataController
     {

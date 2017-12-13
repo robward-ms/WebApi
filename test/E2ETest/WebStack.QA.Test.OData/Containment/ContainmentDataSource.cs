@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.Containment
+namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
     class ContainmentDataSource
     {

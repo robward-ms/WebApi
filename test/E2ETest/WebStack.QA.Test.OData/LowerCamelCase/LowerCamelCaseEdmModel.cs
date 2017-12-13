@@ -4,7 +4,7 @@
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.LowerCamelCase
+namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 {
     public class LowerCamelCaseEdmModel
     {

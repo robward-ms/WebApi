@@ -8,17 +8,17 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.DollarLevels
+namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 {
     [NuwaFramework]
     public class DollarLevelsTest : NuwaTestBase
     {
-        private const string NameSpace = "WebStack.QA.Test.OData.DollarLevels";
+        private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.DollarLevels";
 
         public DollarLevelsTest(NuwaClassFixture fixture)
             : base(fixture)

@@ -9,14 +9,14 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Models.Vehicle;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightInheritanceTests : InheritanceTests
     {

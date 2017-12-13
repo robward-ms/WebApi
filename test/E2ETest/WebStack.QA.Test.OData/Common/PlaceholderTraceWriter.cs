@@ -5,7 +5,7 @@ using System;
 using System.Net.Http;
 using System.Web.Http.Tracing;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     public class PlaceholderTraceWriter : ITraceWriter
     {

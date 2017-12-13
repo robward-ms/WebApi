@@ -4,11 +4,11 @@
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class UriParser_Model1
     {

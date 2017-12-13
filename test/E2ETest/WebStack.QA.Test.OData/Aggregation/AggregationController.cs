@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.Aggregation
+namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
     public class BaseCustomersController : ODataController
     {

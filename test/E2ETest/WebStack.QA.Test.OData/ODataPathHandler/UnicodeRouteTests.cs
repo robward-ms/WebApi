@@ -9,13 +9,14 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ODataPathHandler
+namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
 {
     [EntitySet("UnicodeRouteTests_Todoü")]
     [Key("ID")]

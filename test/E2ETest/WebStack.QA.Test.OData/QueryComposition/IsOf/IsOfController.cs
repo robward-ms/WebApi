@@ -5,20 +5,16 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
-using Nuwa;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.QueryComposition.IsOf
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
     public class BillingCustomersController : ODataController
     {
         [EnableQuery]
         public IHttpActionResult Get()
         {
-            object hostType;
-            if (Request.GetConfiguration().Properties.TryGetValue("Nuwa.HostType", out hostType)
-                && ((HostType)hostType) == HostType.KatanaSelf
-                && RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
+            if (RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
             {
                 return Ok(IsofDataSource.EfCustomers);
             }
@@ -34,10 +30,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         [EnableQuery]
         public IHttpActionResult Get()
         {
-            object hostType;
-            if (Request.GetConfiguration().Properties.TryGetValue("Nuwa.HostType", out hostType)
-                && ((HostType)hostType) == HostType.KatanaSelf
-                && RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
+            if (RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
             {
                 return Ok(IsofDataSource.EfBillings);
             }

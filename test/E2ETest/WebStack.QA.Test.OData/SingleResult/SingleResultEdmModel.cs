@@ -5,7 +5,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.SingleResultTest
+namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
 {
     public class SingleResultEdmModel
     {

@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ComplexTypeInheritance
+namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
     public class WindowsController : ODataController
     {
@@ -138,7 +138,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [ODataRoute("Windows({key})/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle")]
+        [ODataRoute("Windows({key})/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle")]
         public IHttpActionResult GetCurrentShape(int key)
         {
             Window window = _windows.FirstOrDefault(w => w.Id == key);
@@ -155,7 +155,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             return Ok(circle);
         }
 
-        [ODataRoute("Windows({key})/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle/Radius")]
+        [ODataRoute("Windows({key})/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle/Radius")]
         public IHttpActionResult GetRadius(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
@@ -190,7 +190,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
             return Ok(window.OptionalShapes);
         }
 
-        [ODataRoute("Windows({key})/OptionalShapes/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle")]
+        [ODataRoute("Windows({key})/OptionalShapes/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle")]
         public IHttpActionResult GetOptionalShapesOfCircle(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);

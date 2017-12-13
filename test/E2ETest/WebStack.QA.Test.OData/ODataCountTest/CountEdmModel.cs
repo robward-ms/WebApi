@@ -5,7 +5,7 @@ using System.Data.Entity;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ODataCountTest
+namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 {
     public class CountEdmModel
     {

@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.OData.Extensions;
-using WebStack.QA.Test.OData.SxS2.ODataV3.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.SxS2.ODataV3.Extensions;
 
-namespace WebStack.QA.Test.OData.SxS2.ODataV3
+namespace Microsoft.Test.E2E.AspNet.OData.SxS2.ODataV3
 {
     public static class ODataV3WebApiConfig
     {
@@ -17,7 +17,7 @@ namespace WebStack.QA.Test.OData.SxS2.ODataV3
             var odataRoute = config.Routes.MapODataServiceRoute(
                 routeName: "SxSODataV3",
                 routePrefix: "SxSOData",
-                model: WebStack.QA.Test.OData.SxS2.ODataV3.Models.ModelBuilder.GetEdmModel());
+                model: Microsoft.Test.E2E.AspNet.OData.SxS2.ODataV3.Models.ModelBuilder.GetEdmModel());
 
             var contraint = new ODataVersionRouteConstraint(new List<string>() { "OData-Version" });
             odataRoute.Constraints.Add("VersionContraintV1", contraint);

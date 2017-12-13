@@ -7,7 +7,7 @@ using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 
-namespace WebStack.QA.Test.OData.Swagger
+namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
     public class SwaggerRoutingConvention : IODataRoutingConvention
     {

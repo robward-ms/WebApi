@@ -7,12 +7,12 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest
 {
     public class CountAttributeTest : NuwaTestBase
     {
@@ -70,17 +70,17 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest
         [InlineData(CustomerBaseUrl + "(1)/CountableOrders?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(CustomerBaseUrl + "(1)/Addresses2?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder?$count=true",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder?$count=true",
             (int)HttpStatusCode.BadRequest,
-            "entity set 'Orders/WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder'")]
+            "entity set 'Orders/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder'")]
         [InlineData(ModelBoundOrderBaseUrl + "?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=CountableOrders($count=true)", (int)HttpStatusCode.OK, "")]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/CountableOrders?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Addresses2?$count=true", (int)HttpStatusCode.OK, "")]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder?$count=true",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder?$count=true",
             (int)HttpStatusCode.BadRequest,
-            "entity set 'Orders/WebStack.QA.Test.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder'")]
+            "entity set 'Orders/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder'")]
         public void CountOnStructuredType(string url, int statusCode, string error)
         {
             string queryUrl =

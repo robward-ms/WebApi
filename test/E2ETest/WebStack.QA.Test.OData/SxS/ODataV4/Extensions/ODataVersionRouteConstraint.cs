@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4.Extensions
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Extensions
 {
     /// <summary>
     /// Route constraint to allow constraint odata route by query string or headers

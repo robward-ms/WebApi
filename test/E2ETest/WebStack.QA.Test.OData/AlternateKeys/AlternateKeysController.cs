@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.AlternateKeys
+namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 {
     public class CustomersController : ODataController
     {

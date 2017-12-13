@@ -18,13 +18,12 @@ using System.Web.Http.Filters;
 using System.Web.Http.Hosting;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class ServerTypeTests
     {

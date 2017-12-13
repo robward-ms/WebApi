@@ -14,13 +14,13 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.UriParserExtension;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.UriParserExtension;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Routing
+namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     [NuwaFramework]
     public class RefRoutingConventionTests : NuwaTestBase
@@ -62,10 +62,10 @@ namespace WebStack.QA.Test.OData.Routing
 
         [NuwaTheory]
         [InlineData("POST", "/Customers(5)/Orders/$ref")]
-        [InlineData("POST", "/Customers(5)/WebStack.QA.Test.OData.Routing.VipCustomer/Orders/$ref")]
+        [InlineData("POST", "/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Orders/$ref")]
         [InlineData("PUT", "/Addresses(5)/VipCustomer/$ref")]
         [InlineData("PUT", "/Customers(5)/Information/$ref")]
-        [InlineData("POST", "/Customers(5)/WebStack.QA.Test.OData.Routing.VipCustomer/Addresses/$ref")]
+        [InlineData("POST", "/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Addresses/$ref")]
         public void CreateRefRoutingConventionWorks(string method, string url)
         {
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), BaseAddress + url);
@@ -78,7 +78,7 @@ namespace WebStack.QA.Test.OData.Routing
         [NuwaTheory]
         [InlineData("/Customers(5)/Orders(25)/$ref")]
         [InlineData("/Orders(25)/Customer/$ref")]
-        [InlineData("/Customers(5)/WebStack.QA.Test.OData.Routing.VipCustomer/Addresses(25)/$ref")]
+        [InlineData("/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Addresses(25)/$ref")]
         [InlineData("/Addresses(25)/VipCustomer/$ref")]
         [InlineData("/Customers(5)/Information/$ref")]
         public void DeleteRefRoutingConventionWorks(string url)

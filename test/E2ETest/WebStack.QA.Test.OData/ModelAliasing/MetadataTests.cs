@@ -10,10 +10,11 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ModelAliasing
+namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
     [NuwaFramework]
     public class ModelBuildersMetadataTests : NuwaTestBase
@@ -242,7 +243,7 @@ namespace WebStack.QA.Test.OData.ModelAliasing
             Assert.Null(expressOrder.FindProperty("DeliveryDate"));
             Assert.Null(expressOrder.FindProperty("GuanteedDeliveryDate"));
             // Data contract attribute doesn't change the names of the properties
-            IEdmEntityType ordersLines = model.FindDeclaredType("WebStack.QA.Test.OData.ModelAliasing.ModelAliasingMetadataOrderLine") as IEdmEntityType;
+            IEdmEntityType ordersLines = model.FindDeclaredType("Microsoft.Test.E2E.AspNet.OData.ModelAliasing.ModelAliasingMetadataOrderLine") as IEdmEntityType;
             Assert.NotNull(ordersLines);
             Assert.Null(ordersLines.FindProperty("Product"));
             Assert.NotNull(ordersLines.FindProperty("Item"));

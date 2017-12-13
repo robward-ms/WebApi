@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
 
-namespace WebStack.QA.Test.OData.Common.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 {
     public class ModelStateErrorHandlingAttribute : ActionFilterAttribute
     {

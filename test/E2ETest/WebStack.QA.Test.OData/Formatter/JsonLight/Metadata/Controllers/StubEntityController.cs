@@ -7,10 +7,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
-using WebStack.QA.Test.OData.Common.Controllers;
-using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Controllers
 {
     public class StubEntityController : InMemoryODataController<StubEntity, int>
     {

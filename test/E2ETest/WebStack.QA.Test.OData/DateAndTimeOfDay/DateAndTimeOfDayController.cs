@@ -11,7 +11,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     public class DCustomersController : ODataController
     {

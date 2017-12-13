@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Dispatcher;
 
-namespace WebStack.QA.Test.OData.Common.TypeCreator
+namespace Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator
 {
     public class DynamicHttpControllerTypeResolver : DefaultHttpControllerTypeResolver
     {

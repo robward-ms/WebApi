@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class NestedClass_Parent
     {
@@ -27,11 +27,11 @@ namespace WebStack.QA.Test.OData.QueryComposition
     public class NestedClassController : ApiController
     {
         [HttpGet]
-        public IQueryable<WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest> QueryOnNestClass()
+        public IQueryable<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest> QueryOnNestClass()
         {
-            return new WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest[]
+            return new Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]
             {
-                new WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest()
+                new Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest()
                 {
                     Name = "aaa",
                     NestProperty = new NestedClass_Parent.NestPropertyType()
@@ -39,7 +39,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
                         Name = "aaa"
                     }
                 },
-                new WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest()
+                new Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest()
                 {
                     Name = "bbb",
                     NestProperty = new NestedClass_Parent.NestPropertyType()
@@ -74,7 +74,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=Name eq 'aaa'").Result;
             response.EnsureSuccessStatusCode();
 
-            var actual = response.Content.ReadAsAsync<WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
+            var actual = response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
 
             Assert.Equal("aaa", actual.Single().Name);
         }
@@ -85,7 +85,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             var response = this.Client.GetAsync(this.BaseAddress + "/api/NestedClass/QueryOnNestClass?$filter=NestProperty/Name eq 'aaa'").Result;
             response.EnsureSuccessStatusCode();
 
-            var actual = response.Content.ReadAsAsync<WebStack.QA.Test.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
+            var actual = response.Content.ReadAsAsync<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest[]>().Result;
 
             Assert.Equal("aaa", actual.Single().NestProperty.Name);
         }

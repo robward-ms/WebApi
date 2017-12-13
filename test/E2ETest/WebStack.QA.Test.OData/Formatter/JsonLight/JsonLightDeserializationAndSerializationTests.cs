@@ -7,13 +7,13 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.OData.Client;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightDeserializationAndSerializationTests : DeserializationAndSerializationTests
     {

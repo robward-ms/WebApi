@@ -13,16 +13,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ForeignKey
+namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
     [NuwaFramework]
-    [NuwaHost(HostType.KatanaSelf)]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ForeignKeyTest : NuwaTestBase
     {
         public ForeignKeyTest(NuwaClassFixture fixture)
@@ -98,7 +97,7 @@ namespace WebStack.QA.Test.OData.ForeignKey
         [InlineData("explicit")]
         public async Task ReferentialConstraintPresentsOnMetadataDocument(string modelMode)
         {
-            string expect = "<NavigationProperty Name=\"Customer\" Type=\"WebStack.QA.Test.OData.ForeignKey.ForeignKeyCustomer\">\r\n" + 
+            string expect = "<NavigationProperty Name=\"Customer\" Type=\"Microsoft.Test.E2E.AspNet.OData.ForeignKey.ForeignKeyCustomer\">\r\n" + 
                             "          <OnDelete Action=\"Cascade\" />\r\n" + 
                             "          <ReferentialConstraint Property=\"CustomerId\" ReferencedProperty=\"Id\" />\r\n" + 
                             "        </NavigationProperty>";

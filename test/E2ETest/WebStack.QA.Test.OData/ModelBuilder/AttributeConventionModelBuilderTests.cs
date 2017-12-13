@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     [DataContract]
     public class SimpleDataContractModel

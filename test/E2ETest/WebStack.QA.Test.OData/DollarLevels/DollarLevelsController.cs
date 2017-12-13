@@ -12,7 +12,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 
-namespace WebStack.QA.Test.OData.DollarLevels
+namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 {
     public class DLManagersController : ODataController
     {

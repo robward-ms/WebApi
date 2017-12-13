@@ -2,10 +2,10 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using WebStack.QA.Test.OData.Common.Controllers;
-using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Controllers
 {
     public class OneToOneChildController : InMemoryODataController<OneToOneChild, int>
     {

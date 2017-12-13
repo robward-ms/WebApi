@@ -11,13 +11,12 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class DerivedQueryableAttribute : EnableQueryAttribute
     {

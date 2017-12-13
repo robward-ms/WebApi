@@ -10,14 +10,13 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Routing
+namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     [NuwaFramework]
-    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class ActionRoutingConventionTests : NuwaTestBase
     {
         public ActionRoutingConventionTests(NuwaClassFixture fixture)
@@ -45,13 +44,13 @@ namespace WebStack.QA.Test.OData.Routing
         }
 
         [NuwaTheory]
-        [InlineData("/odata/ActionCars(5)/WebStack.QA.Test.OData.Routing.ActionFerrari/Default.Wash", "Ferrari")]
+        [InlineData("/odata/ActionCars(5)/Microsoft.Test.E2E.AspNet.OData.Routing.ActionFerrari/Default.Wash", "Ferrari")]
         [InlineData("/odata/ActionCars(5)/Default.Wash", "Car")]
-        [InlineData("/odata/ActionFerraris(5)/WebStack.QA.Test.OData.Routing.ActionCar/Default.Wash", "Car")]
+        [InlineData("/odata/ActionFerraris(5)/Microsoft.Test.E2E.AspNet.OData.Routing.ActionCar/Default.Wash", "Car")]
         [InlineData("/odata/ActionFerraris(5)/Default.Wash", "Ferrari")]
-        [InlineData("/odata/ActionCars/WebStack.QA.Test.OData.Routing.ActionFerrari/Default.Wash", "FerrariCollection")]
+        [InlineData("/odata/ActionCars/Microsoft.Test.E2E.AspNet.OData.Routing.ActionFerrari/Default.Wash", "FerrariCollection")]
         [InlineData("/odata/ActionCars/Default.Wash", "CarCollection")]
-        [InlineData("/odata/ActionFerraris/WebStack.QA.Test.OData.Routing.ActionCar/Default.Wash", "CarCollection")]
+        [InlineData("/odata/ActionFerraris/Microsoft.Test.E2E.AspNet.OData.Routing.ActionCar/Default.Wash", "CarCollection")]
         [InlineData("/odata/ActionFerraris/Default.Wash", "FerrariCollection")]
         public void CanSupportOverloadOnDerivedBindableTypes(string url, string expectedResult)
         {

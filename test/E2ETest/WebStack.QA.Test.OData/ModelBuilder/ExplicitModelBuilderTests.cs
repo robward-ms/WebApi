@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
@@ -12,16 +11,15 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class ExplicitModelBuilderTests : NuwaTestBase
     {
         public ExplicitModelBuilderTests(NuwaClassFixture fixture)

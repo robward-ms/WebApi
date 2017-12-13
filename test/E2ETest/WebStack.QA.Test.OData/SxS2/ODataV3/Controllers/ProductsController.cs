@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.OData;
-using WebStack.QA.Test.OData.SxS2.ODataV3.Models;
+using Microsoft.Test.E2E.AspNet.OData.SxS2.ODataV3.Models;
 
-namespace WebStack.QA.Test.OData.SxS2.ODataV3.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.SxS2.ODataV3.Controllers
 {
     public class ProductsController : ODataController
     {

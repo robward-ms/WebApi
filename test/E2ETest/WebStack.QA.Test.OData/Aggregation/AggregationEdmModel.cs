@@ -11,7 +11,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.Aggregation
+namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
     public class AggregationEdmModel
     {

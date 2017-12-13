@@ -10,16 +10,15 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Cast
+namespace Microsoft.Test.E2E.AspNet.OData.Cast
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class CastTest : NuwaTestBase
     {
         private readonly string _namespaceOfEdmSchema = null;
@@ -61,7 +60,7 @@ namespace WebStack.QA.Test.OData.Cast
                     // To Edm.String
                     combinations.Add(dataSourceType, "?$filter=cast('Name1',Edm.String) eq Name", 1);
                     combinations.Add(dataSourceType, "?$filter=contains(cast(Name,Edm.String),'Name')", 3);
-                    combinations.Add(dataSourceType, "?$filter=cast(WebStack.QA.Test.OData.Cast.Domain'Civil',Edm.String) eq '2'", 3);
+                    combinations.Add(dataSourceType, "?$filter=cast(Microsoft.Test.E2E.AspNet.OData.Cast.Domain'Civil',Edm.String) eq '2'", 3);
                     combinations.Add(dataSourceType, "?$filter=cast(Domain,Edm.String) eq '3'", 1);
                     combinations.Add(dataSourceType, "?$filter=cast(ID,Edm.String) gt '1'", 2);
                     // TODO bug 1889: Cast function reports error if it is used against a collection of primitive value.
@@ -81,9 +80,9 @@ namespace WebStack.QA.Test.OData.Cast
                     combinations.Add(dataSourceType, "?$filter=cast(null,Edm.DateTimeOffset) eq null", 3);
 
                     // To Enum
-                    combinations.Add(dataSourceType, "?$filter=cast('Both',WebStack.QA.Test.OData.Cast.Domain) eq Domain", 1);
-                    combinations.Add(dataSourceType, "?$filter=cast('1',WebStack.QA.Test.OData.Cast.Domain) eq Domain", 1);
-                    combinations.Add(dataSourceType, "?$filter=cast(null,WebStack.QA.Test.OData.Cast.Domain) eq Domain", 0);
+                    combinations.Add(dataSourceType, "?$filter=cast('Both',Microsoft.Test.E2E.AspNet.OData.Cast.Domain) eq Domain", 1);
+                    combinations.Add(dataSourceType, "?$filter=cast('1',Microsoft.Test.E2E.AspNet.OData.Cast.Domain) eq Domain", 1);
+                    combinations.Add(dataSourceType, "?$filter=cast(null,Microsoft.Test.E2E.AspNet.OData.Cast.Domain) eq Domain", 0);
                 }
 
                 return combinations;

@@ -7,12 +7,12 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 {
     public class CombinedTest : NuwaTestBase
     {

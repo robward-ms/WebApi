@@ -13,12 +13,12 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.DollarFormat
+namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
 {
     [NuwaFramework]
     public class DollarFormatWithoutAcceptMediaTypeTests : NuwaTestBase

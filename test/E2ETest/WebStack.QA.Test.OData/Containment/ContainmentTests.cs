@@ -18,18 +18,17 @@ using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.Extensions;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Containment
+namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ContainmentTests : NuwaTestBase
     {
         public ContainmentTests(NuwaClassFixture fixture)
@@ -186,7 +185,7 @@ namespace WebStack.QA.Test.OData.Containment
                 var odataContext = (string)json["@odata.context"];
                 Assert.Equal(serviceRootUri + "/$metadata#Accounts(AccountID,PayinPIs,PayoutPI)", odataContext);
                 var odataType = (string)results[1]["@odata.type"];
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PremiumAccount", odataType);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount", odataType);
             }
 
             if (mime.Contains("odata.metadata=full"))
@@ -198,11 +197,11 @@ namespace WebStack.QA.Test.OData.Containment
                 Assert.Equal(serviceRootUri + "/Accounts(100)/PayoutPI", (string)account["PayoutPI@odata.navigationLink"]);
 
                 var payoutPIOfAccount = account["PayoutPI"];
-                Assert.Equal(serviceRootUri + "/Accounts(100)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete",
-                   (string)payoutPIOfAccount["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(100)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                   (string)payoutPIOfAccount["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("Accounts(100)/PayoutPI", (string)payoutPIOfAccount["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayoutPI", (string)payoutPIOfAccount["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payoutPIOfAccount["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payoutPIOfAccount["@odata.type"]);
                 Assert.Equal(serviceRootUri + "/Accounts(100)/PayoutPI/Statement", (string)payoutPIOfAccount["Statement@odata.navigationLink"]);
                 Assert.Equal(serviceRootUri + "/Accounts(100)/PayoutPI/Statement/$ref", (string)payoutPIOfAccount["Statement@odata.associationLink"]);
 
@@ -211,53 +210,53 @@ namespace WebStack.QA.Test.OData.Containment
                 // Bug 1862: Functions/Actions bound to a collection of entity should be advertised.
                 /*Functions that are bound to a collection of entities are advertised in representations of that collection.*/
 
-                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete",
-                    payinPIsOfAccont[0]["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    payinPIsOfAccont[0]["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPIsOfAccont[0]["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPIsOfAccont[0]["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPIsOfAccont[0]["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPIsOfAccont[0]["@odata.type"]);
                 Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/Statement", (string)payinPIsOfAccont[0]["Statement@odata.navigationLink"]);
                 Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/Statement/$ref", (string)payinPIsOfAccont[0]["Statement@odata.associationLink"]);
 
                 var premiumAccount = results[1];
                 actualValue = (string)(premiumAccount["PayinPIs@odata.navigationLink"]);
-                expectedValue = serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs";
+                expectedValue = serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs";
                 // Bug 1861: The navigation link of a containment navigation property should contain cast segment if the containing entity is actually a derived type.
                 // Assert.Equal(expectedValue, actualValue); // Actual: http://jinfutanwebapi1:9123/convention/Accounts(200)/PayinPIs
 
-                expectedValue = serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs/$ref";
+                expectedValue = serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs/$ref";
                 actualValue = (string)(premiumAccount["PayinPIs@odata.associationLink"]);
                 Assert.Equal(expectedValue, actualValue);
 
-                expectedValue = serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI";
+                expectedValue = serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI";
                 actualValue = (string)(premiumAccount["PayoutPI@odata.navigationLink"]);
                 // Bug 1861: The navigation link of a containment navigation property should contain cast segment if the containing entity is actually a derived type.
                 // Assert.Equal(expectedValue, actualValue); // Actual: http://jinfutanwebapi1:9123/convention/Accounts(200)/PayoutPI
 
-                expectedValue = serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/$ref";
+                expectedValue = serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/$ref";
                 actualValue = (string)(premiumAccount["PayoutPI@odata.associationLink"]);
                 Assert.Equal(expectedValue, actualValue);
 
 
                 var payoutPIOfPremiumAccount = premiumAccount["PayoutPI"];
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payoutPIOfPremiumAccount["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payoutPIOfPremiumAccount["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("Accounts(200)/PayoutPI", (string)payoutPIOfPremiumAccount["@odata.editLink"]);
                 Assert.Equal("Accounts(200)/PayoutPI", (string)payoutPIOfPremiumAccount["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payoutPIOfPremiumAccount["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payoutPIOfPremiumAccount["@odata.type"]);
 
                 var payinPIsOfPremiumAccont = premiumAccount["PayinPIs"];
 
                 // Bug 1862: Functions/Actions bound to a collection of entity should be advertised.
                 /*Functions that are bound to a collection of entities are advertised in representations of that collection.*/
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/PayinPIs(201)/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payinPIsOfPremiumAccont[0]["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/PayinPIs(201)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payinPIsOfPremiumAccont[0]["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 actualValue = (string)(payinPIsOfPremiumAccont[0]["@odata.editLink"]);
                 Assert.Equal("Accounts(200)/PayinPIs(201)", actualValue);
                 Assert.Equal("Accounts(200)/PayinPIs(201)", (string)payinPIsOfPremiumAccont[0]["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPIsOfPremiumAccont[0]["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPIsOfPremiumAccont[0]["@odata.type"]);
             }
         }
 
@@ -280,8 +279,8 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [NuwaTheory]
-        [InlineData("/convention/Accounts/WebStack.QA.Test.OData.Containment.PremiumAccount/$count", 1)]
-        [InlineData("/explicit/Accounts/WebStack.QA.Test.OData.Containment.PremiumAccount/$count?$filter=AccountID gt 1000", 0)]
+        [InlineData("/convention/Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/$count", 1)]
+        [InlineData("/explicit/Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/$count?$filter=AccountID gt 1000", 0)]
         public async Task QueryPremiumAccountCount(string url, int expectedCount)
         {
             // Arrange
@@ -307,7 +306,7 @@ namespace WebStack.QA.Test.OData.Containment
         {
             await ResetDatasource();
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
-            string requestUri = string.Format("{0}/{1}/Accounts/WebStack.QA.Test.OData.Containment.PremiumAccount?$expand=PayinPIs,PayoutPI,GiftCard&$format={2}", BaseAddress, mode, mime);
+            string requestUri = string.Format("{0}/{1}/Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount?$expand=PayinPIs,PayoutPI,GiftCard&$format={2}", BaseAddress, mode, mime);
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -315,35 +314,35 @@ namespace WebStack.QA.Test.OData.Containment
             /*
              * Sample response payload:
             {
-              "@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts/WebStack.QA.Test.OData.Containment.PremiumAccount","value":[
+              "@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount","value":[
                 {
-                  "@odata.type":"#WebStack.QA.Test.OData.Containment.PremiumAccount",
+                  "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount",
              * "@odata.id":"http://jinfutanwebapi1:9123/explicit/Accounts(200)",
-             * "@odata.editLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount",
+             * "@odata.editLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount",
              * "AccountID":200,"Name":"Name200",
-             * "PayinPIs@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs",
-             * "PayinPIs@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs/$ref",
-             * "PayinPIs@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs",
+             * "PayinPIs@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs",
+             * "PayinPIs@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs/$ref",
+             * "PayinPIs@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs",
              * "PayinPIs":[
                     {
-                      "@odata.type":"#WebStack.QA.Test.OData.Containment.PaymentInstrument","@odata.id":"WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs(201)","@odata.editLink":"WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs(201)","PaymentInstrumentID":201,"FriendlyName":"201 first PI","Statement@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs(201)/Statement/$ref","Statement@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/PayinPIs(201)/Statement","#WebStack.QA.Test.OData.Containment.Delete":{
-                        "title":"WebStack.QA.Test.OData.Containment.Delete","target":"http://jinfutanwebapi1:9123/explicit/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs(201)/WebStack.QA.Test.OData.Containment.Delete"
+                      "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument","@odata.id":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs(201)","@odata.editLink":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs(201)","PaymentInstrumentID":201,"FriendlyName":"201 first PI","Statement@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs(201)/Statement/$ref","Statement@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/PayinPIs(201)/Statement","#Microsoft.Test.E2E.AspNet.OData.Containment.Delete":{
+                        "title":"Microsoft.Test.E2E.AspNet.OData.Containment.Delete","target":"http://jinfutanwebapi1:9123/explicit/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs(201)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete"
                       }
                     }
                   ],
-               "PayoutPI@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/$entity",
-             * "PayoutPI@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/$ref",
-             * "PayoutPI@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI","PayoutPI":{
-                    "@odata.type":"#WebStack.QA.Test.OData.Containment.PaymentInstrument","@odata.id":"WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI",
-             * "@odata.editLink":"WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI","PaymentInstrumentID":200,"FriendlyName":"Payout PI: Direct Debit","Statement@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/Statement/$ref","Statement@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/PayoutPI(200)/Statement","#WebStack.QA.Test.OData.Containment.Delete":{
-                      "title":"WebStack.QA.Test.OData.Containment.Delete","target":"http://jinfutanwebapi1:9123/explicit/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/WebStack.QA.Test.OData.Containment.Delete"
+               "PayoutPI@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/$entity",
+             * "PayoutPI@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/$ref",
+             * "PayoutPI@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI","PayoutPI":{
+                    "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument","@odata.id":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI",
+             * "@odata.editLink":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI","PaymentInstrumentID":200,"FriendlyName":"Payout PI: Direct Debit","Statement@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/Statement/$ref","Statement@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/PayoutPI(200)/Statement","#Microsoft.Test.E2E.AspNet.OData.Containment.Delete":{
+                      "title":"Microsoft.Test.E2E.AspNet.OData.Containment.Delete","target":"http://jinfutanwebapi1:9123/explicit/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete"
                     }
                   },
-                 "GiftCard@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$entity",
-             * "GiftCard@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$ref",
-             * "GiftCard@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard",
+                 "GiftCard@odata.context":"http://jinfutanwebapi1:9123/explicit/$metadata#Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$entity",
+             * "GiftCard@odata.associationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$ref",
+             * "GiftCard@odata.navigationLink":"http://jinfutanwebapi1:9123/explicit/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard",
              * "GiftCard":{
-                    "@odata.type":"#WebStack.QA.Test.OData.Containment.GiftCard","@odata.id":"WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard","@odata.editLink":"WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard","GiftCardID":200,"GiftCardNO":"BBA1-2BBC","Amount":2000.0
+                    "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Containment.GiftCard","@odata.id":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard","@odata.editLink":"Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard","GiftCardID":200,"GiftCardNO":"BBA1-2BBC","Amount":2000.0
                   }
                 }
               ]
@@ -357,40 +356,40 @@ namespace WebStack.QA.Test.OData.Containment
             if (mime == "json" || mime.Contains("odata.metadata=minimal") || mime.Contains("odata.metadata=full"))
             {
                 var odataContext = (string)json["@odata.context"]; // PreminumAccount
-                Assert.Equal(serviceRootUri + "/$metadata#Accounts/WebStack.QA.Test.OData.Containment.PremiumAccount", odataContext);
+                Assert.Equal(serviceRootUri + "/$metadata#Accounts/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount", odataContext);
             }
             if (mime.Contains("odata.metadata=full"))
             {
                 var odataType = (string)premiumAccount["@odata.type"];
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PremiumAccount", odataType);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount", odataType);
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs", (string)premiumAccount["PayinPIs@odata.navigationLink"]);
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayinPIs/$ref", (string)premiumAccount["PayinPIs@odata.associationLink"]);
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI", (string)premiumAccount["PayoutPI@odata.navigationLink"]);
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/PayoutPI/$ref", (string)premiumAccount["PayoutPI@odata.associationLink"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs", (string)premiumAccount["PayinPIs@odata.navigationLink"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayinPIs/$ref", (string)premiumAccount["PayinPIs@odata.associationLink"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI", (string)premiumAccount["PayoutPI@odata.navigationLink"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/PayoutPI/$ref", (string)premiumAccount["PayoutPI@odata.associationLink"]);
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard",
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard",
                     (string)premiumAccount["GiftCard@odata.navigationLink"]);
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$ref",
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$ref",
                     (string)premiumAccount["GiftCard@odata.associationLink"]);
 
                 var payoutPIOfPremiumAccount = premiumAccount["PayoutPI"];
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payoutPIOfPremiumAccount["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payoutPIOfPremiumAccount["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
 
                 Assert.Equal("Accounts(200)/PayoutPI", (string)payoutPIOfPremiumAccount["@odata.editLink"]);
                 Assert.Equal("Accounts(200)/PayoutPI", (string)payoutPIOfPremiumAccount["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payoutPIOfPremiumAccount["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payoutPIOfPremiumAccount["@odata.type"]);
 
                 var payinPIsOfPremiumAccont = premiumAccount["PayinPIs"];
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/PayinPIs(201)/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payinPIsOfPremiumAccont[0]["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(200)/PayinPIs(201)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payinPIsOfPremiumAccont[0]["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
 
                 Assert.Equal("Accounts(200)/PayinPIs(201)", (string)payinPIsOfPremiumAccont[0]["@odata.editLink"]);
                 Assert.Equal("Accounts(200)/PayinPIs(201)", (string)payinPIsOfPremiumAccont[0]["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPIsOfPremiumAccont[0]["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPIsOfPremiumAccont[0]["@odata.type"]);
 
                 var giftCard = premiumAccount["GiftCard"];
                 string expected = "Accounts(200)/GiftCard";
@@ -401,13 +400,13 @@ namespace WebStack.QA.Test.OData.Containment
                 actual = (string)giftCard["@odata.id"];
                 Assert.True(expected == actual, string.Format("odata.id link of GiftCard, exptected: {0}, actual: {1}, request url: {2}", expected, actual, requestUri));
 
-                expected = "#WebStack.QA.Test.OData.Containment.GiftCard";
+                expected = "#Microsoft.Test.E2E.AspNet.OData.Containment.GiftCard";
                 actual = (string)giftCard["@odata.type"];
                 Assert.True(expected == actual, string.Format("odata.type of GiftCard, exptected: {0}, actual: {1}, request url: {2}", expected, actual, requestUri));
 
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$ref",
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$ref",
                     (string)premiumAccount["GiftCard@odata.associationLink"]);
-                Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard",
+                Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard",
                     (string)premiumAccount["GiftCard@odata.navigationLink"]);
             }
         }
@@ -450,7 +449,7 @@ namespace WebStack.QA.Test.OData.Containment
         {
             await ResetDatasource();
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, modelMode).ToLower();
-            string requestUri = serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount";
+            string requestUri = serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount";
 
             var content = @"{'AccountID':-1, 'Name':'newName1000'}";
             HttpResponseMessage response = await Client.PatchAsync(requestUri, content);
@@ -531,11 +530,11 @@ namespace WebStack.QA.Test.OData.Containment
 
                 var payinPI = results[0];
 
-                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payinPI["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payinPI["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPI["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPI["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPI["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPI["@odata.type"]);
             }
         }
 
@@ -564,11 +563,11 @@ namespace WebStack.QA.Test.OData.Containment
             {
                 var payinPI = json;
 
-                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete",
-                    (string)payinPI["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    (string)payinPI["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPI["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)", (string)payinPI["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPI["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPI["@odata.type"]);
             }
         }
 
@@ -597,7 +596,7 @@ namespace WebStack.QA.Test.OData.Containment
             {
                 Assert.Equal("Accounts(100)/PayoutPI", (string)json["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayoutPI", (string)json["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)json["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)json["@odata.type"]);
             }
         }
 
@@ -610,7 +609,7 @@ namespace WebStack.QA.Test.OData.Containment
             await ResetDatasource();
 
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
-            string requestUri = string.Format("{0}/{1}/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard?$format={2}", BaseAddress, mode, mime);
+            string requestUri = string.Format("{0}/{1}/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard?$format={2}", BaseAddress, mode, mime);
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -618,15 +617,15 @@ namespace WebStack.QA.Test.OData.Containment
             var json = await response.Content.ReadAsAsync<JObject>();
             if (!mime.Contains("odata.metadata=none"))
             {
-                var expectedContextUrl = serviceRootUri + "/$metadata#Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$entity";
+                var expectedContextUrl = serviceRootUri + "/$metadata#Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$entity";
                 var actualContextUrl = (string)json["@odata.context"];
                 Assert.Equal(expectedContextUrl, actualContextUrl);
             }
             if (mime.Contains("odata.metadata=full"))
             {
-                Assert.Equal("Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.editLink"]);
-                Assert.Equal("Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.GiftCard", (string)json["@odata.type"]);
+                Assert.Equal("Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.editLink"]);
+                Assert.Equal("Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.id"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.GiftCard", (string)json["@odata.type"]);
             }
         }
 
@@ -639,7 +638,7 @@ namespace WebStack.QA.Test.OData.Containment
             await ResetDatasource();
 
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
-            string requestUri = string.Format("{0}/{1}/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$ref?$format={2}", BaseAddress, mode, mime);
+            string requestUri = string.Format("{0}/{1}/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$ref?$format={2}", BaseAddress, mode, mime);
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -656,7 +655,7 @@ namespace WebStack.QA.Test.OData.Containment
                 var actualContextUrl = (string)json["@odata.context"];
                 Assert.Equal(expectedContextUrl, actualContextUrl);
             }
-            Assert.Equal(serviceRootUri + "/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.id"]);
+            Assert.Equal(serviceRootUri + "/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", (string)json["@odata.id"]);
         }
 
         [NuwaTheory]
@@ -786,7 +785,7 @@ namespace WebStack.QA.Test.OData.Containment
         {
             await ResetDatasource();
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
-            string requestUri = string.Format("{0}/{1}/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard", BaseAddress, mode);
+            string requestUri = string.Format("{0}/{1}/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", BaseAddress, mode);
             string cardNo = "ABCD-1234";
             double amount = 2000;
             GiftCard giftCard = new GiftCard()
@@ -799,7 +798,7 @@ namespace WebStack.QA.Test.OData.Containment
             var response = await Client.PatchAsJsonAsync<GiftCard>(requestUri, giftCard);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var json = await response.Content.ReadAsAsync<JObject>();
-            Assert.Equal(string.Format("{0}/$metadata#Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$entity", serviceRootUri), (string)json["@odata.context"]);
+            Assert.Equal(string.Format("{0}/$metadata#Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$entity", serviceRootUri), (string)json["@odata.context"]);
             Assert.Equal(200, (int)json["GiftCardID"]);
             Assert.Equal(cardNo, (string)json["GiftCardNO"]);
             Assert.Equal(amount, (double)json["Amount"]);
@@ -870,7 +869,7 @@ namespace WebStack.QA.Test.OData.Containment
             /*
             {
               "@odata.context":"http://jinfutan03:9123/explicit/$metadata#Accounts(100)/PayinPIs(101)/Statement/$entity",
-              "@odata.type":"#WebStack.QA.Test.OData.Containment.Statement",
+              "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Containment.Statement",
               "@odata.id":"Accounts(100)/PayinPIs(101)/Statement",
               "@odata.editLink":"Accounts(100)/PayinPIs(101)/Statement",
               "StatementID":1,
@@ -889,7 +888,7 @@ namespace WebStack.QA.Test.OData.Containment
             {
                 Assert.Equal("Accounts(100)/PayinPIs(101)/Statement", (string)json["@odata.editLink"]);
                 Assert.Equal("Accounts(100)/PayinPIs(101)/Statement", (string)json["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.Statement", (string)json["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.Statement", (string)json["@odata.type"]);
             }
             Assert.Equal(1, (int)json["StatementID"]);
 
@@ -964,7 +963,7 @@ namespace WebStack.QA.Test.OData.Containment
             var json = await response.Content.ReadAsAsync<JObject>();
             var originCount = ((JArray)json["value"]).Count;
 
-            string requestUri = string.Format("{0}/WebStack.QA.Test.OData.Containment.Clear", requestUriBase);
+            string requestUri = string.Format("{0}/Microsoft.Test.E2E.AspNet.OData.Containment.Clear", requestUriBase);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, requestUri);
             request.Content = new StringContent("{'nameContains':'10'}");
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -982,10 +981,10 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [NuwaTheory]
-        [InlineData("convention/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete")]
-        [InlineData("convention/Accounts(100)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete")]
-        [InlineData("explicit/Accounts(100)/PayinPIs(101)/WebStack.QA.Test.OData.Containment.Delete")]
-        [InlineData("explicit/Accounts(100)/PayoutPI/WebStack.QA.Test.OData.Containment.Delete")]
+        [InlineData("convention/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
+        [InlineData("convention/Accounts(100)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
+        [InlineData("explicit/Accounts(100)/PayinPIs(101)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
+        [InlineData("explicit/Accounts(100)/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
         // Action bound to a single contained entity.
         public async Task ActionBoundToASingleContainmedEntity(string requestUri)
         {
@@ -1003,7 +1002,7 @@ namespace WebStack.QA.Test.OData.Containment
         public async Task GetPayinPIsCountWhoseNameContainsGivenString(string mode)
         {
             await ResetDatasource();
-            string requestUri = string.Format("{0}/{1}/Accounts(100)/PayinPIs/WebStack.QA.Test.OData.Containment.GetCount(nameContains='10')", BaseAddress, mode);
+            string requestUri = string.Format("{0}/{1}/Accounts(100)/PayinPIs/Microsoft.Test.E2E.AspNet.OData.Containment.GetCount(nameContains='10')", BaseAddress, mode);
             var response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var json = await response.Content.ReadAsAsync<JObject>();
@@ -1042,22 +1041,22 @@ namespace WebStack.QA.Test.OData.Containment
                 Assert.Equal(serviceRootUri + "/AnonymousAccount/PayoutPI", (string)account["PayoutPI@odata.navigationLink"]);
 
                 var payoutPIOfAccount = account["PayoutPI"];
-                Assert.Equal(serviceRootUri + "/AnonymousAccount/PayoutPI/WebStack.QA.Test.OData.Containment.Delete",
-                   (string)payoutPIOfAccount["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/AnonymousAccount/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                   (string)payoutPIOfAccount["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("AnonymousAccount/PayoutPI", (string)payoutPIOfAccount["@odata.editLink"]);
                 Assert.Equal("AnonymousAccount/PayoutPI", (string)payoutPIOfAccount["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payoutPIOfAccount["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payoutPIOfAccount["@odata.type"]);
 
                 var payinPIsOfAccont = account["PayinPIs"];
 
                 // Bug 1862: Functions/Actions bound to a collection of entity should be advertised.
                 /*Functions that are bound to a collection of entities are advertised in representations of that collection.*/
 
-                Assert.Equal(serviceRootUri + "/AnonymousAccount/PayinPIs(0)/WebStack.QA.Test.OData.Containment.Delete",
-                    payinPIsOfAccont[0]["#WebStack.QA.Test.OData.Containment.Delete"]["target"]);
+                Assert.Equal(serviceRootUri + "/AnonymousAccount/PayinPIs(0)/Microsoft.Test.E2E.AspNet.OData.Containment.Delete",
+                    payinPIsOfAccont[0]["#Microsoft.Test.E2E.AspNet.OData.Containment.Delete"]["target"]);
                 Assert.Equal("AnonymousAccount/PayinPIs(0)", (string)payinPIsOfAccont[0]["@odata.editLink"]);
                 Assert.Equal("AnonymousAccount/PayinPIs(0)", (string)payinPIsOfAccont[0]["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)payinPIsOfAccont[0]["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)payinPIsOfAccont[0]["@odata.type"]);
 
             }
         }
@@ -1084,7 +1083,7 @@ namespace WebStack.QA.Test.OData.Containment
             {
                 Assert.Equal("AnonymousAccount/PayoutPI", (string)json["@odata.editLink"]);
                 Assert.Equal("AnonymousAccount/PayoutPI", (string)json["@odata.id"]);
-                Assert.Equal("#WebStack.QA.Test.OData.Containment.PaymentInstrument", (string)json["@odata.type"]);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument", (string)json["@odata.type"]);
             }
         }
 

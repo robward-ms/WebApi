@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     internal sealed class TypesInjectionAssembly : Assembly
     {

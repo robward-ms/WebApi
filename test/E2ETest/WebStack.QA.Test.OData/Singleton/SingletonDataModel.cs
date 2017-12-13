@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     /// <summary>
     /// Present the EntityType "Partner"

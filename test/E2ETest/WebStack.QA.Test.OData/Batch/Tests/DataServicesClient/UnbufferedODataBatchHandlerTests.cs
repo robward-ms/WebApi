@@ -18,14 +18,14 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nuwa;
 using WebStack.QA.Common.WebHost;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Controllers;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
+namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
 {
     public class UnbufferedBatchCustomer
     {
@@ -92,8 +92,6 @@ namespace WebStack.QA.Test.OData.Batch.Tests.DataServicesClient
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class CUDBatchTests : NuwaTestBase
     {
         public CUDBatchTests(NuwaClassFixture fixture)
@@ -260,8 +258,6 @@ Content-Type: application/json;odata.metadata=minimal
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class QueryBatchTests : NuwaTestBase
     {
         public QueryBatchTests(NuwaClassFixture fixture)
@@ -337,8 +333,6 @@ Content-Type: application/json;odata.metadata=minimal
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class ErrorsBatchTests : NuwaTestBase
     {
         public ErrorsBatchTests(NuwaClassFixture fixture)
@@ -413,8 +407,6 @@ Content-Type: application/json;odata.metadata=minimal
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class LinksBatchTests : NuwaTestBase
     {
         public LinksBatchTests(NuwaClassFixture fixture)
@@ -472,8 +464,6 @@ Content-Type: application/json;odata.metadata=minimal
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class ContinueOnErrorBatchTests : NuwaTestBase
     {
         public ContinueOnErrorBatchTests(NuwaClassFixture fixture)

@@ -3,7 +3,7 @@
 
 using System.Data.Entity;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     public class DateAndTimeOfDayContext : DbContext
     {

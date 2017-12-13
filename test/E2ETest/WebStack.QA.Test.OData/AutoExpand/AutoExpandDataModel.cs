@@ -4,7 +4,7 @@
 using System.Data.Entity;
 using Microsoft.AspNet.OData.Builder;
 
-namespace WebStack.QA.Test.OData.AutoExpand
+namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
     public class AutoExpandCustomerContext : DbContext
     {

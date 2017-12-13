@@ -4,7 +4,7 @@
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.DollarLevels
+namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 {
     public class DollarLevelsEdmModel
     {

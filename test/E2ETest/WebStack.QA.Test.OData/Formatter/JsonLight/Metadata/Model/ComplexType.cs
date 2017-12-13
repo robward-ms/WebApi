@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model
 {
     public class ComplexType
     {

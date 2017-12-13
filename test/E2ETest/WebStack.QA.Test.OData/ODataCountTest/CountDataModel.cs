@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.ODataCountTest
+namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 {
     public class Hero
     {

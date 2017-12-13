@@ -7,9 +7,9 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
-using WebStack.QA.Test.OData.SxS.ODataV4.Models;
+using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Models;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4.Controllers
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Controllers
 {
     [ODataRoutePrefix("Parts")]
     public class PartsV2Controller : ODataController

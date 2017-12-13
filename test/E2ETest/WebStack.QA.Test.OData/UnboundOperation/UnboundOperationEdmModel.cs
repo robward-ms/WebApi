@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.UnboundOperation
+namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 {
     internal class UnboundFunctionEdmModel
     {

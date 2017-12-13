@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 
-namespace WebStack.QA.Test.OData.SingleResultTest
+namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
 {
     public class SingleResultContext : DbContext
     {

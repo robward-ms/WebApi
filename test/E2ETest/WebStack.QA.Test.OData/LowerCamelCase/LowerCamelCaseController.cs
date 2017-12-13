@@ -13,7 +13,7 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
 
-namespace WebStack.QA.Test.OData.LowerCamelCase
+namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 {
     public class EmployeesController : ODataController
     {
@@ -97,7 +97,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         }
 
         [EnableQuery(MaxExpansionDepth = 3)]
-        [ODataRoute("Employees/WebStack.QA.Test.OData.LowerCamelCase.Manager")]
+        [ODataRoute("Employees/Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.Manager")]
         public IHttpActionResult GetManagers()
         {
             return Ok(_employees.OfType<Manager>().AsQueryable());
@@ -141,7 +141,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             return Ok(_employees.Single(e => e.ID == id).Address);
         }
 
-        // GET ~/Employees/WebStack.QA.Test.OData.LowerCamelCase.GetEarliestTwoEmployees()
+        // GET ~/Employees/Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.GetEarliestTwoEmployees()
         [EnableQuery]
         public IHttpActionResult GetEarliestTwoEmployeesOnCollectionOfEmployee()
         {

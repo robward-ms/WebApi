@@ -9,7 +9,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     public class PartnersController : ODataController
     {

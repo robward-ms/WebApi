@@ -13,17 +13,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.LowerCamelCase
+namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class LowerCamelCaseTest : NuwaTestBase
     {
         public LowerCamelCaseTest(NuwaClassFixture fixture)
@@ -105,7 +104,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySet(string format)
         {
-            string requestUri = this.BaseAddress + "/odata/Employees?$expand=WebStack.QA.Test.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
+            string requestUri = this.BaseAddress + "/odata/Employees?$expand=Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -121,7 +120,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithDerivedType(string format)
         {
-            string requestUri = this.BaseAddress + "/odata/Employees/WebStack.QA.Test.OData.LowerCamelCase.Manager?$expand=directReports&$format=" + format;
+            string requestUri = this.BaseAddress + "/odata/Employees/Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.Manager?$expand=directReports&$format=" + format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -223,7 +222,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         [MemberData(nameof(MediaTypes))]
         public async Task QueryEntitySetWithExpand(string format)
         {
-            string requestUri = this.BaseAddress + "/odata/Employees?$expand=WebStack.QA.Test.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
+            string requestUri = this.BaseAddress + "/odata/Employees?$expand=Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.Manager/directReports($levels=2)&$format=" + format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -354,7 +353,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
         public async Task ExpandFromCollectionEmployeeToSingleManager(string format)
         {
             string requestUri = string.Format(
-                "{0}/odata/Employees/WebStack.QA.Test.OData.LowerCamelCase.GetEarliestTwoEmployees()" +
+                "{0}/odata/Employees/Microsoft.Test.E2E.AspNet.OData.LowerCamelCase.GetEarliestTwoEmployees()" +
                 "?$expand=manager($levels=2)&$select=id&$format={1}",
                  this.BaseAddress,
                  format
@@ -440,7 +439,7 @@ namespace WebStack.QA.Test.OData.LowerCamelCase
             /*
              * Each array element looks like:
              *   {
-             *     "@odata.type":"#WebStack.QA.Test.OData.CamelCase.Manager",
+             *     "@odata.type":"#Microsoft.Test.E2E.AspNet.OData.CamelCase.Manager",
              *     "@odata.id":"http://jinfutanwebapi1:9123/odata/Employees(5)",
              *     "id":5,
              *     "name":"Name5",

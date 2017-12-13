@@ -22,12 +22,12 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace WebStack.QA.Test.OData.Formatter.Extensibility
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
 {
     public class ParentEntity
     {
@@ -162,8 +162,6 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class SerializeEntityReferenceLinksTest : NuwaTestBase
     {
         public SerializeEntityReferenceLinksTest(NuwaClassFixture fixture)

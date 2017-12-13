@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.AutoExpand
+namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
     public class CustomersController : ODataController
     {

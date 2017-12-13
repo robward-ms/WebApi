@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ForeignKey
+namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
     public class ForeignKeyCustomer
     {

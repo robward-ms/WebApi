@@ -5,13 +5,13 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Controllers;
-using WebStack.QA.Test.OData.Common.Models.ProductFamilies;
-using Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     public class MultipleEntitySetOnSameClrType_Products1Controller : InMemoryODataController<Product, int>
     {

@@ -7,12 +7,12 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest
 {
     public class SelectAttributeTest : NuwaTestBase
     {
@@ -76,16 +76,16 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
         [InlineData(OrderBaseUrl + "?$select=Id", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
             (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
             (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$expand=Cars($select=Id,Name)", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$expand=Cars($select=CarNumber)", (int)HttpStatusCode.BadRequest)]
@@ -95,16 +95,16 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest
         [InlineData(ModelBoundOrderBaseUrl + "?$select=Id", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Name",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Id",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=Price",
             (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttributeTest.SpecialOrder?$select=SpecialName",
             (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=Id,Name)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=CarNumber)", (int)HttpStatusCode.BadRequest)]

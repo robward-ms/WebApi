@@ -1,35 +1,35 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace WebStack.QA.Test.OData.OpenType
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Dispatcher;
-    using System.Xml;
-    using Microsoft.AspNet.OData;
-    using Microsoft.AspNet.OData.Extensions;
-    using Microsoft.AspNet.OData.Routing;
-    using Microsoft.AspNet.OData.Routing.Conventions;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Newtonsoft.Json.Linq;
-    using Nuwa;
-    using WebStack.QA.Test.OData.Common;
-    using Xunit;
-    using TypedProxy = WebStack.QA.Test.OData.OpenType.Typed.Client;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Dispatcher;
+using System.Xml;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.OData.Client;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Newtonsoft.Json.Linq;
+using Xunit;
+using TypedProxy = Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client;
 
+namespace Microsoft.Test.E2E.AspNet.OData.OpenType
+{
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class TypedOpenTypeTest : NuwaTestBase
     {
         private static string[] Routings = new string[] { "convention", "AttributeRouting" };
@@ -146,7 +146,7 @@ namespace WebStack.QA.Test.OData.OpenType
             {
                 await ResetDatasource();
 
-                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/WebStack.QA.Test.OData.OpenType.PremiumAccount/Since?$format=", routing, format);
+                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/Microsoft.Test.E2E.AspNet.OData.OpenType.PremiumAccount/Since?$format=", routing, format);
 
                 HttpResponseMessage response = await this.Client.GetAsync(requestUri);
                 Assert.True(response.IsSuccessStatusCode);
@@ -190,7 +190,7 @@ namespace WebStack.QA.Test.OData.OpenType
         {
             await ResetDatasource();
 
-            string requestUri = this.BaseAddress + "/AttributeRouting/Accounts(1)/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress?$format=" + format;
+            string requestUri = this.BaseAddress + "/AttributeRouting/Accounts(1)/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress?$format=" + format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.True(response.IsSuccessStatusCode);
@@ -216,7 +216,7 @@ namespace WebStack.QA.Test.OData.OpenType
         {
             await ResetDatasource();
 
-            string requestUri = this.BaseAddress + "/AttributeRouting/Accounts(1)/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress?$format=" + format;
+            string requestUri = this.BaseAddress + "/AttributeRouting/Accounts(1)/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress?$format=" + format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.True(response.IsSuccessStatusCode);
@@ -292,13 +292,13 @@ namespace WebStack.QA.Test.OData.OpenType
                 var request = new HttpRequestMessage(new HttpMethod("PATCH"), patchUri);
                 request.Content = new StringContent(
                  @"{
-                    '@odata.type':'#WebStack.QA.Test.OData.OpenType.Account',
+                    '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Account',
                     'AccountInfo':{'NickName':'NewNickName1','Age':40,'Gender': 'Male'},
                     'Address':{'CountryOrRegion':'United States'},
                     'Tags':{'Tag1':'New Value'},
-                    'ShipAddresses@odata.type':'#Collection(WebStack.QA.Test.OData.OpenType.Address)',
+                    'ShipAddresses@odata.type':'#Collection(Microsoft.Test.E2E.AspNet.OData.OpenType.Address)',
                     'ShipAddresses':[],
-                    'OwnerGender@odata.type':'#WebStack.QA.Test.OData.OpenType.Gender',
+                    'OwnerGender@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Gender',
                     'OwnerGender':null
                   }");
 
@@ -357,7 +357,7 @@ namespace WebStack.QA.Test.OData.OpenType
 
                 var putUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)?$format={1}", routing, format);
                 var putContent = JObject.Parse(@"{'Id':1,'Name':'NewName1',
-                'AccountInfo':{'NickName':'NewNickName1','Age':11,'Gender@odata.type':'#WebStack.QA.Test.OData.OpenType.Gender','Gender':'Male'},
+                'AccountInfo':{'NickName':'NewNickName1','Age':11,'Gender@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Gender','Gender':'Male'},
                 'Address':{'City':'Redmond','Street':'1 Microsoft Way','CountryOrRegion':'United States'},
                 'Tags':{'Tag1':'New Value'}}");
 
@@ -422,7 +422,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri);
                 request.Content = new StringContent(
                     @"{
-                        '@odata.type':'#WebStack.QA.Test.OData.OpenType.Address',
+                        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Address',
                         'City':'NewCity',
                         'OtherProperty@odata.type':'#Date',
                         'OtherProperty':'2016-02-01'
@@ -454,7 +454,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 await ResetDatasource();
 
                 // Get ~/Accounts(1)/Address
-                var requestUri = string.Format(BaseAddress + "/{0}/Accounts(1)/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress", routing);
+                var requestUri = string.Format(BaseAddress + "/{0}/Accounts(1)/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress", routing);
                 var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
                 var response = await Client.SendAsync(request);
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -465,11 +465,11 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal("US", content["CountryCode"]);
                 Assert.Equal("US", content["CountryOrRegion"]);
 
-                // Patch ~/Accounts(1)/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress
+                // Patch ~/Accounts(1)/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress
                 request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri);
                 request.Content = new StringContent(
                     @"{
-                        '@odata.type':'#WebStack.QA.Test.OData.OpenType.GlobalAddress',
+                        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress',
                         'CountryCode':'NewCountryCode',
                         'CountryOrRegion':'NewCountry'
                   }");
@@ -478,7 +478,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 response = await this.Client.SendAsync(request);
                 Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
-                // Get ~/Accounts(1)/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress
+                // Get ~/Accounts(1)/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress
                 request = new HttpRequestMessage(HttpMethod.Get, requestUri);
                 response = await Client.SendAsync(request);
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -514,7 +514,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 request = new HttpRequestMessage(HttpMethod.Put, requestUri);
                 request.Content = new StringContent(
                     @"{
-                        '@odata.type':'#WebStack.QA.Test.OData.OpenType.Address',
+                        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Address',
                         'City':'NewCity',
                         'Street':'NewStreet',
                         'OtherProperty@odata.type':'#Date',
@@ -558,15 +558,15 @@ namespace WebStack.QA.Test.OData.OpenType
     'Name':'Name4',
     'AccountInfo':
     {
-        'NickName':'NickName4','Age':40,'Gender@odata.type':'#WebStack.QA.Test.OData.OpenType.Gender','Gender':'Male'
+        'NickName':'NickName4','Age':40,'Gender@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Gender','Gender':'Male'
     },
     'Address':
     {
-        '@odata.type':'#WebStack.QA.Test.OData.OpenType.GlobalAddress',
+        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress',
         'City':'London','Street':'Baker street','CountryOrRegion':'UnitedKindom','CountryCode':'Code'
     },
     'Tags':{'Tag1':'Value 1','Tag2':'Value 2'},
-    'AnotherGender@odata.type':'#WebStack.QA.Test.OData.OpenType.Gender',
+    'AnotherGender@odata.type':'#Microsoft.Test.E2E.AspNet.OData.OpenType.Gender',
     'AnotherGender':'Female'
 }");
                 using (HttpResponseMessage response = await this.Client.PostAsJsonAsync(postUri, postContent))
@@ -676,7 +676,7 @@ namespace WebStack.QA.Test.OData.OpenType
             {
                 await ResetDatasource();
 
-                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/WebStack.QA.Test.OData.OpenType.GetAddressFunction()?$format=", routing, format);
+                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/Microsoft.Test.E2E.AspNet.OData.OpenType.GetAddressFunction()?$format=", routing, format);
 
                 HttpResponseMessage response = await this.Client.GetAsync(requestUri);
                 Assert.True(response.IsSuccessStatusCode);
@@ -704,7 +704,7 @@ namespace WebStack.QA.Test.OData.OpenType
             {
                 await ResetDatasource();
 
-                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/WebStack.QA.Test.OData.OpenType.IncreaseAgeAction()?$format=", routing, format);
+                string requestUri = string.Format(this.BaseAddress + "/{0}/Accounts(1)/Microsoft.Test.E2E.AspNet.OData.OpenType.IncreaseAgeAction()?$format=", routing, format);
                 var requestForPost = new HttpRequestMessage(HttpMethod.Post, requestUri);
                 requestForPost.Content = new StringContent(string.Empty);
                 requestForPost.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -827,7 +827,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal("US", account.Address.CountryOrRegion);
                 Assert.Equal(10, account.AccountInfo.Age);
 
-                Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, account.AccountInfo.Gender);
+                Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, account.AccountInfo.Gender);
 
                 Assert.Equal("Value 1", account.Tags.Tag1);
                 Assert.Equal("Value 2", account.Tags.Tag2);
@@ -856,7 +856,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal("US", premiumAccount.Address.CountryOrRegion);
                 Assert.Equal(10, premiumAccount.AccountInfo.Age);
 
-                Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, premiumAccount.AccountInfo.Gender);
+                Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, premiumAccount.AccountInfo.Gender);
 
                 Assert.Equal("Value 1", premiumAccount.Tags.Tag1);
                 Assert.Equal("Value 2", premiumAccount.Tags.Tag2);
@@ -973,7 +973,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal(3, updatedAccountInfo.Subs.Count);
 
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-                //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
+                //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
 
                 var updatedAddress = updatedAccount.Address;
                 Assert.NotNull(updatedAddress);
@@ -988,7 +988,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.NotNull(updatedAccount.Emails.SingleOrDefault(e => e == "c@c.com"));
 
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-                //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
+                //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
                 //Assert.Equal(TypedProxy.Gender.Male, updatedAccount.OwnerGender);
             }
         }
@@ -1012,7 +1012,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 account.AccountInfo.NickName = "NewNickName";
                 account.AccountInfo.Age = 11;
 
-                account.AccountInfo.Gender = WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male;
+                account.AccountInfo.Gender = Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male;
 
                 account.AccountInfo.Subs = new Collection<string>() { "1", "2", "3" };
 
@@ -1038,7 +1038,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal(3, updatedAccountInfo.Subs.Count);
 
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-                //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
+                //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
 
                 var updatedAddress = updatedAccount.Address;
                 Assert.NotNull(updatedAddress);
@@ -1052,7 +1052,7 @@ namespace WebStack.QA.Test.OData.OpenType
                 Assert.Equal(2, updatedAccount.Emails.Count);
                 Assert.NotNull(updatedAccount.Emails.SingleOrDefault(e => e == "c@c.com"));
                 // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-                //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
+                //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Gender.Male, updatedAccountInfo.Gender);
                 //Assert.Equal(TypedProxy.Gender.Male, updatedAccount.OwnerGender);
             }
         }
@@ -1120,7 +1120,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal(40, insertedAccount.AccountInfo.Age);
 
             // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-            //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.TypedProxy.Gender.Female, insertedAccount.AccountInfo.Gender);
+            //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.TypedProxy.Gender.Female, insertedAccount.AccountInfo.Gender);
 
             Assert.Equal("value 1", insertedAccount.Tags.Tag1);
             Assert.Equal("value 2", insertedAccount.Tags.Tag2);
@@ -1190,7 +1190,7 @@ namespace WebStack.QA.Test.OData.OpenType
             Assert.Equal(40, insertedAccount.AccountInfo.Age);
 
             // Defect 2371564 odata.type is missed in client payload for dynamic enum type
-            //Assert.Equal(WebStack.QA.Test.OData.OpenType.Typed.TypedProxy.Gender.Female, insertedAccount.AccountInfo.Gender);
+            //Assert.Equal(Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.TypedProxy.Gender.Female, insertedAccount.AccountInfo.Gender);
 
             Assert.Equal("value 1", insertedAccount.Tags.Tag1);
             Assert.Equal("value 2", insertedAccount.Tags.Tag2);
@@ -1521,7 +1521,7 @@ namespace WebStack.QA.Test.OData.OpenType
         {
             var directory = Directory.GetCurrentDirectory();
             var strArray = directory.Split(new string[] { "bin" }, StringSplitOptions.None);
-            var filePath = Path.Combine(strArray[0], @"src\WebStack.QA.Test.OData\OpenType\TypedMetadata.csdl.xml");
+            var filePath = Path.Combine(strArray[0], @"src\Microsoft.Test.E2E.AspNet.OData\OpenType\TypedMetadata.csdl.xml");
 
             IEdmModel edmModel = OpenComplexTypeEdmModel.GetTypedConventionModel();
             XmlWriterSettings setting = new XmlWriterSettings();

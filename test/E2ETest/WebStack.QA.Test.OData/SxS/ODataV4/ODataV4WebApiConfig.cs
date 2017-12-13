@@ -5,15 +5,15 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
-using WebStack.QA.Test.OData.SxS.ODataV4.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Extensions;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4
 {
     public static class ODataV4WebApiConfig
     {
         public static void Register(HttpConfiguration config)
         {
-            var model = WebStack.QA.Test.OData.SxS.ODataV4.Models.ModelBuilder.GetEdmModel();
+            var model = Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Models.ModelBuilder.GetEdmModel();
             var conventions = ODataRoutingConventions.CreateDefaultWithAttributeRouting("SxSODataV4", config);
             conventions.Add(new EntitySetVersioningRoutingConvention("V2"));
 

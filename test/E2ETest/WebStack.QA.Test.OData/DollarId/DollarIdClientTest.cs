@@ -11,11 +11,12 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Client;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.DollarId
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
     [NuwaFramework]
     public class DollarIdClientTest : NuwaTestBase
@@ -46,8 +47,8 @@ namespace WebStack.QA.Test.OData.DollarId
             var clientContext = new Client.Default.Container(new Uri(serviceRoot));
             clientContext.MergeOption = MergeOption.OverwriteChanges;
 
-            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Singers/WebStack.QA.Test.OData.DollarId.ResetDataSource"), "POST");
-            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Albums/WebStack.QA.Test.OData.DollarId.ResetDataSource"), "POST");
+            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Singers/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource"), "POST");
+            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Albums/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource"), "POST");
 
             var singer = clientContext.Singers.Where(s => s.ID == 0).Single();
             clientContext.LoadProperty(singer, "Albums");
@@ -68,8 +69,8 @@ namespace WebStack.QA.Test.OData.DollarId
             var clientContext = new Client.Default.Container(new Uri(serviceRoot));
             clientContext.MergeOption = MergeOption.OverwriteChanges;
 
-            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Singers/WebStack.QA.Test.OData.DollarId.ResetDataSource"), "POST");
-            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Albums/WebStack.QA.Test.OData.DollarId.ResetDataSource"), "POST");
+            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Singers/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource"), "POST");
+            await clientContext.ExecuteAsync(new Uri(serviceRoot + "Albums/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource"), "POST");
 
             const int albumKey = 5;
             var album = clientContext.Albums.Where(a => a.ID == albumKey).Single();
@@ -89,7 +90,7 @@ namespace WebStack.QA.Test.OData.DollarId
         {
             var directory = Directory.GetCurrentDirectory();
             var strArray = directory.Split(new string[] { "bin" }, StringSplitOptions.None);
-            var filePath = Path.Combine(strArray[0], @"src\WebStack.QA.Test.OData\DollarId\Metadata.csdl");
+            var filePath = Path.Combine(strArray[0], @"src\Microsoft.Test.E2E.AspNet.OData\DollarId\Metadata.csdl");
 
             var request = (HttpWebRequest)WebRequest.Create(new Uri(this.BaseAddress + "/clientTest/$metadata"));
             request.Accept = "application/xml";

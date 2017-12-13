@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace WebStack.QA.Test.OData.Batch.Client
+namespace Microsoft.Test.E2E.AspNet.OData.Batch.Client
 {
     public class JsonLightContent : HttpContent
     {

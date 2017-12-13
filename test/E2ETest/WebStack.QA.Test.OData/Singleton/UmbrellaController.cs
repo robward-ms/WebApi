@@ -7,9 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     /// <summary>
     /// Present a singleton named "Umbrella"

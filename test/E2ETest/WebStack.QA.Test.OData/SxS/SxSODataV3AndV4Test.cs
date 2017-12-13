@@ -8,20 +8,19 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.SxS.ODataV3.Controllers;
-using WebStack.QA.Test.OData.SxS.ODataV4.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV3.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Controllers;
 using Xunit;
 using Xunit.Extensions;
 using ODataV3Stack = System.Web.Http.OData;
 using ODataV4Stack = Microsoft.AspNet.OData;
 
 
-namespace WebStack.QA.Test.OData.SxS
+namespace Microsoft.Test.E2E.AspNet.OData.SxS
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class SxSODataV3AndV4Test
     {
         [NuwaBaseAddress]

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     public class DCustomer
     {

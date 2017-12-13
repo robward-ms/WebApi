@@ -8,11 +8,12 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.DollarId
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
     [NuwaFramework]
     public class DollarIdTest : NuwaTestBase
@@ -94,7 +95,7 @@ namespace WebStack.QA.Test.OData.DollarId
         [NuwaFact]
         public async Task GetSingersNameOfAlbum()
         {
-            var requestBaseUri = this.BaseAddress + "/Albums(5)/WebStack.QA.Test.OData.DollarId.GetSingers()?$filter=MasterPiece eq 'def'&$select=Name";
+            var requestBaseUri = this.BaseAddress + "/Albums(5)/Microsoft.Test.E2E.AspNet.OData.DollarId.GetSingers()?$filter=MasterPiece eq 'def'&$select=Name";
 
             var response = await this.Client.GetAsync(requestBaseUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -107,7 +108,7 @@ namespace WebStack.QA.Test.OData.DollarId
 
         private async Task<HttpResponseMessage> ResetDataSource(string controller)
         {
-            var uriReset = string.Format(this.BaseAddress + "/{0}/WebStack.QA.Test.OData.DollarId.ResetDataSource", controller);
+            var uriReset = string.Format(this.BaseAddress + "/{0}/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource", controller);
             var response = await this.Client.PostAsync(uriReset, null);
 
             return response;

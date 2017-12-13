@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.DollarLevels
+namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 {
     public class DLManager
     {

@@ -14,14 +14,14 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ComplexTypeInheritance
+namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ComplexTypeInheritanceSerializeTest : NuwaTestBase
     {
         public ComplexTypeInheritanceSerializeTest(NuwaClassFixture fixture)
@@ -65,11 +65,11 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 
             Assert.Equal(new[]
             {
-                "#WebStack.QA.Test.OData.ComplexTypeInheritance.InheritanceAddress",
-                "#WebStack.QA.Test.OData.ComplexTypeInheritance.InheritanceAddress",
-                "#WebStack.QA.Test.OData.ComplexTypeInheritance.InheritanceUsAddress",
-                "#WebStack.QA.Test.OData.ComplexTypeInheritance.InheritanceCnAddress",
-                "#WebStack.QA.Test.OData.ComplexTypeInheritance.InheritanceCnAddress"
+                "#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.InheritanceAddress",
+                "#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.InheritanceAddress",
+                "#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.InheritanceUsAddress",
+                "#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.InheritanceCnAddress",
+                "#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.InheritanceCnAddress"
             },
             contentOfJObject["value"].Select(e => e["Location"]["Address"]["@odata.type"]).Select(c => (string)c));
         }

@@ -12,7 +12,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.Containment
+namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
     public class AccountsController : ODataController
     {
@@ -134,11 +134,11 @@ namespace WebStack.QA.Test.OData.Containment
             return Ok(_dataSource.Accounts.Single(a => a.AccountID == key));
         }
 
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard/$ref")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard/$ref")]
         public IHttpActionResult GetAssociationLinkOfGiftCard(int key)
         {
             var serviceRootUri = GetServiceRootUri();
-            var entityId = string.Format("{0}/Accounts({1})/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard", serviceRootUri, key);
+            var entityId = string.Format("{0}/Accounts({1})/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard", serviceRootUri, key);
             return Ok(new Uri(entityId));
         }
 
@@ -186,7 +186,7 @@ namespace WebStack.QA.Test.OData.Containment
         }
 
         [HttpPatch]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.Containment.PremiumAccount")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount")]
         public IHttpActionResult PatchPremiumAccount(int key, Delta<PremiumAccount> delta)
         {
             var originalAccount = _dataSource.Accounts.Single(a => a.AccountID == key) as PremiumAccount;
@@ -195,7 +195,7 @@ namespace WebStack.QA.Test.OData.Containment
             return Ok(originalAccount);
         }
 
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.Containment.PremiumAccount")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount")]
         public IHttpActionResult Delete(int key)
         {
             var originalAccount = _dataSource.Accounts.Single(a => a.AccountID == key);
@@ -242,9 +242,9 @@ namespace WebStack.QA.Test.OData.Containment
             return Ok(originalPi);
         }
 
-        // PATCH ~/Accounts(200)/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard
+        // PATCH ~/Accounts(200)/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard
         [HttpPatch]
-        [ODataRoute("Accounts({accountId})/WebStack.QA.Test.OData.Containment.PremiumAccount/GiftCard")]
+        [ODataRoute("Accounts({accountId})/Microsoft.Test.E2E.AspNet.OData.Containment.PremiumAccount/GiftCard")]
         public IHttpActionResult PatchToGiftCardFromPremiumAccount(int accountId, [FromBody] Delta<GiftCard> giftCard)
         {
             var account = _dataSource.Accounts.OfType<PremiumAccount>().Single(a => a.AccountID == accountId);
@@ -305,7 +305,7 @@ namespace WebStack.QA.Test.OData.Containment
 
         // POST ~/Accounts(100)/PayinPIs/Namespace.Clear
         [HttpPost]
-        [ODataRoute("Accounts({accountId})/PayinPIs/WebStack.QA.Test.OData.Containment.Clear")]
+        [ODataRoute("Accounts({accountId})/PayinPIs/Microsoft.Test.E2E.AspNet.OData.Containment.Clear")]
         public IHttpActionResult ClearPayoutPIFromAccount(int accountId, ODataActionParameters parameters)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);
@@ -320,7 +320,7 @@ namespace WebStack.QA.Test.OData.Containment
 
         // POST ~/Accounts(100)/PayinPIs(101)/Namespace.Delete
         [HttpPost]
-        [ODataRoute("Accounts({accountId})/PayinPIs({paymentInstrumentId})/WebStack.QA.Test.OData.Containment.Delete")]
+        [ODataRoute("Accounts({accountId})/PayinPIs({paymentInstrumentId})/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
         public IHttpActionResult DeleteAGivenPayinPIFromAccount(int accountId, int paymentInstrumentId)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);
@@ -331,7 +331,7 @@ namespace WebStack.QA.Test.OData.Containment
 
         // POST ~/Accounts(100)/PayoutPI/Namespace.Delete
         [HttpPost]
-        [ODataRoute("Accounts({accountId})/PayoutPI/WebStack.QA.Test.OData.Containment.Delete")]
+        [ODataRoute("Accounts({accountId})/PayoutPI/Microsoft.Test.E2E.AspNet.OData.Containment.Delete")]
         public IHttpActionResult SetPayoutPiToNull(int accountId)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);
@@ -342,7 +342,7 @@ namespace WebStack.QA.Test.OData.Containment
         // Bug 2021-Should support Action/Function returns contained entities.
         // POST ~/Accounts(100)/PayoutPI/Namespace.Duplicate
         [HttpPost]
-        //[ODataRoute("Accounts({accountId})/PayinPIs({piId})/WebStack.QA.Test.OData.Containment.Duplicate")]
+        //[ODataRoute("Accounts({accountId})/PayinPIs({piId})/Microsoft.Test.E2E.AspNet.OData.Containment.Duplicate")]
         public IHttpActionResult DuplicatePayinPI(int accountId, int piId)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);
@@ -370,7 +370,7 @@ namespace WebStack.QA.Test.OData.Containment
 
         // GET ~/Accounts(100)/PayinPIs/Namespace.GetCount)
         [HttpGet]
-        [ODataRoute("Accounts({accountId})/PayinPIs/WebStack.QA.Test.OData.Containment.GetCount(nameContains={name})")]
+        [ODataRoute("Accounts({accountId})/PayinPIs/Microsoft.Test.E2E.AspNet.OData.Containment.GetCount(nameContains={name})")]
         public IHttpActionResult GetPayinPIsCountWhoseNameContainsGivenValue(int accountId, [FromODataUri]string name)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);

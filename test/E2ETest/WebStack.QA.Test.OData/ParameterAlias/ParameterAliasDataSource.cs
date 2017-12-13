@@ -10,7 +10,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.UriParser;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace WebStack.QA.Test.OData.ParameterAlias
+namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
 {
     #region Define CLR Type
     /// <summary>
@@ -169,7 +169,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             }
         }
 
-        [ODataRoute("Trades/WebStack.QA.Test.OData.ParameterAlias.GetTradingVolume(productName={productName}, PortingCountryOrRegion={PortingCountryOrRegion})")]
+        [ODataRoute("Trades/Microsoft.Test.E2E.AspNet.OData.ParameterAlias.GetTradingVolume(productName={productName}, PortingCountryOrRegion={PortingCountryOrRegion})")]
         public IHttpActionResult GetTradingVolume([FromODataUri]string productName, CountryOrRegion portingCountryOrRegion)
         {
             var trades = Trades.Where(t => t.ProductName == productName && t.PortingCountryOrRegion == portingCountryOrRegion).ToArray();

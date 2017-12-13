@@ -14,13 +14,13 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.UnboundOperation
+namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 {
     [NuwaFramework]
     public class UnboundOperationTest : NuwaTestBase
@@ -318,7 +318,7 @@ namespace WebStack.QA.Test.OData.UnboundOperation
             ConventionCustomer expectCustomer = new ConventionCustomersController().GetConventionCustomerById(CustomerId); // expect customer instance
             Assert.NotNull(expectCustomer);
 
-            var requestUri = this.BaseAddress + "/odata/ConventionCustomers?$filter=WebStack.QA.Test.OData.UnBoundFunction.GetConventionCustomerNameById(CustomerId%3D" + CustomerId + ") eq 'Name 7'";
+            var requestUri = this.BaseAddress + "/odata/ConventionCustomers?$filter=Microsoft.Test.E2E.AspNet.OData.UnBoundFunction.GetConventionCustomerNameById(CustomerId%3D" + CustomerId + ") eq 'Name 7'";
 
             // Act
             var response = await Client.GetAsync(requestUri);

@@ -3,9 +3,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using WebStack.QA.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 
-namespace WebStack.QA.Test.OData.QueryComposition.Fuzzing
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing
 {
     public class QueryBuilder
     {

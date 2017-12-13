@@ -11,11 +11,11 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     [NuwaFramework]
     public class InvalidQueryTests : NuwaTestBase
@@ -51,7 +51,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + query);
             HttpResponseMessage response = Client.SendAsync(request).Result;
             dynamic error = JObject.Parse(response.Content.ReadAsStringAsync().Result);
-            Assert.Equal("The query specified in the URI is not valid. Could not find a property named 'id' on type 'WebStack.QA.Test.OData.QueryComposition.InvalidQueryCustomer'.",
+            Assert.Equal("The query specified in the URI is not valid. Could not find a property named 'id' on type 'Microsoft.Test.E2E.AspNet.OData.QueryComposition.InvalidQueryCustomer'.",
                          (string)error["error"]["message"]);
         }
     }

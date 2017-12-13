@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 2014/4/14 20:37:16
-namespace WebStack.QA.Test.OData.Containment.Proxy
+namespace Microsoft.Test.E2E.AspNet.OData.Containment.Proxy
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -38,7 +38,7 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.Containment", "WebStack.QA.Test.OData.Containment.Proxy");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.Containment", "Microsoft.Test.E2E.AspNet.OData.Containment.Proxy");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -53,9 +53,9 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.Containment.Proxy", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.Containment.Proxy", global::System.StringComparison.Ordinal))
             {
-                return string.Concat("WebStack.QA.Test.OData.Containment.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.Containment.", clientType.Name);
             }
             return clientType.FullName;
         }
@@ -109,15 +109,15 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""WebStack.QA.Test.OData.Containment"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.Containment"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""Account"">
         <Key>
           <PropertyRef Name=""AccountID"" />
         </Key>
         <Property Name=""AccountID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
-        <NavigationProperty Name=""PayoutPI"" Type=""WebStack.QA.Test.OData.Containment.PaymentInstrument"" ContainsTarget=""true"" />
-        <NavigationProperty Name=""PayinPIs"" Type=""Collection(WebStack.QA.Test.OData.Containment.PaymentInstrument)"" ContainsTarget=""true"" />
+        <NavigationProperty Name=""PayoutPI"" Type=""Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument"" ContainsTarget=""true"" />
+        <NavigationProperty Name=""PayinPIs"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument)"" ContainsTarget=""true"" />
       </EntityType>
       <EntityType Name=""PaymentInstrument"">
         <Key>
@@ -125,10 +125,10 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         </Key>
         <Property Name=""PaymentInstrumentID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""FriendlyName"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Statement"" Type=""WebStack.QA.Test.OData.Containment.Statement"" ContainsTarget=""true"" />
+        <NavigationProperty Name=""Statement"" Type=""Microsoft.Test.E2E.AspNet.OData.Containment.Statement"" ContainsTarget=""true"" />
       </EntityType>
-      <EntityType Name=""PremiumAccount"" BaseType=""WebStack.QA.Test.OData.Containment.Account"">
-        <NavigationProperty Name=""GiftCard"" Type=""WebStack.QA.Test.OData.Containment.GiftCard"" Nullable=""false"" ContainsTarget=""true"" />
+      <EntityType Name=""PremiumAccount"" BaseType=""Microsoft.Test.E2E.AspNet.OData.Containment.Account"">
+        <NavigationProperty Name=""GiftCard"" Type=""Microsoft.Test.E2E.AspNet.OData.Containment.GiftCard"" Nullable=""false"" ContainsTarget=""true"" />
       </EntityType>
       <EntityType Name=""GiftCard"">
         <Key>
@@ -147,23 +147,23 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         <Property Name=""Amount"" Type=""Edm.Double"" Nullable=""false"" />
       </EntityType>
       <Action Name=""Clear"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.Containment.PaymentInstrument)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument)"" />
         <Parameter Name=""nameContains"" Type=""Edm.String"" Unicode=""false"" />
         <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
       </Action>
       <Action Name=""Delete"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.Containment.PaymentInstrument"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument"" />
       </Action>
       <Function Name=""GetCount"" IsBound=""true"">
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.Containment.PaymentInstrument)"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.Containment.PaymentInstrument)"" />
         <Parameter Name=""nameContains"" Type=""Edm.String"" Unicode=""false"" />
         <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
       </Function>
       <Action Name=""ResetDataSource"" />
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""Accounts"" EntityType=""WebStack.QA.Test.OData.Containment.Account"" />
-        <Singleton Name=""AnonymousAccount"" Type=""WebStack.QA.Test.OData.Containment.Account"" />
-        <ActionImport Name=""ResetDataSource"" Action=""WebStack.QA.Test.OData.Containment.ResetDataSource"" />
+        <EntitySet Name=""Accounts"" EntityType=""Microsoft.Test.E2E.AspNet.OData.Containment.Account"" />
+        <Singleton Name=""AnonymousAccount"" Type=""Microsoft.Test.E2E.AspNet.OData.Containment.Account"" />
+        <ActionImport Name=""ResetDataSource"" Action=""Microsoft.Test.E2E.AspNet.OData.Containment.ResetDataSource"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
@@ -261,7 +261,7 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         /// There are no comments for Property PayoutPI in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument PayoutPI
+        public global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument PayoutPI
         {
             get
             {
@@ -276,14 +276,14 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument _PayoutPI;
-        partial void OnPayoutPIChanging(global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument _PayoutPI;
+        partial void OnPayoutPIChanging(global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument value);
         partial void OnPayoutPIChanged();
         /// <summary>
         /// There are no comments for Property PayinPIs in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument> PayinPIs
+        public global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument> PayinPIs
         {
             get
             {
@@ -298,8 +298,8 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument> _PayinPIs = new global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnPayinPIsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::WebStack.QA.Test.OData.Containment.Proxy.PaymentInstrument> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument> _PayinPIs = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnPayinPIsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.PaymentInstrument> value);
         partial void OnPayinPIsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -387,7 +387,7 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         /// There are no comments for Property Statement in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Containment.Proxy.Statement Statement
+        public global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.Statement Statement
         {
             get
             {
@@ -402,8 +402,8 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Containment.Proxy.Statement _Statement;
-        partial void OnStatementChanging(global::WebStack.QA.Test.OData.Containment.Proxy.Statement value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.Statement _Statement;
+        partial void OnStatementChanging(global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.Statement value);
         partial void OnStatementChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -438,7 +438,7 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         /// <param name="accountID">Initial value of AccountID.</param>
         /// <param name="giftCard">Initial value of GiftCard.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public static PremiumAccount CreatePremiumAccount(int accountID, global::WebStack.QA.Test.OData.Containment.Proxy.GiftCard giftCard)
+        public static PremiumAccount CreatePremiumAccount(int accountID, global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.GiftCard giftCard)
         {
             PremiumAccount premiumAccount = new PremiumAccount();
             premiumAccount.AccountID = accountID;
@@ -453,7 +453,7 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
         /// There are no comments for Property GiftCard in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        public global::WebStack.QA.Test.OData.Containment.Proxy.GiftCard GiftCard
+        public global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.GiftCard GiftCard
         {
             get
             {
@@ -468,8 +468,8 @@ namespace WebStack.QA.Test.OData.Containment.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "1.0.0")]
-        private global::WebStack.QA.Test.OData.Containment.Proxy.GiftCard _GiftCard;
-        partial void OnGiftCardChanging(global::WebStack.QA.Test.OData.Containment.Proxy.GiftCard value);
+        private global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.GiftCard _GiftCard;
+        partial void OnGiftCardChanging(global::Microsoft.Test.E2E.AspNet.OData.Containment.Proxy.GiftCard value);
         partial void OnGiftCardChanged();
     }
     /// <summary>

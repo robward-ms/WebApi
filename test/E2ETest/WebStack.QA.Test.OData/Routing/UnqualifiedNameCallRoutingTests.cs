@@ -14,15 +14,14 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Routing
+namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     [NuwaFramework]
-    [NuwaHost(HostType.KatanaSelf)]
     public class UnqualifiedNameCallRoutingTests : NuwaTestBase
     {
         public UnqualifiedNameCallRoutingTests(NuwaClassFixture fixture)

@@ -6,7 +6,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest
 {
     [Filter("AutoExpandOrder", "Address")]
     public class Customer

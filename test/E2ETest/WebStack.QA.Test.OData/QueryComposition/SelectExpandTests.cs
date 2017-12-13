@@ -16,11 +16,12 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class SelectExpandTests : NuwaTestBase
     {
@@ -168,7 +169,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
-                "$select=Id,WebStack.QA.Test.OData.QueryComposition.SelectPremiumCustomer/Category", BaseAddress);
+                "$select=Id,Microsoft.Test.E2E.AspNet.OData.QueryComposition.SelectPremiumCustomer/Category", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
@@ -225,7 +226,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
                 "$select=Id&" +
-                "$expand=SelectOrders,WebStack.QA.Test.OData.QueryComposition.SelectPremiumCustomer/Bonuses", BaseAddress);
+                "$expand=SelectOrders,Microsoft.Test.E2E.AspNet.OData.QueryComposition.SelectPremiumCustomer/Bonuses", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
@@ -304,7 +305,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
                 "$select=Id&" +
-                "$expand=WebStack.QA.Test.OData.QueryComposition.SelectPremiumCustomer/Bonuses", BaseAddress);
+                "$expand=Microsoft.Test.E2E.AspNet.OData.QueryComposition.SelectPremiumCustomer/Bonuses", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();

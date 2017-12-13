@@ -15,13 +15,13 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 using Container = ModelBuilder.ActionTest.Default.Container;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     public class ODataActionTests : NuwaTestBase
     {
@@ -95,7 +95,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
             int newRating = 8;
             var product = cntr.ExecuteAsync<ODataActionTests_Product>(
-                new Uri(string.Format("{0}/odata/{1}(4)/WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
+                new Uri(string.Format("{0}/odata/{1}(4)/Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
                 new BodyOperationParameter("newRating", newRating)).Result.Single();
@@ -115,7 +115,7 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
             int newRating = 10;
             var products = cntr.ExecuteAsync<ODataActionTests_Product>(
-                new Uri(string.Format("{0}/odata/{1}/WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
+                new Uri(string.Format("{0}/odata/{1}/Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct/Default.{2}", BaseAddress, entitySetName, actionName)),
                 "POST",
                 true,
                 new BodyOperationParameter("productIds", new int[] { 4 }),

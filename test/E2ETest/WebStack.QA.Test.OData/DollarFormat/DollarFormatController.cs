@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
-namespace WebStack.QA.Test.OData.DollarFormat
+namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
 {
     public class DollarFormatCustomersController : ODataController
     {

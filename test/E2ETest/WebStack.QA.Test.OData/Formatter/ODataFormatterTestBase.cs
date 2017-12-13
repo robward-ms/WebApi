@@ -3,9 +3,9 @@
 
 using System;
 using Microsoft.OData.Client;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     public interface IODataFormatterTestBase
     {

@@ -249,7 +249,7 @@ namespace ModelBuilder.ActionTest.Default
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Service.Design.T4", "1.0.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices m:DataServiceVersion=""4.0"" m:MaxDataServiceVersion=""4.0"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-    <Schema Namespace=""WebStack.QA.Test.OData.ModelBuilder"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""ODataActionTests_Product"">
         <Key>
           <PropertyRef Name=""ID"" />
@@ -259,58 +259,58 @@ namespace ModelBuilder.ActionTest.Default
         <Property Name=""ReleaseDate"" Type=""Edm.DateTimeOffset"" />
         <Property Name=""SupportedUntil"" Type=""Edm.DateTimeOffset"" />
       </EntityType>
-      <EntityType Name=""ODataActionTests_RatedProduct"" BaseType=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"">
+      <EntityType Name=""ODataActionTests_RatedProduct"" BaseType=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"">
         <Property Name=""Rating"" Type=""Edm.Int32"" Nullable=""false"" />
       </EntityType>
     </Schema>
     <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <Action Name=""ExtendSupportDate1"" IsBound=""true"">
-        <ReturnType Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
+        <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
         <Parameter Name=""newDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </Action>
       <Action Name=""ExtendSupportDates1"" IsBound=""true"">
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
         <Parameter Name=""productIds"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Parameter Name=""newDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </Action>
       <Action Name=""UpdateRating1"" IsBound=""true"">
-        <ReturnType Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct"" />
+        <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct"" />
         <Parameter Name=""newRating"" Type=""Edm.Int32"" Nullable=""false"" />
       </Action>
       <Action Name=""UpdateRatings1"" IsBound=""true"">
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct)"" Nullable=""false"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct)"" Nullable=""false"" />
         <Parameter Name=""productIds"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Parameter Name=""newRating"" Type=""Edm.Int32"" Nullable=""false"" />
       </Action>
       <Action Name=""ExtendSupportDate2"" IsBound=""true"">
-        <ReturnType Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
+        <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
         <Parameter Name=""newDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </Action>
       <Action Name=""ExtendSupportDates2"" IsBound=""true"">
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
         <Parameter Name=""productIds"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Parameter Name=""newDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </Action>
       <Action Name=""UpdateRating2"" IsBound=""true"">
-        <ReturnType Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
-        <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct"" />
+        <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
+        <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct"" />
         <Parameter Name=""newRating"" Type=""Edm.Int32"" Nullable=""false"" />
       </Action>
       <Action Name=""UpdateRatings2"" IsBound=""true"">
-        <ReturnType Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
-        <Parameter Name=""bindingParameter"" Type=""Collection(WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_RatedProduct)"" Nullable=""false"" />
+        <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product)"" Nullable=""false"" />
+        <Parameter Name=""bindingParameter"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_RatedProduct)"" Nullable=""false"" />
         <Parameter Name=""productIds"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Parameter Name=""newRating"" Type=""Edm.Int32"" Nullable=""false"" />
       </Action>
       <EntityContainer Name=""Container"" m:IsDefaultEntityContainer=""true"">
-        <EntitySet Name=""ODataActionTests_Products1"" EntityType=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
-        <EntitySet Name=""ODataActionTests_Products2"" EntityType=""WebStack.QA.Test.OData.ModelBuilder.ODataActionTests_Product"" />
+        <EntitySet Name=""ODataActionTests_Products1"" EntityType=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
+        <EntitySet Name=""ODataActionTests_Products2"" EntityType=""Microsoft.Test.E2E.AspNet.OData.ModelBuilder.ODataActionTests_Product"" />
         <ActionImport Name=""ExtendSupportDate1"" Action=""Default.ExtendSupportDate1"" EntitySet=""ODataActionTests_Products1"" />
         <ActionImport Name=""ExtendSupportDates1"" Action=""Default.ExtendSupportDates1"" EntitySet=""ODataActionTests_Products1"" />
         <ActionImport Name=""UpdateRating1"" Action=""Default.UpdateRating1"" EntitySet=""ODataActionTests_Products1"" />

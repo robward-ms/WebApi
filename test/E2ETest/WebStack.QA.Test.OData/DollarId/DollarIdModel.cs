@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.DollarId
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
     /// <summary>
     /// EntityType "Singer"

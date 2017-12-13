@@ -3,7 +3,7 @@
 
 using System;
 
-namespace WebStack.QA.Test.OData
+namespace Microsoft.Test.E2E.AspNet.OData
 {
     public static class ODataHelper
     {

@@ -11,7 +11,7 @@ using Microsoft.OData.UriParser;
 using EdmPrimitiveTypeKind = Microsoft.OData.Edm.EdmPrimitiveTypeKind;
 using IEdmModel = Microsoft.OData.Edm.IEdmModel;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     public class DateAndTimeOfDayEdmModel
     {

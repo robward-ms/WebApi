@@ -14,11 +14,12 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class SingleResultExpandTests : NuwaTestBase
     {
@@ -120,7 +121,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         public async Task QueryASubSetOfThePropertiesPresentOnlyInADerivedEntryOnAnEntry()
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(10)?" +
-                "$select=Id,WebStack.QA.Test.OData.QueryComposition.SingleResultPremiumCustomer/Category", BaseAddress);
+                "$select=Id,Microsoft.Test.E2E.AspNet.OData.QueryComposition.SingleResultPremiumCustomer/Category", BaseAddress);
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
@@ -153,7 +154,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(10)?" +
                 "$select=Id&" +
-                "$expand=SingleResultOrders,WebStack.QA.Test.OData.QueryComposition.SingleResultPremiumCustomer/Bonuses", BaseAddress);
+                "$expand=SingleResultOrders,Microsoft.Test.E2E.AspNet.OData.QueryComposition.SingleResultPremiumCustomer/Bonuses", BaseAddress);
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
@@ -206,7 +207,7 @@ namespace WebStack.QA.Test.OData.QueryComposition
         {
             var queryUrl = string.Format("{0}/selectexpand/SingleResultCustomers(1)?" +
                 "$select=Id&" +
-                "$expand=WebStack.QA.Test.OData.QueryComposition.SingleResultPremiumCustomer/Bonuses", BaseAddress);
+                "$expand=Microsoft.Test.E2E.AspNet.OData.QueryComposition.SingleResultPremiumCustomer/Bonuses", BaseAddress);
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 

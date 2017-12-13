@@ -7,12 +7,12 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest
 {
     public class PageAttributeTest : NuwaTestBase
     {
@@ -66,9 +66,9 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
 
         [NuwaTheory]
         [InlineData(CustomerBaseUrl + "?$top=10")]
-        [InlineData(OrderBaseUrl + "/WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
+        [InlineData(OrderBaseUrl + "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$top=10")]
-        [InlineData(ModelBoundOrderBaseUrl + "/WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
+        [InlineData(ModelBoundOrderBaseUrl + "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
         public void MaxTopOnEnitityType(string url)
         {
             // MaxTop on entity type

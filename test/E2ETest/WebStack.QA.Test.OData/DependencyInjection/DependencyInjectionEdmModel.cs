@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.DependencyInjection
+namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
 {
     public class Customer
     {

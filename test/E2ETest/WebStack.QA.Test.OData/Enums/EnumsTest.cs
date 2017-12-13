@@ -16,16 +16,15 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Enums
+namespace Microsoft.Test.E2E.AspNet.OData.Enums
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class EnumsTest : NuwaTestBase
     {
         public EnumsTest(NuwaClassFixture fixture)
@@ -152,10 +151,10 @@ namespace WebStack.QA.Test.OData.Enums
             if (format == "application/json;odata.metadata=full")
             {
                 var typeOfAccessLevel = results[0]["AccessLevel@odata.type"].ToString();
-                Assert.Equal("#WebStack.QA.Test.OData.Enums.AccessLevel", typeOfAccessLevel);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel", typeOfAccessLevel);
 
                 var typeOfSkillSet = results[0]["SkillSet@odata.type"].ToString();
-                Assert.Equal("#Collection(WebStack.QA.Test.OData.Enums.Skill)", typeOfSkillSet);
+                Assert.Equal("#Collection(Microsoft.Test.E2E.AspNet.OData.Enums.Skill)", typeOfSkillSet);
             }
         }
 
@@ -179,7 +178,7 @@ namespace WebStack.QA.Test.OData.Enums
 
         [NuwaTheory]
         [InlineData("/convention/Employees(1)/SkillSet/$count", 2)]
-        [InlineData("/convention/Employees(1)/SkillSet/$count?$filter=$it eq WebStack.QA.Test.OData.Enums.Skill'Sql'", 1)]
+        [InlineData("/convention/Employees(1)/SkillSet/$count?$filter=$it eq Microsoft.Test.E2E.AspNet.OData.Enums.Skill'Sql'", 1)]
         public async Task QuerySkillSetCount(string url, int expectedCount)
         {
             // Arrange
@@ -227,7 +226,7 @@ namespace WebStack.QA.Test.OData.Enums
             if (format != "application/json;odata.metadata=none")
             {
                 var context = json["@odata.context"].ToString();
-                Assert.True(context.IndexOf("/$metadata#Collection(WebStack.QA.Test.OData.Enums.Skill)") >= 0);
+                Assert.True(context.IndexOf("/$metadata#Collection(Microsoft.Test.E2E.AspNet.OData.Enums.Skill)") >= 0);
             }
         }
 
@@ -294,10 +293,10 @@ namespace WebStack.QA.Test.OData.Enums
             if (format == "application/json;odata.metadata=full")
             {
                 var typeOfAccessLevel = result["AccessLevel@odata.type"].ToString();
-                Assert.Equal("#WebStack.QA.Test.OData.Enums.AccessLevel", typeOfAccessLevel);
+                Assert.Equal("#Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel", typeOfAccessLevel);
 
                 var typeOfSkillSet = result["SkillSet@odata.type"].ToString();
-                Assert.Equal("#Collection(WebStack.QA.Test.OData.Enums.Skill)", typeOfSkillSet);
+                Assert.Equal("#Collection(Microsoft.Test.E2E.AspNet.OData.Enums.Skill)", typeOfSkillSet);
             }
         }
 
@@ -315,7 +314,7 @@ namespace WebStack.QA.Test.OData.Enums
 
             using (var response = await this.Client.GetAsync(uriEq))
             {
-                // http://<siteurl>/convention/Employees?$filter=AccessLevel eq WebStack.QA.Test.OData.Enums.AccessLevel'Read'&$format=<Format>
+                // http://<siteurl>/convention/Employees?$filter=AccessLevel eq Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'Read'&$format=<Format>
                 Assert.True(response.IsSuccessStatusCode);
 
                 var result = await response.Content.ReadAsAsync<JObject>();
@@ -326,7 +325,7 @@ namespace WebStack.QA.Test.OData.Enums
 
             using (var response = await this.Client.GetAsync(uriHas))
             {
-                // http://<siteurl>/convention/Employees?$filter=AccessLevel has WebStack.QA.Test.OData.Enums.AccessLevel'Read'&$format=<Format>
+                // http://<siteurl>/convention/Employees?$filter=AccessLevel has Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'Read'&$format=<Format>
                 Assert.True(response.IsSuccessStatusCode);
 
                 var result = await response.Content.ReadAsAsync<JObject>();
@@ -555,7 +554,7 @@ namespace WebStack.QA.Test.OData.Enums
         public async Task EnumInActionParameter()
         {
             await ResetDatasource();
-            var postUri = this.BaseAddress + "/convention/Employees(1)/WebStack.QA.Test.OData.Enums.AddSkill";
+            var postUri = this.BaseAddress + "/convention/Employees(1)/Microsoft.Test.E2E.AspNet.OData.Enums.AddSkill";
             var postContent = new StringContent(@"{""skill"":""Sql""}");
             postContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var response = await Client.PostAsync(postUri, postContent);
@@ -588,7 +587,7 @@ namespace WebStack.QA.Test.OData.Enums
         public async Task EnumInFunctionOutput()
         {
             await ResetDatasource();
-            var getUri = this.BaseAddress + "/convention/Employees(1)/WebStack.QA.Test.OData.Enums.GetAccessLevel";
+            var getUri = this.BaseAddress + "/convention/Employees(1)/Microsoft.Test.E2E.AspNet.OData.Enums.GetAccessLevel";
             var response = await this.Client.GetAsync(getUri);
             response.EnsureSuccessStatusCode();
 
@@ -598,8 +597,8 @@ namespace WebStack.QA.Test.OData.Enums
         }
 
         [NuwaTheory]
-        [InlineData("/convention/HasAccessLevel(ID=1,AccessLevel=WebStack.QA.Test.OData.Enums.AccessLevel'Read')", false)]
-        [InlineData("/convention/HasAccessLevel(ID=2,AccessLevel=WebStack.QA.Test.OData.Enums.AccessLevel'1')", true)]
+        [InlineData("/convention/HasAccessLevel(ID=1,AccessLevel=Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'Read')", false)]
+        [InlineData("/convention/HasAccessLevel(ID=2,AccessLevel=Microsoft.Test.E2E.AspNet.OData.Enums.AccessLevel'1')", true)]
         public async Task EnumInFunctionParameter(string url, bool expectedValue)
         {
             await ResetDatasource();

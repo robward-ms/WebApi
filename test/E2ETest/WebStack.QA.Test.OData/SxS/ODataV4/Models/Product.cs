@@ -3,7 +3,7 @@
 
 using System;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4.Models
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Models
 {
     public class Product
     {

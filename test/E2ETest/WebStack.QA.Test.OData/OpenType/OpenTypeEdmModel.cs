@@ -4,11 +4,11 @@
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.OpenType
+namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 {
     internal class OpenComplexTypeEdmModel
     {
-        private const string NameSpace = "WebStack.QA.Test.OData.OpenType";
+        private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.OpenType";
 
         public static IEdmModel GetTypedExplicitModel()
         {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http.Dispatcher;
 
-namespace WebStack.QA.Test.OData.Common
+namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
     internal class TestAssemblyResolver : IAssembliesResolver
     {

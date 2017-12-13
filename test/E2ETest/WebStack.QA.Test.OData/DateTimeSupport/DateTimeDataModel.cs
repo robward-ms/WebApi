@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.DateTimeSupport
+namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
     public class File
     {

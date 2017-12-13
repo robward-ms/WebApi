@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.CombinedTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 {
     public class CustomersController : ODataController
     {

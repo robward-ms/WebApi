@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.DollarFormat
+namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
 {
     public class DollarFormatCustomer
     {

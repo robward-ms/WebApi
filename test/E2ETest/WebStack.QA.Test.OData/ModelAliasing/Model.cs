@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace WebStack.QA.Test.OData.ModelAliasing
+namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
     public class ModelAliasingMetadataCustomer
     {

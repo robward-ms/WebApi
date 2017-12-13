@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.UnboundOperation
+namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 {
     public class ConventionCustomer
     {

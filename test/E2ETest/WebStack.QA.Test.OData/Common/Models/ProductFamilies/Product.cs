@@ -3,7 +3,7 @@
 
 using System;
 
-namespace WebStack.QA.Test.OData.Common.Models.ProductFamilies
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies
 {
     public partial class Product
     {

@@ -4,18 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     [EntitySetAttribute("SpecialCharactersLinkGenerationTests")]
     [Key("Name")]
@@ -107,9 +107,6 @@ namespace WebStack.QA.Test.OData.ModelBuilder
 
     // Skip webhost as it denies most of the special characters
     [NuwaFramework]
-    [NuwaHost(HostType.KatanaSelf)]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class SpecialCharactersLinkGenerationTests : NuwaTestBase
     {
         public SpecialCharactersLinkGenerationTests(NuwaClassFixture fixture)

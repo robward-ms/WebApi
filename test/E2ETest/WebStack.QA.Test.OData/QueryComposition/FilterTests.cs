@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Models;
-using WebStack.QA.Test.OData.Common.Models.Products;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class FilterTests : NuwaTestBase
     {

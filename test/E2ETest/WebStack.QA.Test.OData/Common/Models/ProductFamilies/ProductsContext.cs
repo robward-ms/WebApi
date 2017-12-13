@@ -4,7 +4,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 
-namespace WebStack.QA.Test.OData.Common.Models.ProductFamilies
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies
 {
     public class ProductsContext : DbContext
     {

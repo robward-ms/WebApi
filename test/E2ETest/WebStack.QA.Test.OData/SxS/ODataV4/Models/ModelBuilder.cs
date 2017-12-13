@@ -4,7 +4,7 @@
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.SxS.ODataV4.Models
+namespace Microsoft.Test.E2E.AspNet.OData.SxS.ODataV4.Models
 {
     public static class ModelBuilder
     {

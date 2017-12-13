@@ -4,7 +4,7 @@
 using System.Linq;
 using Microsoft.AspNet.OData;
 
-namespace WebStack.QA.Test.OData.Aggregation.Paged
+namespace Microsoft.Test.E2E.AspNet.OData.Aggregation.Paged
 {
     public class CustomersController : BaseCustomersController
     {

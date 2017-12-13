@@ -6,7 +6,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.PageAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest
 {
     [Page(MaxTop = 5, PageSize = 1)]
     public class Customer

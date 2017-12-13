@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-namespace WebStack.QA.Test.OData.OpenType
+namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 {
     using System;
     using System.Collections.Generic;
@@ -85,7 +85,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [EnableQuery]
-        [ODataRoute("Employees/WebStack.QA.Test.OData.OpenType.Manager({key})")]
+        [ODataRoute("Employees/Microsoft.Test.E2E.AspNet.OData.OpenType.Manager({key})")]
         public IHttpActionResult GetManager(int key)
         {
             Employee manager = Employees.OfType<Manager>().Single(e => e.Id == key);
@@ -267,7 +267,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpGet]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.OpenType.PremiumAccount/Since")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.PremiumAccount/Since")]
         public IHttpActionResult GetSinceFromPremiumAccount(int key)
         {
             return Ok(Accounts.OfType<PremiumAccount>().SingleOrDefault(e => e.Id == key).Since);
@@ -303,7 +303,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpGet]
-        [ODataRoute("Accounts({key})/Address/WebStack.QA.Test.OData.OpenType.GlobalAddress")]
+        [ODataRoute("Accounts({key})/Address/Microsoft.Test.E2E.AspNet.OData.OpenType.GlobalAddress")]
         public IHttpActionResult GetGlobalAddress(int key)
         {
             Address address = Accounts.SingleOrDefault(e => e.Id == key).Address;
@@ -547,7 +547,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpGet]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.OpenType.GetAddressFunction()")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.GetAddressFunction()")]
         public Address GetAddressFunctionAttributeRouting(int key)
         {
             return Accounts.SingleOrDefault(e => e.Id == key).Address;
@@ -562,7 +562,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpPost]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.OpenType.IncreaseAgeAction()")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.IncreaseAgeAction()")]
         public AccountInfo IncreaseAgeActionAttributeRouting(int key)
         {
             AccountInfo accountInfo = Accounts.SingleOrDefault(e => e.Id == key).AccountInfo;
@@ -583,7 +583,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpPost]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.OpenType.AddShipAddress")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.AddShipAddress")]
         public IHttpActionResult AddShipAddress(int key, ODataActionParameters parameters)
         {
             Account account = Accounts.Single(c => c.Id == key);
@@ -598,7 +598,7 @@ namespace WebStack.QA.Test.OData.OpenType
         }
 
         [HttpGet]
-        [ODataRoute("Accounts({key})/WebStack.QA.Test.OData.OpenType.GetShipAddresses")]
+        [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.GetShipAddresses")]
         public IHttpActionResult GetShipAddresses(int key)
         {
             Account account = Accounts.Single(c => c.Id == key);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace WebStack.QA.Test.OData.Cast
+namespace Microsoft.Test.E2E.AspNet.OData.Cast
 {
     public class DataSource
     {

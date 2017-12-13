@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Web.Http;
 using System.Xml;
 using Microsoft.AspNet.OData.Builder;
@@ -12,10 +11,11 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     [NuwaFramework]
     public class ActionMetadataTests : NuwaTestBase

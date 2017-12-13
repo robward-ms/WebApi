@@ -7,7 +7,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData
+namespace Microsoft.Test.E2E.AspNet.OData
 {
     public static class ODataPathHandlerExtensions
     {

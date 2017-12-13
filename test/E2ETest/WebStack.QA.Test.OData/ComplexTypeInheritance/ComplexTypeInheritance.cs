@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 7/14/2014 3:46:34 PM
-namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
+namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -39,7 +39,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.ComplexTypeInheritance", "WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance", "Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -55,13 +55,13 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
-                    return string.Concat("WebStack.QA.Test.OData.ComplexTypeInheritance.", originalNameAttribute.OriginalName);
+                    return string.Concat("Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.", originalNameAttribute.OriginalName);
                 }
-                return string.Concat("WebStack.QA.Test.OData.ComplexTypeInheritance.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.", clientType.Name);
             }
             if (originalNameAttribute != null)
             {
@@ -103,25 +103,25 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:Runtime>
     <edmx:ConceptualModels>
-      <Schema Namespace=""WebStack.QA.Test.OData.ComplexTypeInheritance"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
         <EntityType Name=""Window"">
           <Key>
             <PropertyRef Name=""Id"" />
           </Key>
           <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
           <Property Name=""Name"" Type=""Edm.String"" />
-          <Property Name=""CurrentShape"" Type=""WebStack.QA.Test.OData.ComplexTypeInheritance.Shape"" />
-          <Property Name=""OptionalShapes"" Type=""Collection(WebStack.QA.Test.OData.ComplexTypeInheritance.Shape)"" />
-          <NavigationProperty Name=""Parent"" Type=""WebStack.QA.Test.OData.ComplexTypeInheritance.Window"" />
+          <Property Name=""CurrentShape"" Type=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Shape"" />
+          <Property Name=""OptionalShapes"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Shape)"" />
+          <NavigationProperty Name=""Parent"" Type=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Window"" />
         </EntityType>
         <ComplexType Name=""Shape"" Abstract=""true"">
           <Property Name=""HasBorder"" Type=""Edm.Boolean"" Nullable=""false"" />
         </ComplexType>
-        <ComplexType Name=""Polygon"" BaseType=""WebStack.QA.Test.OData.ComplexTypeInheritance.Shape"">
-          <Property Name=""Vertexes"" Type=""Collection(WebStack.QA.Test.OData.ComplexTypeInheritance.Point)"" />
+        <ComplexType Name=""Polygon"" BaseType=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Shape"">
+          <Property Name=""Vertexes"" Type=""Collection(Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Point)"" />
         </ComplexType>
-        <ComplexType Name=""Rectangle"" BaseType=""WebStack.QA.Test.OData.ComplexTypeInheritance.Polygon"">
-          <Property Name=""TopLeft"" Type=""WebStack.QA.Test.OData.ComplexTypeInheritance.Point"" />
+        <ComplexType Name=""Rectangle"" BaseType=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Polygon"">
+          <Property Name=""TopLeft"" Type=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Point"" />
           <Property Name=""Width"" Type=""Edm.Int32"" Nullable=""false"" />
           <Property Name=""Height"" Type=""Edm.Int32"" Nullable=""false"" />
         </ComplexType>
@@ -129,12 +129,12 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
           <Property Name=""X"" Type=""Edm.Int32"" Nullable=""false"" />
           <Property Name=""Y"" Type=""Edm.Int32"" Nullable=""false"" />
         </ComplexType>
-        <ComplexType Name=""Circle"" BaseType=""WebStack.QA.Test.OData.ComplexTypeInheritance.Shape"">
-          <Property Name=""Center"" Type=""WebStack.QA.Test.OData.ComplexTypeInheritance.Point"" />
+        <ComplexType Name=""Circle"" BaseType=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Shape"">
+          <Property Name=""Center"" Type=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Point"" />
           <Property Name=""Radius"" Type=""Edm.Int32"" Nullable=""false"" />
         </ComplexType>
         <EntityContainer Name=""Container"">
-          <EntitySet Name=""Windows"" EntityType=""WebStack.QA.Test.OData.ComplexTypeInheritance.Window"">
+          <EntitySet Name=""Windows"" EntityType=""Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Window"">
             <NavigationPropertyBinding Path=""Parent"" Target=""Windows"" />
           </EntitySet>
         </EntityContainer>
@@ -188,7 +188,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         /// There are no comments for Parent in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        public global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle Parent
+        public global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle Parent
         {
             get
             {
@@ -198,13 +198,13 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
                 }
                 if ((this._Parent == null))
                 {
-                    this._Parent = new global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle(this.Context, GetPath("Parent"));
+                    this._Parent = new global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle(this.Context, GetPath("Parent"));
                 }
                 return this._Parent;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle _Parent;
+        private global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle _Parent;
     }
     /// <summary>
     /// There are no comments for Window in the schema.
@@ -279,7 +279,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CurrentShape")]
-        public global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape CurrentShape
+        public global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape CurrentShape
         {
             get
             {
@@ -294,15 +294,15 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape _CurrentShape;
-        partial void OnCurrentShapeChanging(global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape value);
+        private global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape _CurrentShape;
+        partial void OnCurrentShapeChanging(global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape value);
         partial void OnCurrentShapeChanged();
         /// <summary>
         /// There are no comments for Property OptionalShapes in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OptionalShapes")]
-        public global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape> OptionalShapes
+        public global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape> OptionalShapes
         {
             get
             {
@@ -317,15 +317,15 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape> _OptionalShapes = new global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape>();
-        partial void OnOptionalShapesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Shape> value);
+        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape> _OptionalShapes = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape>();
+        partial void OnOptionalShapesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Shape> value);
         partial void OnOptionalShapesChanged();
         /// <summary>
         /// There are no comments for Property Parent in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Parent")]
-        public global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Window Parent
+        public global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Window Parent
         {
             get
             {
@@ -340,8 +340,8 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Window _Parent;
-        partial void OnParentChanging(global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Window value);
+        private global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Window _Parent;
+        partial void OnParentChanging(global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Window value);
         partial void OnParentChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -430,7 +430,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Vertexes")]
-        public global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point> Vertexes
+        public global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point> Vertexes
         {
             get
             {
@@ -445,8 +445,8 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point> _Vertexes = new global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point>();
-        partial void OnVertexesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point> value);
+        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point> _Vertexes = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point>();
+        partial void OnVertexesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point> value);
         partial void OnVertexesChanged();
     }
     /// <summary>
@@ -475,7 +475,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("TopLeft")]
-        public global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point TopLeft
+        public global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point TopLeft
         {
             get
             {
@@ -490,8 +490,8 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point _TopLeft;
-        partial void OnTopLeftChanging(global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point value);
+        private global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point _TopLeft;
+        partial void OnTopLeftChanging(global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point value);
         partial void OnTopLeftChanged();
         /// <summary>
         /// There are no comments for Property Width in the schema.
@@ -647,7 +647,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Center")]
-        public global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point Center
+        public global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point Center
         {
             get
             {
@@ -662,8 +662,8 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point _Center;
-        partial void OnCenterChanging(global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Point value);
+        private global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point _Center;
+        partial void OnCenterChanging(global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Point value);
         partial void OnCenterChanged();
         /// <summary>
         /// There are no comments for Property Radius in the schema.
@@ -695,13 +695,13 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy
     public static class ExtensionMethods2
     {
         /// <summary>
-        /// Get an entity of type global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Window as global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Window as global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.Window> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.Window> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy.WindowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy.WindowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
     }
 }

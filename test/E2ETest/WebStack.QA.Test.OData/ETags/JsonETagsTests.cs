@@ -15,11 +15,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.ETags
+namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     [NuwaFramework]
     public class JsonETagsTests : NuwaTestBase
@@ -66,7 +67,7 @@ namespace WebStack.QA.Test.OData.ETags
         public void ModelBuilderTest()
         {
             string expectMetadata =
-                "<EntitySet Name=\"ETagsCustomers\" EntityType=\"WebStack.QA.Test.OData.ETags.ETagsCustomer\">\r\n" +
+                "<EntitySet Name=\"ETagsCustomers\" EntityType=\"Microsoft.Test.E2E.AspNet.OData.ETags.ETagsCustomer\">\r\n" +
                 "          <NavigationPropertyBinding Path=\"RelatedCustomer\" Target=\"ETagsCustomers\" />\r\n" +
                 "          <Annotation Term=\"Org.OData.Core.V1.OptimisticConcurrency\">\r\n" +
                 "            <Collection>\r\n" +

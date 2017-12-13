@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 7/29/2014 2:16:23 PM
-namespace WebStack.QA.Test.OData.OpenType.Typed.Client
+namespace Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -39,7 +39,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "WebStack.QA.Test.OData.OpenType", "WebStack.QA.Test.OData.OpenType.Typed.Client");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.E2E.AspNet.OData.OpenType", "Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -55,13 +55,13 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
-            if (clientType.Namespace.Equals("WebStack.QA.Test.OData.OpenType.Typed.Client", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
-                    return string.Concat("WebStack.QA.Test.OData.OpenType.", originalNameAttribute.OriginalName);
+                    return string.Concat("Microsoft.Test.E2E.AspNet.OData.OpenType.", originalNameAttribute.OriginalName);
                 }
-                return string.Concat("WebStack.QA.Test.OData.OpenType.", clientType.Name);
+                return string.Concat("Microsoft.Test.E2E.AspNet.OData.OpenType.", clientType.Name);
             }
             if (originalNameAttribute != null)
             {
@@ -128,14 +128,14 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:Runtime>
     <edmx:ConceptualModels>
-      <Schema Namespace=""WebStack.QA.Test.OData.OpenType"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Schema Namespace=""Microsoft.Test.E2E.AspNet.OData.OpenType"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
         <EntityType Name=""Employee"">
           <Key>
             <PropertyRef Name=""Id"" />
           </Key>
           <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
           <Property Name=""Name"" Type=""Edm.String"" />
-          <NavigationProperty Name=""Account"" Type=""WebStack.QA.Test.OData.OpenType.Account"" />
+          <NavigationProperty Name=""Account"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
         </EntityType>
         <EntityType Name=""Account"" OpenType=""true"">
           <Key>
@@ -143,9 +143,9 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
           </Key>
           <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
           <Property Name=""Name"" Type=""Edm.String"" />
-          <Property Name=""AccountInfo"" Type=""WebStack.QA.Test.OData.OpenType.AccountInfo"" />
-          <Property Name=""Address"" Type=""WebStack.QA.Test.OData.OpenType.Address"" />
-          <Property Name=""Tags"" Type=""WebStack.QA.Test.OData.OpenType.Tags"" />
+          <Property Name=""AccountInfo"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.AccountInfo"" />
+          <Property Name=""Address"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Address"" />
+          <Property Name=""Tags"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Tags"" />
         </EntityType>
         <ComplexType Name=""Address"" OpenType=""true"">
           <Property Name=""City"" Type=""Edm.String"" />
@@ -155,10 +155,10 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
           <Property Name=""NickName"" Type=""Edm.String"" />
         </ComplexType>
         <ComplexType Name=""Tags"" OpenType=""true"" />
-        <EntityType Name=""PremiumAccount"" BaseType=""WebStack.QA.Test.OData.OpenType.Account"" OpenType=""true"">
+        <EntityType Name=""PremiumAccount"" BaseType=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" OpenType=""true"">
           <Property Name=""Since"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
         </EntityType>
-        <EntityType Name=""Manager"" BaseType=""WebStack.QA.Test.OData.OpenType.Employee"" OpenType=""true"">
+        <EntityType Name=""Manager"" BaseType=""Microsoft.Test.E2E.AspNet.OData.OpenType.Employee"" OpenType=""true"">
           <Property Name=""Heads"" Type=""Edm.Int32"" Nullable=""false"" />
         </EntityType>
         <EnumType Name=""Gender"">
@@ -166,35 +166,35 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
           <Member Name=""Female"" Value=""2"" />
         </EnumType>
         <Function Name=""GetAddressFunction"" IsBound=""true"">
-          <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.OpenType.Account"" />
-          <ReturnType Type=""WebStack.QA.Test.OData.OpenType.Address"" />
+          <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
+          <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Address"" />
         </Function>
         <Function Name=""GetShipAddresses"" IsBound=""true"">
-          <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.OpenType.Account"" />
-          <ReturnType Type=""Collection(WebStack.QA.Test.OData.OpenType.Address)"" />
+          <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
+          <ReturnType Type=""Collection(Microsoft.Test.E2E.AspNet.OData.OpenType.Address)"" />
         </Function>
         <Action Name=""IncreaseAgeAction"" IsBound=""true"">
-          <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.OpenType.Account"" />
-          <ReturnType Type=""WebStack.QA.Test.OData.OpenType.AccountInfo"" />
+          <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
+          <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.AccountInfo"" />
         </Action>
         <Action Name=""AddShipAddress"" IsBound=""true"">
-          <Parameter Name=""bindingParameter"" Type=""WebStack.QA.Test.OData.OpenType.Account"" />
-          <Parameter Name=""address"" Type=""WebStack.QA.Test.OData.OpenType.Address"" />
+          <Parameter Name=""bindingParameter"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
+          <Parameter Name=""address"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Address"" />
           <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
         </Action>
         <Action Name=""ResetDataSource"" />
         <Action Name=""UpdateAddressAction"">
-          <Parameter Name=""Address"" Type=""WebStack.QA.Test.OData.OpenType.Address"" />
+          <Parameter Name=""Address"" Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Address"" />
           <Parameter Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
-          <ReturnType Type=""WebStack.QA.Test.OData.OpenType.Address"" />
+          <ReturnType Type=""Microsoft.Test.E2E.AspNet.OData.OpenType.Address"" />
         </Action>
         <EntityContainer Name=""Container"">
-          <EntitySet Name=""Employees"" EntityType=""WebStack.QA.Test.OData.OpenType.Employee"">
+          <EntitySet Name=""Employees"" EntityType=""Microsoft.Test.E2E.AspNet.OData.OpenType.Employee"">
             <NavigationPropertyBinding Path=""Account"" Target=""Accounts"" />
           </EntitySet>
-          <EntitySet Name=""Accounts"" EntityType=""WebStack.QA.Test.OData.OpenType.Account"" />
-          <ActionImport Name=""ResetDataSource"" Action=""WebStack.QA.Test.OData.OpenType.ResetDataSource"" />
-          <ActionImport Name=""UpdateAddressAction"" Action=""WebStack.QA.Test.OData.OpenType.UpdateAddressAction"" />
+          <EntitySet Name=""Accounts"" EntityType=""Microsoft.Test.E2E.AspNet.OData.OpenType.Account"" />
+          <ActionImport Name=""ResetDataSource"" Action=""Microsoft.Test.E2E.AspNet.OData.OpenType.ResetDataSource"" />
+          <ActionImport Name=""UpdateAddressAction"" Action=""Microsoft.Test.E2E.AspNet.OData.OpenType.UpdateAddressAction"" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -234,9 +234,9 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// <summary>
         /// There are no comments for UpdateAddressAction in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> UpdateAddressAction(global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address Address, int ID)
+        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> UpdateAddressAction(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address Address, int ID)
         {
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(this, this.BaseUri.OriginalString.Trim('/') + "/UpdateAddressAction", new global::Microsoft.OData.Client.BodyOperationParameter("Address", Address),
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(this, this.BaseUri.OriginalString.Trim('/') + "/UpdateAddressAction", new global::Microsoft.OData.Client.BodyOperationParameter("Address", Address),
                     new global::Microsoft.OData.Client.BodyOperationParameter("ID", ID));
         }
     }
@@ -261,7 +261,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// There are no comments for Account in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle Account
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle Account
         {
             get
             {
@@ -271,13 +271,13 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
                 }
                 if ((this._Account == null))
                 {
-                    this._Account = new global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle(this.Context, GetPath("Account"));
+                    this._Account = new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle(this.Context, GetPath("Account"));
                 }
                 return this._Account;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle _Account;
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle _Account;
     }
     /// <summary>
     /// There are no comments for Employee in the schema.
@@ -352,7 +352,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Account")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account Account
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account Account
         {
             get
             {
@@ -367,8 +367,8 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account _Account;
-        partial void OnAccountChanging(global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account value);
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account _Account;
+        partial void OnAccountChanging(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account value);
         partial void OnAccountChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -479,7 +479,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AccountInfo")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo AccountInfo
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo AccountInfo
         {
             get
             {
@@ -494,15 +494,15 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo _AccountInfo;
-        partial void OnAccountInfoChanging(global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo value);
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo _AccountInfo;
+        partial void OnAccountInfoChanging(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo value);
         partial void OnAccountInfoChanged();
         /// <summary>
         /// There are no comments for Property Address in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Address")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address Address
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address Address
         {
             get
             {
@@ -517,15 +517,15 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address _Address;
-        partial void OnAddressChanging(global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address value);
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address _Address;
+        partial void OnAddressChanging(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address value);
         partial void OnAddressChanged();
         /// <summary>
         /// There are no comments for Property Tags in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Tags")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.Tags Tags
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Tags Tags
         {
             get
             {
@@ -540,8 +540,8 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.Tags _Tags;
-        partial void OnTagsChanging(global::WebStack.QA.Test.OData.OpenType.Typed.Client.Tags value);
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Tags _Tags;
+        partial void OnTagsChanging(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Tags value);
         partial void OnTagsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -564,28 +564,28 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// There are no comments for GetAddressFunction in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetAddressFunction")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetAddressFunction()
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetAddressFunction()
         {
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/WebStack.QA.Test.OData.OpenType.GetAddressFunction" + parameterString, false);
+            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(this.Context, string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.E2E.AspNet.OData.OpenType.GetAddressFunction" + parameterString, false);
         }
         /// <summary>
         /// There are no comments for GetShipAddresses in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipAddresses")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetShipAddresses()
+        public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetShipAddresses()
         {
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(this.Context);
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
-            return this.Context.CreateQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/WebStack.QA.Test.OData.OpenType.GetShipAddresses" + parameterString, false);
+            return this.Context.CreateQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))) + "/Microsoft.Test.E2E.AspNet.OData.OpenType.GetShipAddresses" + parameterString, false);
         }
         /// <summary>
         /// There are no comments for IncreaseAgeAction in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo> IncreaseAgeAction()
+        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo> IncreaseAgeAction()
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -593,12 +593,12 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
                 throw new global::System.Exception("cannot find entity");
             }
 
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo>(this.Context, resource.EditLink.OriginalString.Trim('/') + "/WebStack.QA.Test.OData.OpenType.IncreaseAgeAction");
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo>(this.Context, resource.EditLink.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.OpenType.IncreaseAgeAction");
         }
         /// <summary>
         /// There are no comments for AddShipAddress in the schema.
         /// </summary>
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> AddShipAddress(global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address address)
+        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> AddShipAddress(global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address address)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -606,7 +606,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
                 throw new global::System.Exception("cannot find entity");
             }
 
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<int>(this.Context, resource.EditLink.OriginalString.Trim('/') + "/WebStack.QA.Test.OData.OpenType.AddShipAddress", new global::Microsoft.OData.Client.BodyOperationParameter("address", address));
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<int>(this.Context, resource.EditLink.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.OpenType.AddShipAddress", new global::Microsoft.OData.Client.BodyOperationParameter("address", address));
         }
     }
     /// <summary>
@@ -836,7 +836,7 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
         /// There are no comments for Account in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        public global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle Account
+        public global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle Account
         {
             get
             {
@@ -846,13 +846,13 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
                 }
                 if ((this._Account == null))
                 {
-                    this._Account = new global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle(this.Context, GetPath("Account"));
+                    this._Account = new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle(this.Context, GetPath("Account"));
                 }
                 return this._Account;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.0.0")]
-        private global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle _Account;
+        private global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle _Account;
     }
     /// <summary>
     /// There are no comments for Manager in the schema.
@@ -918,63 +918,63 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Get an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Employee as global::WebStack.QA.Test.OData.OpenType.Typed.Client.EmployeeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Employee as global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.EmployeeSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Employee> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Employee> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.EmployeeSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.EmployeeSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account as global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account as global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount as global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccountSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount as global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccountSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccountSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccountSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccountSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccountSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account to its derived type global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount
+        /// Cast an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account to its derived type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount
         /// </summary>
         /// <param name="source">source entity</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccountSingle CastToPremiumAccount(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccountSingle CastToPremiumAccount(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount> query = source.CastTo<global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount>();
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccountSingle(source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount> query = source.CastTo<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount>();
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccountSingle(source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Manager as global::WebStack.QA.Test.OData.OpenType.Typed.Client.ManagerSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Manager as global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.ManagerSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.ManagerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Manager> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.ManagerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Manager> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.ManagerSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.ManagerSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Employee to its derived type global::WebStack.QA.Test.OData.OpenType.Typed.Client.Manager
+        /// Cast an entity of type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Employee to its derived type global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Manager
         /// </summary>
         /// <param name="source">source entity</param>
-        public static global::WebStack.QA.Test.OData.OpenType.Typed.Client.ManagerSingle CastToManager(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Employee> source)
+        public static global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.ManagerSingle CastToManager(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Employee> source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Manager> query = source.CastTo<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Manager>();
-            return new global::WebStack.QA.Test.OData.OpenType.Typed.Client.ManagerSingle(source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Manager> query = source.CastTo<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Manager>();
+            return new global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.ManagerSingle(source.Context, query.GetPath(null));
         }
         /// <summary>
         /// There are no comments for GetAddressFunction in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetAddressFunction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetAddressFunction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source)
         {
             if (!source.IsComposable)
             {
@@ -982,12 +982,12 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
 
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(source.Context, source.GetPath("WebStack.QA.Test.OData.OpenType.GetAddressFunction" + parameterString), false);
+            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(source.Context, source.GetPath("Microsoft.Test.E2E.AspNet.OData.OpenType.GetAddressFunction" + parameterString), false);
         }
         /// <summary>
         /// There are no comments for GetAddressFunction in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetAddressFunction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount> source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetAddressFunction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount> source)
         {
             if (!source.IsComposable)
             {
@@ -995,12 +995,12 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
 
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(source.Context, source.GetPath("WebStack.QA.Test.OData.OpenType.GetAddressFunction" + parameterString), false);
+            return new global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(source.Context, source.GetPath("Microsoft.Test.E2E.AspNet.OData.OpenType.GetAddressFunction" + parameterString), false);
         }
         /// <summary>
         /// There are no comments for GetShipAddresses in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetShipAddresses(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source)
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetShipAddresses(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source)
         {
             if (!source.IsComposable)
             {
@@ -1008,12 +1008,12 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
 
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return source.Context.CreateQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(source.GetPath("WebStack.QA.Test.OData.OpenType.GetShipAddresses" + parameterString), false);
+            return source.Context.CreateQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(source.GetPath("Microsoft.Test.E2E.AspNet.OData.OpenType.GetShipAddresses" + parameterString), false);
         }
         /// <summary>
         /// There are no comments for GetShipAddresses in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address> GetShipAddresses(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.PremiumAccount> source)
+        public static global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address> GetShipAddresses(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.PremiumAccount> source)
         {
             if (!source.IsComposable)
             {
@@ -1021,31 +1021,31 @@ namespace WebStack.QA.Test.OData.OpenType.Typed.Client
             }
 
             string parameterString = global::Microsoft.OData.Client.Serializer.GetParameterString(source.Context);
-            return source.Context.CreateQuery<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address>(source.GetPath("WebStack.QA.Test.OData.OpenType.GetShipAddresses" + parameterString), false);
+            return source.Context.CreateQuery<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address>(source.GetPath("Microsoft.Test.E2E.AspNet.OData.OpenType.GetShipAddresses" + parameterString), false);
         }
         /// <summary>
         /// There are no comments for IncreaseAgeAction in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo> IncreaseAgeAction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo> IncreaseAgeAction(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source)
         {
             if (!source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.AccountInfo>(source.Context, source.AppendRequestUri("WebStack.QA.Test.OData.OpenType.IncreaseAgeAction"));
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.AccountInfo>(source.Context, source.AppendRequestUri("Microsoft.Test.E2E.AspNet.OData.OpenType.IncreaseAgeAction"));
         }
         /// <summary>
         /// There are no comments for AddShipAddress in the schema.
         /// </summary>
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> AddShipAddress(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::WebStack.QA.Test.OData.OpenType.Typed.Client.Account> source, global::WebStack.QA.Test.OData.OpenType.Typed.Client.Address address)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> AddShipAddress(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Account> source, global::Microsoft.Test.E2E.AspNet.OData.OpenType.Typed.Client.Address address)
         {
             if (!source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<int>(source.Context, source.AppendRequestUri("WebStack.QA.Test.OData.OpenType.AddShipAddress"), new global::Microsoft.OData.Client.BodyOperationParameter("address", address));
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<int>(source.Context, source.AppendRequestUri("Microsoft.Test.E2E.AspNet.OData.OpenType.AddShipAddress"), new global::Microsoft.OData.Client.BodyOperationParameter("address", address));
         }
     }
 }

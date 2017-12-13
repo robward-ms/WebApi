@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace WebStack.QA.Test.OData.QueryComposition.IsOf
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
     public class IsofDataSource
     {

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Microsoft.OData.Edm;
 
-namespace WebStack.QA.Test.OData.Common.Models.Products
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.Products
 {
     public class Product
     {

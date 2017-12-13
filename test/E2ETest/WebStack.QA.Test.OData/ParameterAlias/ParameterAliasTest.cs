@@ -10,12 +10,12 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ParameterAlias
+namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
 {
     [NuwaFramework]
     public class ParameterAliasTest : NuwaTestBase
@@ -71,7 +71,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
         public async Task ParameterAliasInFunctionCall()
         {
             //Unbound function
-            string query = "/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=WebStack.QA.Test.OData.ParameterAlias.CountryOrRegion'USA'";
+            string query = "/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'";
 
             HttpResponseMessage response = this.Client.GetAsync(this.BaseAddress + query).Result;
             var json = await response.Content.ReadAsAsync<JObject>();
@@ -79,7 +79,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
             Assert.Equal(3, result.Count);
 
             //Bound function
-            string requestUri = this.BaseAddress + "/Trades/WebStack.QA.Test.OData.ParameterAlias.GetTradingVolume(productName=@p1, PortingCountryOrRegion=@p2)?@p1='Rice'&@p2=WebStack.QA.Test.OData.ParameterAlias.CountryOrRegion'USA'";
+            string requestUri = this.BaseAddress + "/Trades/Microsoft.Test.E2E.AspNet.OData.ParameterAlias.GetTradingVolume(productName=@p1, PortingCountryOrRegion=@p2)?@p1='Rice'&@p2=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'";
             response = this.Client.GetAsync(requestUri).Result;
             json = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(1000, (long)json["value"]);
@@ -118,7 +118,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
 
         [NuwaTheory]
         //Use multi times in different place
-        [InlineData("/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=WebStack.QA.Test.OData.ParameterAlias.CountryOrRegion'USA'&$filter=PortingCountryOrRegion eq @p1 and @p2 gt 1000&$orderby=@p2&@p2=TradingVolume", 1, 0)]
+        [InlineData("/GetTradeByCountry(PortingCountryOrRegion=@p1)?@p1=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'&$filter=PortingCountryOrRegion eq @p1 and @p2 gt 1000&$orderby=@p2&@p2=TradingVolume", 1, 0)]
         //Reference property under complex type
         [InlineData("/Trades?$filter=@p1 gt 0&$orderby=@p1&@p1=TradeLocation/ZipCode", 3, 1)]
         public async Task MiscParameterAlias(string queryUri, int expectedEntryCount, int expectedZipCode)
@@ -138,7 +138,7 @@ namespace WebStack.QA.Test.OData.ParameterAlias
         {
             string requestBaseUri = this.BaseAddress;
 
-            var queryUri = "/Trades/WebStack.QA.Test.OData.ParameterAlias.GetTopTrading(productName=@p1)/unknown?@p1='Corn'";
+            var queryUri = "/Trades/Microsoft.Test.E2E.AspNet.OData.ParameterAlias.GetTopTrading(productName=@p1)/unknown?@p1='Corn'";
             var response = await this.Client.GetAsync(requestBaseUri + queryUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var json = await response.Content.ReadAsAsync<JObject>();

@@ -11,12 +11,13 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Nop.Core.Domain.Blogs;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     [ODataJsonOnlyFormatting]
     public class JsonLight_BlogPostsController : InMemoryODataController<BlogPost, int>

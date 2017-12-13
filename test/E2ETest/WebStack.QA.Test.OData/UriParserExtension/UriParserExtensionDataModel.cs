@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace WebStack.QA.Test.OData.UriParserExtension
+namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
 {
     public class Customer
     {

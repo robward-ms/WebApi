@@ -9,7 +9,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.UriParserExtension
+namespace Microsoft.Test.E2E.AspNet.OData.UriParserExtension
 {
     public class CustomersController : ODataController
     {

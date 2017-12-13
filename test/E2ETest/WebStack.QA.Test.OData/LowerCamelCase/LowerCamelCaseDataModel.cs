@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace WebStack.QA.Test.OData.LowerCamelCase
+namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 {
     [DataContract]
     public class Employee

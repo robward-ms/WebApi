@@ -11,11 +11,12 @@ using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Aggregation
+namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
     public class AggregationTests : NuwaTestBase
     {

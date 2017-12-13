@@ -5,7 +5,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.Routing.DynamicProperties
+namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
 {
     public class DynamicCustomersController : ODataController
     {

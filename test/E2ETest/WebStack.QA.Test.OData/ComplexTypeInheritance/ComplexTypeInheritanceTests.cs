@@ -15,18 +15,17 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.Extensions;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.ComplexTypeInheritance.Proxy;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Proxy;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ComplexTypeInheritance
+namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class ComplexTypeInheritanceTests : NuwaTestBase
     {
         public ComplexTypeInheritanceTests(NuwaClassFixture fixture)
@@ -98,7 +97,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
     'Name':'Name4',
     'CurrentShape':
     {
-        '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',  
+        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',  
         'Radius':10,
         'Center':{'X':1,'Y':2},
         'HasBorder':true
@@ -106,7 +105,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
     'OptionalShapes':
     [
         {
-            '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Rectangle',
+            '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Rectangle',
             'HasBorder':true,
             'Width':3,
             'Height':4,
@@ -204,7 +203,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
     'Name':'Name30',
     'CurrentShape':
     {
-        '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',  
+        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',  
         'Radius':2,
         'Center':{'X':1,'Y':2},
         'HasBorder':true
@@ -212,7 +211,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
     'OptionalShapes':
     [
         {
-            '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Rectangle',
+            '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Rectangle',
             'HasBorder':true,
             'Width':3,
             'Height':4,
@@ -256,7 +255,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 {
     'CurrentShape':
     {
-        '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',  
+        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',  
         'Radius':2,
         'Center':{'X':1,'Y':2},
         'HasBorder':true
@@ -331,11 +330,11 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         [NuwaTheory]
         [InlineData("convention")]
         [InlineData("explicit")]
-        // GET ~/Windows(1)/OptionalShapes/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle
+        // GET ~/Windows(1)/OptionalShapes/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle
         public async Task GetOptionalShapesPlusCast(string modelMode)
         {
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, modelMode).ToLower();
-            string requestUri = serviceRootUri + "/Windows(3)/OptionalShapes/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle";
+            string requestUri = serviceRootUri + "/Windows(3)/OptionalShapes/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle";
 
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             string contentOfString = await response.Content.ReadAsStringAsync();
@@ -396,12 +395,12 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 
         [NuwaTheory]
         [MemberData(nameof(MediaTypes))]
-        // GET ~/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle/Radius
+        // GET ~/Windows(1)/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle/Radius
         public async Task QueryComplexTypePropertyDefinedOnDerivedType(string mode, string mime)
         {
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, mode).ToLower();
             string requestUri = string.Format(
-                "{0}/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle/Radius?$format={1}", serviceRootUri, mime);
+                "{0}/Windows(1)/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle/Radius?$format={1}", serviceRootUri, mime);
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             string contentOfString = await response.Content.ReadAsStringAsync();
             Assert.True(HttpStatusCode.OK == response.StatusCode,
@@ -429,7 +428,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
 {
   'value':[
     {
-        '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Polygon',
+        '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Polygon',
         'HasBorder':true,'Vertexes':[
         {'X':1,'Y':2},
         {'X':2,'Y':3},
@@ -437,7 +436,7 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
       ]
     },
     {
-      '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',
+      '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',
         'HasBorder':true,
         'Center':{'X':3,'Y':3},
         'Radius':2
@@ -471,11 +470,11 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         {
             // Arrange
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, modelMode).ToLower();
-            string requestUri = serviceRootUri + "/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle";
+            string requestUri = serviceRootUri + "/Windows(1)/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle";
 
             var content = new StringContent(content: @"
 {
-    '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',
+    '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',
     'Radius':5,
     'Center':{'X':1,'Y':2},
     'HasBorder':true 
@@ -522,12 +521,12 @@ namespace WebStack.QA.Test.OData.ComplexTypeInheritance
         {
             // Arrange
             string serviceRootUri = string.Format("{0}/{1}", BaseAddress, modelMode).ToLower();
-            string requestUri = serviceRootUri + "/Windows(1)/CurrentShape/WebStack.QA.Test.OData.ComplexTypeInheritance.Circle";
+            string requestUri = serviceRootUri + "/Windows(1)/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle";
 
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("Patch"), requestUri);
             request.Content = new StringContent(@"
 {
-    '@odata.type':'#WebStack.QA.Test.OData.ComplexTypeInheritance.Circle',
+    '@odata.type':'#Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle',
     'Radius':15,
     'HasBorder':true
 }");

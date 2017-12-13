@@ -6,19 +6,15 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
-using Nuwa;
 
-namespace WebStack.QA.Test.OData.Cast
+namespace Microsoft.Test.E2E.AspNet.OData.Cast
 {
     public class ProductsController : ODataController
     {
         [EnableQuery]
         public IHttpActionResult Get()
         {
-            object hostType;
-            if (Request.GetConfiguration().Properties.TryGetValue("Nuwa.HostType", out hostType)
-                && ((HostType)hostType) == HostType.KatanaSelf
-                && GetRoutePrefix() == "EF")
+            if (GetRoutePrefix() == "EF")
             {
                 return Ok(DataSource.EfProducts);
             }
@@ -31,10 +27,7 @@ namespace WebStack.QA.Test.OData.Cast
         [EnableQuery]
         public IHttpActionResult GetDimensionInCentimeter(int key)
         {
-            object hostType;
-            if (Request.GetConfiguration().Properties.TryGetValue("Nuwa.HostType", out hostType)
-                && ((HostType)hostType) == HostType.KatanaSelf
-                && GetRoutePrefix() == "EF")
+            if (GetRoutePrefix() == "EF")
             {
                 Product product = DataSource.EfProducts.Single(p => p.ID == key);
                 return Ok(product.DimensionInCentimeter);

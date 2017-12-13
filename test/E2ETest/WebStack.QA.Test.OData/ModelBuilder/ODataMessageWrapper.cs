@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using Microsoft.OData;
 
-namespace WebStack.QA.Test.OData.ModelBuilder
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 {
     internal class ODataMessageWrapper : IODataRequestMessage, IODataResponseMessage
     {

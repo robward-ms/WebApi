@@ -17,15 +17,14 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.DateAndTimeOfDay
+namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class DateAndTimeOfDayWithEfTest : NuwaTestBase
     {
         public DateAndTimeOfDayWithEfTest(NuwaClassFixture fixture)
@@ -57,7 +56,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
             string expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
 "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">\r\n" +
 "  <edmx:DataServices>\r\n" +
-"    <Schema Namespace=\"WebStack.QA.Test.OData.DateAndTimeOfDay\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">\r\n" +
+"    <Schema Namespace=\"Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">\r\n" +
 "      <EntityType Name=\"DateAndTimeOfDayModel\">\r\n" +
 "        <Key>\r\n" +
 "          <PropertyRef Name=\"Id\" />\r\n" +
@@ -74,7 +73,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 "    </Schema>\r\n" +
 "    <Schema Namespace=\"Default\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">\r\n" +
 "      <EntityContainer Name=\"Container\">\r\n" +
-"        <EntitySet Name=\"DateAndTimeOfDayModels\" EntityType=\"WebStack.QA.Test.OData.DateAndTimeOfDay.DateAndTimeOfDayModel\" />\r\n" +
+"        <EntitySet Name=\"DateAndTimeOfDayModels\" EntityType=\"Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay.DateAndTimeOfDayModel\" />\r\n" +
 "      </EntityContainer>\r\n" +
 "    </Schema>\r\n" +
 "  </edmx:DataServices>\r\n" +
@@ -125,7 +124,7 @@ namespace WebStack.QA.Test.OData.DateAndTimeOfDay
 
             string expect = @"{
   ""@odata.context"": ""{XXXX}/odata/$metadata#DateAndTimeOfDayModels/$entity"",
-  ""@odata.type"": ""#WebStack.QA.Test.OData.DateAndTimeOfDay.DateAndTimeOfDayModel"",
+  ""@odata.type"": ""#Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay.DateAndTimeOfDayModel"",
   ""@odata.id"": ""{XXXX}/odata/DateAndTimeOfDayModels(2)"",
   ""@odata.editLink"": ""{XXXX}/odata/DateAndTimeOfDayModels(2)"",
   ""EndDay@odata.type"": ""#Date"",

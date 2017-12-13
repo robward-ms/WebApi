@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
-namespace WebStack.QA.Test.OData.QueryComposition.Fuzzing
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing
 {
     public class FuzzingController : ApiController
     {

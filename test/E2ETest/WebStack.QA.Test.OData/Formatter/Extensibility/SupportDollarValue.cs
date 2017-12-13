@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,12 +14,11 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
-using Nuwa;
-using WebStack.QA.Common.WebHost;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter.Extensibility
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
 {
     public class EntityWithPrimitiveAndBinaryProperty
     {
@@ -62,8 +60,6 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
     }
 
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class SupportDollarValueTest : NuwaTestBase
     {
         public SupportDollarValueTest(NuwaClassFixture fixture)
@@ -82,12 +78,6 @@ namespace WebStack.QA.Test.OData.Formatter.Extensibility
                     model: GetEdmModel(configuration), pathHandler: new DefaultODataPathHandler(),
                     routingConventions: ODataRoutingConventions.CreateDefault(),
                     defaultHandler: HttpClientFactory.CreatePipeline(innerHandler: new HttpControllerDispatcher(configuration), handlers: new[] { new ODataNullValueMessageHandler() }));
-        }
-
-        [NuwaWebConfig]
-        internal static void UpdateWebConfig(WebConfigHelper config)
-        {
-            //config.AddODataLibAssemblyRedirection();
         }
 
         protected static IEdmModel GetEdmModel(HttpConfiguration configuration)

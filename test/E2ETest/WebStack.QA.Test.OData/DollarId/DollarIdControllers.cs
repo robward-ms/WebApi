@@ -8,7 +8,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.DollarId
+namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
     public class SingersController : ODataController
     {
@@ -66,7 +66,7 @@ namespace WebStack.QA.Test.OData.DollarId
         }
 
         [HttpPost]
-        [ODataRoute("Singers/WebStack.QA.Test.OData.DollarId.ResetDataSource")]
+        [ODataRoute("Singers/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource")]
         public IHttpActionResult ResetDataSourceOnCollectionOfSinger()
         {
             InitData();
@@ -121,7 +121,7 @@ namespace WebStack.QA.Test.OData.DollarId
             return Ok(Albums.Single(s => s.ID == key));
         }
 
-        // ~/Albums({key})/WebStack.QA.Test.OData.DollarId.GetSinger()"
+        // ~/Albums({key})/Microsoft.Test.E2E.AspNet.OData.DollarId.GetSinger()"
         [HttpGet]
         [EnableQuery]
         public IHttpActionResult GetSingers(int key)
@@ -170,7 +170,7 @@ namespace WebStack.QA.Test.OData.DollarId
         }
 
         [HttpPost]
-        [ODataRoute("Albums/WebStack.QA.Test.OData.DollarId.ResetDataSource")]
+        [ODataRoute("Albums/Microsoft.Test.E2E.AspNet.OData.DollarId.ResetDataSource")]
         public IHttpActionResult ResetDataSourceOnCollectionOfAlbum()
         {
             InitData();

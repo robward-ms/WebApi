@@ -7,12 +7,12 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
+namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest
 {
     public class FilterAttributeTest : NuwaTestBase
     {
@@ -74,13 +74,13 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
         [InlineData(OrderBaseUrl + "?$filter=Id eq 1", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$filter=Id eq 1 and Name eq 'test'", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Name eq 'test'",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Name eq 'test'",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Price eq 1",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Price eq 1",
             (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=SpecialName eq 'test'",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=SpecialName eq 'test'",
             (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$expand=Cars($filter=Id eq 1 and Name eq 'test')", (int)HttpStatusCode.OK)]
         [InlineData(OrderBaseUrl + "?$expand=Cars($filter=CarNumber eq 1)", (int)HttpStatusCode.BadRequest)]
@@ -90,13 +90,13 @@ namespace WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest
         [InlineData(ModelBoundOrderBaseUrl + "?$filter=Id eq 1", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl + "?$filter=Id eq 1 and Name eq 'test'", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Name eq 'test'",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Name eq 'test'",
             (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Price eq 1",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=Price eq 1",
             (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl +
-            "/WebStack.QA.Test.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=SpecialName eq 'test'",
+            "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest.SpecialOrder?$filter=SpecialName eq 'test'",
             (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($filter=Id eq 1 and Name eq 'test')", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($filter=CarNumber eq 1)", (int)HttpStatusCode.BadRequest)]

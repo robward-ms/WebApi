@@ -8,7 +8,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 
-namespace WebStack.QA.Test.OData.ForeignKey
+namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
     public class ForeignKeyEdmModel
     {

@@ -3,7 +3,7 @@
 
 using System.Data.Entity;
 
-namespace WebStack.QA.Test.OData.Aggregation
+namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
     public class AggregationContext : DbContext
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace WebStack.QA.Test.OData.Batch.Client
+namespace Microsoft.Test.E2E.AspNet.OData.Batch.Client
 {
     public class ODataChangeSet
     {

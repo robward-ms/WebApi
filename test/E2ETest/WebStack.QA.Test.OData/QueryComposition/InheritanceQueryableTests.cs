@@ -9,13 +9,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Models.Vehicle;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class InheritanceQueryable_Customer
     {
@@ -208,8 +208,8 @@ namespace WebStack.QA.Test.OData.QueryComposition
 
         [NuwaTheory]
         [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Id eq 1")]
-        [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=WebStack.QA.Test.OData.Common.Models.Vehicle.MiniSportBike/CanDoAWheelie eq false")]
-        [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=WebStack.QA.Test.OData.Common.Models.Vehicle.MiniSportBike/TopSpeed gt 20")]
+        [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle.MiniSportBike/CanDoAWheelie eq false")]
+        [InlineData("/api/InheritanceQueryable/GetMotorcycles?$filter=Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle.MiniSportBike/TopSpeed gt 20")]
         public void TestSimpleInheritanceModel(string url)
         {
             var response = this.Client.GetAsync(this.BaseAddress + url).Result;
@@ -220,22 +220,22 @@ namespace WebStack.QA.Test.OData.QueryComposition
         [NuwaFact]
         public void QueryOnDerivedTypeWithAbstractBaseShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=WebStack.QA.Test.OData.QueryComposition.InheritanceQueryable_DerivedType/ID eq 1").Result;
+            var response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=Microsoft.Test.E2E.AspNet.OData.QueryComposition.InheritanceQueryable_DerivedType/ID eq 1").Result;
             response.EnsureSuccessStatusCode();
             var actual = response.Content.ReadAsAsync<IEnumerable<InheritanceQueryable_DerivedType>>().Result;
             Assert.Equal("First", actual.First().Name);
 
-            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=WebStack.QA.Test.OData.QueryComposition.InheritanceQueryable_DerivedType/Name eq 'First'").Result;
+            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=Microsoft.Test.E2E.AspNet.OData.QueryComposition.InheritanceQueryable_DerivedType/Name eq 'First'").Result;
             response.EnsureSuccessStatusCode();
             actual = response.Content.ReadAsAsync<IEnumerable<InheritanceQueryable_DerivedType>>().Result;
             Assert.Equal(1, actual.First().ID);
 
-            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=WebStack.QA.Test.OData.QueryComposition.InheritanceQueryable_DerivedType/EntityProperty/Name eq 'Fourth'").Result;
+            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=Microsoft.Test.E2E.AspNet.OData.QueryComposition.InheritanceQueryable_DerivedType/EntityProperty/Name eq 'Fourth'").Result;
             response.EnsureSuccessStatusCode();
             actual = response.Content.ReadAsAsync<IEnumerable<InheritanceQueryable_DerivedType>>().Result;
             Assert.Equal(2, actual.First().ID);
 
-            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=WebStack.QA.Test.OData.QueryComposition.InheritanceQueryable_DerivedType/ComplexProperty/ReadOnlyProperty eq 8").Result;
+            response = this.Client.GetAsync(this.BaseAddress + "/api/InheritanceQueryable/GetDerivedTypeWithAbstractBase?$filter=Microsoft.Test.E2E.AspNet.OData.QueryComposition.InheritanceQueryable_DerivedType/ComplexProperty/ReadOnlyProperty eq 8").Result;
             response.EnsureSuccessStatusCode();
             actual = response.Content.ReadAsAsync<IEnumerable<InheritanceQueryable_DerivedType>>().Result;
             Assert.Equal(2, actual.Count());

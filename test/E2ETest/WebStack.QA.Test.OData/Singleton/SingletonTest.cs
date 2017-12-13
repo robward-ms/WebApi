@@ -15,18 +15,18 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
 using HttpClientExtensions = System.Net.Http.HttpClientExtensions;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     [NuwaFramework]
     public class SingletonTest : NuwaTestBase
     {
-        private const string NameSpace = "WebStack.QA.Test.OData.Singleton";
+        private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.Singleton";
 
         public SingletonTest(NuwaClassFixture fixture)
             : base(fixture)
@@ -149,7 +149,7 @@ namespace WebStack.QA.Test.OData.Singleton
             result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
             Assert.Equal(2000, (int)result["value"]);
 
-            // PATCH singleton with {"@odata.type":"#WebStack.QA.Test.OData.Singleton.Company","Revenue":3000}
+            // PATCH singleton with {"@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Singleton.Company","Revenue":3000}
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri);
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Revenue"":3000}}", typeof(Company)));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -250,7 +250,7 @@ namespace WebStack.QA.Test.OData.Singleton
             result = json.GetValue("value") as JArray;
             Assert.Equal<int>(3, result.Count);
 
-            // GET singleton/WebStack.QA.Test.OData.Singleton.GetPartnersCount()
+            // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount()
             requestUri = string.Format(BaseAddress + "/{0}/{1}/{2}.GetPartnersCount()", model, singletonName, NameSpace);
             response = this.Client.GetAsync(requestUri).Result;
             json = await response.Content.ReadAsAsync<JObject>();
@@ -333,7 +333,7 @@ namespace WebStack.QA.Test.OData.Singleton
 
             await ResetDataSource(model, singletonName);
 
-            // PUT singleton/WebStack.QA.Test.OData.Singleton.SubCompany
+            // PUT singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany
             var company = new { ID = 100, Name = "UmbrellaInSouthPole", Category = CompanyCategory.Communication.ToString(), Revenue = 1000, Location = "South Pole", Description = "The Umbrella In South Pole", Partners = new List<Partner>(), Branches = new List<Office>(), Office = new Office() { City = "South", Address = "999" } };
             var request = new HttpRequestMessage(HttpMethod.Put, requestUri);
             request.Content = new StringContent(JsonConvert.SerializeObject(company));
@@ -341,18 +341,18 @@ namespace WebStack.QA.Test.OData.Singleton
             var response = Client.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
 
-            // GET singleton/WebStack.QA.Test.OData.Singleton.SubCompany/Location
+            // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Location
             response = this.Client.GetAsync(requestUri + "/Location?" + formatQuery).Result;
             var result = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal(company.Location, (string)result["value"]);
 
             // Query complex type
-            // GET GET singleton/WebStack.QA.Test.OData.Singleton.SubCompany/Office
+            // GET GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Office
             response = this.Client.GetAsync(requestUri + "/Office?" + formatQuery).Result;
             result = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal(company.Office.City, (string)result["City"]);
 
-            // GET singleton/WebStack.QA.Test.OData.Singleton.SubCompany?$select=Location
+            // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany?$select=Location
             response = this.Client.GetAsync(requestUri + "?$select=Location&" + formatQuery).Result;
             result = response.Content.ReadAsAsync<JObject>().Result;
             Assert.Equal(company.Location, (string)result["Location"]);

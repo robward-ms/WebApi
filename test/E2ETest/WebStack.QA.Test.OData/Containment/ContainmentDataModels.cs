@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.OData.Builder;
 
-namespace WebStack.QA.Test.OData.Containment
+namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
     public class Account
     {

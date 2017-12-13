@@ -10,7 +10,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightConfigurator
     {

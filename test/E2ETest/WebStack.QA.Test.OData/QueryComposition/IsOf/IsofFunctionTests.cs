@@ -12,16 +12,15 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Common.XUnit;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Xunit;
 using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.QueryComposition.IsOf
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
     [NuwaFramework]
-    [NuwaTrace(NuwaTraceAttribute.Tag.Off)]
     public class IsofFunctionTests : NuwaTestBase
     {
         private static readonly string[] DataSourceTypes = new string[] {"IM", "EF"}; // In Memory or Entity Framework
@@ -79,8 +78,8 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             {
                 return new TheoryDataSet<string, string>
                 {
-                    {"?$filter=isof(CustomerType,'WebStack.QA.Test.OData.QueryComposition.IsOf.CustomerType')", "1,2,3"},
-                    {"?$filter=isof(CustomerType,'WebStack.QA.Test.OData.QueryComposition.IsOf.CardType')", null},
+                    {"?$filter=isof(CustomerType,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.CustomerType')", "1,2,3"},
+                    {"?$filter=isof(CustomerType,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.CardType')", null},
                 };
             }
         }
@@ -91,10 +90,10 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             {
                 return new TheoryDataSet<string, string>
                 {
-                    {"?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3"},
-                    {"?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingCnAddress')", "1,3"},
-                    {"?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingUsAddress')", "2"},
-                    {"?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingDetail')", null},
+                    {"?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3"},
+                    {"?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingCnAddress')", "1,3"},
+                    {"?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingUsAddress')", "2"},
+                    {"?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingDetail')", null},
                 };
             }
         }
@@ -105,9 +104,9 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             {
                 return new TheoryDataSet<string, string>
                 {
-                    {"?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
-                    {"?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.CreditCard')", "2"},
-                    {"?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.BankAccount')", "3"},
+                    {"?$filter=isof(Billing,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
+                    {"?$filter=isof(Billing,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.CreditCard')", "2"},
+                    {"?$filter=isof(Billing,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BankAccount')", "3"},
                     
                 };
             }
@@ -118,7 +117,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         [MemberData(nameof(EnumPropertyFilters))]
         [MemberData(nameof(ComplexPropertyFilters))]
         [MemberData(nameof(EntityPropertyFilters))]
-        [InlineData("?$filter=isof(Billing,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", null)]
+        [InlineData("?$filter=isof(Billing,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingAddress')", null)]
         public async Task QueryEntitySetUsingProperty_UsingInMemoryData(string filter, string expected)
         {
             // Arrange
@@ -166,7 +165,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
 
         [NuwaTheory]
         [MemberData(nameof(EntityPropertyFilters))]
-        [InlineData("?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3")]
+        [InlineData("?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingAddress')", "1,2,3")]
         public async Task QueryEntitySetUsingProperty_UsingEFData(string filter, string expected)
         {
             // Arrange
@@ -199,7 +198,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         public async Task IsOfFilterQueryWithComplexTypeProperty(string dataSourceMode, bool work)
         {
             // Arrange
-            string filter = "?$filter=isof(Address,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingCnAddress')";
+            string filter = "?$filter=isof(Address,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingCnAddress')";
             var requestUri = string.Format("{0}/{1}/BillingCustomers{2}", this.BaseAddress, dataSourceMode, filter);
 
             // Act
@@ -230,13 +229,13 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
             {
                 return new TheoryDataSet<string, string>
                 {
-                    {"?$filter=isof('WebStack.QA.Test.OData.QueryComposition.IsOf.BankAccount')", "3"},
-                    {"?$filter=isof('WebStack.QA.Test.OData.QueryComposition.IsOf.CreditCard')", "2"},
-                    {"?$filter=isof('WebStack.QA.Test.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
+                    {"?$filter=isof('Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BankAccount')", "3"},
+                    {"?$filter=isof('Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.CreditCard')", "2"},
+                    {"?$filter=isof('Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
 
-                    {"?$filter=isof($it,'WebStack.QA.Test.OData.QueryComposition.IsOf.BankAccount')", "3"},
-                    {"?$filter=isof($it,'WebStack.QA.Test.OData.QueryComposition.IsOf.CreditCard')", "2"},
-                    {"?$filter=isof($it,'WebStack.QA.Test.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
+                    {"?$filter=isof($it,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BankAccount')", "3"},
+                    {"?$filter=isof($it,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.CreditCard')", "2"},
+                    {"?$filter=isof($it,'Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingDetail')", "1,2,3"},
                 };
             }
         }
@@ -272,7 +271,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         public async Task IsOfFilterQueryOnTypeDifferentResultUsingDifferentData(string dataSourceMode, bool work)
         {
             // Arrange
-            string filter = "?$filter=isof('WebStack.QA.Test.OData.QueryComposition.IsOf.BillingCustomer')";
+            string filter = "?$filter=isof('Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BillingCustomer')";
             var requestUri = string.Format("{0}/{1}/Billings{2}", this.BaseAddress, dataSourceMode, filter);
 
             // Act
@@ -306,7 +305,7 @@ namespace WebStack.QA.Test.OData.QueryComposition.IsOf
         public async Task IsOfFilterQueryFailedOnUnquotedType(string dataSourceMode)
         {
             // Arrange
-            string filter = "?$filter=isof(WebStack.QA.Test.OData.QueryComposition.IsOf.BankAccount)";
+            string filter = "?$filter=isof(Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf.BankAccount)";
             var requestUri = string.Format("{0}/{1}/Billings{2}", this.BaseAddress, dataSourceMode, filter);
 
             // Act

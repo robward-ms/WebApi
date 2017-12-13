@@ -4,7 +4,7 @@
 using System;
 using Microsoft.AspNet.OData.Routing;
 
-namespace WebStack.QA.Test.OData.Swagger
+namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
     public class SwaggerPathHandler : DefaultODataPathHandler
     {

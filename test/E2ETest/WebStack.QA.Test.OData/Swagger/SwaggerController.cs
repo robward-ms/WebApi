@@ -9,7 +9,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Newtonsoft.Json.Linq;
 
-namespace WebStack.QA.Test.OData.Swagger
+namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 {
     public class SwaggerController : ApiController
     {

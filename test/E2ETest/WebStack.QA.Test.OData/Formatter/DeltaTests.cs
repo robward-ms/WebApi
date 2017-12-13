@@ -19,13 +19,14 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Instancing;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Formatter
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     public enum DeltaTests_EnumType
     {
@@ -301,7 +302,6 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class PutDeltaOfTTests : NuwaTestBase
     {
         public PutDeltaOfTTests(NuwaClassFixture fixture)
@@ -343,7 +343,6 @@ namespace WebStack.QA.Test.OData.Formatter
     }
 
     [NuwaFramework]
-    [NuwaHost(Nuwa.HostType.KatanaSelf)]
     public class PatchtDeltaOfTTests : NuwaTestBase
     {
         public PatchtDeltaOfTTests(NuwaClassFixture fixture)

@@ -12,10 +12,11 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
-using Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
 
-namespace WebStack.QA.Test.OData.Singleton
+namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     [NuwaFramework]
     public class SingletonClientTest : NuwaTestBase
@@ -56,8 +57,8 @@ namespace WebStack.QA.Test.OData.Singleton
             ClientContext.MergeOption = MergeOption.OverwriteChanges;
 
             // Reset data source
-            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Umbrella/WebStack.QA.Test.OData.Singleton.ResetDataSource"), "POST");
-            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Partners/WebStack.QA.Test.OData.Singleton.ResetDataSource"),
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
                                   "POST");
 
             // Query
@@ -74,7 +75,7 @@ namespace WebStack.QA.Test.OData.Singleton
 
             // $select
             var category = ClientContext.Umbrella.Select(u => u.Category).Single();
-            Assert.Equal(WebStack.QA.Test.OData.Singleton.Client.CompanyCategory.Communication, category);
+            Assert.Equal(Microsoft.Test.E2E.AspNet.OData.Singleton.Client.CompanyCategory.Communication, category);
 
             // Add navigation link
             var partner = new Client.Partner() { ID = 111, Name = "NewPartner1" };
@@ -122,8 +123,8 @@ namespace WebStack.QA.Test.OData.Singleton
             var ClientContext = new Client.Container(new Uri(serviceRoot));
 
             // Reset data source
-            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/WebStack.QA.Test.OData.Singleton.ResetDataSource"), "POST");
-            ClientContext.Execute(new Uri(serviceRoot + "Partners/WebStack.QA.Test.OData.Singleton.ResetDataSource"),
+            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
+            ClientContext.Execute(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
                                   "POST");
 
             DataServiceRequest[] requests = new DataServiceRequest[] {
@@ -157,8 +158,8 @@ namespace WebStack.QA.Test.OData.Singleton
             var ClientContext = new Client.Container(new Uri(serviceRoot));
 
             // Reset data source
-            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/WebStack.QA.Test.OData.Singleton.ResetDataSource"), "POST");
-            ClientContext.Execute(new Uri(serviceRoot + "Partners/WebStack.QA.Test.OData.Singleton.ResetDataSource"),
+            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
+            ClientContext.Execute(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
                                   "POST");
 
             var umbrella = ClientContext.Umbrella.Single();
@@ -176,7 +177,7 @@ namespace WebStack.QA.Test.OData.Singleton
         {
             var directory = Directory.GetCurrentDirectory();
             var strArray = directory.Split(new string[] { "bin" }, StringSplitOptions.None);
-            var filePath = Path.Combine(strArray[0], @"src\WebStack.QA.Test.OData\Singleton\Metadata.csdl");
+            var filePath = Path.Combine(strArray[0], @"src\Microsoft.Test.E2E.AspNet.OData\Singleton\Metadata.csdl");
 
             var request = (HttpWebRequest)WebRequest.Create(new Uri(this.BaseAddress + "/clientTest/$metadata"));
             request.Accept = "application/xml";

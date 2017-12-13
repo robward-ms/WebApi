@@ -8,17 +8,15 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
-using WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
 using Xunit;
-using Xunit.Extensions;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class FeedMetadataTests : NuwaTestBase
     {
         public FeedMetadataTests(NuwaClassFixture fixture)

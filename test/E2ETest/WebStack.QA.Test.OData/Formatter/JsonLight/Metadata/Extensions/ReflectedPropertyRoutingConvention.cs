@@ -6,10 +6,10 @@ using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Extensions
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extensions
 {
     public class ReflectedPropertyRoutingConvention : EntitySetRoutingConvention
     {

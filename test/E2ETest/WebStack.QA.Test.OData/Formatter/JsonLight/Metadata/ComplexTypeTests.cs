@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
@@ -10,17 +9,15 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Newtonsoft.Json.Linq;
-using Nuwa;
-using WebStack.QA.Test.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Nuwa;
+using Microsoft.Test.E2E.AspNet.OData.Common.Xunit;
 using Xunit;
-using Xunit.Extensions;
-using JsonLightModel = WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model;
+using JsonLightModel = Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
 
-namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
+namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     [NuwaFramework]
-    [NuwaHttpClientConfiguration(MessageLog = false)]
-    [NuwaTrace(typeof(PlaceholderTraceWriter))]
     public class ComplexTypeTests : NuwaTestBase
     {
         public ComplexTypeTests(NuwaClassFixture fixture)
@@ -80,12 +77,12 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight.Metadata
                 }
                 else
                 {
-                    JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.EntityWithComplexProperties",
+                    JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.EntityWithComplexProperties",
                         "@odata.type", returnedEntity);
                     JsonAssert.PropertyEquals("#Collection(String)", "StringListProperty@odata.type", returnedEntity);
                     JsonAssert.ContainsProperty("ComplexProperty", returnedEntity);
                     complexProperty = (JObject)returnedEntity["ComplexProperty"];
-                    JsonAssert.PropertyEquals("#WebStack.QA.Test.OData.Formatter.JsonLight.Metadata.Model.ComplexType",
+                    JsonAssert.PropertyEquals("#Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model.ComplexType",
                         "@odata.type", complexProperty);
                     JsonAssert.PropertyEquals("#Collection(String)", "StringListProperty@odata.type", complexProperty);
                 }

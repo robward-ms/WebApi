@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 
-namespace WebStack.QA.Test.OData.QueryComposition.Fuzzing
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing
 {
     public class FuzzingContext : DbContext
     {

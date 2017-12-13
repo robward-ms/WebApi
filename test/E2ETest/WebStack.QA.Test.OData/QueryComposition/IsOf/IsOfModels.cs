@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebStack.QA.Test.OData.QueryComposition.IsOf
+namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
     public class BillingCustomer
     {
