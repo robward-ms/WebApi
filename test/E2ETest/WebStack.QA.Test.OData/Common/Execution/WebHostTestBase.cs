@@ -124,10 +124,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 
             configuration.Routes.MapHttpRoute("api default", DefaultRouteTemplate, new { action = RouteParameter.Optional });
 
-            this.UpdateConfiguration(configuration);
-
             var httpServer = new HttpServer(configuration);
             configuration.SetHttpServer(httpServer);
+
+            this.UpdateConfiguration(configuration);
 
             app.UseWebApi(httpServer: httpServer);
         }
