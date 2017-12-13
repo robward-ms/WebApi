@@ -110,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.Equal(expect, response.Content.ReadAsStringAsync().Result);
+            Assert.Equal(expect, await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -198,7 +198,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             // GET ~/Files(2)
             var response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"DeleteDate\":null", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"DeleteDate\":null", await response.Content.ReadAsStringAsync());
 
             // Patch ~/Files(2)
             const string content = @"{'DeleteDate':'2014-12-31T07:01:03+08:00'}";
@@ -214,7 +214,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             // GET ~/Files(2)
             response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"DeleteDate\":\"2014-12-30T15:01:03-08:00\"", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"DeleteDate\":\"2014-12-30T15:01:03-08:00\"", await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -230,7 +230,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             // GET ~/Files(6)
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"CreatedDate\":\"2014-12-30T15:01:03-08:00\"", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"CreatedDate\":\"2014-12-30T15:01:03-08:00\"", await response.Content.ReadAsStringAsync());
 
             // Delete ~/Files(6)
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, requestUri);
@@ -238,7 +238,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // GET ~/Files(2)
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         #endregion
@@ -256,7 +256,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"CreatedDate\":\"2017-12-23T17:02:03-08:00\"", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"CreatedDate\":\"2017-12-23T17:02:03-08:00\"", await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -344,7 +344,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             HttpResponseMessage response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"value\":\"2014-12-24T09:02:03+06:00\"", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"value\":\"2014-12-24T09:02:03+06:00\"", await response.Content.ReadAsStringAsync());
         }
 
         #endregion

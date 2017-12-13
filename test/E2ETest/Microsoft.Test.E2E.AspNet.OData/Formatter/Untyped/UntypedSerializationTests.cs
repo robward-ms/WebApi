@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -61,12 +62,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=full")]
-        public void UntypedWorksInAllFormats(string acceptHeader)
+        public async Task UntypedWorksInAllFormats(string acceptHeader)
         {
             string url = "/untyped/UntypedCustomers";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + url);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptHeader));
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
         }
 
@@ -77,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         [InlineData("SinglePrimitive")]
         [InlineData("SingleComplexObject")]
         [InlineData("SingleEntity")]
-        public void UntypedWorksForAllKindsOfDataTypes(string actionName)
+        public async Task UntypedWorksForAllKindsOfDataTypes(string actionName)
         {
             object expectedPayload = null;
             expectedPayload = (actionName == "PrimitiveCollection") ? new { value = Enumerable.Range(1, 10) } : expectedPayload;
@@ -90,15 +91,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             string url = "/untyped/UntypedCustomers/Default." + actionName;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + url);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);
-            JToken result = response.Content.ReadAsAsync<JObject>().Result;
+            JToken result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(JToken.FromObject(expectedPayload), result, JToken.EqualityComparer);
         }
 
         [Fact]
-        public void RoundTripEntityWorks()
+        public async Task RoundTripEntityWorks()
         {
             int i = 10;
             JObject untypedCustomer = new JObject();
@@ -112,29 +113,29 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + url);
             request.Content = new StringContent(untypedCustomer.ToString());
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await Client.SendAsync(request);
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
             Assert.True(response.IsSuccessStatusCode);
 
             HttpRequestMessage getRequest = new HttpRequestMessage(HttpMethod.Get, string.Format("{0}{1}({2})?$expand=Orders", BaseAddress, url, i));
             getRequest.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
-            HttpResponseMessage getResponse = Client.SendAsync(getRequest).Result;
+            HttpResponseMessage getResponse = await Client.SendAsync(getRequest);
             Assert.True(getResponse.IsSuccessStatusCode);
             Assert.NotNull(getResponse.Content);
-            JObject returnedObject = getResponse.Content.ReadAsAsync<JObject>().Result;
+            JObject returnedObject = await getResponse.Content.ReadAsAsync<JObject>();
             Assert.Equal(untypedCustomer, returnedObject, JToken.EqualityComparer);
         }
 
 
         [Fact]
-        public void UntypedActionParametersRoundtrip()
+        public async Task UntypedActionParametersRoundtrip()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + "/untyped/UntypedCustomers/Default.UntypedParameters");
             object payload = new { address = CreateAddress(5), value = 5, addresses = CreateAddresses(10), values = Enumerable.Range(0, 5) };
             request.Content = new ObjectContent<object>(payload, new JsonMediaTypeFormatter());
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            var body = request.Content.ReadAsStringAsync().Result;
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            var body = await request.Content.ReadAsStringAsync();
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
         }
 

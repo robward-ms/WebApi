@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -38,15 +39,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
 
         [Fact]
-        public void PutUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
+        public async Task PutUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)?$format=json";
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
 
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             var etagInHeader = response.Headers.ETag.ToString();
             var etagInPayload = (string)result["@odata.etag"];
             Assert.True(etagInPayload == etagInHeader,
@@ -56,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             request = new HttpRequestMessage(HttpMethod.Put, requestUri);
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Id"":{1},""Name"":""{2}"",""Notes"":[""{3}""]}}", typeof(ETagsCustomer), 0, "Customer Name 0 updated", "This is note 0 updated"));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
 
             requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)";
@@ -64,7 +65,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Id"":{1},""Name"":""{2}"",""Notes"":[""{3}""]}}", typeof(ETagsCustomer), 0, "Customer Name 0 updated again", "This is note 0 updated again"));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             request.Headers.IfMatch.ParseAdd(etagInPayload);
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.PreconditionFailed, response.StatusCode);
         }
     }

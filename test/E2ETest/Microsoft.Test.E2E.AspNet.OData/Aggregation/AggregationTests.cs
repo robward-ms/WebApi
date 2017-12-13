@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -35,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void AggregateNavigationPropertyWorks()
+        public async Task AggregateNavigationPropertyWorks()
         {
             // Arrange
             string queryUrl =
@@ -47,10 +48,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -65,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void GroupByNavigationPropertyWorks()
+        public async Task GroupByNavigationPropertyWorks()
         {
             // Arrange
             string queryUrl =
@@ -77,11 +78,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             var results = result["value"] as JArray;
             Assert.Equal(2, results.Count);
             Assert.Equal("30", results[0]["TotalId"].ToString());
@@ -93,7 +94,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void GroupByComplexPropertyWorks()
+        public async Task GroupByComplexPropertyWorks()
         {
             // Arrange
             string queryUrl =
@@ -105,11 +106,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             var results = result["value"] as JArray;
             Assert.Equal(2, results.Count);
             Assert.Equal("20", results[0]["TotalId"].ToString());
@@ -121,7 +122,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void GroupByMultipleNestedPropertiesWorks()
+        public async Task GroupByMultipleNestedPropertiesWorks()
         {
             // Arrange
             string queryUrl =
@@ -133,10 +134,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -153,7 +154,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void AggregateAggregatedPropertyWorks()
+        public async Task AggregateAggregatedPropertyWorks()
         {
             // Arrange
             string queryUrl =
@@ -166,10 +167,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -178,7 +179,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void AggregateVirtualCountWorks()
+        public async Task AggregateVirtualCountWorks()
         {
             // Arrange
             string queryUrl =
@@ -190,11 +191,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject json = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject json = JObject.Parse(await response.Content.ReadAsStringAsync());
             JToken value = json["value"].Children().First();
 
             var anonymousResponse = new { Count = 0 };
@@ -204,7 +205,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [Fact]
-        public void GroupByVirtualCountWorks()
+        public async Task GroupByVirtualCountWorks()
         {
             // Arrange
             string queryUrl =
@@ -216,11 +217,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject json = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject json = JObject.Parse(await response.Content.ReadAsStringAsync());
             IList<JToken> value = json["value"].Children().ToList();
 
             var responseObj = new { Name = "", Count = 0 };
@@ -237,7 +238,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
 
         [Fact]
-        public void AggregateAggregatedWithGRoupByPropertyWorks()
+        public async Task AggregateAggregatedWithGRoupByPropertyWorks()
         {
             // Arrange
             string queryUrl =
@@ -250,11 +251,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
 
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -278,7 +279,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
                     "/filter(Order/Name ne 'Order0')&$orderby=Order/Name")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +
                     "&$filter=Order/Name ne 'Order0'&$orderby=Order/Name")]
-        public void FilterWorks(string query)
+        public async Task FilterWorks(string query)
         {
             // Arrange
             string queryUrl =
@@ -290,10 +291,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -304,7 +305,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.StdDev as IdStdDev))")]
-        public void CustomAggregateStdDevWorks(string query)
+        public async Task CustomAggregateStdDevWorks(string query)
         {
             // Arrange
             string queryUrl =
@@ -316,7 +317,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -326,7 +327,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with Custom.Sum as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with Custom.OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with Custom.YetAnotherMethod as IdStdDev))")]
-        public void CustomAggregateNotDefinedHaveAppropriateAnswer(string query)
+        public async Task CustomAggregateNotDefinedHaveAppropriateAnswer(string query)
         {
             // Arrange
             string queryUrl =
@@ -338,7 +339,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -348,7 +349,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         [InlineData("?$apply=groupby((Name), aggregate(Order/Price with StdDev as PriceStdDev))")]
         [InlineData("?$apply=groupby((Address/Name), aggregate(Id with OtherMethod as IdStdDev))")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with YetAnotherMethod as IdStdDev))")]
-        public void MethodsNotDefinedHaveAppropriateAnswer(string query)
+        public async Task MethodsNotDefinedHaveAppropriateAnswer(string query)
         {
             // Arrange
             string queryUrl =
@@ -360,7 +361,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -373,7 +374,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         [InlineData("?$apply=aggregate(Order/Price with average as Result)", "450")]
         [InlineData("?$apply=aggregate(Order/Price with countdistinct as Result)", "10")]
         [InlineData("?$apply=aggregate(Order/Price with countdistinct as Result)&$orderby=Result", "10")]
-        public void AggregateMethodWorks(string query, string expectedResult)
+        public async Task AggregateMethodWorks(string query, string expectedResult)
         {
             // Arrange
             string queryUrl =
@@ -385,10 +386,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

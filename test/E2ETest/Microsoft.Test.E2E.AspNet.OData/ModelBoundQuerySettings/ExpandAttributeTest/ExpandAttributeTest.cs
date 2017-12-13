@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -39,7 +40,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [InlineData(CustomerBaseUrl + "?$expand=Order")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=NoExpandOrders")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Order")]
-        public void NonExpandByDefault(string url)
+        public async Task NonExpandByDefault(string url)
         {
             string queryUrl =
                 string.Format(
@@ -49,8 +50,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("cannot be used in the $expand query option", result);
@@ -65,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [InlineData(ModelBoundOrderBaseUrl, "Customers", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl, "Customers2", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl, "NoExpandCustomers", (int)HttpStatusCode.BadRequest)]
-        public void ExpandOnEntityType(string entitySetUrl, string expandOption, int statusCode)
+        public async Task ExpandOnEntityType(string entitySetUrl, string expandOption, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -75,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
             Assert.Equal(statusCode, (int)response.StatusCode);
         }
 
@@ -104,7 +105,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers2", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Order($expand=Customers)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCustomerBaseUrl, "(1)/Order?$expand=Customers", (int)HttpStatusCode.BadRequest)]
-        public void ExpandOnProperty(string entitySetUrl, string url, int statusCode)
+        public async Task ExpandOnProperty(string entitySetUrl, string url, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -114,8 +115,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
             {
@@ -136,7 +137,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [InlineData(ModelBoundCustomerBaseUrl, "(1)/Friend?$expand=Friend($levels=3)", 2)]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Friend($expand=Friend($expand=Friend($levels=max)))", 3)]
         [InlineData(ModelBoundCustomerBaseUrl, "(1)/Friend?$expand=Friend($expand=Friend($levels=max))", 2)]
-        public void ExpandDepth(string url, string queryoption, int maxDepth)
+        public async Task ExpandDepth(string url, string queryoption, int maxDepth)
         {
             string queryUrl =
                 string.Format(
@@ -146,8 +147,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The maximum depth allowed is " + maxDepth, result);
@@ -156,15 +157,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [Theory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
-        public void AutomaticExpand(string url)
+        public async Task AutomaticExpand(string url)
         {
             string queryUrl = string.Format(url, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("AutoExpandOrder", result);
@@ -175,15 +176,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.ExpandAttribut
         [InlineData(CustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundCustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl + "(9)")]
-        public void AutomaticExpandInDerivedType(string url)
+        public async Task AutomaticExpandInDerivedType(string url)
         {
             string queryUrl = string.Format(url, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("SpecialOrder", result);

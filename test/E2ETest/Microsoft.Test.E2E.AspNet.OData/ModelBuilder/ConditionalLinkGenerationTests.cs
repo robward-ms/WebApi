@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -102,12 +103,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
        // [Fact(Skip="when we compute navigationlink and association link, if readlink is set but editlink is not set, it will throw null exception")]
-        public void EditLinkWithNullValueShouldResultInNoEditLinkinPayload()
+        public async Task EditLinkWithNullValueShouldResultInNoEditLinkinPayload()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/ConditionalLinkGeneration_Products(1)/");
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full"));
-            var response = this.Client.SendAsync(request).Result;
-            var content = response.Content.ReadAsStringAsync().Result;
+            var response = await this.Client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain("<link rel=\"edit\"", content);
             Assert.Contains("<link rel=\"self\"", content);
         }

@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         [InlineData(ModelBoundCustomerBaseUrl + "?$filter=Id eq 1")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$filter=Id eq 1 and Name eq 'test'")]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=UnFilterableCustomers($filter=Id eq 1)")]
-        public void NonFilterableByDefault(string url)
+        public async Task NonFilterableByDefault(string url)
         {
             string queryUrl =
                 string.Format(
@@ -55,8 +56,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("cannot be used in the $filter query option.", result);
@@ -95,7 +96,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($filter=CarNumber eq 1)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCarBaseUrl + "?$filter=Id eq 1 and Name eq 'test'", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCarBaseUrl + "?$filter=CarNumber eq 1", (int)HttpStatusCode.BadRequest)]
-        public void FilterOnEntityType(string entitySetUrl, int statusCode)
+        public async Task FilterOnEntityType(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -105,8 +106,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -128,7 +129,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$filter=Name eq 'test'", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($filter=Id eq 1)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$filter=Id eq 1", (int)HttpStatusCode.OK)]
-        public void FilterOnProperty(string entitySetUrl, int statusCode)
+        public async Task FilterOnProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -138,8 +139,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -163,7 +164,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($filter=AutoExpandOrder/Id eq 1)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($filter=AutoExpandOrder/Name eq 'test')", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($filter=Address/Name eq 'test')", (int)HttpStatusCode.OK)]
-        public void FilterSingleNavigationOrComplexProperty(string entitySetUrl, int statusCode)
+        public async Task FilterSingleNavigationOrComplexProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -173,8 +174,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)

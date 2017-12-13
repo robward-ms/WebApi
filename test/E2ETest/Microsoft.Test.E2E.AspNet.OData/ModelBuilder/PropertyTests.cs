@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -35,10 +36,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         [Fact]
-        public void ConventionModelBuilderIgnoresPropertyWhenTold()
+        public async Task ConventionModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             PropertyCustomer customer = response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter())).Result;
             Assert.NotNull(customer);
@@ -67,10 +68,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         [Fact]
-        public void ODataModelBuilderIgnoresPropertyWhenTold()
+        public async Task ODataModelBuilderIgnoresPropertyWhenTold()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/PropertyCustomers(1)");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             PropertyCustomer customer = response.Content.ReadAsAsync<PropertyCustomer>(Enumerable.Range(0, 1).Select(f => new JsonMediaTypeFormatter())).Result;
             Assert.NotNull(customer);

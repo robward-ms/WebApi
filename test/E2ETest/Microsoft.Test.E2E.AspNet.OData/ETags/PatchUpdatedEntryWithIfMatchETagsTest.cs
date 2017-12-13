@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Builder;
@@ -47,15 +48,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
 
         [Fact]
-        public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
+        public async Task PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)?$format=json";
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
             var etagInHeader = response.Headers.ETag.ToString();
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             var etagInPayload = (string)result["@odata.etag"];
             Assert.True(etagInPayload == etagInHeader,
                 string.Format("The etag value in payload is not the same as the one in Header, in payload it is: {0}, but in header, {1}.", etagInPayload, etagInHeader));
@@ -64,7 +65,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             request = new HttpRequestMessage(HttpMethod.Put, requestUri);
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Id"":{1},""Name"":""{2}"",""Notes"":[""{3}""]}}", typeof(ETagsCustomer), 0, "Customer Name 0 updated", "This is note 0 updated"));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
 
             requestUri = this.BaseAddress + "/odata/ETagsCustomers(0)";
@@ -72,7 +73,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Id"":{1},""Name"":""{2}""}}", typeof(ETagsCustomer), 0, "Customer Name 0 updated again"));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             request.Headers.IfMatch.ParseAdd(etagInPayload);
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.PreconditionFailed, response.StatusCode);
         }
     }

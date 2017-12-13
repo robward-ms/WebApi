@@ -112,7 +112,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void AlwaysAvailableActionsGetAdvertisedOnFullMetadataOnly(string acceptHeader)
+        public async Task AlwaysAvailableActionsGetAdvertisedOnFullMetadataOnly(string acceptHeader)
         {
             //Arrange
             string requestUrl = BaseAddress.ToLowerInvariant() + "/Actions/BaseEntity(1)/";
@@ -125,8 +125,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (acceptHeader.Contains("odata.metadata=full"))
@@ -155,7 +155,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void TransientActionsDontGetAdvertisedWhenTheyArentAvailable(string acceptHeader)
+        public async Task TransientActionsDontGetAdvertisedWhenTheyArentAvailable(string acceptHeader)
         {
             //Arrange
             string requestUrl = BaseAddress.ToLowerInvariant() + "/Actions/BaseEntity(1)/";
@@ -165,8 +165,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (acceptHeader.Contains("odata.metadata=full"))
@@ -229,7 +229,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void AlwaysAvailableActionsGetAdvertisedForDerivedTypesOnFullMetadataOnly(string acceptHeader)
+        public async Task AlwaysAvailableActionsGetAdvertisedForDerivedTypesOnFullMetadataOnly(string acceptHeader)
         {
             //Arrange
             string requestUrl = BaseAddress.ToLowerInvariant() + "/Actions/BaseEntity(9)/";
@@ -247,8 +247,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (acceptHeader.Contains("odata.metadata=full"))

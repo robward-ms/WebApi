@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         [InlineData(ModelBoundCustomerBaseUrl + "?$orderby=Id")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$orderby=Id,Name")]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=UnSortableCustomers($orderby=Id,Name)")]
-        public void NonSortableByDefault(string url)
+        public async Task NonSortableByDefault(string url)
         {
             string queryUrl =
                 string.Format(
@@ -55,8 +56,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("cannot be used in the $orderby query option.", result);
@@ -95,7 +96,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($orderby=CarNumber)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCarBaseUrl + "?$orderby=Id,Name", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCarBaseUrl + "?$orderby=CarNumber", (int)HttpStatusCode.BadRequest)]
-        public void OrderByOnEntityType(string entitySetUrl, int statusCode)
+        public async Task OrderByOnEntityType(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -105,8 +106,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -128,7 +129,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$orderby=Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($orderby=Id)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$orderby=Id", (int)HttpStatusCode.OK)]
-        public void OrderByOnProperty(string entitySetUrl, int statusCode)
+        public async Task OrderByOnProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -138,8 +139,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -163,7 +164,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($orderby=AutoExpandOrder/Id)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($orderby=AutoExpandOrder/Name)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($orderby=Address/Name)", (int)HttpStatusCode.OK)]
-        public void OrderBySingleNavigationOrComplexProperty(string entitySetUrl, int statusCode)
+        public async Task OrderBySingleNavigationOrComplexProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -173,8 +174,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)

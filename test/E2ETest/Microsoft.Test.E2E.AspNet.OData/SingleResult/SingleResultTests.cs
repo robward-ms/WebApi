@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -31,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
         }
 
         [Fact]
-        public void EmptySingleResultReturnsNotFound()
+        public async Task EmptySingleResultReturnsNotFound()
         {
             // Arrange
             string queryUrl = string.Format(BaseUrl + "(100)", BaseAddress);
@@ -40,7 +41,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

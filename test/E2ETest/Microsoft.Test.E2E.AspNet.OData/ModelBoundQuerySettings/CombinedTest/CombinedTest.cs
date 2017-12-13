@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(ModelBoundCustomerBaseUrl + "?$filter=Id eq 1", "filter")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$orderby=Id", "orderby")]
         [InlineData(ModelBoundOrderBaseUrl + "?$top=1", "top")]
-        public void DefaultQuerySettings(string url, string error)
+        public async Task DefaultQuerySettings(string url, string error)
         {
             string queryUrl =
                 string.Format(
@@ -55,8 +56,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(error, result);
@@ -71,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($filter=Id eq 1)", "filter")]
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($orderby=Id)", "orderby")]
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($top=3)", "top")]
-        public void QueryAttributeOnEntityTypeNegative(string entitySetUrl, string expandOption, string error)
+        public async Task QueryAttributeOnEntityTypeNegative(string entitySetUrl, string expandOption, string error)
         {
             string queryUrl =
                 string.Format(
@@ -81,8 +82,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(error, result);
         }
@@ -96,7 +97,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($filter=Name eq 'test')")]
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($orderby=Name)")]
         [InlineData(ModelBoundCustomerBaseUrl, "Orders($top=2)")]
-        public void QueryAttributeOnEntityTypePositive(string entitySetUrl, string expandOption)
+        public async Task QueryAttributeOnEntityTypePositive(string entitySetUrl, string expandOption)
         {
             string queryUrl =
                 string.Format(
@@ -106,7 +107,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -115,7 +116,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
         [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
-        public void QuerySettingsOnPropertyNegative(string entitySetUrl, string url, string error)
+        public async Task QuerySettingsOnPropertyNegative(string entitySetUrl, string url, string error)
         {
             string queryUrl =
                 string.Format(
@@ -125,8 +126,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(error, result);
         }
@@ -136,7 +137,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(OrderBaseUrl, "?$expand=Customers2($top=1)")]
         [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($count=true)")]
         [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($top=1)")]
-        public void QuerySettingsOnPropertyPositive(string entitySetUrl, string url)
+        public async Task QuerySettingsOnPropertyPositive(string entitySetUrl, string url)
         {
             string queryUrl =
                 string.Format(
@@ -146,7 +147,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }

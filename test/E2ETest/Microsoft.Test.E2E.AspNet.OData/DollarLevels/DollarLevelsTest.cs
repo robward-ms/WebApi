@@ -141,7 +141,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Contains(errorMessage,
                 result);
         }
@@ -185,7 +185,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             Assert.Contains(errorMessage,
                 result);
         }

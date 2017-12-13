@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -41,7 +42,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
         }
 
         [Fact]
-        public void CutomizeSerializerProvider()
+        public async Task CutomizeSerializerProvider()
         {
             string queryUrl =
                 string.Format(
@@ -51,15 +52,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             Assert.Contains(MyODataSerializerProvider.EnumNotSupportError, result);
         }
 
         [Fact]
-        public void CutomizeSerializer()
+        public async Task CutomizeSerializer()
         {
             string queryUrl =
                 string.Format(
@@ -70,8 +71,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
             request.Headers.Add("Prefer", "odata.include-annotations=\"*\"");
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             response.EnsureSuccessStatusCode();
             Assert.Contains("@dependency.injection.test\":1", result);

@@ -88,30 +88,30 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void WebAPIShouldWorkWithPrimitiveTypeCollectionInJSON()
+        public async Task WebAPIShouldWorkWithPrimitiveTypeCollectionInJSON()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/Get").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/Get");
             response.EnsureSuccessStatusCode();
-            var result = response.Content.ReadAsAsync<IEnumerable<string>>().Result;
+            var result = await response.Content.ReadAsAsync<IEnumerable<string>>();
             Assert.Equal(2, result.Count());
             Assert.Equal("value1", result.First());
         }
 
         [Fact]
-        public void WebAPIShouldWorkWithHttpErrorInJSON()
+        public async Task WebAPIShouldWorkWithHttpErrorInJSON()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/ThrowExceptionInAction").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/ThrowExceptionInAction");
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            var result = response.Content.ReadAsAsync<HttpError>().Result;
+            var result = await response.Content.ReadAsAsync<HttpError>();
             Assert.Contains("Something wrong", result["ExceptionMessage"].ToString());
         }
 
         [Fact]
-        public void WebAPIQueryableShouldWork()
+        public async Task WebAPIQueryableShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/GetQueryableData?$filter=Id gt 1").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/GetQueryableData?$filter=Id gt 1");
             response.EnsureSuccessStatusCode();
-            var result = response.Content.ReadAsAsync<IEnumerable<BlogPost>>().Result;
+            var result = await response.Content.ReadAsAsync<IEnumerable<BlogPost>>();
             Assert.Equal(2, result.Count());
         }
     }

@@ -51,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            int actualCount = Int32.Parse(response.Content.ReadAsStringAsync().Result);
+            int actualCount = Int32.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(expectedCount, actualCount);
         }
 
@@ -69,7 +69,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(expectedCount, result["@odata.count"]);
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             Assert.DoesNotContain("@odata.count", result);
         }
     }

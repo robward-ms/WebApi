@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -54,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 
         [Theory]
         [MemberData(nameof(AutoExpandTestData))]
-        public void QueryForAnEntryIncludeTheAutoExpandNavigationProperty(string url, int propCount)
+        public async Task QueryForAnEntryIncludeTheAutoExpandNavigationProperty(string url, int propCount)
         {
             // Arrange
             string queryUrl = string.Format(url, BaseAddress);
@@ -64,14 +65,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
 
-            var customer = response.Content.ReadAsAsync<JObject>().Result;
+            var customer = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(customer.Properties().Count(), propCount);
             VerifyOrderAndChoiceOrder(customer);
 
@@ -87,7 +88,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
 
         [Fact]
-        public void LevelsWithAutoExpandInSameNavigationProperty()
+        public async Task LevelsWithAutoExpandInSameNavigationProperty()
         {
             // Arrange
             string queryUrl = string.Format(AutoExpandTestBaseUrl + "?$expand=Friend($levels=0)", BaseAddress);
@@ -96,11 +97,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var customer = response.Content.ReadAsAsync<JObject>().Result;
+            var customer = await response.Content.ReadAsAsync<JObject>();
             Assert.NotNull(customer);
             VerifyOrderAndChoiceOrder(customer);
             Assert.Null(customer["Friend"]);
@@ -110,7 +111,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         [InlineData("1", 1)]
         [InlineData("3", 3)]
         [InlineData("max", 4)]
-        public void LevelsWithAutoExpandInDifferentNavigationProperty(string level, int levelNumber)
+        public async Task LevelsWithAutoExpandInDifferentNavigationProperty(string level, int levelNumber)
         {
             // Arrange
             string queryUrl = string.Format("{0}/autoexpand/People?$expand=Friend($levels={1})", BaseAddress, level);
@@ -119,11 +120,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var responseJson = response.Content.ReadAsAsync<JObject>().Result;
+            var responseJson = await response.Content.ReadAsAsync<JObject>();
             var people = responseJson["value"] as JArray;
             var he = people[8] as JObject;
             JObject friend = he;
@@ -140,7 +141,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
 
         [Fact]
-        public void QueryForAnEntryIncludeTheDerivedAutoExpandNavigationProperty()
+        public async Task QueryForAnEntryIncludeTheDerivedAutoExpandNavigationProperty()
         {
             // Arrange
             string queryUrl = string.Format("{0}/autoexpand/Customers(8)", BaseAddress);
@@ -150,14 +151,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
 
-            var customer = response.Content.ReadAsAsync<JObject>().Result;
+            var customer = await response.Content.ReadAsAsync<JObject>();
             VerifyOrderAndChoiceOrder(customer, special: true);
 
             // level one
@@ -168,7 +169,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
 
         [Fact]
-        public void QueryForAnEntryIncludeTheMultiDerivedAutoExpandNavigationProperty()
+        public async Task QueryForAnEntryIncludeTheMultiDerivedAutoExpandNavigationProperty()
         {
             // Arrange
             string queryUrl = string.Format("{0}/autoexpand/Customers(9)", BaseAddress);
@@ -178,14 +179,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
 
-            var customer = response.Content.ReadAsAsync<JObject>().Result;
+            var customer = await response.Content.ReadAsAsync<JObject>();
             VerifyOrderAndChoiceOrder(customer, special: true, vip: true);
 
             // level one
@@ -198,7 +199,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         [Theory]
         [InlineData("{0}/autoexpand/NormalOrders")]
         [InlineData("{0}/autoexpand/NormalOrders(1)")]
-        public void DerivedAutoExpandNavigationPropertyTest(string url)
+        public async Task DerivedAutoExpandNavigationPropertyTest(string url)
         {
             // Arrange
             string queryUrl = string.Format(url, BaseAddress);
@@ -208,13 +209,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Contains("OrderDetail", result);
         }
 
@@ -225,7 +226,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         [InlineData("{0}/autoexpand/NormalOrders(2)", false)]
         [InlineData("{0}/autoexpand/NormalOrders(3)?$select=Id", true)]
         [InlineData("{0}/autoexpand/NormalOrders(3)", false)]
-        public void DisableAutoExpandWhenSelectIsPresentTest(string url, bool isSelectPresent)
+        public async Task DisableAutoExpandWhenSelectIsPresentTest(string url, bool isSelectPresent)
         {
             // Arrange
             string queryUrl = string.Format(url, BaseAddress);
@@ -235,13 +236,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             if (isSelectPresent)
             {
                 Assert.DoesNotContain("NotShownOrderDetail4", result);
@@ -255,7 +256,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         [Theory]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder($select=Id)", true)]
         [InlineData("{0}/autoexpand/NormalOrders(2)?$expand=LinkOrder", false)]
-        public void DisableAutoExpandWhenSelectIsPresentDollarExpandTest(string url, bool isSelectPresent)
+        public async Task DisableAutoExpandWhenSelectIsPresentDollarExpandTest(string url, bool isSelectPresent)
         {
             // Arrange
             string queryUrl = string.Format(url, BaseAddress);
@@ -265,13 +266,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Contains("NotShownOrderDetail4", result);
             if (isSelectPresent)
             {

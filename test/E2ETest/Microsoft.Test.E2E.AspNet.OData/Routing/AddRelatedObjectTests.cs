@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -51,12 +52,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
 
         [Theory]
         [MemberData(nameof(AddRelatedObjectConventionsWorkPropertyData))]
-        public void AddRelatedObjectConventionsWork(string method, string url)
+        public async Task AddRelatedObjectConventionsWork(string method, string url)
         {
             object data = new AROOrder() { Id = 5 };
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), BaseAddress + url);
             request.Content = new ObjectContent(data.GetType(), data, new JsonMediaTypeFormatter());
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }

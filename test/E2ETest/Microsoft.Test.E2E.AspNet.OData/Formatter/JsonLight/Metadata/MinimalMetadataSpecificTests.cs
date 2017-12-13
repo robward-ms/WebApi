@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -33,14 +34,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         }
 
         [Fact]
-        public void QueryWithCastDoesntContainODataType()
+        public async Task QueryWithCastDoesntContainODataType()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/Pets(5)/Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.BigPet");
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            string payload = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            string payload = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -51,14 +52,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         }
 
         [Fact]
-        public void QueryWithoutCastContainsODataType()
+        public async Task QueryWithoutCastContainsODataType()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/Pets(5)");
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            string payload = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            string payload = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

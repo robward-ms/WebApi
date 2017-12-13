@@ -203,12 +203,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithQAttr")]
-        public void TestActionsThatNotAllowedByQueryableAttribute(string url)
+        public async Task TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
             var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            Assert.Contains("The requested resource is not a collection.", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("The requested resource is not a collection.", await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -289,12 +289,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [InlineData("/api/GlobalQueryableFilter/GetProductWithDerivedQAttr")]
-        public void TestActionsThatNotAllowedByQueryableAttribute(string url)
+        public async Task TestActionsThatNotAllowedByQueryableAttribute(string url)
         {
             var response = this.Client.GetAsync(this.BaseAddress + url + "?$top=1").Result;
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-            Assert.Contains("The requested resource is not a collection.", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("The requested resource is not a collection.", await response.Content.ReadAsStringAsync());
         }
     }
 }

@@ -407,7 +407,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
-            actual = cars.ExecuteAsync().Result.First();
+            actual = (await cars.ExecuteAsync()).First();
             await ctx.LoadPropertyAsync(actual, "BaseTypeNavigationProperty");
 
             Assert.Empty(actual.BaseTypeNavigationProperty);
@@ -435,7 +435,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             var cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
-            var actual = cars.ExecuteAsync().Result.First();
+            var actual = (await cars.ExecuteAsync()).First();
             await ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty");
 
             AssertExtension.PrimitiveEqual(miniSportBike, actual.DerivedTypeNavigationProperty[0]);
@@ -448,7 +448,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
             cars = ctx.CreateQuery<Car>("InheritanceTests_Cars");
-            actual = cars.ExecuteAsync().Result.First();
+            actual = (await cars.ExecuteAsync()).First();
             await ctx.LoadPropertyAsync(actual, "DerivedTypeNavigationProperty");
 
             Assert.Empty(actual.DerivedTypeNavigationProperty);
@@ -478,7 +478,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             await ctx.SaveChangesAsync();
 
             ctx = ReaderClient(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
-            var cars = ctx.CreateQuery<Vehicle>("InheritanceTests_Vehicles").ExecuteAsync().Result.ToList().OfType<Car>();
+            var cars = (await ctx.CreateQuery<Vehicle>("InheritanceTests_Vehicles").ExecuteAsync()).ToList().OfType<Car>();
             var actual = cars.First();
             await ctx.LoadPropertyAsync(actual, "SingleNavigationProperty");
             AssertExtension.PrimitiveEqual(vehicle, actual.SingleNavigationProperty);
@@ -486,11 +486,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             await this.ClearRepository("InheritanceTests_Vehicles");
         }
 
-        public virtual void InvokeActionWithOverloads(string actionUrl)
+        public virtual async Task InvokeActionWithOverloads(string actionUrl)
         {
             DataServiceContext ctx = new DataServiceContext(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
 
-            var result = ctx.ExecuteAsync(new Uri(this.BaseAddress + actionUrl), "POST").Result;
+            var result = await ctx.ExecuteAsync(new Uri(this.BaseAddress + actionUrl), "POST");
 
             Assert.Equal(204, result.StatusCode);
         }

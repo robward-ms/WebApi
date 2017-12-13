@@ -390,7 +390,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpResponseMessage response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("\"value\":true", response.Content.ReadAsStringAsync().Result);
+            Assert.Contains("\"value\":true", await response.Content.ReadAsStringAsync());
         }
         #endregion
 

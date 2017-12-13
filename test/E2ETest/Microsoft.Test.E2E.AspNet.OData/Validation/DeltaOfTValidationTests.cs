@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -49,7 +50,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
 
         [Theory]
         [MemberData(nameof(CanValidatePatchesData))]
-        public void CanValidatePatches(int expectedResponseCode, string message)
+        public async Task CanValidatePatches(int expectedResponseCode, string message)
         {
             object payload = null;
             switch (expectedResponseCode)
@@ -66,11 +67,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("PATCH"), BaseAddress + "/odata/PatchCustomers(5)");
             request.Content = new StringContent(JObject.FromObject(payload).ToString());
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(expectedResponseCode, (int)response.StatusCode);
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+                dynamic result = JObject.Parse(await response.Content.ReadAsStringAsync());
                 Assert.Equal(message, result["error"].innererror.message.Value);
             }
 

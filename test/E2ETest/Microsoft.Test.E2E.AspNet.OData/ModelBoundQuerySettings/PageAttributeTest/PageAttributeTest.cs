@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -38,7 +39,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
         [Theory]
         [InlineData(OrderBaseUrl + "?$top=3", 2)]
         [InlineData(ModelBoundOrderBaseUrl + "?$top=3", 2)]
-        public void DefaultMaxTop(string url, int maxTop)
+        public async Task DefaultMaxTop(string url, int maxTop)
         {
             // If there is no attribute on type then the page is disabled, 
             // MaxTop is 0 or the value set in DefaultQuerySetting.
@@ -50,8 +51,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(string.Format("The limit of '{0}' for Top query has been exceeded", maxTop), result);
@@ -62,7 +63,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
         [InlineData(OrderBaseUrl + "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$top=10")]
         [InlineData(ModelBoundOrderBaseUrl + "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeTest.SpecialOrder?$top=10")]
-        public void MaxTopOnEnitityType(string url)
+        public async Task MaxTopOnEnitityType(string url)
         {
             // MaxTop on entity type
             string queryUrl =
@@ -73,8 +74,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("The limit of '5' for Top query has been exceeded", result);
@@ -89,7 +90,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Customers($top=10)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$top=3", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundOrderBaseUrl + "(1)/Customers?$top=10", (int)HttpStatusCode.OK)]
-        public void MaxTopOnProperty(string url, int statusCode)
+        public async Task MaxTopOnProperty(string url, int statusCode)
         {
             // MaxTop on property override on entity type
             string queryUrl =
@@ -100,8 +101,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -113,15 +114,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
         [Theory]
         [InlineData(CustomerBaseUrl)]
         [InlineData(ModelBoundCustomerBaseUrl)]
-        public void PageSizeOnEntityType(string url)
+        public async Task PageSizeOnEntityType(string url)
         {
             string queryUrl = string.Format(url, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains(string.Format(url, "") + "?$skip=1", result);
@@ -132,15 +133,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.PageAttributeT
         [InlineData(CustomerBaseUrl, "(1)/Orders")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders")]
         [InlineData(ModelBoundCustomerBaseUrl, "(1)/Orders")]
-        public void PageSizeOnProperty(string url, string expand)
+        public async Task PageSizeOnProperty(string url, string expand)
         {
             string queryUrl = string.Format(url + expand, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("Orders?$skip=1", result);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -41,7 +42,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
         [Theory]
         [InlineData(CustomerBaseUrl + "?$count=true", (int)HttpStatusCode.BadRequest)]
         [InlineData(OrderBaseUrl + "?$count=true", (int)HttpStatusCode.OK)]
-        public void CutomizeCountValidator(string entitySetUrl, int statusCode)
+        public async Task CutomizeCountValidator(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -51,8 +52,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)

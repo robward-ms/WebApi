@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Extensions;
@@ -71,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(FuzzingQueries))]
-        public void TestFuzzingQueries(string filter)
+        public async Task TestFuzzingQueries(string filter)
         {
             var handler = typeof(HttpMessageInvoker).GetField("handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this.Client) as HttpMessageHandler;
             this.Client = new HttpClient(handler);
@@ -89,7 +90,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
                 || response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
-                var message = response.Content.ReadAsStringAsync().Result;
+                var message = await response.Content.ReadAsStringAsync();
                 if (message.Contains("The recursion limit has been exceeded"))
                 {
                     // Pass if expected error occurs
@@ -130,7 +131,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                var content = response.Content.ReadAsStringAsync().Result;
+                var content = await response.Content.ReadAsStringAsync();
                 Assert.Contains("The request filtering module is configured to deny a request where the query string is too long.", content);
             }
             else

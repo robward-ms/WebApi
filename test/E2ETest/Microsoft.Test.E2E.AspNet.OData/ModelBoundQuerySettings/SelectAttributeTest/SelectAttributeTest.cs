@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -47,7 +48,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [InlineData(ModelBoundCustomerBaseUrl + "?$select=*")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$select=Id")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$select=Id,Name")]
-        public void NoSelectableByDefault(string url)
+        public async Task NoSelectableByDefault(string url)
         {
             string queryUrl =
                 string.Format(
@@ -57,8 +58,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("cannot be used in the $select query option.", result);
@@ -103,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [InlineData(ModelBoundOrderBaseUrl + "?$expand=Cars($select=CarNumber)", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCarBaseUrl + "?$select=Id,Name", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCarBaseUrl + "?$select=CarNumber", (int)HttpStatusCode.BadRequest)]
-        public void SelectOnEntityType(string entitySetUrl, int statusCode)
+        public async Task SelectOnEntityType(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -113,8 +114,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -136,7 +137,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Name", (int)HttpStatusCode.BadRequest)]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($select=Id)", (int)HttpStatusCode.OK)]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$select=Id", (int)HttpStatusCode.OK)]
-        public void SelectOnProperty(string entitySetUrl, int statusCode)
+        public async Task SelectOnProperty(string entitySetUrl, int statusCode)
         {
             string queryUrl =
                 string.Format(
@@ -146,8 +147,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.BadRequest)
@@ -159,7 +160,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
-        public void AutoSelectWithAutoExpand(string url)
+        public async Task AutoSelectWithAutoExpand(string url)
         {
             string queryUrl =
                 string.Format(
@@ -169,8 +170,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain("Id", result);
@@ -182,7 +183,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
-        public void AutoSelectPropertyAccessWithAutoExpand(string url)
+        public async Task AutoSelectPropertyAccessWithAutoExpand(string url)
         {
             string queryUrl =
                 string.Format(
@@ -192,8 +193,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain("Id", result);
@@ -206,7 +207,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
-        public void AutoSelectByDefault(string url)
+        public async Task AutoSelectByDefault(string url)
         {
             string queryUrl =
                 string.Format(
@@ -216,8 +217,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain("Name", result);
@@ -228,7 +229,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
-        public void DollarSelectGetPrecedenceWithAutoSelect(string url)
+        public async Task DollarSelectGetPrecedenceWithAutoSelect(string url)
         {
             string queryUrl =
                 string.Format(
@@ -238,8 +239,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain("Name", result);
@@ -251,7 +252,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [Theory]
         [InlineData(AutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
-        public void NestedDollarSelectGetPrecedenceWithAutoSelect(string url)
+        public async Task NestedDollarSelectGetPrecedenceWithAutoSelect(string url)
         {
             string queryUrl =
                 string.Format(
@@ -261,8 +262,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.DoesNotContain("Id", result);
@@ -274,15 +275,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         [InlineData(AutoSelectCustomerBaseUrl + "(9)")]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl)]
         [InlineData(ModelBoundAutoSelectCustomerBaseUrl + "(9)")]
-        public void AutomaticSelectInDerivedType(string url)
+        public async Task AutomaticSelectInDerivedType(string url)
         {
             string queryUrl = string.Format(url, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("VIPNumber", result);

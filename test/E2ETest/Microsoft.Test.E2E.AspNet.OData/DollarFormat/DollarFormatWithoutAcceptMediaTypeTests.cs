@@ -168,7 +168,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -214,7 +214,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -253,7 +253,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -293,7 +293,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -333,7 +333,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -373,7 +373,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
             }
             else if (dollarFormat.ToLowerInvariant().Contains("xml"))
             {
-                XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+                XmlReader.Create(await response.Content.ReadAsStreamAsync());
             }
             else if (dollarFormat.ToLowerInvariant().Contains("json"))
             {
@@ -392,7 +392,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarFormat
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(expectMediaType, response.Content.Headers.ContentType.MediaType);
-            XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
+            XmlReader.Create(await response.Content.ReadAsStreamAsync());
         }
     }
 }

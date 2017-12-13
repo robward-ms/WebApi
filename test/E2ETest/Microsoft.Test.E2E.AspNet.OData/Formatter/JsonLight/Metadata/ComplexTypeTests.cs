@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
-        public void ODataTypeAnnotationShouldAppearForComplexTypesLikeCollectionAndUserDefinedTypes(string acceptHeader)
+        public async Task ODataTypeAnnotationShouldAppearForComplexTypesLikeCollectionAndUserDefinedTypes(string acceptHeader)
         {
             //Arrange
             string requestUrl = BaseAddress.ToLowerInvariant() + "/Complex/EntityWithComplexProperties/";
@@ -54,8 +55,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             JsonAssert.ContainsProperty("value", result);

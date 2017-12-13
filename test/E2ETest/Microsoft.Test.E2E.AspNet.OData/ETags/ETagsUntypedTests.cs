@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
@@ -51,7 +52,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
 
         [Fact]
-        public void ModelBuilderTest()
+        public async Task ModelBuilderTest()
         {
             string expectMetadata =
                 "<EntitySet Name=\"ETagUntypedCustomers\" EntityType=\"NS.Customer\">\r\n" +
@@ -67,12 +68,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
             string requestUri = string.Format("{0}/odata/$metadata", this.BaseAddress);
 
-            HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
+            HttpResponseMessage response = await this.Client.GetAsync(requestUri);
 
-            var content = response.Content.ReadAsStringAsync().Result;
+            var content = await response.Content.ReadAsStringAsync();
             Assert.Contains(expectMetadata, content);
 
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage message = new ODataMessageWrapper(stream, response.Content.Headers);
             var reader = new ODataMessageReader(message);
             var edmModel = reader.ReadMetadataDocument();
@@ -98,16 +99,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
 
         [Fact]
-        public void PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
+        public async Task PatchUpdatedEntryWithIfMatchShouldReturnPreconditionFailed()
         {
             string requestUri = this.BaseAddress + "/odata/ETagUntypedCustomers(1)?$format=json";
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
 
             Assert.True(response.IsSuccessStatusCode);
             var etagInHeader = response.Headers.ETag.ToString();
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             var etagInPayload = (string)result["@odata.etag"];
 
             Assert.True(etagInPayload == etagInHeader);

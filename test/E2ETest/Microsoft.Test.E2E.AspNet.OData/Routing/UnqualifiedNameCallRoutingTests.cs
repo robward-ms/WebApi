@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -52,10 +53,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("/odata/UnqualifiedCars(5)/Default.Wash", "WashSingle5")]
         [InlineData("/odata/UnqualifiedCars/Wash", "WashCollection")]
         [InlineData("/odata/UnqualifiedCars/Default.Wash", "WashCollection")]
-        public void CanCallBoundActionWithUnqualifiedRouteName(string url, string expectedResult)
+        public async Task CanCallBoundActionWithUnqualifiedRouteName(string url, string expectedResult)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);
@@ -67,10 +68,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("/odata/UnqualifiedCars(5)/Default.Check", "CheckSingle5")]
         [InlineData("/odata/UnqualifiedCars/Check", "CheckCollection")]
         [InlineData("/odata/UnqualifiedCars/Default.Check", "CheckCollection")]
-        public void CanCallBoundFunctionWithUnqualifiedRouteName(string url, string expectedResult)
+        public async Task CanCallBoundFunctionWithUnqualifiedRouteName(string url, string expectedResult)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);

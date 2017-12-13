@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
@@ -29,7 +30,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryJustThePropertiesOfTheEntriesOnASingleResult()
+        public async Task QueryJustThePropertiesOfTheEntriesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1?$select=*", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -39,12 +40,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -53,7 +54,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubsetOfThePropertiesOfAnEntryOnASingleResult()
+        public async Task QueryASubsetOfThePropertiesOfAnEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1/?$select=Name", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -63,12 +64,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -77,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntryOnASingleResult()
+        public async Task QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1/?$select=Id,Name&$expand=JsonSingleResultOrders($select=Id)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -87,12 +88,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -102,7 +103,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntryOnASingleResult()
+        public async Task QueryASubSetOfThePropertiesPresentOnlyInADerivedEntryOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10/?" +
                 "$select=Id,Microsoft.Test.E2E.AspNet.OData.QueryComposition.JsonSingleResultPremiumCustomer/Category", BaseAddress);
@@ -113,12 +114,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -126,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInlineOnASingleResult()
+        public async Task QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInlineOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/1?$select=Id&$expand=JsonSingleResultOrders", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -136,12 +137,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -156,7 +157,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationPropertiesOnASingleResult()
+        public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationPropertiesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?" +
                 "$select=Id&" +
@@ -168,12 +169,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -197,7 +198,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPathOnASingleResult()
+        public async Task QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPathOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?$select=Id,JsonSingleResultOrders&$expand=JsonSingleResultOrders($expand=OrderDetails)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -207,12 +208,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -235,7 +236,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntriesOnASingleResult()
+        public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntriesOnASingleResult()
         {
             string queryUrl = string.Format("{0}/api/JsonSingleResultCustomer/10?" +
                 "$select=Id&" +
@@ -247,12 +248,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);

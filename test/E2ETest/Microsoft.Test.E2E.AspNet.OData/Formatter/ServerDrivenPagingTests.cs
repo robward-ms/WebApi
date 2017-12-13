@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -56,10 +57,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         // [Fact]
-        public void VerifyNextPageLinkAndInlineCountGeneratedCorrect()
+        public async Task VerifyNextPageLinkAndInlineCountGeneratedCorrect()
         {
             // Arrange & Act
-            var result = this.Client.GetStringAsync(this.BaseAddress + "/ServerDrivenPaging_Products?$inlinecount=allPages").Result;
+            var result = await this.Client.GetStringAsync(this.BaseAddress + "/ServerDrivenPaging_Products?$inlinecount=allPages");
 
             // Assert
             Assert.Contains("\"@odata.count\":100", result);

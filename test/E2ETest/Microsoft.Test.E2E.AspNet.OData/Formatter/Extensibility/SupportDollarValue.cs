@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -80,7 +81,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
 
         [Fact]
-        public void CanExtendTheFormatterToSupportPrimitiveRawValues()
+        public async Task CanExtendTheFormatterToSupportPrimitiveRawValues()
         {
             // Arrange
             string requestUrl = BaseAddress + "/RawValue/EntityWithPrimitiveAndBinaryProperty(1)/LongProperty/$value";
@@ -88,15 +89,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             message.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(message).Result;
-            long result = long.Parse(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await Client.SendAsync(message);
+            long result = long.Parse(await response.Content.ReadAsStringAsync());
 
             // Assert
             Assert.Equal(long.MaxValue, result);
         }
 
         [Fact]
-        public void CanExtendTheFormatterToSupportBinaryRawValues()
+        public async Task CanExtendTheFormatterToSupportBinaryRawValues()
         {
             // Arrange
             string requestUrl = BaseAddress + "/RawValue/EntityWithPrimitiveAndBinaryProperty(1)/BinaryProperty/$value";
@@ -104,8 +105,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             message.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(message).Result;
-            byte[] result = response.Content.ReadAsByteArrayAsync().Result;
+            HttpResponseMessage response = await Client.SendAsync(message);
+            byte[] result = await response.Content.ReadAsByteArrayAsync();
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -113,7 +114,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
 
         [Fact]
-        public void CanExtendTheFormatterToSupportNullRawValues()
+        public async Task CanExtendTheFormatterToSupportNullRawValues()
         {
             // Arrange
             string requestUrl = BaseAddress + "/RawValue/EntityWithPrimitiveAndBinaryProperty(1)/NullableLongProperty/$value";
@@ -121,7 +122,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             message.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(message).Result;
+            HttpResponseMessage response = await Client.SendAsync(message);
 
             // Assert
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);

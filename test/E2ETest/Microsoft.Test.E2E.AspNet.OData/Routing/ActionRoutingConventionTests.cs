@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -44,10 +45,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("/odata/ActionCars/Default.Wash", "CarCollection")]
         [InlineData("/odata/ActionFerraris/Microsoft.Test.E2E.AspNet.OData.Routing.ActionCar/Default.Wash", "CarCollection")]
         [InlineData("/odata/ActionFerraris/Default.Wash", "FerrariCollection")]
-        public void CanSupportOverloadOnDerivedBindableTypes(string url, string expectedResult)
+        public async Task CanSupportOverloadOnDerivedBindableTypes(string url, string expectedResult)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -69,12 +70,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         [Fact]
-        public void QueryableShouldWork()
+        public async Task QueryableShouldWork()
         {
-            var response = this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products1?$top=1").Result;
+            var response = await this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products1?$top=1");
             response.EnsureSuccessStatusCode();
 
-            response = this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products2?$top=1").Result;
+            response = await this.Client.GetAsync(this.BaseAddress + "/MultipleEntitySetOnSameClrType_Products2?$top=1");
             response.EnsureSuccessStatusCode();
         }
     }

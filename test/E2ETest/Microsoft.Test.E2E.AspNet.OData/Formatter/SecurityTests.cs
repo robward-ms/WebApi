@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Builder;
@@ -85,7 +86,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=full")]
-        public void DeepNestedObjectShouldBeBlockedByRecursionCheck(string mediaType)
+        public async Task DeepNestedObjectShouldBeBlockedByRecursionCheck(string mediaType)
         {
             var root = new Security_NestedModel();
             var nest = root;
@@ -97,9 +98,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, this.BaseAddress + "/Security_NestedModel");
             request.Content = new ObjectContent<Security_NestedModel>(root, new JsonMediaTypeFormatter(), MediaTypeHeaderValue.Parse(mediaType));
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
-            var content = response.Content.ReadAsStringAsync().Result;
+            var content = await response.Content.ReadAsStringAsync();
             Assert.Contains("The depth limit for entries in nested expanded navigation links was reached", content);
         }
 
@@ -108,7 +109,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         [InlineData("application/json;odata.metadata=none")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=full")]
-        public void BigArrayObjectWithJsonShoulNotdMakeServerHang(string mediaType)
+        public async Task BigArrayObjectWithJsonShoulNotdMakeServerHang(string mediaType)
         {
             var model = new Security_ArrayModel();
             List<string> stringList = new List<string>();
@@ -126,13 +127,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, this.BaseAddress + "/Security_ArrayModel");
             request.Content = new ObjectContent<Security_ArrayModel>(model, new JsonMediaTypeFormatter(), MediaTypeHeaderValue.Parse(mediaType));
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
-        public void BigDataServiceVersionHeaderShouldBeRejected()
+        public async Task BigDataServiceVersionHeaderShouldBeRejected()
         {
             var model = new Security_ArrayModel();
 
@@ -142,7 +143,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             request.Content = new ObjectContent<Security_ArrayModel>(model, new JsonMediaTypeFormatter(), MediaTypeHeaderValue.Parse("application/json"));
             request.Headers.Add("DataServiceVersion", asb.ToString());
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             Assert.False(response.IsSuccessStatusCode);
         }

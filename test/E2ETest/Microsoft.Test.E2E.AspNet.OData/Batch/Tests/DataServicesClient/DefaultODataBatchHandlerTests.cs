@@ -224,7 +224,7 @@ Content-Type: application/json;odata.metadata=minimal
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
             using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), GetEdmModel()))
@@ -356,7 +356,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [Fact]
-        public void SendsIndividualErrorWhenOneOfTheRequestsFails()
+        public async Task SendsIndividualErrorWhenOneOfTheRequestsFails()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/DefaultBatch");
             DefaultBatchProxy.Container client = new DefaultBatchProxy.Container(serviceUrl);
@@ -376,9 +376,9 @@ Content-Type: application/json;odata.metadata=minimal
 
             client.AddToDefaultBatchCustomer(validCustomer);
             client.AddToDefaultBatchCustomer(invalidCustomer);
-            var aggregate = Assert.Throws<AggregateException>(() =>
+            var aggregate = await Assert.ThrowsAsync<AggregateException>(async () =>
             {
-                DataServiceResponse response = client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset).Result;
+                DataServiceResponse response = await client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
             });
 
             var exception = aggregate.InnerExceptions.Single() as DataServiceRequestException;
@@ -433,7 +433,7 @@ Content-Type: application/json;odata.metadata=minimal
             DefaultBatchProxy.Container client = new DefaultBatchProxy.Container(serviceUrl);
             client.Format.UseJson();
 
-            DefaultBatchProxy.DefaultBatchCustomer customer = client.DefaultBatchCustomer.ExecuteAsync().Result.First();
+            DefaultBatchProxy.DefaultBatchCustomer customer = (await client.DefaultBatchCustomer.ExecuteAsync()).First();
             DefaultBatchProxy.DefaultBatchOrder order = new DefaultBatchProxy.DefaultBatchOrder() { Id = 0, PurchaseDate = DateTime.Now };
 
             client.AddToDefaultBatchOrder(order);
@@ -512,7 +512,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
 
@@ -577,7 +577,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
 

@@ -219,7 +219,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestFilters()
+        public async Task TestFilters()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -237,7 +237,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
                 var requestUri = this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter;
 
-                var response = this.Client.GetAsync(requestUri).Result;
+                var response = await this.Client.GetAsync(requestUri);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     /* 
@@ -253,7 +253,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
                     Trace.TraceInformation("Request: {0}", requestUri);
                     Trace.TraceError("StatusCode: {0}", response.StatusCode);
-                    Trace.TraceError(response.Content.ReadAsStringAsync().Result);
+                    Trace.TraceError(await response.Content.ReadAsStringAsync());
 
                     Trace.Flush();
                     Trace.Listeners.Remove(traceListener);
@@ -273,7 +273,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void TestFiltersWithXmlSerializer()
+        public async Task TestFiltersWithXmlSerializer()
         {
             // While this seems ideal for a Theory test case, the IEnumerable<Product> would need to be serialize-able in
             // order to generate an Xunit 2.0 test case.
@@ -291,7 +291,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$filter=" + filter);
                 request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/xml"));
-                var response = this.Client.SendAsync(request).Result;
+                var response = await this.Client.SendAsync(request);
                 var result = response.Content.ReadAsAsync<IEnumerable<Product>>().Result;
 
                 Assert.Equal(expected.Count(), result.Count());

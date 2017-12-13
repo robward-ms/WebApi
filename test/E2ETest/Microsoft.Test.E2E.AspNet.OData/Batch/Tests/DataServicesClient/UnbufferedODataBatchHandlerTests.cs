@@ -226,7 +226,7 @@ Content-Type: application/json;odata.metadata=minimal
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
             using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), GetEdmModel()))
@@ -281,7 +281,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [Fact]
-        public void CanBatchQueriesWithDataServicesClient()
+        public async Task CanBatchQueriesWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
             UnbufferedBatchProxy.Container client = new UnbufferedBatchProxy.Container(serviceUrl);
@@ -291,7 +291,7 @@ Content-Type: application/json;odata.metadata=minimal
             Uri singleCustomerRequestUri = new Uri(BaseAddress + "/UnbufferedBatch/UnbufferedBatchCustomer(0)");
             DataServiceRequest<UnbufferedBatchProxy.UnbufferedBatchCustomer> singleCustomerRequest = new DataServiceRequest<UnbufferedBatchProxy.UnbufferedBatchCustomer>(singleCustomerRequestUri);
 
-            DataServiceResponse batchResponse = client.ExecuteBatchAsync(customersRequest, singleCustomerRequest).Result;
+            DataServiceResponse batchResponse = await client.ExecuteBatchAsync(customersRequest, singleCustomerRequest);
 
             if (batchResponse.IsBatchResponse)
             {
@@ -349,7 +349,7 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [Fact]
-        public void SendsIndividualErrorWhenOneOfTheRequestsFails()
+        public async Task SendsIndividualErrorWhenOneOfTheRequestsFails()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
             UnbufferedBatchProxy.Container client = new UnbufferedBatchProxy.Container(serviceUrl);
@@ -369,9 +369,9 @@ Content-Type: application/json;odata.metadata=minimal
 
             client.AddToUnbufferedBatchCustomer(validCustomer);
             client.AddToUnbufferedBatchCustomer(invalidCustomer);
-            var aggregateException = Assert.Throws<AggregateException>(() =>
+            var aggregateException = await Assert.ThrowsAsync<AggregateException>(async () =>
             {
-                DataServiceResponse response = client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset).Result;
+                DataServiceResponse response = await client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
             });
 
             var exception = aggregateException.InnerExceptions.SingleOrDefault() as DataServiceRequestException;
@@ -413,20 +413,20 @@ Content-Type: application/json;odata.metadata=minimal
         }
 
         [Fact]
-        public virtual Task CanSetLinksInABatchWithDataServicesClient()
+        public virtual async Task CanSetLinksInABatchWithDataServicesClient()
         {
             Uri serviceUrl = new Uri(BaseAddress + "/UnbufferedBatch");
             UnbufferedBatchProxy.Container client = new UnbufferedBatchProxy.Container(serviceUrl);
             client.Format.UseJson();
 
-            UnbufferedBatchProxy.UnbufferedBatchCustomer customer = client.UnbufferedBatchCustomer.ExecuteAsync().Result.First();
+            UnbufferedBatchProxy.UnbufferedBatchCustomer customer = (await client.UnbufferedBatchCustomer.ExecuteAsync()).First();
             UnbufferedBatchProxy.UnbufferedBatchOrder order = new UnbufferedBatchProxy.UnbufferedBatchOrder() { Id = 0, PurchaseDate = DateTime.Now };
 
             client.AddToUnbufferedBatchOrder(order);
 
             client.AddLink(customer, "Orders", order);
 
-            return client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            await client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
         }
     }
 
@@ -496,7 +496,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
 
@@ -561,7 +561,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
 

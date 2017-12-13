@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -33,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void OrderByTest()
+        public async Task OrderByTest()
         {
             HttpResponseMessage response = Client.GetAsync(BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/Addresses?$orderby=City").Result;
 
@@ -42,7 +43,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             IEnumerable<string> expectedData =
                     ComplextTypeCollectionTests_PersonsController.Persons.Where(p => p.Id == 1).First().Addresses.OrderBy(a => a.City).Select(a => a.City);
 
-            string responseContent = response.Content.ReadAsStringAsync().Result;
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             JObject jo = JObject.Parse(responseContent);
             JArray addresses = jo["value"] as JArray;
@@ -52,14 +53,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void PageSizeWorksOnCollectionOfComplexProperty()
+        public async Task PageSizeWorksOnCollectionOfComplexProperty()
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos";
             HttpResponseMessage response = Client.GetAsync(resquestUri).Result;
 
             response.EnsureSuccessStatusCode();
 
-            string responseContent = response.Content.ReadAsStringAsync().Result;
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             JObject result = JObject.Parse(responseContent);
 
@@ -79,14 +80,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("", false)]
         [InlineData("?$count=false", false)]
         [InlineData("?$count=true", true)]
-        public void DollarCountWorksOnCollectionOfComplexProperty(string countOption, bool expect)
+        public async Task DollarCountWorksOnCollectionOfComplexProperty(string countOption, bool expect)
         {
             string resquestUri = BaseAddress + "/odata/ComplextTypeCollectionTests_Persons(1)/PersonInfos" + countOption;
             HttpResponseMessage response = Client.GetAsync(resquestUri).Result;
 
             response.EnsureSuccessStatusCode();
 
-            string responseContent = response.Content.ReadAsStringAsync().Result;
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             if (expect)
             {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -58,7 +59,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryJustThePropertiesOfTheEntriesOnAFeed()
+        public async Task QueryJustThePropertiesOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=*", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -68,12 +69,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -83,7 +84,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryJustTheActionsOfTheEntriesOnAFeed()
+        public async Task QueryJustTheActionsOfTheEntriesOnAFeed()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Default.*", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -93,12 +94,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -108,7 +109,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubsetOfThePropertiesOfAnEntry()
+        public async Task QueryASubsetOfThePropertiesOfAnEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Name", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -118,12 +119,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -133,7 +134,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
+        public async Task QueryASubsetOfThePropertiesOfAnEntryAndASubsetOfThePropertiesOfARelatedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/?$select=Id,Name&$expand=SelectOrders($select=Id)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -143,12 +144,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -159,7 +160,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
+        public async Task QueryASubSetOfThePropertiesPresentOnlyInADerivedEntry()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
                 "$select=Id,Microsoft.Test.E2E.AspNet.OData.QueryComposition.SelectPremiumCustomer/Category", BaseAddress);
@@ -168,12 +169,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
             HttpResponseMessage response;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            var content = response.Content.ReadAsAsync<JObject>().Result;
+            var content = await response.Content.ReadAsAsync<JObject>();
 
             JArray customers = content["value"] as JArray;
             Assert.Equal(10, customers.Count);
@@ -181,7 +182,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
+        public async Task QueryAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyInline()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id&$expand=SelectOrders", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -191,12 +192,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -215,7 +216,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
+        public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForASetOfNavigationProperties()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
                 "$select=Id&" +
@@ -225,12 +226,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
             HttpResponseMessage response;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            var content = response.Content.ReadAsAsync<JObject>().Result;
+            var content = await response.Content.ReadAsAsync<JObject>();
 
             JArray customers = content["value"] as JArray;
             Assert.Equal(10, customers.Count);
@@ -254,7 +255,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
+        public async Task QueryForAnEntryAndIncludeTheRelatedEntriesForAGivenNavigationPropertyPath()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?$select=Id,SelectOrders&$expand=SelectOrders($expand=OrderDetails)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
@@ -264,12 +265,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             JObject result;
             string content;
 
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            content = response.Content.ReadAsStringAsync().Result;
+            content = await response.Content.ReadAsStringAsync();
 
             result = JObject.Parse(content);
             Assert.NotNull(result);
@@ -294,7 +295,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
+        public async Task QueryForAnEntryAnIncludeTheRelatedEntriesForANavigationPropertyPresentOnlyInDerivedEntries()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer/Default.PremiumCustomers?" +
                 "$select=Id&" +
@@ -304,12 +305,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
             HttpResponseMessage response;
            
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
-            var content = response.Content.ReadAsAsync<JObject>().Result;
+            var content = await response.Content.ReadAsAsync<JObject>();
 
             JArray customers = content["value"] as JArray;
             Assert.Equal(10, customers.Count);
@@ -326,7 +327,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
+        public async Task QueryForAnEntryWithExpandNavigationPropertyExceedPageSize()
         {
             // Arrange
             RestoreData();
@@ -337,14 +338,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
             
-            var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
             Assert.Equal(2, expandProp.Count);
@@ -353,19 +354,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedDollarCountInDollarExpandWorks()
+        public async Task NestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
 
             JsonAssert.ArrayLength(10, "value", result);
@@ -384,19 +385,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedDollarCountInDollarExpandWithNestedDollarFilterWorks()
+        public async Task NestedDollarCountInDollarExpandWithNestedDollarFilterWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($filter=Id lt 1;$count=true)", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
             Console.WriteLine(result);
             JsonAssert.ArrayLength(10, "value", result);
@@ -429,20 +430,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedNestedDollarCountInDollarExpandWorks()
+        public async Task NestedNestedDollarCountInDollarExpandWorks()
         {
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?&$expand=SelectOrders($count=true;$expand=OrderDetails($count=true))", BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, queryUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
 
             JsonAssert.ArrayLength(10, "value", result);
@@ -462,7 +463,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedNestedSkipInDollarExpandWorks()
+        public async Task NestedNestedSkipInDollarExpandWorks()
         {
             // Arrange
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?" +
@@ -472,14 +473,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
 
             JsonAssert.ArrayLength(10, "value", result);
@@ -497,7 +498,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedNestedTopInDollarExpandWorks()
+        public async Task NestedNestedTopInDollarExpandWorks()
         {
             // Arrange
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?" +
@@ -507,14 +508,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
 
             JsonAssert.ArrayLength(8, "value", result);
@@ -532,7 +533,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedNestedOrderByInDollarExpandWorks()
+        public async Task NestedNestedOrderByInDollarExpandWorks()
         {
             // Arrange
             string queryUrl = string.Format("{0}/selectexpand/SelectCustomer?" +
@@ -542,14 +543,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
                                                                                                                                                                                                                                                                                                                                                     
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             Assert.NotNull(response.Content);
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(result);
 
             JsonAssert.ArrayLength(10, "value", result);
@@ -561,7 +562,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void NestedTopSkipOrderByInDollarExpandWorksWithEF()
+        public async Task NestedTopSkipOrderByInDollarExpandWorksWithEF()
         {
             // Arrange
             RestoreData();
@@ -572,14 +573,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             HttpResponseMessage response;
 
             // Act
-            response = client.SendAsync(request).Result;
+            response = await client.SendAsync(request);
 
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
 
-            var responseObject = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var responseObject = JObject.Parse(await response.Content.ReadAsStringAsync());
             var result = responseObject["value"] as JArray;
             var expandProp = result[0]["SelectOrders"] as JArray;
             Assert.Single(expandProp);

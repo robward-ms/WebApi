@@ -2,13 +2,24 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
 using Microsoft.Owin.Hosting;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Owin;
+using Xunit;
+
+// Parallelism in the test framework is a feature that's new for (Xunit) version 2. However,
+// since each test will spin up a number of web servers each with a listening port, disabling the
+// parallel test with take a bit long but consume fewer resources.
+//
+// By default, each test class is a unique test collection. Tests within the same test class will not run
+// in parallel against each other. That means that there may be up to # subclasses of WebHostTestBase
+// web servers running at any point during the test run, currently ~500. Without this, there would be a
+// web server per test case since Xunit 2.0 spans a new test class instance for each test case.
+//
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
@@ -90,22 +101,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             string baseAddress = string.Format(NormalBaseAddressTemplate, Environment.MachineName, _port);
             this.BaseAddress = baseAddress.Replace("localhost", Environment.MachineName);
 
-            try
-            {
-                // set up the server
-                WebApp.Start(baseAddress, DefaultKatanaConfigure);
+            // set up the server. If this throws an exception, it will be reported in
+            // the test output.
+            WebApp.Start(baseAddress, DefaultKatanaConfigure);
 
-                // setup client
-                this.Client = new HttpClient();
-            }
-            catch (Exception ex)
-            {
-                EventLog appLog = new System.Diagnostics.EventLog();
-                appLog.Source = "OData WebApi Katana Self Host Test";
-                appLog.WriteEntry(string.Format("base address: {0}\n message: {1}\n stack trace: {2}\n", this.BaseAddress, ex.Message, ex.StackTrace),
-                    EventLogEntryType.Error);
-                throw ex;
-            }
+            // setup client, nothing special.
+            this.Client = new HttpClient();
 
             return true;
         }

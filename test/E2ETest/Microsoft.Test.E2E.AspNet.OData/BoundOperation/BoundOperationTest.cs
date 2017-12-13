@@ -78,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            var stream = response.Content.ReadAsStreamAsync().Result;
+            var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage message = new ODataMessageWrapper(stream, response.Content.Headers);
             var reader = new ODataMessageReader(message);
             var edmModel = reader.ReadMetadataDocument();
@@ -271,7 +271,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -335,7 +335,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -354,7 +354,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -375,7 +375,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode); // 400
@@ -394,7 +394,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -418,7 +418,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -440,7 +440,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -458,7 +458,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -479,7 +479,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -497,7 +497,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -590,7 +590,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -610,7 +610,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -627,7 +627,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -702,7 +702,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             //Assert
             Assert.True(responseForPost.IsSuccessStatusCode);
-            var response = responseForPost.Content.ReadAsAsync<JObject>().Result["value"] as JArray;
+            var response = (await responseForPost.Content.ReadAsAsync<JObject>())["value"] as JArray;
             Assert.Equal(expectedCount, response.Count());
         }
 
@@ -723,7 +723,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             //Assert
             Assert.True(responseForPost.IsSuccessStatusCode);
-            var response = responseForPost.Content.ReadAsAsync<JObject>().Result["value"] as JArray;
+            var response = (await responseForPost.Content.ReadAsAsync<JObject>())["value"] as JArray;
             Assert.Equal(expectedCount, response.Count());
         }
 
@@ -744,7 +744,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             //Assert
             Assert.True(responseForPost.IsSuccessStatusCode);
-            var response = responseForPost.Content.ReadAsAsync<JObject>().Result["value"] as JArray;
+            var response = (await responseForPost.Content.ReadAsAsync<JObject>())["value"] as JArray;
             Assert.Equal(expectedCount, response.Count());
         }
 
@@ -810,7 +810,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -838,7 +838,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -867,7 +867,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -896,7 +896,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Act
             HttpResponseMessage response = await Client.SendAsync(request);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             response.EnsureSuccessStatusCode();

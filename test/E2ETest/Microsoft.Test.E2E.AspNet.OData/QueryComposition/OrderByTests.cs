@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -36,14 +37,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void CanOrderByNestedPropertiesOnComplexObjects()
+        public async Task CanOrderByNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/ZipCode desc";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + query);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic parsedContent = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            dynamic parsedContent = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(parsedContent.value);
             for (int i = 1; i < parsedContent.value.Count; i++)
             {
@@ -54,14 +55,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void CanOrderByMultipleNestedPropertiesOnComplexObjects()
+        public async Task CanOrderByMultipleNestedPropertiesOnComplexObjects()
         {
             string query = "/odata/OrderByCustomers?$orderby=Address/CountryOrRegion/Name asc, Address/ZipCode asc";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + query);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic parsedContent = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            dynamic parsedContent = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(parsedContent.value);
             for (int i = 1; i < parsedContent.value.Count; i++)
             {
@@ -73,15 +74,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void CanOrderByDuplicatePropertiesSimiliarPath()
+        public async Task CanOrderByDuplicatePropertiesSimiliarPath()
         {
             string query =
                 "/odata/OrderByCustomers?$orderby=CountryOrRegion/Name, Address/CountryOrRegion/Name asc, WorkAddress/CountryOrRegion/Name asc";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + query);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic parsedContent = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            dynamic parsedContent = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.NotNull(parsedContent.value);
             for (int i = 1; i < parsedContent.value.Count; i++)
             {

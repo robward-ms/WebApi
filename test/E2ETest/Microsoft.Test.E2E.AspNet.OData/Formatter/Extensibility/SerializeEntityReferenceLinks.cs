@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData;
@@ -188,13 +189,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
 
         [Fact]
-        public void CanExtendTheFormatterToSerializeEntityReferenceLinks()
+        public async Task CanExtendTheFormatterToSerializeEntityReferenceLinks()
         {
             string requestUrl = BaseAddress + "/EntityReferenceLinks/ParentEntity(1)/Children/$ref";
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUrl);
             message.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-            HttpResponseMessage response = Client.SendAsync(message).Result;
-            JObject result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await Client.SendAsync(message);
+            JObject result = JObject.Parse(await response.Content.ReadAsStringAsync());
             JsonAssert.ArrayLength(10, "value", result);
         }
 

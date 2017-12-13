@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -97,24 +98,25 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
         }
 
         [Fact]
-        public void GeneratedLinkShouldMatchRequestRouting()
+        public async Task GeneratedLinkShouldMatchRequestRouting()
         {
-            var content = this.Client.GetStringAsync(this.BaseAddress + "/v1/LinkGeneration_Model1").Result;
+            var content = await this.Client.GetStringAsync(this.BaseAddress + "/v1/LinkGeneration_Model1");
             Assert.DoesNotContain(@"/v2/LinkGeneration_Model1", content);
 
-            content = this.Client.GetStringAsync(this.BaseAddress + "/v2/LinkGeneration_Model2").Result;
+            content = await this.Client.GetStringAsync(this.BaseAddress + "/v2/LinkGeneration_Model2");
             Assert.DoesNotContain(@"/v1/LinkGeneration_Model2", content);
         }
 
         [Theory]
         [InlineData("/v1/LinkGeneration_Model1(1)/NonContainedNavigationProperty", "/v1/LinkGeneration_Model2(2)")]
-        public void GeneratedLinkTestForNavigationProperty(string requestUrl, string expectLinkUrl)
+        public async Task GeneratedLinkTestForNavigationProperty(string requestUrl, string expectLinkUrl)
         {
             string AcceptJsonFullMetadata = "application/json;odata.metadata=full";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 this.BaseAddress + requestUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(AcceptJsonFullMetadata));
-            var content = this.Client.SendAsync(request).Result.Content.ReadAsStringAsync().Result;
+            var response = await this.Client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
             JObject result = JObject.Parse(content);
             Assert.Equal(result["@odata.editLink"].ToString(), this.BaseAddress + expectLinkUrl, StringComparer.OrdinalIgnoreCase);
             Assert.Equal(result["@odata.id"].ToString(), this.BaseAddress + expectLinkUrl, StringComparer.OrdinalIgnoreCase);

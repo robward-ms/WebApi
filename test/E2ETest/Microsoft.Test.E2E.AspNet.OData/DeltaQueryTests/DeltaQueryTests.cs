@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -36,13 +37,13 @@ namespace Microsoft.Test.E2E.AspNet.OData
         }
 
         [Fact]
-        public void DeltaVerifyReslt()
+        public async Task DeltaVerifyReslt()
         {
             HttpRequestMessage get = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/TestCustomers?$deltaToken=abc");
             get.Headers.Add("Accept", "application/json;odata.metadata=minimal");
-            HttpResponseMessage response = Client.SendAsync(get).Result;
+            HttpResponseMessage response = await Client.SendAsync(get);
             Assert.True(response.IsSuccessStatusCode);
-            dynamic results = response.Content.ReadAsAsync<JObject>().Result;
+            dynamic results = await response.Content.ReadAsAsync<JObject>();
 
             Assert.True(results.value.Count == 7, "There should be 7 entries in the response");
 

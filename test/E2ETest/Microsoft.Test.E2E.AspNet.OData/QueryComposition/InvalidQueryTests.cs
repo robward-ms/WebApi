@@ -3,6 +3,7 @@
 
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -38,11 +39,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [InlineData("/odata/InvalidQueryCustomers?$orderby=id")]
         [InlineData("/odata/InvalidQueryCustomers(5)?$orderby=id asc")]
         [InlineData("/odata/InvalidQueryCustomers?$orderby=id desc")]
-        public void ParseErrorsProduceMeaningfulMessages(string query)
+        public async Task ParseErrorsProduceMeaningfulMessages(string query)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + query);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            dynamic error = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await Client.SendAsync(request);
+            dynamic error = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal("The query specified in the URI is not valid. Could not find a property named 'id' on type 'Microsoft.Test.E2E.AspNet.OData.QueryComposition.InvalidQueryCustomer'.",
                          (string)error["error"]["message"]);
         }

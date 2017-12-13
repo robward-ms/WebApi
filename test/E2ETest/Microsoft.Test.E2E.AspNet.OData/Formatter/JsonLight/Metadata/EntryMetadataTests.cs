@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -114,7 +115,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
+        public async Task ODataTypeAnnotationAppearsForAllEntitiesInFullMetadataAndForDerivedEntityTypesInFullAndMinimalMetadata(
             string acceptHeader)
         {
             //Arrange
@@ -127,8 +128,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             JArray returnedEntities = (JArray)result["value"];
@@ -163,7 +164,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
+        public async Task NavigationLinksAppearOnlyInFullMetadata(string acceptHeader)
         {
             //Arrange
             OneToOneParent[] entities = MetadataTestHelpers.CreateInstances<OneToOneParent[]>();
@@ -174,8 +175,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (acceptHeader.Contains("odata.metadata=full"))
@@ -190,7 +191,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
+        public async Task CustomEditLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
             OneToOneParent[] entities = MetadataTestHelpers.CreateInstances<OneToOneParent[]>();
@@ -201,8 +202,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (!acceptHeader.Contains("odata.metadata=none"))
@@ -217,7 +218,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
+        public async Task CustomIdLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
             OneToOneParent[] entities = MetadataTestHelpers.CreateInstances<OneToOneParent[]>();
@@ -228,8 +229,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (!acceptHeader.Contains("odata.metadata=none"))
@@ -244,7 +245,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 
         [Theory]
         [MemberData(nameof(AllAcceptHeaders))]
-        public void CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
+        public async Task CustomReadLinksAppearInFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
             OneToOneParent[] entities = MetadataTestHelpers.CreateInstances<OneToOneParent[]>();
@@ -255,8 +256,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (!acceptHeader.Contains("odata.metadata=none"))
@@ -273,7 +274,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]
-        public void CanFollowGeneratedNavigationLinks(string acceptHeader)
+        public async Task CanFollowGeneratedNavigationLinks(string acceptHeader)
         {
             //Arrange
             OneToOneParent[] entities = MetadataTestHelpers.CreateInstances<OneToOneParent[]>();
@@ -286,15 +287,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             request.SetAcceptHeader(acceptHeader);
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             returnedParentEntities = (JArray)result["value"];
             for (int i = 0; i < returnedParentEntities.Count; i++)
             {
                 string childUrl = (string)returnedParentEntities[i]["Child@odata.navigationLink"];
                 HttpRequestMessage childRequest = new HttpRequestMessage(HttpMethod.Get, childUrl);
-                HttpResponseMessage childResponse = Client.SendAsync(childRequest).Result;
-                JObject childEntry = childResponse.Content.ReadAsAsync<JObject>().Result;
+                HttpResponseMessage childResponse = await Client.SendAsync(childRequest);
+                JObject childEntry = await childResponse.Content.ReadAsAsync<JObject>();
                 returnedChildEntities.Add(childEntry);
             }
             returnedChildrenIdentities = returnedChildEntities.Select(x => (int)x["Id"]).ToArray();

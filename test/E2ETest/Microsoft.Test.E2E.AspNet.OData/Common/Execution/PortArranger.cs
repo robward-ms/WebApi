@@ -18,7 +18,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             string startPort = "9001";
             if (_available == null)
             {
-                _available = new ConcurrentQueue<string>(Enumerable.Range(int.Parse(startPort), 5000).Select(i => i.ToString()));
+                _available = new ConcurrentQueue<string>(Enumerable.Range(int.Parse(startPort), 1000).Select(i => i.ToString()));
             }
         }
 

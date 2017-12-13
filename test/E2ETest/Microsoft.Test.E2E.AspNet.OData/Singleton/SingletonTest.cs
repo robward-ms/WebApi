@@ -54,7 +54,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         {
             string requestUri = string.Format(this.BaseAddress + "/{0}", model);
 
-            HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
+            HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json["value"] as JArray;
 
@@ -106,7 +106,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
             // Act
             HttpResponseMessage response = await Client.GetAsync(requestUri);
-            string responseString = response.Content.ReadAsStringAsync().Result;
+            string responseString = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -128,8 +128,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             await ResetDataSource(model, "Partners");
 
             // GET singleton
-            HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
-            dynamic result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await this.Client.GetAsync(requestUri);
+            dynamic result = JObject.Parse(await response.Content.ReadAsStringAsync());
 
             // PUT singleton with {"ID":1,"Name":"singletonName","Revenue":2000,"Category":"IT"}
             result["Revenue"] = 2000;
@@ -138,19 +138,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
             // GET singleton/Revenue
             response = this.Client.GetAsync(requestUri + "/Revenue").Result;
-            result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2000, (int)result["value"]);
 
             // PATCH singleton with {"@odata.type":"#Microsoft.Test.E2E.AspNet.OData.Singleton.Company","Revenue":3000}
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri);
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Revenue"":3000}}", typeof(Company)));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // GET singleton
-            response = this.Client.GetAsync(requestUri).Result;
-            result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            response = await this.Client.GetAsync(requestUri);
+            result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(3000, (int)result["Revenue"]);
 
             // Negative: Add singleton
@@ -181,7 +181,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             await ResetDataSource(model, "Partners");
 
             // GET singleton/Partners
-            HttpResponseMessage response = this.Client.GetAsync(requestUri).Result;
+            HttpResponseMessage response = await this.Client.GetAsync(requestUri);
             var json = await response.Content.ReadAsAsync<JObject>();
             var result = json.GetValue("value") as JArray;
             Assert.Empty(result);
@@ -193,25 +193,25 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, navigationLinkUri);
             request.Content = new StringContent("{ \"@odata.id\" : \"" + idLinkBase + "(1)\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // POST singleton/Partners/$ref
             request = new HttpRequestMessage(HttpMethod.Post, navigationLinkUri);
             request.Content = new StringContent("{ \"@odata.id\" : \"" + idLinkBase + "(2)\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // POST singleton/Partners/$ref
             request = new HttpRequestMessage(HttpMethod.Post, navigationLinkUri);
             request.Content = new StringContent("{ \"@odata.id\" : \"" + idLinkBase + "(3)\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // GET singleton/Partners
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json.GetValue("value") as JArray;
             Assert.Equal<int>(3, result.Count);
@@ -221,11 +221,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             Partner partner = new Partner() { ID = 100, Name = "NewHire" };
             request = new HttpRequestMessage(HttpMethod.Post, requestUri);
             request.Content = new ObjectContent(partner.GetType(), partner, new JsonMediaTypeFormatter());
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // GET singleton/Partners
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json.GetValue("value") as JArray;
             Assert.Equal<int>(4, result.Count);
@@ -233,18 +233,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             // Unrelate Partners(3) from Company
             // DELETE singleton/Partners(3)/$ref
             request = new HttpRequestMessage(HttpMethod.Delete, requestUri + "(3)/$ref");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // GET singleton/Partners
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             json = await response.Content.ReadAsAsync<JObject>();
             result = json.GetValue("value") as JArray;
             Assert.Equal<int>(3, result.Count);
 
             // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount()
             requestUri = string.Format(BaseAddress + "/{0}/{1}/{2}.GetPartnersCount()", model, singletonName, NameSpace);
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             json = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(3, (int)json["value"]);
         }
@@ -268,12 +268,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, navigationUri);
             request.Content = new StringContent("{ \"@odata.id\" : \"" + idLinkBase + "\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
             // GET Partners(1)/Company
-            response = this.Client.GetAsync(requestUri).Result;
-            var result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            response = await this.Client.GetAsync(requestUri);
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal("MonstersInc", (string)result["Name"]);
 
             // PUT Partners(1)/Company
@@ -283,19 +283,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
             // GET Partners(1)/Company/Revenue
             response = this.Client.GetAsync(requestUri + formatQuery).Result;
-            result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2000, (int)result["Revenue"]);
 
             // PATCH Partners(1)/Company
             request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri);
             request.Content = new StringContent(string.Format(@"{{""@odata.type"":""#{0}"",""Revenue"":3000}}", typeof(Company)));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // GET Partners(1)/Company/Revenue
             response = this.Client.GetAsync(requestUri + formatQuery).Result;
-            result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(3000, (int)result["Revenue"]);
 
             // DELETE Partners(1)/Company/$ref
@@ -330,23 +330,23 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             var request = new HttpRequestMessage(HttpMethod.Put, requestUri);
             request.Content = new StringContent(JsonConvert.SerializeObject(company));
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Location
             response = this.Client.GetAsync(requestUri + "/Location?" + formatQuery).Result;
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Location, (string)result["value"]);
 
             // Query complex type
             // GET GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany/Office
             response = this.Client.GetAsync(requestUri + "/Office?" + formatQuery).Result;
-            result = response.Content.ReadAsAsync<JObject>().Result;
+            result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Office.City, (string)result["City"]);
 
             // GET singleton/Microsoft.Test.E2E.AspNet.OData.Singleton.SubCompany?$select=Location
             response = this.Client.GetAsync(requestUri + "?$select=Location&" + formatQuery).Result;
-            result = response.Content.ReadAsAsync<JObject>().Result;
+            result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(company.Location, (string)result["Location"]);
         }
 
@@ -363,7 +363,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
             // GET /singleton?$select=Name
             var response = this.Client.GetAsync(requestUri + "?$select=Name").Result;
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             int i = 0;
             foreach (var pro in result.Properties())
             {
@@ -375,14 +375,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             Partner partner = new Partner() { ID = 100, Name = "NewHire" };
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri + "/Partners");
             request.Content = new ObjectContent(partner.GetType(), partner, new JsonMediaTypeFormatter());
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // POST /singleton/Partners
             partner = new Partner() { ID = 101, Name = "NewHire2" };
             request = new HttpRequestMessage(HttpMethod.Post, requestUri + "/Partners");
             request.Content = new ObjectContent(partner.GetType(), partner, new JsonMediaTypeFormatter());
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             // GET /singleton?$expand=Partners($select=Name)
@@ -397,7 +397,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             request = new HttpRequestMessage(HttpMethod.Put, navigationUri);
             request.Content = new StringContent("{ \"@odata.id\" : \"" + idLinkBase + "\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            response = Client.SendAsync(request).Result;
+            response = await Client.SendAsync(request);
 
             // GET /Partners(1)?$expand=Company($select=Name)
             requestUri = string.Format(this.BaseAddress + "/{0}/Partners(1)", model);

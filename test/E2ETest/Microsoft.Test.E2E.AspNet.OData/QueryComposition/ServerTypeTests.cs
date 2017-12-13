@@ -229,8 +229,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             try
             {
                 q.OnActionExecuted(context);
-
-                Console.WriteLine(context.Response.Content.ReadAsStringAsync().Result);
                 Assert.Equal(HttpStatusCode.OK, context.Response.StatusCode);
             }
             catch (ArgumentException ae)

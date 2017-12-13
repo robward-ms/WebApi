@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -58,12 +59,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("PUT", "/Addresses(5)/VipCustomer/$ref")]
         [InlineData("PUT", "/Customers(5)/Information/$ref")]
         [InlineData("POST", "/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Addresses/$ref")]
-        public void CreateRefRoutingConventionWorks(string method, string url)
+        public async Task CreateRefRoutingConventionWorks(string method, string url)
         {
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), BaseAddress + url);
             request.Content = new StringContent("{ \"@odata.id\" : \"http://localhost:12345/Orders(25)\"}");
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -73,10 +74,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("/Customers(5)/Microsoft.Test.E2E.AspNet.OData.Routing.VipCustomer/Addresses(25)/$ref")]
         [InlineData("/Addresses(25)/VipCustomer/$ref")]
         [InlineData("/Customers(5)/Information/$ref")]
-        public void DeleteRefRoutingConventionWorks(string url)
+        public async Task DeleteRefRoutingConventionWorks(string url)
         {
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("DELETE"), BaseAddress + url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
     }

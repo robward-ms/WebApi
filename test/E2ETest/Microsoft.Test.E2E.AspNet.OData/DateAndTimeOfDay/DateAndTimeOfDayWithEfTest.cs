@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -41,7 +42,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         }
 
         [Fact]
-        public void MetadataDocument_IncludesDateAndTimeOfDayProperties()
+        public async Task MetadataDocument_IncludesDateAndTimeOfDayProperties()
         {
             // Arrange
             string Uri = BaseAddress + "/odata/$metadata";
@@ -77,26 +78,26 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Uri);
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
-            Assert.Equal(expected, response.Content.ReadAsStringAsync().Result);
+            Assert.Equal(expected, await response.Content.ReadAsStringAsync());
         }
 
         [Fact]
-        public void CanQueryEntitySet_WithDateAndTimeOfDayProperties()
+        public async Task CanQueryEntitySet_WithDateAndTimeOfDayProperties()
         {
             // Arrange
             string Uri = BaseAddress + "/odata/DateAndTimeOfDayModels";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Uri);
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
-            var result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
 
             Assert.Equal(5, result["value"].Count());
 
@@ -109,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         }
 
         [Fact]
-        public void CanQuerySingleEntity_WithDateAndTimeOfDayProperties()
+        public async Task CanQuerySingleEntity_WithDateAndTimeOfDayProperties()
         {
             // Arrange
             string Uri = BaseAddress + "/odata/DateAndTimeOfDayModels(2)";
@@ -139,28 +140,28 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full"));
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
-            var result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(JObject.Parse(expect), result);
         }
 
         [Fact]
-        public void CanSelect_OnDateAndTimeOfDayProperties()
+        public async Task CanSelect_OnDateAndTimeOfDayProperties()
         {
             // Arrange
             string Uri = BaseAddress + "/odata/DateAndTimeOfDayModels(3)?$select=Birthday,PublishDay,DeliverDay,CreatedTime,ResumeTime";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Uri);
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
 
-            var result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal("2018-12-22", result["Birthday"]);
             Assert.Equal(JValue.CreateNull(), result["PublishDay"]);
             Assert.Equal("2017-12-22", result["DeliverDay"]);
@@ -184,19 +185,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         [InlineData("?$filter=second(EndTime) eq 10", "5")]
         [InlineData("?$filter=EndTime eq null", "2,4")]
         [InlineData("?$filter=EndTime ge 02:03:05.0790000", "1,3,5")]
-        public void CanFilter_OnDateAndTimeOfDayProperties(string filter, string expect)
+        public async Task CanFilter_OnDateAndTimeOfDayProperties(string filter, string expect)
         {
             // Arrange
             string Uri = BaseAddress + "/odata/DateAndTimeOfDayModels" + filter;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Uri);
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
 
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            JObject result = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(expect, String.Join(",", result["value"].Select(e => e["Id"].ToString())));
         }
 
@@ -207,26 +208,26 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         [InlineData("?$orderby=PublishDay desc", "2,4,5,3,1")]
         [InlineData("?$orderby=CreatedTime", "1,2,3,4,5")]
         [InlineData("?$orderby=CreatedTime desc", "5,4,3,2,1")]
-        public void CanOrderBy_OnDateAndTimeOfDayProperties(string orderby, string expect)
+        public async Task CanOrderBy_OnDateAndTimeOfDayProperties(string orderby, string expect)
         {
             // Arrange
             string Uri = BaseAddress + "/odata/DateAndTimeOfDayModels" + orderby;
             var request = new HttpRequestMessage(HttpMethod.Get, Uri);
 
             // Act
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
 
-            var result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            var result = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(5, result["value"].Count());
 
             Assert.Equal(expect, String.Join(",", result["value"].Select(e => e["Id"].ToString())));
         }
 
         [Fact]
-        public void PostEntity_WithDateAndTimeOfDayTimeProperties()
+        public async Task PostEntity_WithDateAndTimeOfDayTimeProperties()
         {
             // Arrange
             const string Payload = "{" +
@@ -242,7 +243,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -250,7 +251,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         }
 
         [Fact]
-        public void PutEntity_WithDateAndTimeOfDayProperties()
+        public async Task PutEntity_WithDateAndTimeOfDayProperties()
         {
             // Arrange
             const string Payload = "{" +
@@ -264,7 +265,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
 
             // Act
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);

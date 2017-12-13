@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -36,7 +37,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
                     "/filter(Order/Name ne 'Order0')&$orderby=Order/Name")]
         [InlineData("?$apply=groupby((Order/Name), aggregate(Id with sum as TotalId))" +
                     "&$filter=Order/Name ne 'Order0'&$orderby=Order/Name")]
-        public void PagedAggregationWorks(string query)
+        public async Task PagedAggregationWorks(string query)
         {
             // Arrange
             string queryUrl =
@@ -48,10 +49,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpClient client = new HttpClient();
 
             // Act
-            HttpResponseMessage response = client.SendAsync(request).Result;
+            HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = response.Content.ReadAsAsync<JObject>().Result;
+            var result = await response.Content.ReadAsAsync<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;

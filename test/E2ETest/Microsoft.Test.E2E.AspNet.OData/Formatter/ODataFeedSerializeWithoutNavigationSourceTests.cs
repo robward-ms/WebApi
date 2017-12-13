@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -44,20 +45,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void CanSerializeFeedWithoutNavigationSource()
+        public async Task CanSerializeFeedWithoutNavigationSource()
         {
             // Arrange
             string requestUri = BaseAddress + "/odata/ReturnAll";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
             // Act
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(response.Content);
 
-            JObject content = response.Content.ReadAsAsync<JObject>().Result;
+            JObject content = await response.Content.ReadAsAsync<JObject>();
             Assert.Contains("/odata/$metadata#Collection(Microsoft.Test.E2E.AspNet.OData.Formatter.BaseType)", content["@odata.context"].ToString());
 
             Assert.Equal(2, content["value"].Count());

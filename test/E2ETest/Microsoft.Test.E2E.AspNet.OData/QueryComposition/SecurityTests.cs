@@ -76,11 +76,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(DoSAttackData))]
-        public void TestDosAttack(string filter)
+        public async Task TestDosAttack(string filter)
         {
             Console.WriteLine(filter);
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProducts?" + filter).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
         }
 
         [Theory]
@@ -95,11 +95,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(AnyAllDoSAttackData))]
-        public void TestAnyAllDosAttack(string filter)
+        public async Task TestAnyAllDosAttack(string filter)
         {
             this.Client.Timeout = TimeSpan.FromDays(1);
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetMoviesBig?" + filter).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
         }
 
         //[Theory]
@@ -114,10 +114,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(InvalidUnicodeData))]
-        public void TestInvalidUnicodeAttack(string query)
+        public async Task TestInvalidUnicodeAttack(string query)
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/FilterTests/GetProducts?" + query).Result;
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
         }
     }
 }

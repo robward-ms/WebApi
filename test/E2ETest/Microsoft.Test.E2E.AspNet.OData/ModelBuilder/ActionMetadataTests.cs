@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml;
 using Microsoft.AspNet.OData.Builder;
@@ -36,10 +37,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
 
         [Fact]
-        public void ProvideOverloadToSupplyEntitySetConfiguration()
+        public async Task ProvideOverloadToSupplyEntitySetConfiguration()
         {
             IEdmModel model = null;
-            Stream stream = Client.GetStreamAsync(BaseAddress + "/odata/$metadata").Result;
+            Stream stream = await Client.GetStreamAsync(BaseAddress + "/odata/$metadata");
             using (XmlReader reader = XmlReader.Create(stream))
             {
                 model = CsdlReader.Parse(reader);

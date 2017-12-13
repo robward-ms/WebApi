@@ -3,6 +3,7 @@
 
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
@@ -49,16 +50,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
         [InlineData("DynamicSingleCustomer/Account/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromAccount")]
         [InlineData("DynamicSingleCustomer/Order/DynamicPropertyName", "DynamicPropertyName_GetDynamicPropertyFromOrder")]
         [InlineData("DynamicCustomers(1)/Id", "Id_1")]
-        public void AccessPropertyTest(string uri, string expected)
+        public async Task AccessPropertyTest(string uri, string expected)
         {
             string requestUri = string.Format("{0}/odata/{1}", BaseAddress, uri);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains(expected, response.Content.ReadAsStringAsync().Result);
+            Assert.Contains(expected, await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -66,13 +67,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
         [InlineData("Patch")]
         [InlineData("Post")]
         [InlineData("Delete")]
-        public void AccessDynamicPropertyWithWrongMethodTest(string method)
+        public async Task AccessDynamicPropertyWithWrongMethodTest(string method)
         {
             string requestUri = string.Format("{0}/odata/DynamicCustomers(1)/DynamicPropertyName", BaseAddress);
 
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(method), requestUri);
 
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -80,13 +81,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
         [Theory]
         [InlineData("DynamicCustomers(2)/SecondAccount/DynamicPropertyName")]
         [InlineData("DynamicSingleCustomer/SecondAccount/DynamicPropertyName")]
-        public void AccessDynamicPropertyWithoutImplementMethod(string uri)
+        public async Task AccessDynamicPropertyWithoutImplementMethod(string uri)
         {
             string requestUri = string.Format("{0}/odata/{1}", BaseAddress, uri);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

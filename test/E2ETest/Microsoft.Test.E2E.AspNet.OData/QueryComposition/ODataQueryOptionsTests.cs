@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -128,7 +129,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void GetTopValueShouldWork()
+        public async Task GetTopValueShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/GetTopValue?$top=50").Result;
             var actual = response.Content.ReadAsAsync<int>().Result;
@@ -136,10 +137,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void OptionsOnHttpResponseMessageShouldWork()
+        public async Task OptionsOnHttpResponseMessageShouldWork()
         {
             var response = this.Client.GetAsync(this.BaseAddress + "/api/ODataQueryOptions/OptionsOnHttpResponseMessage?$filter=ID ge 50").Result;
-            var actual = response.Content.ReadAsStringAsync().Result;
+            var actual = await response.Content.ReadAsStringAsync();
             Console.WriteLine(actual);
         }
 

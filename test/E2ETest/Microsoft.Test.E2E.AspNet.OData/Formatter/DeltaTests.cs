@@ -244,7 +244,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             ctx.ResolveType = ResolveType;
 
             var query = ctx.CreateQuery<DeltaTests_TodoClient>("DeltaTests_Todoes");
-            var results = query.ExecuteAsync().Result;
+            var results = await query.ExecuteAsync();
             var actual = results.Where(t => t.ID == id).First();
             //Assert.Equal(id, actual.ID);
             Assert.Equal(todo.Name, actual.Name);
@@ -313,18 +313,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void PutShouldntOverrideNavigationProperties()
+        public async Task PutShouldntOverrideNavigationProperties()
         {
             HttpRequestMessage put = new HttpRequestMessage(HttpMethod.Put, BaseAddress + "/odata/DeltaCustomers(5)");
             dynamic data = new ExpandoObject();
             put.Content = new ObjectContent<dynamic>(data, new JsonMediaTypeFormatter());
-            HttpResponseMessage response = Client.SendAsync(put).Result;
+            HttpResponseMessage response = await Client.SendAsync(put);
             Assert.True(response.IsSuccessStatusCode);
 
             HttpRequestMessage get = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/DeltaCustomers(0)?$expand=Orders");
-            response = Client.SendAsync(get).Result;
+            response = await Client.SendAsync(get);
             Assert.True(response.IsSuccessStatusCode);
-            dynamic query = response.Content.ReadAsAsync<JObject>().Result;
+            dynamic query = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(3, query.Orders.Count);
         }
     }
@@ -347,19 +347,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void PatchShouldSupportNonSettableCollectionProperties()
+        public async Task PatchShouldSupportNonSettableCollectionProperties()
         {
             HttpRequestMessage patch = new HttpRequestMessage(new HttpMethod("MERGE"), BaseAddress + "/odata/DeltaCustomers(5)");
             dynamic data = new ExpandoObject();
             data.Addresses = Enumerable.Range(10, 3).Select(i => new DeltaAddress { ZipCode = i });
             patch.Content = new ObjectContent<dynamic>(data, new JsonMediaTypeFormatter());
-            HttpResponseMessage response = Client.SendAsync(patch).Result;
+            HttpResponseMessage response = await Client.SendAsync(patch);
             Assert.True(response.IsSuccessStatusCode);
 
             HttpRequestMessage get = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/odata/DeltaCustomers(5)?$expand=Orders");
-            response = Client.SendAsync(get).Result;
+            response = await Client.SendAsync(get);
             Assert.True(response.IsSuccessStatusCode);
-            dynamic query = response.Content.ReadAsAsync<JObject>().Result;
+            dynamic query = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(3, query.Addresses.Count);
             Assert.Equal(3, query.Orders.Count);
         }

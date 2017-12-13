@@ -92,7 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         }
 
         [Fact]
-        public void SerializationTests()
+        public async Task SerializationTests()
         {
             string requestUri = this.BaseAddress + "/UniverseEntity";
             string payload = @"{""@odata.context"":""" + this.BaseAddress + @"/$metadata#UniverseEntity/$entity""," +
@@ -114,8 +114,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             request.Content = new StringContent(payload);
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
 
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
             Assert.Equal(payload.ToLower().Replace("\"null\":null,",""), result.ToLower());
         }
     }

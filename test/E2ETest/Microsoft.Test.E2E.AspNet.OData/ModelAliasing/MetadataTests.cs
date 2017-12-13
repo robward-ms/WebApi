@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml;
 using Microsoft.AspNet.OData.Builder;
@@ -124,11 +125,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         }
 
         [Fact]
-        public void CanRenameTypesAndNamespacesInConventionModelBuilder()
+        public async Task CanRenameTypesAndNamespacesInConventionModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/convention/$metadata");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            IEdmModel model = CsdlReader.Parse(XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+            HttpResponseMessage response = await Client.SendAsync(request);
+            IEdmModel model = CsdlReader.Parse(XmlReader.Create(await response.Content.ReadAsStreamAsync()));
             //Can rename an entity + namespace
             IEdmEntityType customer = model.FindDeclaredType("ModelAliasing.Customer") as IEdmEntityType;
             Assert.NotNull(customer);
@@ -152,11 +153,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         }
 
         [Fact]
-        public void CanRenamePropertiesInConventionModelBuilder()
+        public async Task CanRenamePropertiesInConventionModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/convention/$metadata");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            IEdmModel model = CsdlReader.Parse(XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+            HttpResponseMessage response = await Client.SendAsync(request);
+            IEdmModel model = CsdlReader.Parse(XmlReader.Create(await response.Content.ReadAsStreamAsync()));
             // Can change the name of regular, complex and navigation properties.
             IEdmEntityType customer = model.FindDeclaredType("ModelAliasing.Customer") as IEdmEntityType;
             Assert.NotNull(customer);
@@ -183,11 +184,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         }
 
         [Fact]
-        public void CanRenameTypesAndNamespacesInRegularModelBuilder()
+        public async Task CanRenameTypesAndNamespacesInRegularModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/explicit/$metadata");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            IEdmModel model = CsdlReader.Parse(XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+            HttpResponseMessage response = await Client.SendAsync(request);
+            IEdmModel model = CsdlReader.Parse(XmlReader.Create(await response.Content.ReadAsStreamAsync()));
             //Can rename an entity + namespace
             IEdmEntityType customer = model.FindDeclaredType("ModelAliasing.Customer") as IEdmEntityType;
             Assert.NotNull(customer);
@@ -211,11 +212,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         }
 
         [Fact]
-        public void CanRenamePropertiesInRegularModelBuilder()
+        public async Task CanRenamePropertiesInRegularModelBuilder()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/explicit/$metadata");
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            IEdmModel model = CsdlReader.Parse(XmlReader.Create(response.Content.ReadAsStreamAsync().Result));
+            HttpResponseMessage response = await Client.SendAsync(request);
+            IEdmModel model = CsdlReader.Parse(XmlReader.Create(await response.Content.ReadAsStreamAsync()));
             // Can change the name of regular, complex and navigation properties.
             IEdmEntityType customer = model.FindDeclaredType("ModelAliasing.Customer") as IEdmEntityType;
             Assert.NotNull(customer);

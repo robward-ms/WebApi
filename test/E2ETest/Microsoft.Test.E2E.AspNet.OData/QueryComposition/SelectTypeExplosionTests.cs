@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
@@ -172,11 +173,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [Theory]
         [MemberData(nameof(Queries))]
-        public void ServerDoesntCreateAnInfiniteAmmountOfTypes(string query)
+        public async Task ServerDoesntCreateAnInfiniteAmmountOfTypes(string query)
         {
             string requestUrl = BaseAddress + "/TypeWithManyProperties?$select=" + query;
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             response.EnsureSuccessStatusCode();
         }
     }

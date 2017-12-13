@@ -101,7 +101,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             HttpResponseMessage response = await Client.GetAsync(requestUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains(expect, response.Content.ReadAsStringAsync().Result);
+            Assert.Contains(expect, await response.Content.ReadAsStringAsync());
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             HttpResponseMessage response = await Client.GetAsync(requestUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.DoesNotContain("ReferentialConstraint", response.Content.ReadAsStringAsync().Result);
+            Assert.DoesNotContain("ReferentialConstraint", await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -128,7 +128,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             HttpResponseMessage response = await Client.GetAsync(requestCustomerUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            dynamic payload = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2, (int)payload["Id"]);
             Assert.Equal("Customer #2", (string)payload["Name"]);
 
@@ -136,7 +136,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             response = await Client.GetAsync(requestOrderUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            payload = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(5, (int)payload["OrderId"]);
             Assert.Equal("Order #5", (string)payload["OrderName"]);
             Assert.Equal(2, (int)payload["CustomerId"]);
@@ -167,7 +167,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             HttpResponseMessage response = await Client.GetAsync(requestCustomerUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            dynamic payload = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(2, (int)payload["Id"]);
             Assert.Equal("Customer #2", (string)payload["Name"]);
 
@@ -175,7 +175,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             response = await Client.GetAsync(requestOrderUri);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            payload = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+            payload = JObject.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(5, (int)payload["OrderId"]);
             Assert.Equal("Order #5", (string)payload["OrderName"]);
             Assert.Equal(2, (int)payload["CustomerId"]);

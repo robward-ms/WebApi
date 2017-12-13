@@ -72,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
 
             //Bound function
             string requestUri = this.BaseAddress + "/Trades/Microsoft.Test.E2E.AspNet.OData.ParameterAlias.GetTradingVolume(productName=@p1, PortingCountryOrRegion=@p2)?@p1='Rice'&@p2=Microsoft.Test.E2E.AspNet.OData.ParameterAlias.CountryOrRegion'USA'";
-            response = this.Client.GetAsync(requestUri).Result;
+            response = await this.Client.GetAsync(requestUri);
             json = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(1000, (long)json["value"]);
         }

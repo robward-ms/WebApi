@@ -4,6 +4,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
@@ -40,7 +41,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
         [InlineData(CustomerBaseUrl + "(1)/Addresses?$count=true", "property 'Addresses'")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$count=true", "entity set 'Customers'")]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Addresses?$count=true", "property 'Addresses'")]
-        public void NonCountByDefault(string entitySetUrl, string error)
+        public async Task NonCountByDefault(string entitySetUrl, string error)
         {
             string queryUrl =
                 string.Format(
@@ -50,8 +51,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(error + " cannot be used for $count", result);
@@ -74,7 +75,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             "/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder?$count=true",
             (int)HttpStatusCode.BadRequest,
             "entity set 'Orders/Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttributeTest.SpecialOrder'")]
-        public void CountOnStructuredType(string url, int statusCode, string error)
+        public async Task CountOnStructuredType(string url, int statusCode, string error)
         {
             string queryUrl =
                 string.Format(
@@ -84,8 +85,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(statusCode, (int)response.StatusCode);
             if (statusCode == (int)HttpStatusCode.OK)
@@ -103,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
         [InlineData(CustomerBaseUrl + "?$expand=Orders($count=true)", "property 'Orders'")]
         [InlineData(ModelBoundCustomerBaseUrl + "(1)/Orders?$count=true", "property 'Orders'")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$expand=Orders($count=true)", "property 'Orders'")]
-        public void CountOnProperty(string url, string error)
+        public async Task CountOnProperty(string url, string error)
         {
             string queryUrl =
                 string.Format(
@@ -113,8 +114,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=none"));
             HttpClient client = new HttpClient();
 
-            HttpResponseMessage response = client.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage response = await client.SendAsync(request);
+            string result = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains(error + " cannot be used for $count", result);

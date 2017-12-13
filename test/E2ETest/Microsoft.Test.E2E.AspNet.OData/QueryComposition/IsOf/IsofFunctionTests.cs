@@ -151,7 +151,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
             Assert.Contains("Only entity types and complex types are supported in LINQ to Entities queries.",
-                response.Content.ReadAsStringAsync().Result);
+                await response.Content.ReadAsStringAsync());
         }
 
         [Theory]
@@ -286,7 +286,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
                 Assert.True(HttpStatusCode.InternalServerError == response.StatusCode);
 
                 Assert.Contains("DbIsOfExpression requires an expression argument with a polymorphic result type that is " +
-                    "compatible with the type argument.", response.Content.ReadAsStringAsync().Result);
+                    "compatible with the type argument.", await response.Content.ReadAsStringAsync());
             }
         }
 
@@ -307,7 +307,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 
             Assert.Contains(
                 "The query specified in the URI is not valid. Cast or IsOf Function must have a type in its arguments.",
-                response.Content.ReadAsStringAsync().Result);
+                await response.Content.ReadAsStringAsync());
         }
 
         private static int GetCount(string expect)

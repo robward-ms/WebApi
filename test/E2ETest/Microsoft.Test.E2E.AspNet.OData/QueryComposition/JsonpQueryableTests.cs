@@ -79,12 +79,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [Fact]
-        public void QueryableShouldWorkWithJsonp()
+        public async Task QueryableShouldWorkWithJsonp()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, this.BaseAddress + "/api/FilterTests/GetProducts?$top=1&callback=test");
             request.Headers.Accept.ParseAdd("text/javascript");
-            var response = this.Client.SendAsync(request).Result;
-            var payload = response.Content.ReadAsStringAsync().Result;
+            var response = await this.Client.SendAsync(request);
+            var payload = await response.Content.ReadAsStringAsync();
             Console.WriteLine(payload);
         }
     }

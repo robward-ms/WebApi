@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -75,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         [InlineData("application/json;odata.metadata=full")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=false")]
         [InlineData("application/json;odata.metadata=full;odata.streaming=true")]
-        public void CanReadRenamedPayloads(string acceptHeader)
+        public async Task CanReadRenamedPayloads(string acceptHeader)
         {
             Customer customer = new Customer();
             customer.Id = 3;
@@ -214,12 +215,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
             postRequest.Content = new StringContent(jsonCustomer.ToString());
             postRequest.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
             postRequest.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptHeader));
-            HttpResponseMessage postResponse = Client.SendAsync(postRequest).Result;
+            HttpResponseMessage postResponse = await Client.SendAsync(postRequest);
             Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + "/convention/ModelAliasingCustomers(3)?$expand=Purchases($expand=Details($expand=Product))");
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptHeader));
-            HttpResponseMessage response = Client.SendAsync(request).Result;
-            JToken queriedCustomer = JToken.Parse(response.Content.ReadAsStringAsync().Result);
+            HttpResponseMessage response = await Client.SendAsync(request);
+            JToken queriedCustomer = JToken.Parse(await response.Content.ReadAsStringAsync());
             if (acceptHeader.Contains("application/json;odata.metadata=none"))
             {
                 Assert.Equal(JObject.FromObject(customer), queriedCustomer, JObject.EqualityComparer);

@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,14 +46,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [InlineData("")]
         [InlineData("prefix/")]
         [InlineData("parameter/")]
-        public void UrlsGeneratedByFastPathAreConsistentWithUrlsGeneratedWithSlowPath(string requestPath)
+        public async Task UrlsGeneratedByFastPathAreConsistentWithUrlsGeneratedWithSlowPath(string requestPath)
         {
             Uri serviceUrl = new Uri(BaseAddress + "/" + requestPath);
             var request = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=full"));
-            var response = Client.SendAsync(request).Result;
+            var response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            string content = response.Content.ReadAsStringAsync().Result;
+            string content = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("odata.context\":\"" + serviceUrl + "$metadata\"", content);
         }

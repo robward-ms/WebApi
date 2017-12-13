@@ -4,6 +4,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -40,15 +41,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=minimal")]
         [InlineData("application/json;odata.metadata=full")]
-        public void UntypedDeltaWorksInAllFormats(string acceptHeader)
+        public async Task UntypedDeltaWorksInAllFormats(string acceptHeader)
         {
             string url = "/untyped/UntypedDeltaCustomers?$deltatoken=abc";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, BaseAddress + url);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptHeader));
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(response.Content);
-            JObject returnedObject = response.Content.ReadAsAsync<JObject>().Result;
+            JObject returnedObject = await response.Content.ReadAsAsync<JObject>();
             Assert.True(((dynamic)returnedObject).value.Count == 15);
 
             //Verification of content to validate Payload

@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -45,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
-        public void ODataCountAndNextLinkAnnotationsAppearsOnAllMetadataLevelsWhenSpecified(string acceptHeader)
+        public async Task ODataCountAndNextLinkAnnotationsAppearsOnAllMetadataLevelsWhenSpecified(string acceptHeader)
         {
             //Arrange
             StubEntity[] entities = MetadataTestHelpers.CreateInstances<StubEntity[]>();
@@ -54,8 +55,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             string expectedNextLink = new Uri("http://differentServer:5000/StubEntity/Default.Paged?$skip=" + entities.Length).ToString();
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(message).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(message);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             JsonAssert.PropertyEquals(entities.Length, "@odata.count", result);
@@ -75,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
-        public void MetadataAnnotationAppearsOnlyForFullAndMinimalMetadata(string acceptHeader)
+        public async Task MetadataAnnotationAppearsOnlyForFullAndMinimalMetadata(string acceptHeader)
         {
             //Arrange
             StubEntity[] entities = MetadataTestHelpers.CreateInstances<StubEntity[]>();
@@ -84,8 +85,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             string expectedMetadataUrl = BaseAddress.ToLowerInvariant() + "/$metadata#StubEntity";
 
             //Act
-            HttpResponseMessage response = Client.SendAsync(message).Result;
-            JObject result = response.Content.ReadAsAsync<JObject>().Result;
+            HttpResponseMessage response = await Client.SendAsync(message);
+            JObject result = await response.Content.ReadAsAsync<JObject>();
 
             //Assert
             if (acceptHeader.Contains("odata.metadata=none"))
@@ -111,7 +112,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
         [InlineData("application/json")]
         [InlineData("application/json;odata.streaming=true")]
         [InlineData("application/json;odata.streaming=false")]
-        public void CanReturnTheWholeResultSetUsingNextLink(string acceptHeader)
+        public async Task CanReturnTheWholeResultSetUsingNextLink(string acceptHeader)
         {
             //Arrange
             StubEntity[] entities = MetadataTestHelpers.CreateInstances<StubEntity[]>();
@@ -125,8 +126,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             {
                 HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, nextUrlToQuery);
                 message.SetAcceptHeader(acceptHeader);
-                HttpResponseMessage response = Client.SendAsync(message).Result;
-                result = response.Content.ReadAsAsync<JObject>().Result;
+                HttpResponseMessage response = await Client.SendAsync(message);
+                result = await response.Content.ReadAsAsync<JObject>();
                 JArray currentResults = (JArray)result["value"];
                 for (int i = 0; i < currentResults.Count; i++)
                 {

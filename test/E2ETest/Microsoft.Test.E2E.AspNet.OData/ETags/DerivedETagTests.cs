@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -43,44 +44,44 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
 
         [Fact]
-        public void DerivedTypesHaveSameETagsTest()
+        public async Task DerivedTypesHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers?$select=Id";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             request.Headers.Accept.ParseAdd("application/json");
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
-            var jsonResult = response.Content.ReadAsAsync<JObject>().Result;
+            var jsonResult = await response.Content.ReadAsAsync<JObject>();
             var jsonETags = jsonResult.GetValue("value").Select(e => e["@odata.etag"].ToString());
 
             requestUri = this.BaseAddress + "/odata/ETagsDerivedCustomers?$select=Id";
             request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             request.Headers.Accept.ParseAdd("application/json");
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
-            jsonResult = response.Content.ReadAsAsync<JObject>().Result;
+            jsonResult = await response.Content.ReadAsAsync<JObject>();
             var derivedEtags = jsonResult.GetValue("value").Select(e => e["@odata.etag"].ToString());
             
             Assert.True(String.Concat(jsonETags) == String.Concat(derivedEtags), "Derived Types has different etags than base type");
         }
 
         [Fact]
-        public void SingletonsHaveSameETagsTest()
+        public async Task SingletonsHaveSameETagsTest()
         {
             string requestUri = this.BaseAddress + "/odata/ETagsCustomers?$select=Id";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             request.Headers.Accept.ParseAdd("application/json");
-            HttpResponseMessage response = this.Client.SendAsync(request).Result;
+            HttpResponseMessage response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
-            var jsonResult = response.Content.ReadAsAsync<JObject>().Result;
+            var jsonResult = await response.Content.ReadAsAsync<JObject>();
             var jsonETags = jsonResult.GetValue("value").Select(e => e["@odata.etag"].ToString());
 
             requestUri = this.BaseAddress + "/odata/ETagsDerivedCustomersSingleton?$select=Id";
             request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             request.Headers.Accept.ParseAdd("application/json");
-            response = this.Client.SendAsync(request).Result;
+            response = await this.Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
-            jsonResult = response.Content.ReadAsAsync<JObject>().Result;
+            jsonResult = await response.Content.ReadAsAsync<JObject>();
             var singletonEtag = jsonResult.GetValue("@odata.etag").ToString();
 
             Assert.True(jsonETags.FirstOrDefault() == singletonEtag, "Singleton has different etags than Set");

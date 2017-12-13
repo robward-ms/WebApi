@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Builder;
@@ -61,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void RequestJsonLightShouldWork()
+        public async Task RequestJsonLightShouldWork()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(
@@ -70,7 +71,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json;odata.metadata=minimal"));
 
             // Act
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -80,7 +81,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void RequestAtomShouldNotWork()
+        public async Task RequestAtomShouldNotWork()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(
@@ -89,7 +90,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/atom+xml"));
 
             // Act
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -99,7 +100,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void RequestHasNoAcceptHeaderShouldNotWork()
+        public async Task RequestHasNoAcceptHeaderShouldNotWork()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(
@@ -107,7 +108,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
                 this.BaseAddress + "/JsonLight_BlogPosts");
 
             // Act
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -117,7 +118,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [Fact]
-        public void RequestXmlShouldWorkWithMetadata()
+        public async Task RequestXmlShouldWorkWithMetadata()
         {
             // Arrange
             HttpRequestMessage request = new HttpRequestMessage(
@@ -126,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/xml"));
 
             // Act
-            var response = this.Client.SendAsync(request).Result;
+            var response = await this.Client.SendAsync(request);
 
             // Assert
             response.EnsureSuccessStatusCode();

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
@@ -225,7 +226,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public virtual void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
+        public virtual async Task TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {
             // Arrange
             if (header != string.Empty)
@@ -236,8 +237,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             // Act
             var request = CreateRequestMessage(this.BaseAddress, errorType, header);
-            var response = this.Client.SendAsync(request).Result;
-            string responseMessage = response.Content.ReadAsStringAsync().Result;
+            var response = await this.Client.SendAsync(request);
+            string responseMessage = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(code, (int)response.StatusCode);
@@ -298,7 +299,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
+        public async Task TestHttpErrorInAction(ErrorType errorType, int code, string message, string header)
         {
             // Arrange
             if (header != string.Empty)
@@ -309,8 +310,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             // Act
             var request = HttpAndODataErrorAlwaysIncludeDetailsTests.CreateRequestMessage(this.BaseAddress, errorType, header);
-            var response = this.Client.SendAsync(request).Result;
-            string responseMessage = response.Content.ReadAsStringAsync().Result;
+            var response = await this.Client.SendAsync(request);
+            string responseMessage = await response.Content.ReadAsStringAsync();
 
             // Assert
             Assert.Equal(code, (int)response.StatusCode);

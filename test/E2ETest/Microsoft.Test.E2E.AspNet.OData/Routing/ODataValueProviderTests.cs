@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData;
@@ -41,25 +42,25 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         [Theory]
         [InlineData("{0}/odata/BindCustomers({1})", 5, (int)HttpStatusCode.OK)]
         [InlineData("{0}/odata/BindCustomers({1})", 0, (int)HttpStatusCode.BadRequest)]
-        public void CanModelBindNonStringDataFromUri(string urlTemplate, int key, int expectedStatusCode)
+        public async Task CanModelBindNonStringDataFromUri(string urlTemplate, int key, int expectedStatusCode)
         {
             string url = string.Format(urlTemplate, BaseAddress, key);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(expectedStatusCode, (int)response.StatusCode);
-            dynamic content = response.Content.ReadAsAsync<JObject>().Result;
+            dynamic content = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(key, (int)content.Id);
         }
 
         [Theory]
         [InlineData("{0}/api/BindCustomersApi/", (int)HttpStatusCode.BadRequest)]
-        public void CanModelBindNonStringDataFromUriWebAPI(string urlTemplate, int expectedStatusCode)
+        public async Task CanModelBindNonStringDataFromUriWebAPI(string urlTemplate, int expectedStatusCode)
         {
             string url = string.Format(urlTemplate, BaseAddress);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
-            HttpResponseMessage response = Client.SendAsync(request).Result;
+            HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(expectedStatusCode, (int)response.StatusCode);
-            dynamic content = response.Content.ReadAsAsync<JObject>().Result;
+            dynamic content = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(0, (int)content.Id);
         }
     }
