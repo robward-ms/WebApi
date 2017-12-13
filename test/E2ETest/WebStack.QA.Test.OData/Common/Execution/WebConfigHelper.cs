@@ -3,7 +3,7 @@
 
 using System.Xml.Linq;
 
-namespace WebStack.QA.Common.WebHost
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
     /// <summary>
     /// Represents the a web.config file content in xml

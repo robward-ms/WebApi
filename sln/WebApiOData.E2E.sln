@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DD61AE62-B084-4A8C-AE1E-615A62BA645D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStack.QA.Test.OData", "..\test\E2ETest\WebStack.QA.Test.OData\WebStack.QA.Test.OData.csproj", "{5516EA5D-350A-447A-9399-61A22A9C4F4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.E2E.AspNet.OData", "..\test\E2ETest\WebStack.QA.Test.OData\Microsoft.Test.E2E.AspNet.OData.csproj", "{5516EA5D-350A-447A-9399-61A22A9C4F4B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4C937D2-3BD0-4F6B-B75F-A526A7FD978B}"
 EndProject
