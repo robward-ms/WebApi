@@ -20,6 +20,7 @@ using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using WebStack.QA.Common.WebHost;
 using Xunit;
@@ -94,7 +95,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -251,7 +252,7 @@ Content-Type: application/json;odata.metadata=minimal
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
@@ -322,7 +323,7 @@ Content-Type: application/json;odata.metadata=minimal
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
@@ -393,7 +394,7 @@ Content-Type: application/json;odata.metadata=minimal
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
@@ -449,7 +450,7 @@ Content-Type: application/json;odata.metadata=minimal
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(

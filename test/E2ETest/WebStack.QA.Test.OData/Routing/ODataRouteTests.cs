@@ -21,7 +21,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
     {
         protected override void UpdateConfiguration(HttpConfiguration configuration)
         {
-            HttpServer server = configuration.Properties["Nuwa.HttpServerKey"] as HttpServer;
+            HttpServer server = configuration.GetHttpServer();
 
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("noPrefix", "", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
