@@ -87,9 +87,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         [MemberData(nameof(DoSAttackData))]
         public void TestDosAttackWithMultipleThreads(string filter)
         {
-            Parallel.For(0, 3, i =>
+            Parallel.For(0, 3, async i =>
             {
-                TestDosAttack(filter);
+                await TestDosAttack(filter);
             });
         }
 

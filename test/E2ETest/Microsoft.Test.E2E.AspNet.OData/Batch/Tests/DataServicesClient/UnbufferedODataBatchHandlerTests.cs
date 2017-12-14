@@ -369,12 +369,11 @@ Content-Type: application/json;odata.metadata=minimal
 
             client.AddToUnbufferedBatchCustomer(validCustomer);
             client.AddToUnbufferedBatchCustomer(invalidCustomer);
-            var aggregateException = await Assert.ThrowsAsync<AggregateException>(async () =>
+            var exception = await Assert.ThrowsAsync<DataServiceRequestException>(async () =>
             {
                 DataServiceResponse response = await client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
             });
 
-            var exception = aggregateException.InnerExceptions.SingleOrDefault() as DataServiceRequestException;
             Assert.NotNull(exception);
             Assert.Equal(200, exception.Response.BatchStatusCode);
             Assert.Single(exception.Response);

@@ -11,62 +11,39 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
     public class PortArranger
     {
-        private static ConcurrentQueue<string> _available = null;
+        private static int nextPort;
 
         static PortArranger()
         {
-            string startPort = "9001";
-            if (_available == null)
-            {
-                _available = new ConcurrentQueue<string>(Enumerable.Range(int.Parse(startPort), 3000).Select(i => i.ToString()));
-            }
+            nextPort = 11000;
         }
 
-        public string Reserve()
+        public static int Reserve()
         {
-            while (true)
+            int attempts = 0;
+            while (attempts < 10)
             {
-                var retval = this.GetPort();
-
-                if (IsFree(retval))
+                int port = nextPort++;
+                if (port >= 65535)
                 {
-                    return retval;
+                    throw new OverflowException("Cannot get an available port, port value overflowed");
                 }
-            }
-        }
 
-        public void Return(string port)
-        {
-            _available.Enqueue(port);
-        }
-
-        private string GetPort()
-        {
-            int repeat = 10;
-            int delay = 100;
-
-            for (int i = 0; i < repeat; i++)
-            {
-                string port;
-
-                if (_available.TryDequeue(out port))
+                if (IsFree(port))
                 {
                     return port;
                 }
-
-                Thread.Sleep(delay);
             }
 
-            throw new TimeoutException(string.Format("Cannot get an available port in {0}ms.", repeat * delay));
+            throw new TimeoutException(string.Format("Cannot get an available port in {0} attempts.", attempts));
         }
 
-        private static bool IsFree(string port)
+        private static bool IsFree(int port)
         {
             IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
             TcpConnectionInformation[] connections = properties.GetActiveTcpConnections();
-            int portOfInt = int.Parse(port);
             var isInUse = connections.Any(c =>
-                c.LocalEndPoint.Port == portOfInt || c.RemoteEndPoint.Port == portOfInt);
+                c.LocalEndPoint.Port == port || c.RemoteEndPoint.Port == port);
             return !isInUse;
         }
     }

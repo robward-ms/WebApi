@@ -376,12 +376,11 @@ Content-Type: application/json;odata.metadata=minimal
 
             client.AddToDefaultBatchCustomer(validCustomer);
             client.AddToDefaultBatchCustomer(invalidCustomer);
-            var aggregate = await Assert.ThrowsAsync<AggregateException>(async () =>
+            var exception = await Assert.ThrowsAsync<DataServiceRequestException>(async () =>
             {
                 DataServiceResponse response = await client.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
             });
 
-            var exception = aggregate.InnerExceptions.Single() as DataServiceRequestException;
             Assert.NotNull(exception);
             Assert.Equal(200, exception.Response.BatchStatusCode);
             Assert.Single(exception.Response);

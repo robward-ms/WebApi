@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
@@ -12,14 +13,15 @@ using Xunit;
 
 // Parallelism in the test framework is a feature that's new for (Xunit) version 2. However,
 // since each test will spin up a number of web servers each with a listening port, disabling the
-// parallel test with take a bit long but consume fewer resources.
+// parallel test with take a bit long but consume fewer resources with more stable results.
 //
 // By default, each test class is a unique test collection. Tests within the same test class will not run
 // in parallel against each other. That means that there may be up to # subclasses of WebHostTestBase
 // web servers running at any point during the test run, currently ~500. Without this, there would be a
-// web server per test case since Xunit 2.0 spans a new test class instance for each test case.
+// web server per test case since Xunit 2.0 spawns a new test class instance for each test case.
 //
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
+//[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
@@ -31,8 +33,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         private static readonly string NormalBaseAddressTemplate = "http://{0}:{1}";
         private static readonly string DefaultRouteTemplate = "api/{controller}/{action}";
 
-        private PortArranger _portArranger = new PortArranger();
-        private string _port;
+        private int _port;
         private IDisposable _katanaSelfHostServer = null;
         private bool disposedValue = false;
 
@@ -70,7 +71,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             Dispose(true);
         }
 
-
         /// <summary>
         /// Cleanup the server.
         /// </summary>
@@ -85,8 +85,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                         _katanaSelfHostServer.Dispose();
                         _katanaSelfHostServer = null;
                     }
-
-                    _portArranger.Return(_port);
                 }
 
                 disposedValue = true;
@@ -95,20 +93,33 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 
         private bool Initialize()
         {
-            // setup base address
-            _port = _portArranger.Reserve();
-            SecurityHelper.AddIpListen();
-            string baseAddress = string.Format(NormalBaseAddressTemplate, Environment.MachineName, _port);
-            this.BaseAddress = baseAddress.Replace("localhost", Environment.MachineName);
+            int attempts = 0;
+            while (attempts < 3)
+            {
+                try
+                {
+                    // setup base address
+                    _port = PortArranger.Reserve();
+                    SecurityHelper.AddIpListen();
+                    string baseAddress = string.Format(NormalBaseAddressTemplate, Environment.MachineName, _port.ToString());
+                    this.BaseAddress = baseAddress.Replace("localhost", Environment.MachineName);
 
-            // set up the server. If this throws an exception, it will be reported in
-            // the test output.
-            _katanaSelfHostServer = WebApp.Start(baseAddress, DefaultKatanaConfigure);
+                    // set up the server. If this throws an exception, it will be reported in
+                    // the test output.
+                    _katanaSelfHostServer = WebApp.Start(baseAddress, DefaultKatanaConfigure);
 
-            // setup client, nothing special.
-            this.Client = new HttpClient();
+                    // setup client, nothing special.
+                    this.Client = new HttpClient();
 
-            return true;
+                    return true;
+                }
+                catch (HttpListenerException)
+                {
+                    // Retry HttpListenerException up to 3 times.
+                }
+            }
+
+            throw new TimeoutException(string.Format("Unable to start server after {0} attempts", attempts));
         }
 
         private void DefaultKatanaConfigure(IAppBuilder app)
