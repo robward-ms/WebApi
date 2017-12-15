@@ -1,0 +1,1207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0073FACD-2887-4D0A-8D3E-BAA17749B629}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.E2E.AspNetCore.OData</RootNamespace>
+    <AssemblyName>Microsoft.Test.E2E.AspNetCore.OData</AssemblyName>
+    <OutputPath>..\..\..\bin\$(Configuration)\E2ETest\</OutputPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x</DefineConstants>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServerCompact, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\EntityFramework.SqlServerCompact.6.1.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Antiforgery, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Antiforgery.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Antiforgery.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Authentication.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Core, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Authentication.Core.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authorization, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Authorization.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authorization.Policy, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Authorization.Policy.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.Policy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Cors, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Cors.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Cryptography.Internal, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Cryptography.Internal.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Cryptography.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.DataProtection, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.DataProtection.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.DataProtection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.DataProtection.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.DataProtection.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.DataProtection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Diagnostics, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Diagnostics.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Diagnostics.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Diagnostics.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Hosting.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Hosting.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Hosting.Server.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.Server.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Html.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Html.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.AspNetCore.Html.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Http.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Http.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Extensions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Http.Extensions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Features, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Http.Features.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.HttpOverrides, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.HttpOverrides.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.HttpOverrides.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.JsonPatch, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.JsonPatch.2.0.0\lib\netstandard2.0\Microsoft.AspNetCore.JsonPatch.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Localization, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Localization.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.ApiExplorer, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.ApiExplorer.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.ApiExplorer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Core, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Core.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Cors, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Cors.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.DataAnnotations, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.DataAnnotations.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Formatters.Json, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Formatters.Json.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Formatters.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Localization, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Localization.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Razor, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Razor.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.0.1\lib\net46\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.RazorPages, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.RazorPages.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.RazorPages.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.TagHelpers, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.TagHelpers.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.TagHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.ViewFeatures, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Mvc.ViewFeatures.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.ViewFeatures.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Razor, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Razor.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Razor.Language, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Razor.Language.2.0.1\lib\net46\Microsoft.AspNetCore.Razor.Language.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Razor.Runtime, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Razor.Runtime.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Razor.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.ResponseCaching.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.ResponseCaching.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.ResponseCaching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Routing, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Routing.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Routing.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Routing.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Routing.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.IISIntegration, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.IISIntegration.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.IISIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.Kestrel.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Core, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.Kestrel.Core.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Https, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.Kestrel.Https.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.AspNetCore.WebUtilities.2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.CodeAnalysis.Common.2.3.1\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.CodeAnalysis.CSharp.2.3.1\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Razor, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.CodeAnalysis.Razor.2.0.1\lib\net46\Microsoft.CodeAnalysis.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.DotNet.PlatformAbstractions.2.0.3\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Caching.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Caching.Memory.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.Binder.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.CommandLine, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.CommandLine.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.CommandLine.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.EnvironmentVariables, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.EnvironmentVariables.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.EnvironmentVariables.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.FileExtensions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.Json.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.UserSecrets, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Configuration.UserSecrets.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.DependencyInjection.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.DependencyModel.2.0.3\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.FileProviders.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Composite, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.FileProviders.Composite.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Composite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.FileProviders.Physical.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.FileSystemGlobbing.2.0.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Hosting.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Hosting.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Localization, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Localization.2.0.1\lib\netstandard2.0\Microsoft.Extensions.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Localization.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Localization.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.Extensions.Localization.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Logging.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Logging.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Logging.Configuration.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Console, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Logging.Console.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Debug, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Logging.Debug.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.ObjectPool, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.ObjectPool.2.0.0\lib\netstandard2.0\Microsoft.Extensions.ObjectPool.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Options.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Options.ConfigurationExtensions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.Primitives.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.WebEncoders, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Extensions.WebEncoders.2.0.0\lib\netstandard2.0\Microsoft.Extensions.WebEncoders.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Net.Http.Headers, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Net.Http.Headers.2.0.1\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Client, Version=7.4.0.11102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.OData.Client.7.4.0-beta\lib\netstandard1.1\Microsoft.OData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Core, Version=7.4.0.11102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.OData.Core.7.4.0-beta\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm, Version=7.4.0.11102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.OData.Edm.7.4.0-beta\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=7.4.0.11102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Spatial.7.4.0-beta\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Registry, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.Win32.Registry.4.4.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext">
+      <HintPath>..\..\..\sln\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Collections.Immutable.1.4.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.ComponentModel.Annotations.4.4.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Console">
+      <HintPath>..\..\..\sln\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.SqlServer.Compact.4.0.8854.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\Microsoft.SqlServer.Compact.4.0.8854.1\lib\net40\System.Data.SqlServerCe.Entity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.FileVersionInfo">
+      <HintPath>..\..\..\sln\packages\System.Diagnostics.FileVersionInfo.4.3.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>..\..\..\sln\packages\System.Diagnostics.StackTrace.4.3.0\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression">
+      <HintPath>..\..\..\sln\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>..\..\..\sln\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives">
+      <HintPath>..\..\..\sln\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection">
+      <HintPath>..\..\..\sln\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=1.4.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Reflection.Metadata.1.5.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\..\sln\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions">
+      <HintPath>..\..\..\sln\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <HintPath>..\..\..\sln\packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives">
+      <HintPath>..\..\..\sln\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Security.AccessControl.4.4.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>..\..\..\sln\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>..\..\..\sln\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>..\..\..\sln\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>..\..\..\sln\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Security.Cryptography.Xml.4.4.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Security.Principal.Windows.4.4.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Text.Encoding.CodePages.4.3.0\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Text.Encodings.Web.4.4.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\System.Threading.Tasks.Extensions.4.4.0\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>..\..\..\sln\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\..\sln\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.ReaderWriter">
+      <HintPath>..\..\..\sln\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument">
+      <HintPath>..\..\..\sln\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath">
+      <HintPath>..\..\..\sln\packages\System.Xml.XPath.4.3.0\lib\net46\System.Xml.XPath.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>..\..\..\sln\packages\System.Xml.XPath.XDocument.4.3.0\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\..\..\sln\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\Controllers\AsyncInMemoryODataController.cs">
+      <Link>Common\Controllers\AsyncInMemoryODataController.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Controllers\TestController.cs">
+      <Link>Common\Controllers\TestController.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <Compile Include="..\Common\AssertExtension.cs">
+      <Link>Common\AssertExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\AttackStringBuilder.cs">
+      <Link>Common\AttackStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ComparisonHelper.cs">
+      <Link>Common\ComparisonHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Container.cs">
+      <Link>Common\Container.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Controllers\TypeLibrary\ComplexTypes.cs">
+      <Link>Common\Controllers\TypeLibrary\ComplexTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs">
+      <Link>Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DataServiceContextAsyncExtension.cs">
+      <Link>Common\DataServiceContextAsyncExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DataServiceQueryExtensions.cs">
+      <Link>Common\DataServiceQueryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Execution\PortArranger.cs">
+      <Link>Common\Execution\PortArranger.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Execution\SecurityHelper.cs">
+      <Link>Common\Execution\SecurityHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Execution\WebConfigHelper.cs">
+      <Link>Common\Execution\WebConfigHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Execution\WebHostTestBase.cs">
+      <Link>Common\Execution\WebHostTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Execution\WebRouteConfiguration.cs">
+      <Link>Common\Execution\WebRouteConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Extensions\DirectoryInfoExtension.cs">
+      <Link>Common\Extensions\DirectoryInfoExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Extensions\HttpClientExtension.cs">
+      <Link>Common\Extensions\HttpClientExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Extensions\HttpConfigurationExtensions.cs">
+      <Link>Common\Extensions\HttpConfigurationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Extensions\HttpContentExtensions.cs">
+      <Link>Common\Extensions\HttpContentExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Extensions\ODataPathHandlerExtensions.cs">
+      <Link>Common\Extensions\ODataPathHandlerExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\HttpClientExtensions.cs">
+      <Link>Common\HttpClientExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\HttpControllerContextExtensions.cs">
+      <Link>Common\HttpControllerContextExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\CharsToUseBuilder.cs">
+      <Link>Common\Instancing\CharsToUseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\ComplexTypeInstanceCreator.cs">
+      <Link>Common\Instancing\ComplexTypeInstanceCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\CookieHeaderValueInstanceCreator.cs">
+      <Link>Common\Instancing\CookieHeaderValueInstanceCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\CreatorSettings.cs">
+      <Link>Common\Instancing\CreatorSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\InstanceCreator.cs">
+      <Link>Common\Instancing\InstanceCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\InstanceCreatorSurrogate.cs">
+      <Link>Common\Instancing\InstanceCreatorSurrogate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\JTokenInstanceCreator.cs">
+      <Link>Common\Instancing\JTokenInstanceCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\PrimitiveCreator.cs">
+      <Link>Common\Instancing\PrimitiveCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\RandomSeedGenerator.cs">
+      <Link>Common\Instancing\RandomSeedGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\SyntaxCreator.cs">
+      <Link>Common\Instancing\SyntaxCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Instancing\ULongJsonNetRangeLimitSurrogate.cs">
+      <Link>Common\Instancing\ULongJsonNetRangeLimitSurrogate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\JObjectExtensions.cs">
+      <Link>Common\JObjectExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\JsonAssert.cs">
+      <Link>Common\JsonAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\LinkRoutingConvention2.cs">
+      <Link>Common\LinkRoutingConvention2.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ModelHelper.cs">
+      <Link>Common\Models\ModelHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Movie\Movie.cs">
+      <Link>Common\Models\Movie\Movie.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\BaseEntity.cs">
+      <Link>Common\Models\NopCommerce\BaseEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Configuration\ISettings.cs">
+      <Link>Common\Models\NopCommerce\Configuration\ISettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Affiliates\Affiliate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Affiliates\Affiliate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogComment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogComment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogExtensions.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogPost.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogPost.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogPostTag.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogPostTag.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\AttributeControlType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\AttributeControlType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\BackInStockSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\BackInStockSubscription.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\BackorderMode.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\BackorderMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CatalogSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CatalogSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Category.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Category.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CategoryTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CategoryTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CrossSellProduct.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CrossSellProduct.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\DownloadActivationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\DownloadActivationType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\GiftCardType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\GiftCardType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\LowStockActivity.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\LowStockActivity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ManageInventoryMethod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ManageInventoryMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Manufacturer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Manufacturer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ManufacturerTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ManufacturerTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\PriceRange.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\PriceRange.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Product.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductCategory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductManufacturer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductManufacturer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductPicture.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductPicture.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductReview.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductReview.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductReviewHelpfulness.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductReviewHelpfulness.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductSortingEnum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductSortingEnum.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductSpecificationAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductSpecificationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductTag.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductTag.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeCombination.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeCombination.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeValue.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantExtensions.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\RecurringProductCyclePeriod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\RecurringProductCyclePeriod.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\RelatedProduct.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\RelatedProduct.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOption.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOption.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOptionFilter.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOptionFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\TierPrice.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\TierPrice.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Cms\WidgetSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Cms\WidgetSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\Address.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\Address.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\AdminAreaSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\AdminAreaSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\CommonSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\CommonSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\FulltextSearchMode.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\FulltextSearchMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\GenericAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\GenericAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\PdfSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\PdfSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Configuration\Setting.cs">
+      <Link>Common\Models\NopCommerce\Domain\Configuration\Setting.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\BestCustomerReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\BestCustomerReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\Customer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\Customer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerContent.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerContent.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerNameFormat.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerNameFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerRole.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerRole.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\PasswordFormat.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\PasswordFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\RewardPointsHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\RewardPointsHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\RewardPointsSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\RewardPointsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerAttributeNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerAttributeNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerRoleNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerRoleNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\UserRegistrationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\UserRegistrationType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\CountryOrRegion.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\CountryOrRegion.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\Currency.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\Currency.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\CurrencySettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\CurrencySettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\ExchangeRate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\ExchangeRate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureDimension.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureDimension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureWeight.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureWeight.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\StateProvince.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\StateProvince.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\Discount.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\Discount.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountLimitationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountLimitationType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountRequirement.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountRequirement.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountUsageHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountUsageHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\EditorType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\EditorType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\Forum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\Forum.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumGroup.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumPost.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumPost.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSearchType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSearchType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSubscription.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumTopic.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumTopic.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumTopicType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumTopicType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\PrivateMessage.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\PrivateMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\ILocalizedEntity.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\ILocalizedEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\ILocalizedEnum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\ILocalizedEnum.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\Language.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\Language.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocaleStringResource.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocaleStringResource.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocalizationSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocalizationSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocalizedProperty.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocalizedProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\ActivityLog.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\ActivityLog.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\ActivityLogType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\ActivityLogType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\Log.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\LogLevel.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\LogLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\Download.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\Download.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\MediaSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\MediaSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\Picture.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\Picture.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\PictureType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\PictureType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\Campaign.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\Campaign.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\EmailAccount.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\EmailAccount.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\EmailAccountSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\EmailAccountSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\Events.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\Events.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\MessageTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\MessageTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\MessageTemplatesSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\MessageTemplatesSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\NewsLetterSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\NewsLetterSubscription.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\QueuedEmail.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\QueuedEmail.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsComment.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsComment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsItem.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\BestsellersReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\BestsellersReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\CheckoutAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\CheckoutAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\CheckoutAttributeValue.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\CheckoutAttributeValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\Events.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\Events.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\GiftCard.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\GiftCard.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\GiftCardUsageHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\GiftCardUsageHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\Order.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\Order.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLineSummary.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLineSummary.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderNote.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderNote.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderProductVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\RecurringPayment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\RecurringPayment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\RecurringPaymentHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\RecurringPaymentHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ReturnRequest.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ReturnRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ReturnRequestStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ReturnRequestStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartItem.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Payments\PaymentSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Payments\PaymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Payments\PaymentStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Payments\PaymentStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\Poll.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\Poll.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\PollAnswer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\PollAnswer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\PollVotingRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\PollVotingRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\DefaultPermissionRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\DefaultPermissionRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\PermissionRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\PermissionRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\SecuritySettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\SecuritySettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\ISlugSupported.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\ISlugSupported.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\PageTitleSeoAdjustment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\PageTitleSeoAdjustment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\SeoSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\SeoSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\UrlRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\UrlRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\Shipment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\Shipment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShipmentOrderProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShipmentOrderProductVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingMethod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingOption.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingOption.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tasks\ScheduleTask.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tasks\ScheduleTask.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxBasedOn.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxBasedOn.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxCategory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxDisplayType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxDisplayType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\VatNumberStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\VatNumberStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Topics\Topic.cs">
+      <Link>Common\Models\NopCommerce\Domain\Topics\Topic.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\NopException.cs">
+      <Link>Common\Models\NopCommerce\NopException.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Address.cs">
+      <Link>Common\Models\ProductFamilies\Address.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Product.cs">
+      <Link>Common\Models\ProductFamilies\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\ProductFamily.cs">
+      <Link>Common\Models\ProductFamilies\ProductFamily.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\ProductsContext.cs">
+      <Link>Common\Models\ProductFamilies\ProductsContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Supplier.cs">
+      <Link>Common\Models\ProductFamilies\Supplier.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Address.cs">
+      <Link>Common\Models\Products\Address.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Category.cs">
+      <Link>Common\Models\Products\Category.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Customer.cs">
+      <Link>Common\Models\Products\Customer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Order.cs">
+      <Link>Common\Models\Products\Order.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Product.cs">
+      <Link>Common\Models\Products\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Supplier.cs">
+      <Link>Common\Models\Products\Supplier.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Vehicle\Vehicle.cs">
+      <Link>Common\Models\Vehicle\Vehicle.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\NavigationRoutingConvention2.cs">
+      <Link>Common\NavigationRoutingConvention2.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataAcceptHeaderTestSet.cs">
+      <Link>Common\ODataAcceptHeaderTestSet.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataHelper.cs">
+      <Link>Common\ODataHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataTestConstants.cs">
+      <Link>Common\ODataTestConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataTestExtension.cs">
+      <Link>Common\ODataTestExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataUrlAssert.cs">
+      <Link>Common\ODataUrlAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PlaceholderTraceWriter.cs">
+      <Link>Common\PlaceholderTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PropertyRoutingConvention.cs">
+      <Link>Common\PropertyRoutingConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TestAssembly.cs">
+      <Link>Common\TestAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TestAssemblyResolver.cs">
+      <Link>Common\TestAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TheoryDataSet.cs">
+      <Link>Common\TheoryDataSet.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypeCreator\DynamicAssemblyResolver.cs">
+      <Link>Common\TypeCreator\DynamicAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypeCreator\ODataModelTypeCreator.cs">
+      <Link>Common\TypeCreator\ODataModelTypeCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypesInjectionAssembly.cs">
+      <Link>Common\TypesInjectionAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountController.cs">
+      <Link>ODataCountTest\CountController.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountDataModel.cs">
+      <Link>ODataCountTest\CountDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountEdmModel.cs">
+      <Link>ODataCountTest\CountEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountTest.cs">
+      <Link>ODataCountTest\CountTest.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\sln\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\..\..\sln\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.AspNetCore.OData\Microsoft.AspNetCore.OData.csproj">
+      <Project>{3571a6b6-b859-4fa2-a96f-40956bfc3837}</Project>
+      <Name>Microsoft.AspNetCore.OData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8854.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8854.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\..\..\sln\packages\Microsoft.Extensions.Configuration.UserSecrets.2.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets" Condition="Exists('..\..\..\sln\packages\Microsoft.Extensions.Configuration.UserSecrets.2.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\sln\packages\Microsoft.Extensions.Configuration.UserSecrets.2.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\Microsoft.Extensions.Configuration.UserSecrets.2.0.0\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.props'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\..\sln\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\sln\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets'))" />
+  </Target>
+  <Import Project="..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\..\..\sln\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
+  <Import Project="..\..\..\sln\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\..\sln\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
+</Project>

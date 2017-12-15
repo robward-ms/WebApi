@@ -20,6 +20,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETFX;NETFX45</DefineConstants>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -180,912 +181,1631 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aggregation\AggregationController.cs" />
-    <Compile Include="Aggregation\AggregationDataModel.cs" />
-    <Compile Include="Aggregation\AggregationEdmModel.cs" />
-    <Compile Include="Aggregation\PagedAggregationTests.cs" />
-    <Compile Include="Aggregation\AggregationTests.cs" />
-    <Compile Include="Aggregation\PagedCustomersController.cs" />
-    <Compile Include="AlternateKeys\AlternateKeysDataSource.cs" />
-    <Compile Include="AlternateKeys\AlternateKeysEdmModel.cs" />
-    <Compile Include="AlternateKeys\AlternateKeysTest.cs" />
-    <Compile Include="AlternateKeys\AlternateKeysController.cs" />
-    <Compile Include="AutoExpand\AutoExpandController.cs" />
-    <Compile Include="AutoExpand\AutoExpandDataModel.cs" />
-    <Compile Include="AutoExpand\AutoExpandEdmModel.cs" />
-    <Compile Include="AutoExpand\AutoExpandTests.cs" />
-    <Compile Include="Batch\Client\DefaultBatchGeneratedClient.cs" />
-    <Compile Include="Batch\Client\JsonLightContent.cs" />
-    <Compile Include="Batch\Client\ODataChangeSet.cs" />
-    <Compile Include="Batch\Client\ODataOperation.cs" />
-    <Compile Include="Batch\Client\UnbufferedBatchGeneratedClient.cs" />
-    <Compile Include="Batch\Tests\DataServicesClient\DefaultODataBatchHandlerTests.cs" />
-    <Compile Include="Batch\Tests\DataServicesClient\UnbufferedODataBatchHandlerTests.cs" />
-    <Compile Include="Common\ComparisonHelper.cs" />
-    <Compile Include="Common\Controllers\CollectionController.cs" />
-    <Compile Include="Common\Controllers\ComplexTypesCollectionsController.cs" />
-    <Compile Include="Common\Controllers\ComplexTypesController.cs" />
-    <Compile Include="Common\Controllers\JTokenController.cs" />
-    <Compile Include="Common\Controllers\ModelBindingBasedComplexTypesController.cs" />
-    <Compile Include="Common\Controllers\NorthwindController.cs" />
-    <Compile Include="Common\Controllers\PrimitiveCollectionsOperationsController.cs" />
-    <Compile Include="Common\Controllers\PrimitiveOperationsController.cs" />
-    <Compile Include="Common\Controllers\TypeLibrary\ComplexTypes.cs" />
-    <Compile Include="Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs" />
-    <Compile Include="Common\Controllers\TypeLibrary\NorthwindTypes.cs" />
-    <Compile Include="Common\Execution\WebRouteConfiguration.cs" />
-    <Compile Include="Common\Extensions\DirectoryInfoExtension.cs" />
-    <Compile Include="Common\Extensions\HttpClientExtension.cs" />
-    <Compile Include="Common\HttpControllerContextExtensions.cs" />
-    <Compile Include="Common\Instancing\CharsToUseBuilder.cs" />
-    <Compile Include="Common\Instancing\ComplexTypeInstanceCreator.cs" />
-    <Compile Include="Common\Instancing\CookieHeaderValueInstanceCreator.cs" />
-    <Compile Include="Common\Instancing\CreatorSettings.cs" />
-    <Compile Include="Common\Instancing\InstanceCreator.cs" />
-    <Compile Include="Common\Instancing\InstanceCreatorSurrogate.cs" />
-    <Compile Include="Common\Instancing\JTokenInstanceCreator.cs" />
-    <Compile Include="Common\Instancing\PrimitiveCreator.cs" />
-    <Compile Include="Common\Instancing\RandomSeedGenerator.cs" />
-    <Compile Include="Common\Instancing\SyntaxCreator.cs" />
-    <Compile Include="Common\Instancing\ULongJsonNetRangeLimitSurrogate.cs" />
-    <Compile Include="Common\Extensions\HttpConfigurationExtensions.cs" />
-    <Compile Include="Common\Execution\PortArranger.cs" />
-    <Compile Include="Common\Execution\SecurityHelper.cs" />
-    <Compile Include="Common\Execution\WebConfigHelper.cs" />
-    <Compile Include="Common\TestAssembly.cs" />
-    <Compile Include="Common\TestDbContext.cs" />
-    <Compile Include="Common\TheoryDataSet.cs" />
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceSerializeTest.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayContext.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayController.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayEdmModel.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayModel.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayTest.cs" />
-    <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayWithEfTest.cs" />
-    <Compile Include="DateAndTimeOfDay\DateWithEfTest.cs" />
-    <Compile Include="DeltaQueryTests\DeltaQueryTests.cs" />
-    <Compile Include="DependencyInjection\CustomizeCountQueryValidatorTest.cs" />
-    <Compile Include="DependencyInjection\CustomizeSerializerTest.cs" />
-    <Compile Include="DependencyInjection\DependencyInjectionController.cs" />
-    <Compile Include="DependencyInjection\DependencyInjectionEdmModel.cs" />
-    <Compile Include="DollarLevels\DollarLevelsController.cs" />
-    <Compile Include="DollarLevels\DollarLevelsDataModel.cs" />
-    <Compile Include="DollarLevels\DollarLevelsEdmModel.cs" />
-    <Compile Include="DollarLevels\DollarLevelsTest.cs" />
-    <Compile Include="ETags\DerivedETagTests.cs" />
-    <Compile Include="ModelBoundQuerySettings\CombinedTest\CombinedController.cs" />
-    <Compile Include="ModelBoundQuerySettings\CombinedTest\CombinedEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\CombinedTest\CombinedTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\CountAttributeTest\CountAtrributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\CountAttributeTest\CountAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\CountAttributeTest\CountAttributeTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\ExpandAttributeTest\ExpandAtrributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\FilterAttributeTest\FilterAtrributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\OrderByAttributeTest\OrderByAtrributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeTest.cs" />
-    <Compile Include="ModelBoundQuerySettings\PageAttributeTest\PageAttributeEdmModel.cs" />
-    <Compile Include="ModelBoundQuerySettings\PageAttributeTest\PageAttributeController.cs" />
-    <Compile Include="ModelBoundQuerySettings\PageAttributeTest\PageAttributeTest.cs" />
-    <Compile Include="ETags\DominiosController.cs" />
-    <Compile Include="ETags\ETagCurrencyTokenEfContext.cs" />
-    <Compile Include="ETags\ETagCurrencyTokenEfContextTest.cs" />
-    <Compile Include="ETags\ETagsOtherTypesTest.cs" />
-    <Compile Include="ETags\ETagsUntypedTests.cs" />
-    <Compile Include="Formatter\ODataFeedSerializeWithoutNavigationSourceTests.cs" />
-    <Compile Include="Common\Execution\WebHostTestBase.cs" />
-    <Compile Include="ODataCountTest\CountController.cs" />
-    <Compile Include="ODataCountTest\CountDataModel.cs" />
-    <Compile Include="ODataCountTest\CountEdmModel.cs" />
-    <Compile Include="ODataCountTest\CountTest.cs" />
-    <Compile Include="ODataPathHandlerExtensions.cs" />
-    <Compile Include="QueryComposition\IsOf\IsOfController.cs" />
-    <Compile Include="QueryComposition\IsOf\IsofDataSource.cs" />
-    <Compile Include="QueryComposition\IsOf\IsofEdmModel.cs" />
-    <Compile Include="QueryComposition\IsOf\IsofFunctionTests.cs" />
-    <Compile Include="QueryComposition\IsOf\IsOfModels.cs" />
-    <Compile Include="Routing\DynamicProperties\DynamicPropertiesController.cs" />
-    <Compile Include="Routing\DynamicProperties\DynamicPropertiesModel.cs" />
-    <Compile Include="Routing\DynamicProperties\DynamicPropertiesTest.cs" />
-    <Compile Include="SingleResult\SingleResultController.cs" />
-    <Compile Include="SingleResult\SingleResultDataModel.cs" />
-    <Compile Include="SingleResult\SingleResultEdmModel.cs" />
-    <Compile Include="SingleResult\SingleResultTests.cs" />
-    <Compile Include="Swagger\SwaggerController.cs" />
-    <Compile Include="Swagger\SwaggerMetadataTest.cs" />
-    <Compile Include="Swagger\SwaggerPathHandler.cs" />
-    <Compile Include="Swagger\SwaggerPathSegment.cs" />
-    <Compile Include="Swagger\SwaggerRoutingConvention.cs" />
-    <Compile Include="UriParserExtension\CaseInsensitiveResolver.cs" />
-    <Compile Include="UriParserExtension\CaseInsensitiveTest.cs" />
-    <Compile Include="UriParserExtension\EnumPrefixFreeTest.cs" />
-    <Compile Include="UriParserExtension\UnqualifiedCallTest.cs" />
-    <Compile Include="UriParserExtension\UriParserExtensionDataModel.cs" />
-    <Compile Include="UriParserExtension\UriParserExtenstionController.cs" />
-    <Compile Include="UriParserExtension\UriParserExtenstionEdmModel.cs" />
-    <Compile Include="Cast\CastContext.cs" />
-    <Compile Include="Cast\CastControllers.cs" />
-    <Compile Include="Cast\CastDataModel.cs" />
-    <Compile Include="Cast\CastEdmModel.cs" />
-    <Compile Include="Cast\CastTest.cs" />
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritance.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ComplexTypeInheritance.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceControllers.cs" />
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceDataModels.cs" />
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.cs" />
-    <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceTests.cs" />
-    <Compile Include="Containment\ContainmentProxy.cs" />
-    <Compile Include="DateTimeSupport\DateTimeController.cs" />
-    <Compile Include="DateTimeSupport\DateTimeDataModel.cs" />
-    <Compile Include="DateTimeSupport\DateTimeEdmModel.cs" />
-    <Compile Include="DateTimeSupport\DateTimeTest.cs" />
-    <Compile Include="DollarId\DollarIdClientTest.cs" />
-    <Compile Include="DollarId\DollarIdModel.cs" />
-    <Compile Include="DollarId\DollarIdTest.cs" />
-    <Compile Include="DollarId\DollarIdControllers.cs" />
-    <Compile Include="DollarId\ODataClient.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ODataClient.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ForeignKey\ForeignKeyContext.cs" />
-    <Compile Include="ForeignKey\ForeignkeyController.cs" />
-    <Compile Include="ForeignKey\ForeignKeyEdmModel.cs" />
-    <Compile Include="ForeignKey\ForeignKeyModel.cs" />
-    <Compile Include="ForeignKey\ForeignKeyTest.cs" />
-    <Compile Include="LowerCamelCase\LowerCamelCaseController.cs" />
-    <Compile Include="LowerCamelCase\LowerCamelCaseDataModel.cs" />
-    <Compile Include="LowerCamelCase\LowerCamelCaseEdmModel.cs" />
-    <Compile Include="LowerCamelCase\LowerCamelCaseTest.cs" />
-    <Compile Include="Common\AssertExtension.cs" />
-    <Compile Include="Common\DataServiceContextAsyncExtension.cs" />
-    <Compile Include="Common\Container.cs" />
-    <Compile Include="Common\Controllers\AsyncInMemoryODataController.cs" />
-    <Compile Include="Common\Controllers\ModelStateErrorHandlingAttribute.cs" />
-    <Compile Include="Common\DataServiceQueryExtensions.cs" />
-    <Compile Include="Common\HttpClientExtensions.cs" />
-    <Compile Include="Common\JObjectExtensions.cs" />
-    <Compile Include="Common\LinkRoutingConvention2.cs" />
-    <Compile Include="Common\Models\NopCommerce\BaseEntity.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Configuration\ISettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Affiliates\Affiliate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Blogs\BlogComment.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Blogs\BlogExtensions.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Blogs\BlogPost.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Blogs\BlogPostTag.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Blogs\BlogSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\AttributeControlType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\BackInStockSubscription.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\BackorderMode.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\CatalogSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\Category.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\CategoryTemplate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\CrossSellProduct.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\DownloadActivationType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\GiftCardType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\LowStockActivity.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ManageInventoryMethod.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\Manufacturer.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ManufacturerTemplate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\PriceRange.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\Product.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductCategory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductManufacturer.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductPicture.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductReview.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductReviewHelpfulness.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductSortingEnum.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductSpecificationAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductTag.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductTemplate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductVariant.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\AggregationController.cs">
+      <Link>Aggregation\AggregationController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeCombination.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\AggregationDataModel.cs">
+      <Link>Aggregation\AggregationDataModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeValue.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\AggregationEdmModel.cs">
+      <Link>Aggregation\AggregationEdmModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\ProductVariantExtensions.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\AggregationTests.cs">
+      <Link>Aggregation\AggregationTests.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\RecurringProductCyclePeriod.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\PagedAggregationTests.cs">
+      <Link>Aggregation\PagedAggregationTests.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\RelatedProduct.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Aggregation\PagedCustomersController.cs">
+      <Link>Aggregation\PagedCustomersController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\SpecificationAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AlternateKeys\AlternateKeysController.cs">
+      <Link>AlternateKeys\AlternateKeysController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOption.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AlternateKeys\AlternateKeysDataSource.cs">
+      <Link>AlternateKeys\AlternateKeysDataSource.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOptionFilter.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AlternateKeys\AlternateKeysEdmModel.cs">
+      <Link>AlternateKeys\AlternateKeysEdmModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Catalog\TierPrice.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AlternateKeys\AlternateKeysTest.cs">
+      <Link>AlternateKeys\AlternateKeysTest.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Cms\WidgetSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AutoExpand\AutoExpandController.cs">
+      <Link>AutoExpand\AutoExpandController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\Address.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AutoExpand\AutoExpandDataModel.cs">
+      <Link>AutoExpand\AutoExpandDataModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\AdminAreaSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AutoExpand\AutoExpandEdmModel.cs">
+      <Link>AutoExpand\AutoExpandEdmModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\CommonSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\AutoExpand\AutoExpandTests.cs">
+      <Link>AutoExpand\AutoExpandTests.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\FulltextSearchMode.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Client\DefaultBatchGeneratedClient.cs">
+      <Link>Batch\Client\DefaultBatchGeneratedClient.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\GenericAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Client\JsonLightContent.cs">
+      <Link>Batch\Client\JsonLightContent.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Common\PdfSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Client\ODataChangeSet.cs">
+      <Link>Batch\Client\ODataChangeSet.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Configuration\Setting.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Client\ODataOperation.cs">
+      <Link>Batch\Client\ODataOperation.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\BestCustomerReportLine.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Client\UnbufferedBatchGeneratedClient.cs">
+      <Link>Batch\Client\UnbufferedBatchGeneratedClient.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\Customer.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Tests\DataServicesClient\DefaultODataBatchHandlerTests.cs">
+      <Link>Batch\Tests\DataServicesClient\DefaultODataBatchHandlerTests.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\CustomerContent.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Batch\Tests\DataServicesClient\UnbufferedODataBatchHandlerTests.cs">
+      <Link>Batch\Tests\DataServicesClient\UnbufferedODataBatchHandlerTests.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\CustomerNameFormat.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\BoundOperation\BoundOperationController.cs">
+      <Link>BoundOperation\BoundOperationController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\CustomerRole.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\BoundOperation\BoundOperationDataModel.cs">
+      <Link>BoundOperation\BoundOperationDataModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\CustomerSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\BoundOperation\BoundOperationEdmModel.cs">
+      <Link>BoundOperation\BoundOperationEdmModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationRecord.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\BoundOperation\BoundOperationTest.cs">
+      <Link>BoundOperation\BoundOperationTest.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Cast\CastContext.cs">
+      <Link>Cast\CastContext.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\PasswordFormat.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Cast\CastControllers.cs">
+      <Link>Cast\CastControllers.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\RewardPointsHistory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Cast\CastDataModel.cs">
+      <Link>Cast\CastDataModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\RewardPointsSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Cast\CastEdmModel.cs">
+      <Link>Cast\CastEdmModel.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\SystemCustomerAttributeNames.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Cast\CastTest.cs">
+      <Link>Cast\CastTest.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\SystemCustomerNames.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\AssertExtension.cs">
+      <Link>Common\AssertExtension.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\SystemCustomerRoleNames.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\AttackStringBuilder.cs">
+      <Link>Common\AttackStringBuilder.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Customers\UserRegistrationType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\ComparisonHelper.cs">
+      <Link>Common\ComparisonHelper.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\CountryOrRegion.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Container.cs">
+      <Link>Common\Container.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\Currency.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\AsyncInMemoryODataController.cs">
+      <Link>Common\Controllers\AsyncInMemoryODataController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\CurrencySettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\CollectionController.cs">
+      <Link>Common\Controllers\CollectionController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\ExchangeRate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\ComplexTypesCollectionsController.cs">
+      <Link>Common\Controllers\ComplexTypesCollectionsController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\MeasureDimension.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\ComplexTypesController.cs">
+      <Link>Common\Controllers\ComplexTypesController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\MeasureSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\JTokenController.cs">
+      <Link>Common\Controllers\JTokenController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\MeasureWeight.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\ModelBindingBasedComplexTypesController.cs">
+      <Link>Common\Controllers\ModelBindingBasedComplexTypesController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Directory\StateProvince.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\ModelStateErrorHandlingAttribute.cs">
+      <Link>Common\Controllers\ModelStateErrorHandlingAttribute.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Discounts\Discount.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\NorthwindController.cs">
+      <Link>Common\Controllers\NorthwindController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Discounts\DiscountLimitationType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\PrimitiveCollectionsOperationsController.cs">
+      <Link>Common\Controllers\PrimitiveCollectionsOperationsController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Discounts\DiscountRequirement.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\PrimitiveOperationsController.cs">
+      <Link>Common\Controllers\PrimitiveOperationsController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Discounts\DiscountType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\TestController.cs">
+      <Link>Common\Controllers\TestController.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Discounts\DiscountUsageHistory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\TypeLibrary\ComplexTypes.cs">
+      <Link>Common\Controllers\TypeLibrary\ComplexTypes.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\EditorType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs">
+      <Link>Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\Forum.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Controllers\TypeLibrary\NorthwindTypes.cs">
+      <Link>Common\Controllers\TypeLibrary\NorthwindTypes.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumGroup.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\DataServiceContextAsyncExtension.cs">
+      <Link>Common\DataServiceContextAsyncExtension.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumPost.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\DataServiceQueryExtensions.cs">
+      <Link>Common\DataServiceQueryExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumSearchType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Execution\PortArranger.cs">
+      <Link>Common\Execution\PortArranger.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Execution\SecurityHelper.cs">
+      <Link>Common\Execution\SecurityHelper.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumSubscription.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Execution\WebConfigHelper.cs">
+      <Link>Common\Execution\WebConfigHelper.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumTopic.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Execution\WebHostTestBase.cs">
+      <Link>Common\Execution\WebHostTestBase.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\ForumTopicType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Execution\WebRouteConfiguration.cs">
+      <Link>Common\Execution\WebRouteConfiguration.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Forums\PrivateMessage.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Extensions\DirectoryInfoExtension.cs">
+      <Link>Common\Extensions\DirectoryInfoExtension.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\ILocalizedEntity.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Extensions\HttpClientExtension.cs">
+      <Link>Common\Extensions\HttpClientExtension.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\ILocalizedEnum.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Extensions\HttpConfigurationExtensions.cs">
+      <Link>Common\Extensions\HttpConfigurationExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\Language.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Extensions\HttpContentExtensions.cs">
+      <Link>Common\Extensions\HttpContentExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\LocaleStringResource.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Extensions\ODataPathHandlerExtensions.cs">
+      <Link>Common\Extensions\ODataPathHandlerExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\LocalizationSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\HttpClientExtensions.cs">
+      <Link>Common\HttpClientExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Localization\LocalizedProperty.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\HttpControllerContextExtensions.cs">
+      <Link>Common\HttpControllerContextExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Logging\ActivityLog.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\CharsToUseBuilder.cs">
+      <Link>Common\Instancing\CharsToUseBuilder.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Logging\ActivityLogType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\ComplexTypeInstanceCreator.cs">
+      <Link>Common\Instancing\ComplexTypeInstanceCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Logging\Log.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\CookieHeaderValueInstanceCreator.cs">
+      <Link>Common\Instancing\CookieHeaderValueInstanceCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Logging\LogLevel.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\CreatorSettings.cs">
+      <Link>Common\Instancing\CreatorSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Media\Download.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\InstanceCreator.cs">
+      <Link>Common\Instancing\InstanceCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Media\MediaSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\InstanceCreatorSurrogate.cs">
+      <Link>Common\Instancing\InstanceCreatorSurrogate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Media\Picture.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\JTokenInstanceCreator.cs">
+      <Link>Common\Instancing\JTokenInstanceCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Media\PictureType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\PrimitiveCreator.cs">
+      <Link>Common\Instancing\PrimitiveCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\Campaign.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\RandomSeedGenerator.cs">
+      <Link>Common\Instancing\RandomSeedGenerator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\EmailAccount.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\SyntaxCreator.cs">
+      <Link>Common\Instancing\SyntaxCreator.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\EmailAccountSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Instancing\ULongJsonNetRangeLimitSurrogate.cs">
+      <Link>Common\Instancing\ULongJsonNetRangeLimitSurrogate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\Events.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\JObjectExtensions.cs">
+      <Link>Common\JObjectExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\MessageTemplate.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\JsonAssert.cs">
+      <Link>Common\JsonAssert.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\MessageTemplatesSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\LinkRoutingConvention2.cs">
+      <Link>Common\LinkRoutingConvention2.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\NewsLetterSubscription.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\ModelHelper.cs">
+      <Link>Common\Models\ModelHelper.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Messages\QueuedEmail.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\Movie\Movie.cs">
+      <Link>Common\Models\Movie\Movie.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\News\NewsComment.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\BaseEntity.cs">
+      <Link>Common\Models\NopCommerce\BaseEntity.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\News\NewsItem.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Configuration\ISettings.cs">
+      <Link>Common\Models\NopCommerce\Configuration\ISettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\News\NewsSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Affiliates\Affiliate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Affiliates\Affiliate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\BestsellersReportLine.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogComment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogComment.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\CheckoutAttribute.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogExtensions.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\CheckoutAttributeValue.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogPost.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogPost.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\Events.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogPostTag.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogPostTag.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\GiftCard.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Blogs\BlogSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Blogs\BlogSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\GiftCardUsageHistory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\AttributeControlType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\AttributeControlType.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\Order.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\BackInStockSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\BackInStockSubscription.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLine.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\BackorderMode.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\BackorderMode.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLineSummary.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CatalogSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CatalogSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderNote.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Category.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Category.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderProductVariant.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CategoryTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CategoryTemplate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\CrossSellProduct.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\CrossSellProduct.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\OrderStatus.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\DownloadActivationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\DownloadActivationType.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\RecurringPayment.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\GiftCardType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\GiftCardType.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\RecurringPaymentHistory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\LowStockActivity.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\LowStockActivity.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\ReturnRequest.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ManageInventoryMethod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ManageInventoryMethod.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\ReturnRequestStatus.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Manufacturer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Manufacturer.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\ShoppingCartItem.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ManufacturerTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ManufacturerTemplate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\ShoppingCartSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\PriceRange.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\PriceRange.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Orders\ShoppingCartType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\Product.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\Product.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Payments\PaymentSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductAttribute.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Payments\PaymentStatus.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductCategory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductCategory.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Polls\Poll.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductManufacturer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductManufacturer.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Polls\PollAnswer.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductPicture.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductPicture.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Polls\PollVotingRecord.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductReview.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductReview.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Security\DefaultPermissionRecord.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductReviewHelpfulness.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductReviewHelpfulness.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Security\PermissionRecord.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductSortingEnum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductSortingEnum.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Security\SecuritySettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductSpecificationAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductSpecificationAttribute.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Seo\ISlugSupported.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductTag.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductTag.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Seo\PageTitleSeoAdjustment.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductTemplate.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Seo\SeoSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariant.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Seo\UrlRecord.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttribute.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\Shipment.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeCombination.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeCombination.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\ShipmentOrderProductVariant.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeValue.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantAttributeValue.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\ShippingMethod.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\ProductVariantExtensions.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\ProductVariantExtensions.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\ShippingOption.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\RecurringProductCyclePeriod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\RecurringProductCyclePeriod.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\ShippingSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\RelatedProduct.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\RelatedProduct.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Shipping\ShippingStatus.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttribute.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\StoreInformationSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOption.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOption.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tasks\ScheduleTask.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOptionFilter.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\SpecificationAttributeOptionFilter.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tax\TaxBasedOn.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Catalog\TierPrice.cs">
+      <Link>Common\Models\NopCommerce\Domain\Catalog\TierPrice.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tax\TaxCategory.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Cms\WidgetSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Cms\WidgetSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tax\TaxDisplayType.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\Address.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\Address.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tax\TaxSettings.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\AdminAreaSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\AdminAreaSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Tax\VatNumberStatus.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\CommonSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\CommonSettings.cs</Link>
     </Compile>
-    <Compile Include="Common\Models\NopCommerce\Domain\Topics\Topic.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Common\Models\NopCommerce\NopException.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Common\Models\ProductFamilies\Address.cs" />
-    <Compile Include="Common\Models\ProductFamilies\Product.cs" />
-    <Compile Include="Common\Models\ProductFamilies\ProductFamily.cs" />
-    <Compile Include="Common\Models\ProductFamilies\ProductsContext.cs" />
-    <Compile Include="Common\Models\ProductFamilies\Supplier.cs" />
-    <Compile Include="Common\Models\Vehicle\Vehicle.cs" />
-    <Compile Include="Common\NavigationRoutingConvention2.cs" />
-    <Compile Include="Common\ODataAcceptHeaderTestSet.cs" />
-    <Compile Include="Common\ODataTestConstants.cs" />
-    <Compile Include="Common\ODataTestExtension.cs" />
-    <Compile Include="Common\ODataUrlAssert.cs" />
-    <Compile Include="Common\PlaceholderTraceWriter.cs" />
-    <Compile Include="Common\PropertyRoutingConvention.cs" />
-    <Compile Include="Common\TypesInjectionAssembly.cs" />
-    <Compile Include="Common\TestAssemblyResolver.cs" />
-    <Compile Include="Common\TypeCreator\DynamicAssemblyResolver.cs" />
-    <Compile Include="Containment\ContainmentControllers.cs" />
-    <Compile Include="Containment\ContainmentDataModels.cs" />
-    <Compile Include="Containment\ContainmentDataSource.cs" />
-    <Compile Include="Containment\ContainmentEdmModels.cs" />
-    <Compile Include="Containment\ContainmentTests.cs" />
-    <Compile Include="DollarFormat\DollarFormatController.cs" />
-    <Compile Include="DollarFormat\DollarFormatModel.cs" />
-    <Compile Include="DollarFormat\DollarFormatOverrideAcceptMediaTypeTests.cs" />
-    <Compile Include="DollarFormat\DollarFormatWithoutAcceptMediaTypeTests.cs" />
-    <Compile Include="Enums\EnumsController.cs" />
-    <Compile Include="Enums\EnumsDataModel.cs" />
-    <Compile Include="Enums\EnumsEdmModel.cs" />
-    <Compile Include="Enums\EnumsTest.cs" />
-    <Compile Include="ETags\DeleteUpdatedEntryWithIfMatchETagsTest.cs" />
-    <Compile Include="ETags\ETagsController.cs" />
-    <Compile Include="ETags\ETagsModel.cs" />
-    <Compile Include="ETags\JsonETagsTests.cs" />
-    <Compile Include="ETags\GetEntryWithIfNoneMatchETagsTest.cs" />
-    <Compile Include="ETags\PatchUpdatedEntryWithIfMatchETagsTest.cs" />
-    <Compile Include="ETags\PutUpdatedEntryWithIfMatchETagsTest.cs" />
-    <Compile Include="Formatter\CollectionPropertyTests.cs" />
-    <Compile Include="Formatter\ComplexTypeTests.cs" />
-    <Compile Include="Formatter\ErrorMessagesTests.cs" />
-    <Compile Include="Formatter\Extensibility\SerializeEntityReferenceLinks.cs" />
-    <Compile Include="Formatter\Extensibility\SupportDollarValue.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\MinimalMetadataSpecificTests.cs" />
-    <Compile Include="Formatter\DeltaTests.cs" />
-    <Compile Include="Formatter\DeserializationAndSerializationTests.cs" />
-    <Compile Include="Formatter\HttpAndODataErrorTests.cs" />
-    <Compile Include="Formatter\InheritanceTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightCollectionPropertyTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightComplexTypeTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightConfigurator.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightDeltaTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightDeserializationAndSerializationTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightInheritanceTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightMixScenarioTests.cs" />
-    <Compile Include="Formatter\JsonLight\JsonLightRandomModelTests.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\ActionMetadataTests.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\ComplexTypeTests.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\BaseEntityController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\EntityWithComplexPropertiesController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\OneToOneChildController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\OneToOneParentController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\EntityWithSimplePropertiesController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Controllers\StubEntityController.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\CustomConventionActionMetadataTests.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\EntryMetadataTests.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Extensions\HttpRequestMessageExtensions.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Extensions\ReflectedPropertyRoutingConvention.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\FeedMetadataTests.cs" />
-    <Compile Include="Common\JsonAssert.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\MetadataTestHelpers.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\BaseEntity.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\ComplexType.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\DerivedEntity.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\EntityWithComplexProperties.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\EntityWithSimpleProperties.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\OneToOneChild.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\OneToOneParent.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\SimpleEnumeration.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\Model\StubEntity.cs" />
-    <Compile Include="Formatter\JsonLight\Metadata\PrimitiveTypesMetadataTests.cs" />
-    <Compile Include="Formatter\MixScenarioTests.cs" />
-    <Compile Include="Formatter\ODataFormatterTestBase.cs" />
-    <Compile Include="Formatter\ServerDrivenPagingTests.cs" />
-    <Compile Include="Formatter\Untyped\UntypedSerializationTests.cs" />
-    <Compile Include="Formatter\Untyped\UntypedDeltaSerializationTests.cs" />
-    <Compile Include="ModelAliasing\FormattersTests.cs" />
-    <Compile Include="ModelAliasing\GeneratedConventionModelClient.cs" />
-    <Compile Include="ModelAliasing\MetadataTests.cs" />
-    <Compile Include="ModelAliasing\Model.cs" />
-    <Compile Include="ModelAliasing\QueryTests.cs" />
-    <Compile Include="ModelBuilder\ActionMetadataTests.cs" />
-    <Compile Include="ModelBuilder\ConditionalLinkGenerationTests.cs" />
-    <Compile Include="ModelBuilder\MultipleEntitySetOnSameClrTypeTests.cs" />
-    <Compile Include="ModelBuilder\ODataActionTests.cs" />
-    <Compile Include="Formatter\ODataResultTests.cs" />
-    <Compile Include="Formatter\SecurityTests.cs" />
-    <Compile Include="Formatter\SupportMediaTypesTests.cs" />
-    <Compile Include="Formatter\RandomModelTests.cs" />
-    <Compile Include="ModelBuilder\AttributeConventionModelBuilderTests.cs" />
-    <Compile Include="Common\TypeCreator\ODataModelTypeCreator.cs" />
-    <Compile Include="ModelBuilder\ImplicitModelBuilderTests.cs" />
-    <Compile Include="ModelBuilder\ExplicitModelBuilderTests.cs" />
-    <Compile Include="ModelBuilder\InheritanceTests.cs" />
-    <Compile Include="ModelBuilder\ODataActionTestsProxyGeneratedCode.cs" />
-    <Compile Include="ModelBuilder\PropertyTests.cs" />
-    <Compile Include="ModelBuilder\SpecialCharactersLinkGenerationTests.cs" />
-    <Compile Include="ModelBuilder\ODataMessageWrapper.cs" />
-    <Compile Include="ModelBuilder\SpecialPrimaryKeyTypesInLinkGenerationTests.cs" />
-    <Compile Include="ModelBuilder\UnicodeLinkGenerationTests.cs" />
-    <Compile Include="ODataHelper.cs" />
-    <Compile Include="ODataPathHandler\LinkGenerationTests.cs" />
-    <Compile Include="ODataPathHandler\UnicodeRouteTests.cs" />
-    <Compile Include="OpenType\TypedClient.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TypedClient.tt</DependentUpon>
-    </Compile>
-    <Compile Include="OpenType\OpenTypeControllers.cs" />
-    <Compile Include="OpenType\OpenTypeDataModel.cs" />
-    <Compile Include="OpenType\OpenTypeEdmModel.cs" />
-    <Compile Include="OpenType\TypedServiceReferenceForOpenType.cs" />
-    <Compile Include="OpenType\TypedTest.cs" />
-    <Compile Include="ParameterAlias\ParameterAliasDataSource.cs" />
-    <Compile Include="ParameterAlias\ParameterAliasTest.cs" />
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\FulltextSearchMode.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\FulltextSearchMode.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\GenericAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\GenericAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Common\PdfSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Common\PdfSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Configuration\Setting.cs">
+      <Link>Common\Models\NopCommerce\Domain\Configuration\Setting.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\BestCustomerReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\BestCustomerReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\Customer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\Customer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerContent.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerContent.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerNameFormat.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerNameFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerRole.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerRole.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\CustomerSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\CustomerSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\ExternalAuthenticationSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\PasswordFormat.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\PasswordFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\RewardPointsHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\RewardPointsHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\RewardPointsSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\RewardPointsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerAttributeNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerAttributeNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\SystemCustomerRoleNames.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\SystemCustomerRoleNames.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Customers\UserRegistrationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Customers\UserRegistrationType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\CountryOrRegion.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\CountryOrRegion.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\Currency.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\Currency.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\CurrencySettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\CurrencySettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\ExchangeRate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\ExchangeRate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureDimension.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureDimension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\MeasureWeight.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\MeasureWeight.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Directory\StateProvince.cs">
+      <Link>Common\Models\NopCommerce\Domain\Directory\StateProvince.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\Discount.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\Discount.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountLimitationType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountLimitationType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountRequirement.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountRequirement.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Discounts\DiscountUsageHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Discounts\DiscountUsageHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\EditorType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\EditorType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\Forum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\Forum.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumGroup.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumPost.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumPost.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSearchType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSearchType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumSubscription.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumTopic.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumTopic.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\ForumTopicType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\ForumTopicType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Forums\PrivateMessage.cs">
+      <Link>Common\Models\NopCommerce\Domain\Forums\PrivateMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\ILocalizedEntity.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\ILocalizedEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\ILocalizedEnum.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\ILocalizedEnum.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\Language.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\Language.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocaleStringResource.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocaleStringResource.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocalizationSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocalizationSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Localization\LocalizedProperty.cs">
+      <Link>Common\Models\NopCommerce\Domain\Localization\LocalizedProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\ActivityLog.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\ActivityLog.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\ActivityLogType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\ActivityLogType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\Log.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Logging\LogLevel.cs">
+      <Link>Common\Models\NopCommerce\Domain\Logging\LogLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\Download.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\Download.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\MediaSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\MediaSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\Picture.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\Picture.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Media\PictureType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Media\PictureType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\Campaign.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\Campaign.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\EmailAccount.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\EmailAccount.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\EmailAccountSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\EmailAccountSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\Events.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\Events.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\MessageTemplate.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\MessageTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\MessageTemplatesSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\MessageTemplatesSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\NewsLetterSubscription.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\NewsLetterSubscription.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Messages\QueuedEmail.cs">
+      <Link>Common\Models\NopCommerce\Domain\Messages\QueuedEmail.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsComment.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsComment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsItem.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\News\NewsSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\News\NewsSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\BestsellersReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\BestsellersReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\CheckoutAttribute.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\CheckoutAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\CheckoutAttributeValue.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\CheckoutAttributeValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\Events.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\Events.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\GiftCard.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\GiftCard.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\GiftCardUsageHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\GiftCardUsageHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\Order.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\Order.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLine.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLine.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLineSummary.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderAverageReportLineSummary.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderNote.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderNote.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderProductVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\OrderStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\OrderStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\RecurringPayment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\RecurringPayment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\RecurringPaymentHistory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\RecurringPaymentHistory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ReturnRequest.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ReturnRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ReturnRequestStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ReturnRequestStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartItem.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Orders\ShoppingCartType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Orders\ShoppingCartType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Payments\PaymentSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Payments\PaymentSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Payments\PaymentStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Payments\PaymentStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\Poll.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\Poll.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\PollAnswer.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\PollAnswer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Polls\PollVotingRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Polls\PollVotingRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\DefaultPermissionRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\DefaultPermissionRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\PermissionRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\PermissionRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Security\SecuritySettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Security\SecuritySettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\ISlugSupported.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\ISlugSupported.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\PageTitleSeoAdjustment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\PageTitleSeoAdjustment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\SeoSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\SeoSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Seo\UrlRecord.cs">
+      <Link>Common\Models\NopCommerce\Domain\Seo\UrlRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\Shipment.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\Shipment.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShipmentOrderProductVariant.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShipmentOrderProductVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingMethod.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingOption.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingOption.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Shipping\ShippingStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Shipping\ShippingStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tasks\ScheduleTask.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tasks\ScheduleTask.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxBasedOn.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxBasedOn.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxCategory.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxCategory.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxDisplayType.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxDisplayType.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\TaxSettings.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\TaxSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Tax\VatNumberStatus.cs">
+      <Link>Common\Models\NopCommerce\Domain\Tax\VatNumberStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\Domain\Topics\Topic.cs">
+      <Link>Common\Models\NopCommerce\Domain\Topics\Topic.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\NopCommerce\NopException.cs">
+      <Link>Common\Models\NopCommerce\NopException.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Address.cs">
+      <Link>Common\Models\ProductFamilies\Address.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Product.cs">
+      <Link>Common\Models\ProductFamilies\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\ProductFamily.cs">
+      <Link>Common\Models\ProductFamilies\ProductFamily.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\ProductsContext.cs">
+      <Link>Common\Models\ProductFamilies\ProductsContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\ProductFamilies\Supplier.cs">
+      <Link>Common\Models\ProductFamilies\Supplier.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Address.cs">
+      <Link>Common\Models\Products\Address.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Category.cs">
+      <Link>Common\Models\Products\Category.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Customer.cs">
+      <Link>Common\Models\Products\Customer.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Order.cs">
+      <Link>Common\Models\Products\Order.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Product.cs">
+      <Link>Common\Models\Products\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Products\Supplier.cs">
+      <Link>Common\Models\Products\Supplier.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Models\Vehicle\Vehicle.cs">
+      <Link>Common\Models\Vehicle\Vehicle.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\NavigationRoutingConvention2.cs">
+      <Link>Common\NavigationRoutingConvention2.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataAcceptHeaderTestSet.cs">
+      <Link>Common\ODataAcceptHeaderTestSet.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataHelper.cs">
+      <Link>Common\ODataHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataTestConstants.cs">
+      <Link>Common\ODataTestConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataTestExtension.cs">
+      <Link>Common\ODataTestExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ODataUrlAssert.cs">
+      <Link>Common\ODataUrlAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PlaceholderTraceWriter.cs">
+      <Link>Common\PlaceholderTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PropertyRoutingConvention.cs">
+      <Link>Common\PropertyRoutingConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TestAssembly.cs">
+      <Link>Common\TestAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TestAssemblyResolver.cs">
+      <Link>Common\TestAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TestDbContext.cs">
+      <Link>Common\TestDbContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TheoryDataSet.cs">
+      <Link>Common\TheoryDataSet.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypeCreator\DynamicAssemblyResolver.cs">
+      <Link>Common\TypeCreator\DynamicAssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypeCreator\ODataModelTypeCreator.cs">
+      <Link>Common\TypeCreator\ODataModelTypeCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\TypesInjectionAssembly.cs">
+      <Link>Common\TypesInjectionAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritance.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritance.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritanceControllers.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritanceControllers.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritanceDataModels.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritanceDataModels.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritanceSerializeTest.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritanceSerializeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ComplexTypeInheritance\ComplexTypeInheritanceTests.cs">
+      <Link>ComplexTypeInheritance\ComplexTypeInheritanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentControllers.cs">
+      <Link>Containment\ContainmentControllers.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentDataModels.cs">
+      <Link>Containment\ContainmentDataModels.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentDataSource.cs">
+      <Link>Containment\ContainmentDataSource.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentEdmModels.cs">
+      <Link>Containment\ContainmentEdmModels.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentProxy.cs">
+      <Link>Containment\ContainmentProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\Containment\ContainmentTests.cs">
+      <Link>Containment\ContainmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayContext.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayContext.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayController.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayController.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayEdmModel.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayModel.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayTest.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateAndTimeOfDayWithEfTest.cs">
+      <Link>DateAndTimeOfDay\DateAndTimeOfDayWithEfTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DateAndTimeOfDay\DateWithEfTest.cs">
+      <Link>DateAndTimeOfDay\DateWithEfTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DateTimeSupport\DateTimeController.cs">
+      <Link>DateTimeSupport\DateTimeController.cs</Link>
+    </Compile>
+    <Compile Include="..\DateTimeSupport\DateTimeDataModel.cs">
+      <Link>DateTimeSupport\DateTimeDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DateTimeSupport\DateTimeEdmModel.cs">
+      <Link>DateTimeSupport\DateTimeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DateTimeSupport\DateTimeTest.cs">
+      <Link>DateTimeSupport\DateTimeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DeltaQueryTests\DeltaQueryTests.cs">
+      <Link>DeltaQueryTests\DeltaQueryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\DependencyInjection\CustomizeCountQueryValidatorTest.cs">
+      <Link>DependencyInjection\CustomizeCountQueryValidatorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DependencyInjection\CustomizeSerializerTest.cs">
+      <Link>DependencyInjection\CustomizeSerializerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DependencyInjection\DependencyInjectionController.cs">
+      <Link>DependencyInjection\DependencyInjectionController.cs</Link>
+    </Compile>
+    <Compile Include="..\DependencyInjection\DependencyInjectionEdmModel.cs">
+      <Link>DependencyInjection\DependencyInjectionEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarFormat\DollarFormatController.cs">
+      <Link>DollarFormat\DollarFormatController.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarFormat\DollarFormatModel.cs">
+      <Link>DollarFormat\DollarFormatModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarFormat\DollarFormatOverrideAcceptMediaTypeTests.cs">
+      <Link>DollarFormat\DollarFormatOverrideAcceptMediaTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarFormat\DollarFormatWithoutAcceptMediaTypeTests.cs">
+      <Link>DollarFormat\DollarFormatWithoutAcceptMediaTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarId\DollarIdClientTest.cs">
+      <Link>DollarId\DollarIdClientTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarId\DollarIdControllers.cs">
+      <Link>DollarId\DollarIdControllers.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarId\DollarIdModel.cs">
+      <Link>DollarId\DollarIdModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarId\DollarIdTest.cs">
+      <Link>DollarId\DollarIdTest.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarId\ODataClient.cs">
+      <Link>DollarId\ODataClient.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarLevels\DollarLevelsController.cs">
+      <Link>DollarLevels\DollarLevelsController.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarLevels\DollarLevelsDataModel.cs">
+      <Link>DollarLevels\DollarLevelsDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarLevels\DollarLevelsEdmModel.cs">
+      <Link>DollarLevels\DollarLevelsEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\DollarLevels\DollarLevelsTest.cs">
+      <Link>DollarLevels\DollarLevelsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Enums\EnumsController.cs">
+      <Link>Enums\EnumsController.cs</Link>
+    </Compile>
+    <Compile Include="..\Enums\EnumsDataModel.cs">
+      <Link>Enums\EnumsDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Enums\EnumsEdmModel.cs">
+      <Link>Enums\EnumsEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Enums\EnumsTest.cs">
+      <Link>Enums\EnumsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\DeleteUpdatedEntryWithIfMatchETagsTest.cs">
+      <Link>ETags\DeleteUpdatedEntryWithIfMatchETagsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\DerivedETagTests.cs">
+      <Link>ETags\DerivedETagTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\DominiosController.cs">
+      <Link>ETags\DominiosController.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagCurrencyTokenEfContext.cs">
+      <Link>ETags\ETagCurrencyTokenEfContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagCurrencyTokenEfContextTest.cs">
+      <Link>ETags\ETagCurrencyTokenEfContextTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagsController.cs">
+      <Link>ETags\ETagsController.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagsModel.cs">
+      <Link>ETags\ETagsModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagsOtherTypesTest.cs">
+      <Link>ETags\ETagsOtherTypesTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\ETagsUntypedTests.cs">
+      <Link>ETags\ETagsUntypedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\GetEntryWithIfNoneMatchETagsTest.cs">
+      <Link>ETags\GetEntryWithIfNoneMatchETagsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\JsonETagsTests.cs">
+      <Link>ETags\JsonETagsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\PatchUpdatedEntryWithIfMatchETagsTest.cs">
+      <Link>ETags\PatchUpdatedEntryWithIfMatchETagsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ETags\PutUpdatedEntryWithIfMatchETagsTest.cs">
+      <Link>ETags\PutUpdatedEntryWithIfMatchETagsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ForeignKey\ForeignKeyContext.cs">
+      <Link>ForeignKey\ForeignKeyContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ForeignKey\ForeignkeyController.cs">
+      <Link>ForeignKey\ForeignkeyController.cs</Link>
+    </Compile>
+    <Compile Include="..\ForeignKey\ForeignKeyEdmModel.cs">
+      <Link>ForeignKey\ForeignKeyEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ForeignKey\ForeignKeyModel.cs">
+      <Link>ForeignKey\ForeignKeyModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ForeignKey\ForeignKeyTest.cs">
+      <Link>ForeignKey\ForeignKeyTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\CollectionPropertyTests.cs">
+      <Link>Formatter\CollectionPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ComplexTypeTests.cs">
+      <Link>Formatter\ComplexTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\DeltaTests.cs">
+      <Link>Formatter\DeltaTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\DeserializationAndSerializationTests.cs">
+      <Link>Formatter\DeserializationAndSerializationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ErrorMessagesTests.cs">
+      <Link>Formatter\ErrorMessagesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\Extensibility\SerializeEntityReferenceLinks.cs">
+      <Link>Formatter\Extensibility\SerializeEntityReferenceLinks.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\Extensibility\SupportDollarValue.cs">
+      <Link>Formatter\Extensibility\SupportDollarValue.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\HttpAndODataErrorTests.cs">
+      <Link>Formatter\HttpAndODataErrorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\InheritanceTests.cs">
+      <Link>Formatter\InheritanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightCollectionPropertyTests.cs">
+      <Link>Formatter\JsonLight\JsonLightCollectionPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightComplexTypeTests.cs">
+      <Link>Formatter\JsonLight\JsonLightComplexTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightConfigurator.cs">
+      <Link>Formatter\JsonLight\JsonLightConfigurator.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightDeltaTests.cs">
+      <Link>Formatter\JsonLight\JsonLightDeltaTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightDeserializationAndSerializationTests.cs">
+      <Link>Formatter\JsonLight\JsonLightDeserializationAndSerializationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightInheritanceTests.cs">
+      <Link>Formatter\JsonLight\JsonLightInheritanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightMixScenarioTests.cs">
+      <Link>Formatter\JsonLight\JsonLightMixScenarioTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\JsonLightRandomModelTests.cs">
+      <Link>Formatter\JsonLight\JsonLightRandomModelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\ActionMetadataTests.cs">
+      <Link>Formatter\JsonLight\Metadata\ActionMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\ComplexTypeTests.cs">
+      <Link>Formatter\JsonLight\Metadata\ComplexTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\BaseEntityController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\BaseEntityController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\EntityWithComplexPropertiesController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\EntityWithComplexPropertiesController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\EntityWithSimplePropertiesController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\EntityWithSimplePropertiesController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\OneToOneChildController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\OneToOneChildController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\OneToOneParentController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\OneToOneParentController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Controllers\StubEntityController.cs">
+      <Link>Formatter\JsonLight\Metadata\Controllers\StubEntityController.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\CustomConventionActionMetadataTests.cs">
+      <Link>Formatter\JsonLight\Metadata\CustomConventionActionMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\EntryMetadataTests.cs">
+      <Link>Formatter\JsonLight\Metadata\EntryMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Extensions\HttpRequestMessageExtensions.cs">
+      <Link>Formatter\JsonLight\Metadata\Extensions\HttpRequestMessageExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Extensions\ReflectedPropertyRoutingConvention.cs">
+      <Link>Formatter\JsonLight\Metadata\Extensions\ReflectedPropertyRoutingConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\FeedMetadataTests.cs">
+      <Link>Formatter\JsonLight\Metadata\FeedMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\MetadataTestHelpers.cs">
+      <Link>Formatter\JsonLight\Metadata\MetadataTestHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\MinimalMetadataSpecificTests.cs">
+      <Link>Formatter\JsonLight\Metadata\MinimalMetadataSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\BaseEntity.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\BaseEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\ComplexType.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\ComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\DerivedEntity.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\DerivedEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\EntityWithComplexProperties.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\EntityWithComplexProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\EntityWithSimpleProperties.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\EntityWithSimpleProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\OneToOneChild.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\OneToOneChild.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\OneToOneParent.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\OneToOneParent.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\SimpleEnumeration.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\SimpleEnumeration.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\Model\StubEntity.cs">
+      <Link>Formatter\JsonLight\Metadata\Model\StubEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\JsonLight\Metadata\PrimitiveTypesMetadataTests.cs">
+      <Link>Formatter\JsonLight\Metadata\PrimitiveTypesMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\MixScenarioTests.cs">
+      <Link>Formatter\MixScenarioTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ODataFeedSerializeWithoutNavigationSourceTests.cs">
+      <Link>Formatter\ODataFeedSerializeWithoutNavigationSourceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ODataFormatterTestBase.cs">
+      <Link>Formatter\ODataFormatterTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ODataResultTests.cs">
+      <Link>Formatter\ODataResultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\RandomModelTests.cs">
+      <Link>Formatter\RandomModelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\SecurityTests.cs">
+      <Link>Formatter\SecurityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\ServerDrivenPagingTests.cs">
+      <Link>Formatter\ServerDrivenPagingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\SupportMediaTypesTests.cs">
+      <Link>Formatter\SupportMediaTypesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\Untyped\UntypedDeltaSerializationTests.cs">
+      <Link>Formatter\Untyped\UntypedDeltaSerializationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Formatter\Untyped\UntypedSerializationTests.cs">
+      <Link>Formatter\Untyped\UntypedSerializationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\LowerCamelCase\LowerCamelCaseController.cs">
+      <Link>LowerCamelCase\LowerCamelCaseController.cs</Link>
+    </Compile>
+    <Compile Include="..\LowerCamelCase\LowerCamelCaseDataModel.cs">
+      <Link>LowerCamelCase\LowerCamelCaseDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\LowerCamelCase\LowerCamelCaseEdmModel.cs">
+      <Link>LowerCamelCase\LowerCamelCaseEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\LowerCamelCase\LowerCamelCaseTest.cs">
+      <Link>LowerCamelCase\LowerCamelCaseTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelAliasing\FormattersTests.cs">
+      <Link>ModelAliasing\FormattersTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelAliasing\GeneratedConventionModelClient.cs">
+      <Link>ModelAliasing\GeneratedConventionModelClient.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelAliasing\MetadataTests.cs">
+      <Link>ModelAliasing\MetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelAliasing\Model.cs">
+      <Link>ModelAliasing\Model.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelAliasing\QueryTests.cs">
+      <Link>ModelAliasing\QueryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CombinedTest\CombinedController.cs">
+      <Link>ModelBoundQuerySettings\CombinedTest\CombinedController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CombinedTest\CombinedEdmModel.cs">
+      <Link>ModelBoundQuerySettings\CombinedTest\CombinedEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CombinedTest\CombinedTest.cs">
+      <Link>ModelBoundQuerySettings\CombinedTest\CombinedTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CountAttributeTest\CountAtrributeController.cs">
+      <Link>ModelBoundQuerySettings\CountAttributeTest\CountAtrributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CountAttributeTest\CountAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\CountAttributeTest\CountAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\CountAttributeTest\CountAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\CountAttributeTest\CountAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\ExpandAttributeTest\ExpandAtrributeController.cs">
+      <Link>ModelBoundQuerySettings\ExpandAttributeTest\ExpandAtrributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\ExpandAttributeTest\ExpandAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\FilterAttributeTest\FilterAtrributeController.cs">
+      <Link>ModelBoundQuerySettings\FilterAttributeTest\FilterAtrributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\FilterAttributeTest\FilterAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\OrderByAttributeTest\OrderByAtrributeController.cs">
+      <Link>ModelBoundQuerySettings\OrderByAttributeTest\OrderByAtrributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\OrderByAttributeTest\OrderByAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\PageAttributeTest\PageAttributeController.cs">
+      <Link>ModelBoundQuerySettings\PageAttributeTest\PageAttributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\PageAttributeTest\PageAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\PageAttributeTest\PageAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\PageAttributeTest\PageAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\PageAttributeTest\PageAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeController.cs">
+      <Link>ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeController.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeEdmModel.cs">
+      <Link>ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeTest.cs">
+      <Link>ModelBoundQuerySettings\SelectAttributeTest\SelectAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ActionMetadataTests.cs">
+      <Link>ModelBuilder\ActionMetadataTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\AttributeConventionModelBuilderTests.cs">
+      <Link>ModelBuilder\AttributeConventionModelBuilderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ConditionalLinkGenerationTests.cs">
+      <Link>ModelBuilder\ConditionalLinkGenerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ExplicitModelBuilderTests.cs">
+      <Link>ModelBuilder\ExplicitModelBuilderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ImplicitModelBuilderTests.cs">
+      <Link>ModelBuilder\ImplicitModelBuilderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\InheritanceTests.cs">
+      <Link>ModelBuilder\InheritanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\MultipleEntitySetOnSameClrTypeTests.cs">
+      <Link>ModelBuilder\MultipleEntitySetOnSameClrTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ODataActionTests.cs">
+      <Link>ModelBuilder\ODataActionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ODataActionTestsProxyGeneratedCode.cs">
+      <Link>ModelBuilder\ODataActionTestsProxyGeneratedCode.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\ODataMessageWrapper.cs">
+      <Link>ModelBuilder\ODataMessageWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\PropertyTests.cs">
+      <Link>ModelBuilder\PropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\SpecialCharactersLinkGenerationTests.cs">
+      <Link>ModelBuilder\SpecialCharactersLinkGenerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\SpecialPrimaryKeyTypesInLinkGenerationTests.cs">
+      <Link>ModelBuilder\SpecialPrimaryKeyTypesInLinkGenerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ModelBuilder\UnicodeLinkGenerationTests.cs">
+      <Link>ModelBuilder\UnicodeLinkGenerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountController.cs">
+      <Link>ODataCountTest\CountController.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountDataModel.cs">
+      <Link>ODataCountTest\CountDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountEdmModel.cs">
+      <Link>ODataCountTest\CountEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCountTest\CountTest.cs">
+      <Link>ODataCountTest\CountTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPathHandler\LinkGenerationTests.cs">
+      <Link>ODataPathHandler\LinkGenerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPathHandler\UnicodeRouteTests.cs">
+      <Link>ODataPathHandler\UnicodeRouteTests.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\OpenTypeControllers.cs">
+      <Link>OpenType\OpenTypeControllers.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\OpenTypeDataModel.cs">
+      <Link>OpenType\OpenTypeDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\OpenTypeEdmModel.cs">
+      <Link>OpenType\OpenTypeEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\TypedClient.cs">
+      <Link>OpenType\TypedClient.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\TypedServiceReference.cs">
+      <Link>OpenType\TypedServiceReference.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\TypedServiceReferenceForOpenType.cs">
+      <Link>OpenType\TypedServiceReferenceForOpenType.cs</Link>
+    </Compile>
+    <Compile Include="..\OpenType\TypedTest.cs">
+      <Link>OpenType\TypedTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ParameterAlias\ParameterAliasDataSource.cs">
+      <Link>ParameterAlias\ParameterAliasDataSource.cs</Link>
+    </Compile>
+    <Compile Include="..\ParameterAlias\ParameterAliasTest.cs">
+      <Link>ParameterAlias\ParameterAliasTest.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\AnonymousTypeTests.cs">
+      <Link>QueryComposition\AnonymousTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\ComplextTypeCollectionTests.cs">
+      <Link>QueryComposition\ComplextTypeCollectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\Controllers\FilterTestsController.cs">
+      <Link>QueryComposition\Controllers\FilterTestsController.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\Controllers\TopSkipOrderByTestsController.cs">
+      <Link>QueryComposition\Controllers\TopSkipOrderByTestsController.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\EnumTypeTests.cs">
+      <Link>QueryComposition\EnumTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\FilterTests.cs">
+      <Link>QueryComposition\FilterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\Fuzzing\FuzzingController.cs">
+      <Link>QueryComposition\Fuzzing\FuzzingController.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\Fuzzing\Models.cs">
+      <Link>QueryComposition\Fuzzing\Models.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\Fuzzing\QueryBuilder.cs">
+      <Link>QueryComposition\Fuzzing\QueryBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\GlobalQueryableFilterTests.cs">
+      <Link>QueryComposition\GlobalQueryableFilterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\InheritanceQueryableTests.cs">
+      <Link>QueryComposition\InheritanceQueryableTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\InvalidQueryTests.cs">
+      <Link>QueryComposition\InvalidQueryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\IsOf\IsOfController.cs">
+      <Link>QueryComposition\IsOf\IsOfController.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\IsOf\IsofDataSource.cs">
+      <Link>QueryComposition\IsOf\IsofDataSource.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\IsOf\IsofEdmModel.cs">
+      <Link>QueryComposition\IsOf\IsofEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\IsOf\IsofFunctionTests.cs">
+      <Link>QueryComposition\IsOf\IsofFunctionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\IsOf\IsOfModels.cs">
+      <Link>QueryComposition\IsOf\IsOfModels.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\JsonpQueryableTests.cs">
+      <Link>QueryComposition\JsonpQueryableTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\JsonSelectExpandTests.cs">
+      <Link>QueryComposition\JsonSelectExpandTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\JsonSingleResultSelectExpandTests.cs">
+      <Link>QueryComposition\JsonSingleResultSelectExpandTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\NestedClassTests.cs">
+      <Link>QueryComposition\NestedClassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\ODataQueryOptionsTests.cs">
+      <Link>QueryComposition\ODataQueryOptionsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\OrderByTests.cs">
+      <Link>QueryComposition\OrderByTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\PrimitiveTypesTests.cs">
+      <Link>QueryComposition\PrimitiveTypesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\QueryFuzzingTests.cs">
+      <Link>QueryComposition\QueryFuzzingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\SecurityTests.cs">
+      <Link>QueryComposition\SecurityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\SelectExpandTests.cs">
+      <Link>QueryComposition\SelectExpandTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\SelectTypeExplosionTests.cs">
+      <Link>QueryComposition\SelectTypeExplosionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\ServerTypeTests.cs">
+      <Link>QueryComposition\ServerTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\SingleResultSelectExpandTests.cs">
+      <Link>QueryComposition\SingleResultSelectExpandTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\StableOrderTests.cs">
+      <Link>QueryComposition\StableOrderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\TopSkipOrderByTests.cs">
+      <Link>QueryComposition\TopSkipOrderByTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\UriParserTests.cs">
+      <Link>QueryComposition\UriParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\QueryComposition\ValidatorTests.cs">
+      <Link>QueryComposition\ValidatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\ActionRoutingConventionTests.cs">
+      <Link>Routing\ActionRoutingConventionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\AddRelatedObjectTests.cs">
+      <Link>Routing\AddRelatedObjectTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\DynamicProperties\DynamicPropertiesController.cs">
+      <Link>Routing\DynamicProperties\DynamicPropertiesController.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\DynamicProperties\DynamicPropertiesModel.cs">
+      <Link>Routing\DynamicProperties\DynamicPropertiesModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\DynamicProperties\DynamicPropertiesTest.cs">
+      <Link>Routing\DynamicProperties\DynamicPropertiesTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\ODataRouteTests.cs">
+      <Link>Routing\ODataRouteTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\ODataValueProviderTests.cs">
+      <Link>Routing\ODataValueProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\RefRoutingConventionTests.cs">
+      <Link>Routing\RefRoutingConventionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Routing\UnqualifiedNameCallRoutingTests.cs">
+      <Link>Routing\UnqualifiedNameCallRoutingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\SingleResult\SingleResultController.cs">
+      <Link>SingleResult\SingleResultController.cs</Link>
+    </Compile>
+    <Compile Include="..\SingleResult\SingleResultDataModel.cs">
+      <Link>SingleResult\SingleResultDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\SingleResult\SingleResultEdmModel.cs">
+      <Link>SingleResult\SingleResultEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\SingleResult\SingleResultTests.cs">
+      <Link>SingleResult\SingleResultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\MonstersIncController.cs">
+      <Link>Singleton\MonstersIncController.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\ODataClient.cs">
+      <Link>Singleton\ODataClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\PartnersController.cs">
+      <Link>Singleton\PartnersController.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\SingletonClientTest.cs">
+      <Link>Singleton\SingletonClientTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\SingletonDataModel.cs">
+      <Link>Singleton\SingletonDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\SingletonEdmModel.cs">
+      <Link>Singleton\SingletonEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\SingletonTest.cs">
+      <Link>Singleton\SingletonTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Singleton\UmbrellaController.cs">
+      <Link>Singleton\UmbrellaController.cs</Link>
+    </Compile>
+    <Compile Include="..\Swagger\SwaggerController.cs">
+      <Link>Swagger\SwaggerController.cs</Link>
+    </Compile>
+    <Compile Include="..\Swagger\SwaggerMetadataTest.cs">
+      <Link>Swagger\SwaggerMetadataTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Swagger\SwaggerPathHandler.cs">
+      <Link>Swagger\SwaggerPathHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Swagger\SwaggerPathSegment.cs">
+      <Link>Swagger\SwaggerPathSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\Swagger\SwaggerRoutingConvention.cs">
+      <Link>Swagger\SwaggerRoutingConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV3\Controllers\ProductsController.cs">
+      <Link>SxS2\ODataV3\Controllers\ProductsController.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV3\Extensions\ODataVersionRouteConstraint.cs">
+      <Link>SxS2\ODataV3\Extensions\ODataVersionRouteConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV3\Models\ModelBuilder.cs">
+      <Link>SxS2\ODataV3\Models\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV3\Models\Product.cs">
+      <Link>SxS2\ODataV3\Models\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV3\ODataV3WebApiConfig.cs">
+      <Link>SxS2\ODataV3\ODataV3WebApiConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV4\Controllers\ProductsV2Controller.cs">
+      <Link>SxS2\ODataV4\Controllers\ProductsV2Controller.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV4\Extensions\ODataVersionRouteConstraint.cs">
+      <Link>SxS2\ODataV4\Extensions\ODataVersionRouteConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV4\Models\ModelBuilder.cs">
+      <Link>SxS2\ODataV4\Models\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV4\Models\Product.cs">
+      <Link>SxS2\ODataV4\Models\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\ODataV4\ODataV4WebApiConfig.cs">
+      <Link>SxS2\ODataV4\ODataV4WebApiConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS2\SxSODataV3AndV4Test.cs">
+      <Link>SxS2\SxSODataV3AndV4Test.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Controllers\PartsController.cs">
+      <Link>SxS\ODataV3\Controllers\PartsController.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Controllers\ProductsController.cs">
+      <Link>SxS\ODataV3\Controllers\ProductsController.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Extensions\ODataVersionRouteConstraint.cs">
+      <Link>SxS\ODataV3\Extensions\ODataVersionRouteConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Models\ModelBuilder.cs">
+      <Link>SxS\ODataV3\Models\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Models\Part.cs">
+      <Link>SxS\ODataV3\Models\Part.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\Models\Product.cs">
+      <Link>SxS\ODataV3\Models\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV3\ODataV3WebApiConfig.cs">
+      <Link>SxS\ODataV3\ODataV3WebApiConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Controllers\PartsV2Controller.cs">
+      <Link>SxS\ODataV4\Controllers\PartsV2Controller.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Controllers\ProductsV2Controller.cs">
+      <Link>SxS\ODataV4\Controllers\ProductsV2Controller.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Extensions\EntitySetVersioningRoutingConvention.cs">
+      <Link>SxS\ODataV4\Extensions\EntitySetVersioningRoutingConvention.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Extensions\ODataVersionRouteConstraint.cs">
+      <Link>SxS\ODataV4\Extensions\ODataVersionRouteConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Models\ModelBuilder.cs">
+      <Link>SxS\ODataV4\Models\ModelBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Models\Part.cs">
+      <Link>SxS\ODataV4\Models\Part.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\Models\Product.cs">
+      <Link>SxS\ODataV4\Models\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\ODataV4\ODataV4WebApiConfig.cs">
+      <Link>SxS\ODataV4\ODataV4WebApiConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\SxS\SxSODataV3AndV4Test.cs">
+      <Link>SxS\SxSODataV3AndV4Test.cs</Link>
+    </Compile>
+    <Compile Include="..\UnboundOperation\UnboundOperationController.cs">
+      <Link>UnboundOperation\UnboundOperationController.cs</Link>
+    </Compile>
+    <Compile Include="..\UnboundOperation\UnboundOperationDataModel.cs">
+      <Link>UnboundOperation\UnboundOperationDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\UnboundOperation\UnboundOperationEdmModel.cs">
+      <Link>UnboundOperation\UnboundOperationEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\UnboundOperation\UnboundOperationTest.cs">
+      <Link>UnboundOperation\UnboundOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\CaseInsensitiveResolver.cs">
+      <Link>UriParserExtension\CaseInsensitiveResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\CaseInsensitiveTest.cs">
+      <Link>UriParserExtension\CaseInsensitiveTest.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\EnumPrefixFreeTest.cs">
+      <Link>UriParserExtension\EnumPrefixFreeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\UnqualifiedCallTest.cs">
+      <Link>UriParserExtension\UnqualifiedCallTest.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\UriParserExtensionDataModel.cs">
+      <Link>UriParserExtension\UriParserExtensionDataModel.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\UriParserExtenstionController.cs">
+      <Link>UriParserExtension\UriParserExtenstionController.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParserExtension\UriParserExtenstionEdmModel.cs">
+      <Link>UriParserExtension\UriParserExtenstionEdmModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Validation\DeltaOfTValidationTests.cs">
+      <Link>Validation\DeltaOfTValidationTests.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\AttackStringBuilder.cs" />
-    <Compile Include="QueryComposition\AnonymousTypeTests.cs" />
-    <Compile Include="QueryComposition\ComplextTypeCollectionTests.cs" />
-    <Compile Include="QueryComposition\Controllers\FilterTestsController.cs" />
-    <Compile Include="QueryComposition\Controllers\TopSkipOrderByTestsController.cs" />
-    <Compile Include="QueryComposition\EnumTypeTests.cs" />
-    <Compile Include="QueryComposition\FilterTests.cs" />
-    <Compile Include="QueryComposition\Fuzzing\FuzzingController.cs" />
-    <Compile Include="QueryComposition\Fuzzing\Models.cs" />
-    <Compile Include="QueryComposition\Fuzzing\QueryBuilder.cs" />
-    <Compile Include="QueryComposition\GlobalQueryableFilterTests.cs" />
-    <Compile Include="QueryComposition\InheritanceQueryableTests.cs" />
-    <Compile Include="QueryComposition\InvalidQueryTests.cs" />
-    <Compile Include="QueryComposition\JsonpQueryableTests.cs" />
-    <Compile Include="QueryComposition\JsonSelectExpandTests.cs" />
-    <Compile Include="QueryComposition\JsonSingleResultSelectExpandTests.cs" />
-    <Compile Include="QueryComposition\NestedClassTests.cs" />
-    <Compile Include="QueryComposition\ODataQueryOptionsTests.cs" />
-    <Compile Include="QueryComposition\OrderByTests.cs" />
-    <Compile Include="QueryComposition\PrimitiveTypesTests.cs" />
-    <Compile Include="QueryComposition\QueryFuzzingTests.cs" />
-    <Compile Include="Common\Models\Products\Address.cs" />
-    <Compile Include="Common\Models\Products\Category.cs" />
-    <Compile Include="Common\Models\Products\Customer.cs" />
-    <Compile Include="Common\Models\ModelHelper.cs" />
-    <Compile Include="Common\Models\Movie\Movie.cs" />
-    <Compile Include="Common\Models\Products\Order.cs" />
-    <Compile Include="Common\Models\Products\Product.cs" />
-    <Compile Include="Common\Models\Products\Supplier.cs" />
-    <Compile Include="QueryComposition\SecurityTests.cs" />
-    <Compile Include="QueryComposition\SelectExpandTests.cs" />
-    <Compile Include="QueryComposition\SelectTypeExplosionTests.cs" />
-    <Compile Include="QueryComposition\ServerTypeTests.cs" />
-    <Compile Include="QueryComposition\SingleResultSelectExpandTests.cs" />
-    <Compile Include="QueryComposition\StableOrderTests.cs" />
-    <Compile Include="QueryComposition\TopSkipOrderByTests.cs" />
-    <Compile Include="QueryComposition\UriParserTests.cs" />
-    <Compile Include="QueryComposition\ValidatorTests.cs" />
-    <Compile Include="Routing\ActionRoutingConventionTests.cs" />
-    <Compile Include="Routing\AddRelatedObjectTests.cs" />
-    <Compile Include="Routing\RefRoutingConventionTests.cs" />
-    <Compile Include="Routing\ODataRouteTests.cs" />
-    <Compile Include="Routing\ODataValueProviderTests.cs" />
-    <Compile Include="Routing\UnqualifiedNameCallRoutingTests.cs" />
-    <Compile Include="BoundOperation\BoundOperationController.cs" />
-    <Compile Include="BoundOperation\BoundOperationDataModel.cs" />
-    <Compile Include="BoundOperation\BoundOperationEdmModel.cs" />
-    <Compile Include="BoundOperation\BoundOperationTest.cs" />
-    <Compile Include="Singleton\ODataClient.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ODataClient.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Singleton\SingletonClientTest.cs" />
-    <Compile Include="Singleton\UmbrellaController.cs" />
-    <Compile Include="Singleton\PartnersController.cs" />
-    <Compile Include="Singleton\SingletonDataModel.cs" />
-    <Compile Include="Singleton\SingletonEdmModel.cs" />
-    <Compile Include="Singleton\SingletonTest.cs" />
-    <Compile Include="Singleton\MonstersIncController.cs" />
-    <Compile Include="SxS2\ODataV3\Controllers\ProductsController.cs" />
-    <Compile Include="SxS2\ODataV3\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS2\ODataV3\Models\ModelBuilder.cs" />
-    <Compile Include="SxS2\ODataV3\Models\Product.cs" />
-    <Compile Include="SxS2\ODataV3\ODataV3WebApiConfig.cs" />
-    <Compile Include="SxS2\ODataV4\Controllers\ProductsV2Controller.cs" />
-    <Compile Include="SxS2\ODataV4\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS2\ODataV4\Models\ModelBuilder.cs" />
-    <Compile Include="SxS2\ODataV4\Models\Product.cs" />
-    <Compile Include="SxS2\ODataV4\ODataV4WebApiConfig.cs" />
-    <Compile Include="SxS2\SxSODataV3AndV4Test.cs" />
-    <Compile Include="SxS\ODataV3\Controllers\PartsController.cs" />
-    <Compile Include="SxS\ODataV3\Controllers\ProductsController.cs" />
-    <Compile Include="SxS\ODataV3\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS\ODataV3\Models\ModelBuilder.cs" />
-    <Compile Include="SxS\ODataV3\Models\Part.cs" />
-    <Compile Include="SxS\ODataV3\Models\Product.cs" />
-    <Compile Include="SxS\ODataV3\ODataV3WebApiConfig.cs" />
-    <Compile Include="SxS\ODataV4\Controllers\PartsV2Controller.cs" />
-    <Compile Include="SxS\ODataV4\Controllers\ProductsV2Controller.cs" />
-    <Compile Include="SxS\ODataV4\Extensions\EntitySetVersioningRoutingConvention.cs" />
-    <Compile Include="SxS\ODataV4\Extensions\ODataVersionRouteConstraint.cs" />
-    <Compile Include="SxS\ODataV4\Models\ModelBuilder.cs" />
-    <Compile Include="SxS\ODataV4\Models\Part.cs" />
-    <Compile Include="SxS\ODataV4\Models\Product.cs" />
-    <Compile Include="SxS\ODataV4\ODataV4WebApiConfig.cs" />
-    <Compile Include="SxS\SxSODataV3AndV4Test.cs" />
-    <Compile Include="UnboundOperation\UnboundOperationController.cs" />
-    <Compile Include="UnboundOperation\UnboundOperationDataModel.cs" />
-    <Compile Include="UnboundOperation\UnboundOperationEdmModel.cs" />
-    <Compile Include="UnboundOperation\UnboundOperationTest.cs" />
-    <Compile Include="Validation\DeltaOfTValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ComplexTypeInheritance\ComplexTypeInheritance.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ComplexTypeInheritance.cs</LastGenOutput>
-    </None>
-    <None Include="ComplexTypeInheritance\ComplexTypeInheritance.ttinclude" />
-    <None Include="DollarId\ODataClient.odata.config" />
-    <None Include="DollarId\ODataClient.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ODataClient.cs</LastGenOutput>
-    </None>
-    <None Include="OpenType\TypedClient.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TypedClient.cs</LastGenOutput>
-    </None>
-    <None Include="OpenType\TypedClient.ttinclude" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Singleton\ODataClient.odata.config" />
-    <None Include="Singleton\ODataClient.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ODataClient.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1099,14 +1819,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ComplexTypeInheritance\ComplexTypeInheritanceEdmModels.csdl.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="OpenType\TypedMetadata.csdl.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\..\..\sln\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
