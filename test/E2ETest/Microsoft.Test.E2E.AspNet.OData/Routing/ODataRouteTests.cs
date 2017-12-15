@@ -20,11 +20,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     public class ODataRouteTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("noPrefix", "", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("prefix", "prefix", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("oneParameterInPrefix", "{a}", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

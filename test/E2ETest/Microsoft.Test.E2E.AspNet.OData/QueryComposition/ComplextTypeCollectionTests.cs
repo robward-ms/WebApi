@@ -20,11 +20,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class ComplextTypeCollectionTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.Routes.Clear();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<ComplextTypeCollectionTests_Person>("ComplextTypeCollectionTests_Persons");

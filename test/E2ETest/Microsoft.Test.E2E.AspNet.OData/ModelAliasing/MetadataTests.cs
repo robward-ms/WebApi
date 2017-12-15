@@ -18,7 +18,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
     public class ModelBuildersMetadataTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
             config.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

@@ -23,14 +23,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.OrderByAttribu
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof (IAssembliesResolver),
-                new TestAssemblyResolver(typeof(CustomersController), typeof(OrdersController),
-                    typeof(CarsController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof(CustomersController), typeof(OrdersController),
+                    typeof(CarsController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Expand();
             configuration.MapODataServiceRoute("enablequery", "enablequery",

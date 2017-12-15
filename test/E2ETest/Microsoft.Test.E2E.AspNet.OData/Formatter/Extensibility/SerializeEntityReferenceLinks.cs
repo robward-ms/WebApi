@@ -164,9 +164,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
 
     public class SerializeEntityReferenceLinksTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.InsertRange(0,
                 ODataMediaTypeFormatters.Create(
                     new CustomODataSerializerProvider(new MockContainer()),

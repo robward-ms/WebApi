@@ -204,10 +204,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 
     public class SpecialPrimaryKeyTypesInLinkGenerationTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.EnableODataSupport(GetEdmModel());
         }
 

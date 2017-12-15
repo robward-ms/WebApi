@@ -1,9 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.EntityFrameworkCore;
+#else
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
@@ -57,7 +63,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
         protected void ResetDataSource()
         {
-            if (!_db.Customers.Any())
+            _db.Database.EnsureCreated();
+
+            if (_db.Customers == null || !_db.Customers.Any())
             {
                 Generate();
             }
@@ -82,6 +90,4 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             return SingleResult.Create(db.Customers.Where(c => c.Id == key));
         }
     }
-
-  
 }

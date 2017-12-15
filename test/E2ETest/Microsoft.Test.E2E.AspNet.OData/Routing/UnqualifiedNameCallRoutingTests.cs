@@ -23,7 +23,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     public class UnqualifiedNameCallRoutingTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[] { typeof(UnqualifiedCarsController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

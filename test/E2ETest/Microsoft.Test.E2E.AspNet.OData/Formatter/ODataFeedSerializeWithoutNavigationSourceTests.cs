@@ -22,7 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
     public class ODataFeedSerializeWithoutNavigationSourceTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[] { typeof(AnyController), typeof(MetadataController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

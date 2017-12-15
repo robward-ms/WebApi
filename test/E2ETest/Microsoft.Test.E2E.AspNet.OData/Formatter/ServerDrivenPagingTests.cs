@@ -41,9 +41,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class ServerDrivenPagingTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Formatters.Clear();
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }

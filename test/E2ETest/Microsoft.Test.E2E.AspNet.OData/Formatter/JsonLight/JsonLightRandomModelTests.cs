@@ -11,6 +11,7 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
@@ -71,10 +72,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             return ctx;
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
             configuration.Services.Replace(typeof(IHttpControllerTypeResolver), new DynamicHttpControllerTypeResolver(
@@ -84,11 +84,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
                     return controllers;
                 }));
 
-            var selfHostConfig = configuration as HttpSelfHostConfiguration;
-            if (selfHostConfig != null)
-            {
-                selfHostConfig.MaxReceivedMessageSize = selfHostConfig.MaxBufferSize = int.MaxValue;
-            }
+            configuration.MaxReceivedMessageSize = int.MaxValue;
         }
 
         // [Theory(Skip = "github Issue #324 random deadlock")]

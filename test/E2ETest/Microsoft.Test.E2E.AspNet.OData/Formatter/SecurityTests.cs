@@ -59,14 +59,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class DosSecurityTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            var selfConfig = configuration as HttpSelfHostConfiguration;
-            if (selfConfig != null)
-            {
-                selfConfig.MaxReceivedMessageSize = selfConfig.MaxBufferSize = int.MaxValue;
-            }
+            configuration.MaxReceivedMessageSize = int.MaxValue;
 
             configuration.Formatters.Clear();
             configuration.EnableODataSupport(GetEdmModel());

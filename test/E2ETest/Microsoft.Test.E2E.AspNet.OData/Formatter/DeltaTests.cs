@@ -297,7 +297,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class PutDeltaOfTTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -331,7 +331,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class PatchtDeltaOfTTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();

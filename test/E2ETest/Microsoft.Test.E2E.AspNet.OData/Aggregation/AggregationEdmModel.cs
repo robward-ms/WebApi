@@ -1,15 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Microsoft.AspNet.OData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+#else
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
@@ -18,9 +28,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         public const string StdDevMethodToken = "Custom.StdDev";
         public const string StdDevMethodLabel = "StandardDeviation";
 
-        public static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        public static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder(configuration);
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             builder.EntitySet<Order>("Orders");
             IEdmModel model = builder.GetEdmModel();

@@ -16,13 +16,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 {
     public class DollarIdTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(SingersController), typeof(AlbumsController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
+            configuration.AddControllers(controllers);
 
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
 
             configuration.MapODataServiceRoute("Test", "", DollarIdEdmModel.GetModel());

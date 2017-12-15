@@ -21,13 +21,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CountAttribute
         private const string ModelBoundCustomerBaseUrl = "{0}/modelboundapi/Customers";
         private const string ModelBoundOrderBaseUrl = "{0}/modelboundapi/Orders";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof (IAssembliesResolver),
-                new TestAssemblyResolver(typeof(CustomersController), typeof(OrdersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof(CustomersController), typeof(OrdersController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Expand();
             configuration.MapODataServiceRoute("enablequery", "enablequery",

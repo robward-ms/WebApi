@@ -208,7 +208,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
             EnableQueryAttribute q = new EnableQueryAttribute();
             var configuration = new HttpConfiguration();
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.Routes.MapHttpRoute("ApiDefault", "api/{controller}/{id}", new { id = RouteParameter.Optional });
             configuration.EnableDependencyInjection();

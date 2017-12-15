@@ -45,7 +45,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 
     public class ConditionalLinkGeneration_ConventionModelBuilder_Tests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var repo = ConditionalLinkGeneration_ProductsController.Repository;
             repo[typeof(Product)] = new System.Collections.Concurrent.ConcurrentDictionary<int, Product>();
@@ -65,8 +65,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                     }
                 }
             });
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             configuration.EnableODataSupport(GetImplicitEdmModel());
         }

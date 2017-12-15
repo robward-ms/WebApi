@@ -24,7 +24,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     public class RefRoutingConventionTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(AddressesController) };
             TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));

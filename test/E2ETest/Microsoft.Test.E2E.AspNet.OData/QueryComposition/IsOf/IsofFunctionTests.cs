@@ -22,7 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
     {
         private static readonly string[] DataSourceTypes = new string[] {"IM", "EF"}; // In Memory or Entity Framework
 
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[]
             {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};

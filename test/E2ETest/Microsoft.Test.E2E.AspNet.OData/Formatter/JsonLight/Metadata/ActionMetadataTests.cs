@@ -24,9 +24,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public class ActionMetadataTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Actions", "Actions", GetActionsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.AddODataQueryFilter();
         }

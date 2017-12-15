@@ -23,18 +23,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
 {
     public class ForeignKeyTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(ForeignKeyCustomersController),
                 typeof(ForeignKeyOrdersController),
                 typeof(ForeignKeyCustomersNoCascadeController),
                 typeof(ForeignKeyOrdersNoCascadeController),
                 typeof(MetadataController) };
-
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
             configuration.GetHttpServer();

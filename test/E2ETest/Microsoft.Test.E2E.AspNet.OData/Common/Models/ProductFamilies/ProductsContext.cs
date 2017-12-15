@@ -2,23 +2,24 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
+using Microsoft.Test.E2E.AspNetCore.OData.Common;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies
 {
-    public class ProductsContext : DbContext
+    public class ProductsContext : TestDbContext
     {
         public ProductsContext()
             : base("Products")
         {
         }
 
-        public DbSet<Product> Products { get; set; }
+        public TestDbSet<Product> Products { get; set; }
 
-        public DbSet<ProductFamily> ProductFamilies { get; set; }
+        public TestDbSet<ProductFamily> ProductFamilies { get; set; }
 
-        public DbSet<Supplier> Suppliers { get; set; }
+        public TestDbSet<Supplier> Suppliers { get; set; }
 
+#if !NETCORE
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().Property(p => p.ID).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -27,5 +28,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies
             modelBuilder.Entity<Supplier>().Property(p => p.CountryOrRegion).HasColumnName("CountryOrRegion");
             base.OnModelCreating(modelBuilder);
         }
+#endif
     }
 }

@@ -213,6 +213,7 @@
     <Compile Include="Common\Controllers\TypeLibrary\ComplexTypes.cs" />
     <Compile Include="Common\Controllers\TypeLibrary\ModelBindingBasedComplexTypes.cs" />
     <Compile Include="Common\Controllers\TypeLibrary\NorthwindTypes.cs" />
+    <Compile Include="Common\Execution\WebRouteConfiguration.cs" />
     <Compile Include="Common\Extensions\DirectoryInfoExtension.cs" />
     <Compile Include="Common\Extensions\HttpClientExtension.cs" />
     <Compile Include="Common\HttpControllerContextExtensions.cs" />
@@ -231,6 +232,8 @@
     <Compile Include="Common\Execution\PortArranger.cs" />
     <Compile Include="Common\Execution\SecurityHelper.cs" />
     <Compile Include="Common\Execution\WebConfigHelper.cs" />
+    <Compile Include="Common\TestAssembly.cs" />
+    <Compile Include="Common\TestDbContext.cs" />
     <Compile Include="Common\TheoryDataSet.cs" />
     <Compile Include="ComplexTypeInheritance\ComplexTypeInheritanceSerializeTest.cs" />
     <Compile Include="DateAndTimeOfDay\DateAndTimeOfDayContext.cs" />

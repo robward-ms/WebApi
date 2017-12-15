@@ -19,7 +19,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
 {
     public class DynamicPropertiesTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(DynamicCustomersController),
@@ -27,10 +27,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing.DynamicProperties
                 typeof(MetadataController),
             };
 
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
             configuration.GetHttpServer();

@@ -25,15 +25,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class SelectExpandTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                  typeof(IAssembliesResolver),
-                  new TestAssemblyResolver(
-                      typeof(SelectCustomerController),
-                      typeof(EFSelectCustomersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.AddControllers(
+                    typeof(SelectCustomerController),
+                    typeof(EFSelectCustomersController));
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("selectexpand", "selectexpand", GetEdmModel(configuration));
         }

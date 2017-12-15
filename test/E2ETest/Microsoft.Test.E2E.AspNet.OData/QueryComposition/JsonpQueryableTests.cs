@@ -68,9 +68,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class JsonpQueryableTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var f = new JsonpMediaTypeFormatter();
             f.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Formatters.Clear();

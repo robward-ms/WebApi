@@ -22,9 +22,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public class EntryMetadataTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Relationships", "Relationships", GetRelationshipsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("Inheritance", "Inheritance", GetInheritanceModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("CustomNavigationPropertyConventions", "CustomNavigationPropertyConventions", GetCustomNavigationPropertyConventionsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

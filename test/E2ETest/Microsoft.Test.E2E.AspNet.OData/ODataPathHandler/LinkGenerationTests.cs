@@ -72,9 +72,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
 
     public class LinkGenerationTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             var model1 = GetEdmModel1(configuration);
             var model2 = GetEdmModel2(configuration);
             configuration.MapODataServiceRoute("OData1", "v1", model1, new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());

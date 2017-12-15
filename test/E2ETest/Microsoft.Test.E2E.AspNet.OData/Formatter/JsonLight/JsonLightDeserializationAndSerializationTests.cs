@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
@@ -60,10 +61,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             }
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel());
         }

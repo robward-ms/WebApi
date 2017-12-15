@@ -18,13 +18,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
     {
         private const string BaseUrl = "{0}/singleresult/Customers";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof(IAssembliesResolver),
-                new TestAssemblyResolver(typeof (CustomersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof (CustomersController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("singleresult", "singleresult",

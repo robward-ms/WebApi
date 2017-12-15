@@ -23,7 +23,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
 {
     public class ODataValueProviderTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();

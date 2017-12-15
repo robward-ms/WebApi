@@ -19,9 +19,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public class ComplexTypeTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute("Complex", "Complex", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.AddODataQueryFilter();
         }

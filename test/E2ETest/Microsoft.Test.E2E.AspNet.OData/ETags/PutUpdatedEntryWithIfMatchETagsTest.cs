@@ -20,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     public class PutUpdatedEntryWithIfMatchETagsTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);

@@ -103,10 +103,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
             {
                 return JTokenInstanceCreator.CreateInstanceOfJArray(rndGen, creatorSettings);
             }
+#if !NETCORE
             else if (type == typeof(System.Net.Http.Headers.CookieHeaderValue))
             {
                 return CookieHeaderValueInstanceCreator.CreateInstanceOfCookieHeaderValue(rndGen, creatorSettings);
             }
+#endif
             else if (type.IsPublic)
             {
                 return ComplexTypeInstanceCreator.CreateInstanceOf(type, rndGen, creatorSettings);
@@ -115,9 +117,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
             throw new ArgumentException("Cannot create instance of " + type.FullName);
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         private static object CreateInstanceOfArray(Type arrayType, Random rndGen, CreatorSettings creatorSettings)
         {
@@ -261,6 +263,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
             return false;
         }
 
-        #endregion
+#endregion
     }
 }

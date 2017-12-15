@@ -56,18 +56,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
-
-            var selfhostConfig = configuration as HttpSelfHostConfiguration;
-            if (selfhostConfig != null)
-            {
-                selfhostConfig.MaxReceivedMessageSize = selfhostConfig.MaxBufferSize = 5000000;
-            }
+            configuration.MaxReceivedMessageSize = int.MaxValue;
         }
 
         [Theory]

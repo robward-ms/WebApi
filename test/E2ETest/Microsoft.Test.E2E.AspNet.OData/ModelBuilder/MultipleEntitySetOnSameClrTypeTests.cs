@@ -32,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 
     public class MultipleEntitySetOnSameClrTypeTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var repo = MultipleEntitySetOnSameClrType_Products1Controller.Repository;
             repo.TryAdd(
@@ -53,8 +53,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                     Name = "Product 2"
                 });
 
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.EnableODataSupport(GetImplicitEdmModel());
         }

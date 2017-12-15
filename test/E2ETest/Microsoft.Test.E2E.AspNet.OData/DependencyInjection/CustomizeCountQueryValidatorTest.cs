@@ -24,13 +24,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.DependencyInjection
         private const string CustomerBaseUrl = "{0}/dependencyinjection/Customers";
         private const string OrderBaseUrl = "{0}/dependencyinjection/Orders";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof(IAssembliesResolver),
-                new TestAssemblyResolver(typeof(CustomersController), typeof(OrdersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof(CustomersController), typeof(OrdersController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.MapODataServiceRoute("dependencyinjection", "dependencyinjection", builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => EdmModel.GetEdmModel())

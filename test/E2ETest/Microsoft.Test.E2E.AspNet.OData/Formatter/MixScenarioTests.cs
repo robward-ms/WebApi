@@ -72,9 +72,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class MixScenarioTestsWebApi : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.EnableODataSupport(GetEdmModel(configuration), "odata");
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();

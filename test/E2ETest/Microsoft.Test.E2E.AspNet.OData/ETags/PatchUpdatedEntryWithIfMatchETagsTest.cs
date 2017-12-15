@@ -20,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
     public class PatchUpdatedEntryWithIfMatchETagsTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.Routes.Clear();
             var model = GetEdmModel();

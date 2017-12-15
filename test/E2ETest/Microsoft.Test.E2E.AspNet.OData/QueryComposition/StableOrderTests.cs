@@ -77,9 +77,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class StableOrderWithoutResultLimitTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.AddODataQueryFilter();
             configuration.EnableDependencyInjection();

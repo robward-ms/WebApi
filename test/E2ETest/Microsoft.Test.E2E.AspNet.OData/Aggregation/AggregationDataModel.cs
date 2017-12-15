@@ -1,18 +1,33 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System.Data.Entity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Test.E2E.AspNetCore.OData.Common;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
     public class AggregationContext : DbContext
     {
         public static string ConnectionString =
-            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AggregationTest";
+            @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Persist Security Info=True;Database=AggregationTest";
 
         public AggregationContext()
-            : base(ConnectionString)
+        //    : base(ConnectionString)
         {
+#if NETCORE
+            this.PrivateConnectionString = ConnectionString;
+#endif
+        }
+
+        private string PrivateConnectionString { get; set; }
+
+        /// <inheritdocs/>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(this.PrivateConnectionString);
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         public DbSet<Customer> Customers { get; set; }
@@ -20,6 +35,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
     public class Customer
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -31,6 +47,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
     public class Order
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -40,6 +57,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
     public class Address
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Street { get; set; }

@@ -22,13 +22,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
     public class ComplexTypeInheritanceSerializeTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(MetadataController), typeof(InheritanceCustomersController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.AddControllers(controllers);
 
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Routes.Clear();
 
             configuration.MapODataServiceRoute(routeName: "odata", routePrefix: "odata", model: GetEdmModel());

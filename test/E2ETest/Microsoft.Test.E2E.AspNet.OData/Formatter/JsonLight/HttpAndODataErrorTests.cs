@@ -27,7 +27,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         public static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
             configuration.EnableQuerySupport(new QueryableAttribute() { ResultLimit = 100 });
@@ -86,7 +86,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         public static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
             configuration.EnableQuerySupport(new QueryableAttribute() { ResultLimit = 100 });
@@ -142,7 +142,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         public static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
             configuration.EnableQuerySupport(new QueryableAttribute() { ResultLimit = 100 });
@@ -201,7 +201,7 @@ namespace WebStack.QA.Test.OData.Formatter.JsonLight
         public static void UpdateConfiguration(HttpConfiguration configuration)
         {
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
             configuration.EnableQuerySupport(new QueryableAttribute() { ResultLimit = 100 });

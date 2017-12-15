@@ -20,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
     public class SingletonClientTest : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             HttpServer server = configuration.GetHttpServer();
 
@@ -28,8 +28,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             {
                 throw new Exception("Inappropriate http server");
             }
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);

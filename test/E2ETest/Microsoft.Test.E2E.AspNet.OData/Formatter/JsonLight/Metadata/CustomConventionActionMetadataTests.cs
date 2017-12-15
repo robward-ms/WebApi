@@ -23,10 +23,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public class CustomConventionActionMetadataTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-
             var conventions = ODataRoutingConventions.CreateDefault();
             configuration.MapODataServiceRoute("CustomActionConventions", "CustomActionConventions", GetCustomActionConventionsModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.AddODataQueryFilter();

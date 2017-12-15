@@ -27,17 +27,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
         private readonly string EdmSchemaNamespace = typeof(ConventionCustomer).Namespace;
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { 
                 typeof(ConventionCustomersController), 
                 typeof(MetadataController) };
 
-            var resolver =
-                new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();

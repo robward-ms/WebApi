@@ -167,9 +167,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class GlobalQueryableFilterWithoutResultLimitTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
@@ -234,7 +233,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
     {
         internal static void UpdateConfiguration1(HttpConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
@@ -243,9 +241,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class GlobalQueryableFilterWithDerivedEnableQueryAttribute : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.AddODataQueryFilter(new DerivedQueryableAttribute());
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();

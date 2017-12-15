@@ -8,8 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
@@ -18,7 +16,8 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNetCore.OData.Common.Extensions;
+//using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -39,23 +38,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             return responseForPost;
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(EmployeesController), typeof(MetadataController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
 
-            IEdmModel edmModel = UnBoundFunctionEdmModel.GetEdmModel();
+            IEdmModel edmModel = UnBoundFunctionEdmModel.GetEdmModel(configuration);
             DefaultODataPathHandler pathHandler = new DefaultODataPathHandler();
 
             // only with attribute routing & metadata routing convention
             IList<IODataRoutingConvention> routingConventions = new List<IODataRoutingConvention>
             {
-                new AttributeRoutingConvention("AttributeRouting", configuration),
+                configuration.CreateAttributeRoutingConvention(),
                 new MetadataRoutingConvention()
             };
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -66,6 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             configuration.EnsureInitialized();
         }
 
+#if !NETCORE
         [Theory]
         [InlineData("AttributeRouting")]
         [InlineData("ConventionRouting")]
@@ -85,7 +82,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Assert
 
-            #region functions
+#region functions
             // Function GetCount
             var iEdmOperationsOfGetCount = edmModel.FindDeclaredOperations("Default.GetCount");
             Assert.Equal(3, iEdmOperationsOfGetCount.Count());
@@ -137,9 +134,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             // Entity & collection of Entity
             AssertEntityOperation(edmModel, "Default.EntityFunction");
 
-            #endregion
+#endregion
 
-            #region actions
+#region actions
 
             // Action IncreaseSalary
             var iEdmOperationOfIncreaseSalary = edmModel.FindDeclaredOperations("Default.IncreaseSalary");
@@ -177,12 +174,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
             // Entity & collection of Entity
             AssertEntityOperation(edmModel, "Default.EntityAction");
-            #endregion
+#endregion
 
             // ActionImport: ResetDataSource
             Assert.Single(edmModel.EntityContainer.OperationImports());
 
         }
+#endif
 
         private static void AssertPrimitiveOperation(IEdmModel edmModel, string opertionName)
         {
@@ -259,7 +257,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             Assert.Equal("Collection(NS.Employee)", parameter.Type.FullName());
             Assert.True(parameter.Type.IsNullable);
         }
-        #region functions
+#region functions
 
         [Theory]
         [InlineData("ConventionRouting/Employees/Default.GetCount()")]//Convention routing
@@ -681,9 +679,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             // Assert
             response.EnsureSuccessStatusCode();
         }
-        #endregion
+#endregion
 
-        #region actions
+#region actions
 
         [Theory]
         [InlineData("ConventionRouting/Employees/Default.IncreaseSalary", 2)]//Convention routing
@@ -904,6 +902,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
             Assert.Contains(String.Format("\"@odata.context\":\"{0}/{1}/$metadata#Edm.Boolean\",\"value\":true", BaseAddress.ToLower(), route),
                 responseString);
         }
-        #endregion
+#endregion
     }
 }

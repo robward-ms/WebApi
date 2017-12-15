@@ -2,12 +2,12 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private readonly AutoExpandCustomerContext _db = new AutoExpandCustomerContext();
 
@@ -110,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
     }
 
-    public class PeopleController : ODataController
+    public class PeopleController : TestController
     {
         private readonly AutoExpandPeopleContext _db = new AutoExpandPeopleContext();
 
@@ -162,7 +162,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
     }
 
-    public class NormalOrdersController : ODataController
+    public class NormalOrdersController : TestController
     {
         private readonly AutoExpandOrdersContext _db = new AutoExpandOrdersContext();
 

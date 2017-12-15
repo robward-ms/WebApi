@@ -23,10 +23,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
 {
     public class PrimitiveTypesMetadataTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();
             conventions.Insert(0, new ReflectedPropertyRoutingConvention());
             configuration.MapODataServiceRoute("OData", null, GetEdmModel(configuration), new DefaultODataPathHandler(), conventions);

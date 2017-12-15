@@ -16,7 +16,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
     public class SelectTypeExplosionTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
             config.Routes.MapHttpRoute("api", "{controller}");

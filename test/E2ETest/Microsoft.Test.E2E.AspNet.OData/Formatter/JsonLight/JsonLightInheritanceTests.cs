@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
 using Xunit;
 
@@ -70,10 +71,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             return ctx;
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-
             var conventions = ODataRoutingConventions.CreateDefault();
             conventions.Insert(0, new DeleteAllRoutingConvention());
             conventions.Insert(0, new NavigationRoutingConvention2());

@@ -92,11 +92,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
 
     public class DefaultBatchHandlerCUDBatchTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             HttpServer server = configuration.GetHttpServer();
 
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
                 "batch",
@@ -249,18 +248,15 @@ Content-Type: application/json;odata.metadata=minimal
 
     public class DefaultBatchHandlerQueryBatchTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -320,18 +316,15 @@ Content-Type: application/json;odata.metadata=minimal
 
     public class DefaultBatchHandlerErrorsBatchTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -390,18 +383,15 @@ Content-Type: application/json;odata.metadata=minimal
 
     public class DefaultBatchHandlerLinksBatchTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -446,18 +436,15 @@ Content-Type: application/json;odata.metadata=minimal
 
     public class DefaultBatchHandlerContinueOnErrorBatchTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
             configuration.EnableContinueOnErrorHeader();
         }
 

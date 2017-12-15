@@ -176,7 +176,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class InheritanceQueryableTests : WebHostTestBase
     {
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var types = new[] { 
                 typeof(InheritanceQueryable_Customer), 
@@ -190,12 +190,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 typeof(ReadOnlyPropertyType), 
                 typeof(InheritanceQueryableController) };
 
-            var resolver = new TestAssemblyResolver(new TypesInjectionAssembly(types));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.AddControllers(types);
 
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.AddODataQueryFilter();
             configuration.EnableDependencyInjection();
         }

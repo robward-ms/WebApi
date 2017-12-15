@@ -25,14 +25,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.SelectAttribut
         private const string ModelBoundCarBaseUrl = "{0}/modelboundapi/Cars";
         private const string ModelBoundAutoSelectCustomerBaseUrl = "{0}/modelboundapi/AutoSelectCustomers";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof (IAssembliesResolver),
-                new TestAssemblyResolver(typeof(CustomersController), typeof(OrdersController),
-                    typeof(CarsController), typeof(AutoSelectCustomersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof(CustomersController), typeof(OrdersController),
+                    typeof(CarsController), typeof(AutoSelectCustomersController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Expand();
             configuration.MapODataServiceRoute("enablequery", "enablequery",

@@ -26,13 +26,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
     {
         private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.Singleton";
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(UmbrellaController), typeof(MonstersIncController), typeof(MetadataController), typeof(PartnersController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();

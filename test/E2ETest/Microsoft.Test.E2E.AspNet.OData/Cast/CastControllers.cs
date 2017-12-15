@@ -6,13 +6,14 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Cast
 {
-    public class ProductsController : ODataController
+    public class ProductsController : TestController
     {
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             if (GetRoutePrefix() == "EF")
             {
@@ -25,7 +26,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Cast
         }
 
         [EnableQuery]
-        public IHttpActionResult GetDimensionInCentimeter(int key)
+        public ITestActionResult GetDimensionInCentimeter(int key)
         {
             if (GetRoutePrefix() == "EF")
             {
