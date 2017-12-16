@@ -99,7 +99,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                     if (_selfHostServer != null)
                     {
 #if NETCORE
-                        _selfHostServer.StopAsync();
+                        _selfHostServer.StopAsync().Wait();
                         _selfHostServer.WaitForShutdown();
 #endif
                         _selfHostServer.Dispose();
@@ -176,14 +176,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddMvc();
+                services.AddMvcCore();
                 services.AddOData();
             }
 
-            public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
             {
-                loggerFactory.AddConsole(LogLevel.Debug);
-
                 app.UseMvc(routeBuilder =>
                 {
                     routeBuilder.MapRoute("api default", "api/{controller}/{action?}");

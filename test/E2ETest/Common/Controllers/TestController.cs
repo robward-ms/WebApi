@@ -192,27 +192,45 @@ namespace Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers
     }
 #endif
 
+    /// <summary>
+    /// Platform-agnostic version of HttpMethod attributes. AspNetCore attributes are not sealed
+    /// so they are used as a base class. AspNet has sealed attributes so the code is copied.
+    /// </summary>
 #if NETCORE
     /// <summary>
     /// Platform-agnostic version of action result.
     /// </summary>
-    public class HttpGetAttribute : Microsoft.AspNetCore.Mvc.HttpGetAttribute
-    {
-
-    }
+    public class HttpGetAttribute : Microsoft.AspNetCore.Mvc.HttpGetAttribute { }
+    public class HttpPatchAttribute : Microsoft.AspNetCore.Mvc.HttpPatchAttribute { }
+    public class HttpPostAttribute : Microsoft.AspNetCore.Mvc.HttpPostAttribute { }
 #else
     /// <summary>
     /// Platform-agnostic version of action result.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class TestHttpGetAttribute : Attribute, IActionHttpMethodProvider
+    public class HttpGetAttribute : Attribute, IActionHttpMethodProvider
     {
         public Collection<HttpMethod> HttpMethods
         {
-            get
-            {
-                return new Collection<HttpMethod>(new HttpMethod[] { HttpMethod.Get });
-            }
+            get { return new Collection<HttpMethod>(new HttpMethod[] { HttpMethod.Get }); }
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class HttpPatchAttribute : Attribute, IActionHttpMethodProvider
+    {
+        public Collection<HttpMethod> HttpMethods
+        {
+            get { return new Collection<HttpMethod>(new HttpMethod[] { new HttpMethod("PATCH") }); }
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class HttpPostAttribute : Attribute, IActionHttpMethodProvider
+    {
+        public Collection<HttpMethod> HttpMethods
+        {
+            get { return new Collection<HttpMethod>(new HttpMethod[] { HttpMethod.Post }); }
         }
     }
 #endif
