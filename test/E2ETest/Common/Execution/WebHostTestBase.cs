@@ -99,7 +99,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                     if (_selfHostServer != null)
                     {
 #if NETCORE
-                        _selfHostServer.StopAsync().Wait();
+                        _selfHostServer.StopAsync();
                         _selfHostServer.WaitForShutdown();
 #endif
                         _selfHostServer.Dispose();
@@ -138,7 +138,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                     // the test output.
 #if NETCORE
                     _selfHostServer = new WebHostBuilder()
-                        .UseKestrel()
                         .UseKestrel(options =>
                         {
                             options.Listen(IPAddress.Loopback, _port);
