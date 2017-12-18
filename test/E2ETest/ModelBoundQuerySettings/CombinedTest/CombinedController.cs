@@ -3,10 +3,11 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 {
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private List<Customer> _customers;
 
@@ -81,7 +82,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         }
     }
 
-    public class OrdersController : ODataController
+    public class OrdersController : TestController
     {
         private List<Order> _orders;
 

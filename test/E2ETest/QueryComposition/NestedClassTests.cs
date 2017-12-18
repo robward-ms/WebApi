@@ -1,11 +1,11 @@
 ﻿// Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -24,7 +24,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class NestedClassController : ApiController
+    public class NestedClassController : TestController
     {
         [HttpGet]
         public IQueryable<Microsoft.Test.E2E.AspNet.OData.QueryComposition.NestedClass_Parent.Nest> QueryOnNestClass()

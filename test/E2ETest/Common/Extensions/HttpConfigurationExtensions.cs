@@ -6,7 +6,6 @@ using System.Web.Http;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Extensions
 {
-    
     /// <summary>
     /// This extension is used to create batch handlers for AspNet.
     /// </summary>

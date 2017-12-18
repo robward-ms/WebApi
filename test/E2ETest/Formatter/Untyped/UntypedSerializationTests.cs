@@ -6,10 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -19,6 +17,8 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -30,12 +30,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("untyped", "untyped", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("untyped", "untyped", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var customers = builder.EntitySet<UntypedCustomer>("UntypedCustomers");
             customers.EntityType.Property(c => c.Name).IsRequired();
             var orders = builder.EntitySet<UntypedOrder>("UntypedOrders");
@@ -183,7 +183,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
 
     }
 
-    public class UntypedCustomersController : ODataController
+    public class UntypedCustomersController : TestController
     {
         private static IEdmEntityObject postedCustomer = null;
         public IEdmEntityType CustomerType
@@ -210,7 +210,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             }
         }
 
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             IEdmEntityObject[] untypedCustomers = new EdmEntityObject[20];
             for (int i = 0; i < 20; i++)
@@ -232,7 +232,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             return Ok(new EdmEntityObjectCollection(entityCollectionType, untypedCustomers.ToList()));
         }
 
-        public IHttpActionResult Get([FromODataUri] int key)
+        public ITestActionResult Get([FromODataUri] int key)
         {
             object id;
             if (postedCustomer == null || !postedCustomer.TryGetPropertyValue("Id", out id) || key != (int)id)
@@ -249,7 +249,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             return Ok(postedCustomer);
         }
 
-        public IHttpActionResult Post(IEdmEntityObject customer)
+        public ITestActionResult Post(IEdmEntityObject customer)
         {
             if (!ModelState.IsValid)
             {
@@ -264,43 +264,43 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
                 new KeySegment(new[] {new KeyValuePair<string, object>("Id", id)}, entitySet.EntityType(), null)), customer);
         }
 
-        public IHttpActionResult PrimitiveCollection()
+        public ITestActionResult PrimitiveCollection()
         {
             return Ok(Enumerable.Range(1, 10));
         }
 
-        public IHttpActionResult ComplexObjectCollection()
+        public ITestActionResult ComplexObjectCollection()
         {
             return Ok(CreateAddresses(10));
         }
 
-        public IHttpActionResult EntityCollection()
+        public ITestActionResult EntityCollection()
         {
             return Ok(CreateOrders(10));
         }
 
-        public IHttpActionResult SinglePrimitive()
+        public ITestActionResult SinglePrimitive()
         {
             return Ok(10);
         }
 
-        public IHttpActionResult SingleComplexObject()
+        public ITestActionResult SingleComplexObject()
         {
             return Ok(CreateAddress(10));
         }
 
-        public IHttpActionResult SingleEntity()
+        public ITestActionResult SingleEntity()
         {
             return Ok(CreateOrder(10));
         }
 
-        public IHttpActionResult EnumerableOfIEdmObject()
+        public ITestActionResult EnumerableOfIEdmObject()
         {
             IList<IEdmEntityObject> result = Enumerable.Range(0, 10).Select(i => (IEdmEntityObject)CreateOrder(i)).ToList();
             return Ok(result);
         }
 
-        public IHttpActionResult UntypedParameters(ODataUntypedActionParameters parameters)
+        public ITestActionResult UntypedParameters(ODataUntypedActionParameters parameters)
         {
             if (!ModelState.IsValid)
             {

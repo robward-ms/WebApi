@@ -7,7 +7,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Template;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.Test.E2E.AspNet.OData
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Extensions
 {
     public static class ODataPathHandlerExtensions
     {

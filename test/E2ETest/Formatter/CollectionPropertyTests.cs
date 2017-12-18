@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -45,9 +45,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public abstract class CollectionPropertyTests : ODataFormatterTestBase
     {
-        protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder(configuration);
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<CollectionProperty_Entity>("CollectionProperty_Entity");
             return mb.GetEdmModel();
         }

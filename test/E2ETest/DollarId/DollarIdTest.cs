@@ -4,11 +4,9 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -23,7 +21,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarId
 
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
 
-            configuration.MapODataServiceRoute("Test", "", DollarIdEdmModel.GetModel());
+            configuration.MapODataServiceRoute("Test", "", DollarIdEdmModel.GetModel(configuration));
             configuration.EnsureInitialized();
         }
 

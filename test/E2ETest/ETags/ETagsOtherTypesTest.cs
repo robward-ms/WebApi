@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
@@ -15,6 +14,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -26,22 +26,22 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
-            configuration.MapODataServiceRoute("odata1", "double", GetDoubleETagEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
-            configuration.MapODataServiceRoute("odata2", "short", GetShortETagEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("odata1", "double", GetDoubleETagEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("odata2", "short", GetShortETagEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetDoubleETagEdmModel()
+        private static IEdmModel GetDoubleETagEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             var customer = builder.EntitySet<ETagsCustomer>("ETagsCustomers").EntityType;
             customer.Property(c => c.DoubleProperty).IsConcurrencyToken();
             customer.Ignore(c => c.StringWithConcurrencyCheckAttributeProperty);
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetShortETagEdmModel()
+        private static IEdmModel GetShortETagEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             var customer = builder.EntitySet<ETagsCustomer>("ETagsCustomers").EntityType;
             customer.Ignore(c => c.StringWithConcurrencyCheckAttributeProperty);
             customer.Property(c => c.ShortProperty).IsConcurrencyToken();
@@ -69,8 +69,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
                 EntityTagHeaderValue parsedValue;
                 Assert.True(EntityTagHeaderValue.TryParse(eTag, out parsedValue));
-                HttpConfiguration config = new HttpConfiguration();
-                IETagHandler handler = config.GetETagHandler();
+                IETagHandler handler = new DefaultODataETagHandler();
                 IDictionary<string, object> tags = handler.ParseETag(parsedValue);
                 KeyValuePair<string, object> pair = Assert.Single(tags);
                 Single value = Assert.IsType<Single>(pair.Value);
@@ -106,8 +105,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
                 EntityTagHeaderValue parsedValue;
                 Assert.True(EntityTagHeaderValue.TryParse(eTag, out parsedValue));
-                HttpConfiguration config = new HttpConfiguration();
-                IETagHandler handler = config.GetETagHandler();
+                IETagHandler handler = new DefaultODataETagHandler();
                 IDictionary<string, object> tags = handler.ParseETag(parsedValue);
                 KeyValuePair<string, object> pair = Assert.Single(tags);
                 int value = Assert.IsType<int>(pair.Value);

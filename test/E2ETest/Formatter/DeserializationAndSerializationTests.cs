@@ -10,6 +10,7 @@ using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -58,9 +59,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public abstract class DeserializationAndSerializationTests : ODataFormatterTestBase
     {
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<UniverseEntity>("UniverseEntity")
                    .EntityType
                    .ComplexProperty(p => p.OptionalComplexProperty)

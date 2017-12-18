@@ -8,10 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
@@ -52,23 +49,25 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration
                 .MapODataServiceRoute(routeName: "convention",
                     routePrefix: "convention",
-                    model: ComplexTypeInheritanceEdmModels.GetConventionModel());
+                    model: ComplexTypeInheritanceEdmModels.GetConventionModel(configuration));
 
+#if !NETCORE
+            HttpServer httpServer = configuration.GetHttpServer();
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
                     model: ComplexTypeInheritanceEdmModels.GetExplicitModel(),
                     batchHandler: new DefaultODataBatchHandler(httpServer));
+#endif
             configuration.EnsureInitialized();
         }
 
 
-        #region CRUD on the entity
+#region CRUD on the entity
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -284,9 +283,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             HttpResponseMessage response = await Client.DeleteAsync(requestUri);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
-        #endregion
+#endregion
 
-        #region RUD on complex type
+#region RUD on complex type
 
         [Theory]
         [MemberData(nameof(MediaTypes))]
@@ -547,6 +546,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        #endregion
+#endregion
     }
 }

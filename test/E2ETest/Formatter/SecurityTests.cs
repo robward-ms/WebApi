@@ -3,11 +3,8 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
@@ -64,12 +61,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             configuration.MaxReceivedMessageSize = int.MaxValue;
 
             configuration.Formatters.Clear();
-            configuration.EnableODataSupport(GetEdmModel());
+            configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<Security_NestedModel>("Security_NestedModel");
             builder.EntitySet<Security_ArrayModel>("Security_ArrayModel");
 

@@ -3,7 +3,6 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using Microsoft.Test.E2E.AspNetCore.OData.Common;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies
 {

@@ -6,13 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.Http.SelfHost;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.TypeCreator;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {

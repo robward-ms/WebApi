@@ -3,17 +3,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class PrimitiveTypesController : ApiController
+    public class PrimitiveTypesController : TestController
     {
         private List<string> stringList = new List<string>();
 
@@ -42,7 +42,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
+#if !NETCORE
             configuration.AddODataQueryFilter();
+#endif
             configuration.EnableDependencyInjection();
         }
 

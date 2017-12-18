@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Vehicle;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -51,7 +49,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class InheritanceQueryableController : ApiController
+    public class InheritanceQueryableController : TestController
     {
         public IQueryable GetMotorcycles()
         {

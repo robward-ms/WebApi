@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
@@ -43,12 +42,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            configuration.EnableODataSupport(GetEdmModel(), "odataü");
+            configuration.EnableODataSupport(GetEdmModel(configuration), "odataü");
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder();
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<UnicodeRouteTests_Todoü>("UnicodeRouteTests_Todoü");
 
             return mb.GetEdmModel();

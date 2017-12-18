@@ -2,7 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Linq;
-using System.Web.Http.Controllers;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -11,9 +11,10 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extensions
 {
-    public class ReflectedPropertyRoutingConvention : EntitySetRoutingConvention
+    public class ReflectedPropertyRoutingConvention : TestEntitySetRoutingConvention
     {
-        public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+        /// <inheritdoc/>
+        internal override string SelectAction(ODataPath odataPath, WebApiControllerContext controllerContext, WebApiActionMap actionMap)
         {
             if (odataPath.PathTemplate == "~/entityset/key/property" || odataPath.PathTemplate == "~/entityset/key/cast/property")
             {
@@ -24,7 +25,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extension
                 {
                     var key = odataPath.Segments[1] as KeySegment;
                     controllerContext.AddKeyValueToRouteData(key);
-                    controllerContext.RouteData.Values.Add("property", property.Name);
+                    controllerContext.RouteData.Add("property", property.Name);
                     string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString());
                     if (string.IsNullOrEmpty(prefix))
                     {

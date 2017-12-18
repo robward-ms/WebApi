@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -17,6 +16,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -30,9 +30,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             configuration.AddODataQueryFilter();
         }
 
-        private static IEdmModel GetActionsModel(HttpConfiguration config)
+        private static IEdmModel GetActionsModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var baseEntitySet = builder.EntitySet<BaseEntity>("BaseEntity");
             var alwaysAvailableActionBaseType = baseEntitySet.EntityType.Action("AlwaysAvailableActionBaseType");
             var transientActionBaseType = baseEntitySet.EntityType.Action("TransientActionBaseType");
@@ -58,7 +58,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
                     segments.Add(new EntitySetSegment(eic.NavigationSource as IEdmEntitySet));
                     segments.Add(new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, eic.StructuredType as IEdmEntityType, null));
                     var pathHandler = eic.Request.GetPathHandler();
-                    string link = eic.Url.CreateODataLink("Actions", pathHandler, segments);
+                    string link = eic.InternalUrlHelper.CreateODataLink("Actions", pathHandler, segments);
                     link += "/" + action.FullName();
                     return new Uri(link);
                 }
@@ -92,7 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
                     // bug 1985: Make the internal constructor as public in BoundActionPathSegment
                     //segments.Add(new BoundActionPathSegment(action));
                     var pathHandler = eic.Request.GetPathHandler();
-                    string link = eic.Url.CreateODataLink("Actions", pathHandler, segments);
+                    string link = eic.InternalUrlHelper.CreateODataLink("Actions", pathHandler, segments);
                     link += "/" + action.FullName();
                     return new Uri(link);
                 }

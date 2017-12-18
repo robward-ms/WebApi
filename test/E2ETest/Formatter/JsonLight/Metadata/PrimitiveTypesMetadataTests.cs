@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
@@ -16,6 +15,7 @@ using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -31,9 +31,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             configuration.AddODataQueryFilter();
         }
 
-        protected static IEdmModel GetEdmModel(HttpConfiguration config)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<EntityWithSimpleProperties>("EntityWithSimpleProperties");
             return builder.GetEdmModel();
         }

@@ -1,7 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE
+#if NETCORE
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+#else
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -17,6 +25,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common
 {
@@ -27,7 +36,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
             return test.Client.DeleteAsync(test.BaseAddress + "/" + entityName);
         }
 
+#if NETCORE
+        public static void EnableODataSupport(this IRouteBuilder configuration, IEdmModel model, string routePrefix)
+#else
         public static void EnableODataSupport(this HttpConfiguration configuration, IEdmModel model, string routePrefix)
+#endif
         {
             var conventions = ODataRoutingConventions.CreateDefault();
             conventions.Insert(0, new PropertyRoutingConvention());
@@ -39,14 +52,21 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
                 new DefaultODataPathHandler(), 
                 conventions);
 
+#if !NETCORE
             configuration.AddODataQueryFilter();
+#endif
         }
 
+#if NETCORE
+        public static void EnableODataSupport(this IRouteBuilder configuration, IEdmModel model)
+#else
         public static void EnableODataSupport(this HttpConfiguration configuration, IEdmModel model)
+#endif
         {
             configuration.EnableODataSupport(model, routePrefix: null);
         }
 
+#if !NETCORE
         /// <summary>
         /// Helper method to get the odata path for an arbitrary odata uri.
         /// </summary>
@@ -128,8 +148,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
 
             return errorMessageBuilder.ToString();
         }
+#endif
     }
 
+#if !NETCORE
     public class EntityTypeConstraint : IHttpRouteConstraint
     {
         public bool Match(System.Net.Http.HttpRequestMessage request, IHttpRoute route, string parameterName, System.Collections.Generic.IDictionary<string, object> values, HttpRouteDirection routeDirection)
@@ -142,5 +164,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
             return ((string)values[parameterName]).Contains(".");
         }
     }
-}
 #endif
+}

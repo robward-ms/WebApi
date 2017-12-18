@@ -7,14 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -37,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("unboundFunctionConvention", "odata", UnboundFunctionEdmModel.GetEdmModel());
+            configuration.MapODataServiceRoute("unboundFunctionConvention", "odata", UnboundFunctionEdmModel.GetEdmModel(configuration));
 
             configuration.EnsureInitialized();
         }
@@ -140,7 +139,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             //Assert
             var oDataMessageReaderSettings = new ODataMessageReaderSettings();
             IODataResponseMessage message = new ODataMessageWrapper(stream, response.Content.Headers);
-            var reader = new ODataMessageReader(message, oDataMessageReaderSettings, UnboundFunctionEdmModel.GetEdmModel());
+            var reader = new ODataMessageReader(message, oDataMessageReaderSettings, UnboundFunctionEdmModel.GetEdmModel(configuration));
             var oDataWorkSpace = reader.ReadServiceDocument();
 
             var function1 = oDataWorkSpace.FunctionImports.Where(odataResourceCollectionInfo => odataResourceCollectionInfo.Name == "GetAllConventionCustomers");

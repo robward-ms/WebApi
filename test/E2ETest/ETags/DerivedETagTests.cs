@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -13,6 +12,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -24,13 +24,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         {
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
-            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MessageHandlers.Add(new ETagMessageHandler());
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             EntitySetConfiguration<ETagsCustomer> eTagsCustomersSet = builder.EntitySet<ETagsCustomer>("ETagsCustomers");
             eTagsCustomersSet.HasRequiredBinding(c => c.RelatedCustomer, eTagsCustomersSet);
             eTagsCustomersSet.HasRequiredBinding(c => c.ContainedCustomer, eTagsCustomersSet);

@@ -7,10 +7,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Xml.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -21,6 +18,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Instancing;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -61,7 +59,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         public DateTimeOffset DateTimeOffset { get; set; }
         public byte Byte { get; set; }
         public byte[] ByteArray { get; set; }
+#if !NETCORE
         public XElement XElement { get; set; }
+#endif
     }
 
     [EntitySet("DeltaTests_Todoes")]
@@ -157,11 +157,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             PropertyDescriptorCollection descriptors = new PropertyDescriptorCollection(null);
             foreach (PropertyDescriptor descriptor in base.GetProperties(attributes))
             {
+#if !NETCORE
                 if (descriptor.PropertyType == typeof(XElement))
                 {
                     continue;
                 }
-
+#endif
                 descriptors.Add(descriptor);
             }
 
@@ -171,9 +172,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public abstract class DeltaTests : ODataFormatterTestBase
     {
-        protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder(configuration);
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<DeltaTests_Todo>("DeltaTests_Todoes");
             return mb.GetEdmModel();
         }
@@ -301,17 +302,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("odata", "odata", GetModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<DeltaCustomer>("DeltaCustomers");
             builder.EntitySet<DeltaOrder>("DeltaOrders");
             return builder.GetEdmModel();
         }
 
+#if !NETCORE
         [Fact]
         public async Task PutShouldntOverrideNavigationProperties()
         {
@@ -327,6 +329,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             dynamic query = await response.Content.ReadAsAsync<JObject>();
             Assert.Equal(3, query.Orders.Count);
         }
+#endif
     }
 
     public class PatchtDeltaOfTTests : WebHostTestBase
@@ -335,17 +338,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("odata", "odata", GetModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<DeltaCustomer>("DeltaCustomers");
             builder.EntitySet<DeltaOrder>("DeltaOrders");
             return builder.GetEdmModel();
         }
 
+#if !NETCORE
         [Fact]
         public async Task PatchShouldSupportNonSettableCollectionProperties()
         {
@@ -363,9 +367,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal(3, query.Addresses.Count);
             Assert.Equal(3, query.Orders.Count);
         }
+#endif
     }
 
-    public class DeltaCustomersController : ODataController
+    public class DeltaCustomersController : TestController
     {
         private static DeltaCustomer customer;
 
@@ -378,7 +383,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 2)]
-        public IHttpActionResult Get([FromODataUri] int key)
+        public ITestActionResult Get([FromODataUri] int key)
         {
             if (key == customer.Id)
             {
@@ -389,7 +394,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
                 return BadRequest();
             }
         }
-        public IHttpActionResult Put([FromODataUri] int key, [FromBody] Delta<DeltaCustomer> entity)
+        public ITestActionResult Put([FromODataUri] int key, [FromBody] Delta<DeltaCustomer> entity)
         {
             if (!ModelState.IsValid)
             {
@@ -400,7 +405,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] int key, Delta<DeltaCustomer> patch)
+        public ITestActionResult Patch([FromODataUri] int key, Delta<DeltaCustomer> patch)
         {
             if (!ModelState.IsValid)
             {

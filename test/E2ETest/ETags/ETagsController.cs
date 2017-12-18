@@ -5,48 +5,48 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-    public class ETagsDerivedCustomersController : ODataController
+    public class ETagsDerivedCustomersController : TestController
     {
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 5)]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(ETagsCustomersController.customers.Select(c => Helpers.CreateDerivedCustomer(c)));
         }
     }
 
-    public class ETagsDerivedCustomersSingletonController : ODataController
+    public class ETagsDerivedCustomersSingletonController : TestController
     {
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 5)]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(ETagsCustomersController.customers.Select(c => Helpers.CreateDerivedCustomer(c)).FirstOrDefault());
         }
     }
 
-    public class ETagsCustomersController : ODataController
+    public class ETagsCustomersController : TestController
     {
         internal static IList<ETagsCustomer> customers = Enumerable.Range(0, 10).Select(i => Helpers.CreateCustomer(i)).ToList();
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(customers);
         }
 
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 5)]
-        public IHttpActionResult Get(int key, ODataQueryOptions<ETagsCustomer> queryOptions)
+        public ITestActionResult Get(int key, ODataQueryOptions<ETagsCustomer> queryOptions)
         {
             IEnumerable<ETagsCustomer> appliedCustomers = customers.Where(c => c.Id == key);
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest("The key is not valid");
+                return BadRequest();
             }
 
             if (queryOptions.IfNoneMatch != null)
@@ -64,11 +64,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             }
         }
 
-        public IHttpActionResult Put(int key, ETagsCustomer eTagsCustomer, ODataQueryOptions<ETagsCustomer> queryOptions)
+        public ITestActionResult Put(int key, ETagsCustomer eTagsCustomer, ODataQueryOptions<ETagsCustomer> queryOptions)
         {
             if (key != eTagsCustomer.Id)
             {
-                return BadRequest("The Id of customer is not matched with the key");
+                return BadRequest();
             }
 
             IEnumerable<ETagsCustomer> appliedCustomers = customers.Where(c => c.Id == eTagsCustomer.Id);
@@ -110,13 +110,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return Ok(customer);
         }
 
-        public IHttpActionResult Delete(int key, ODataQueryOptions<ETagsCustomer> queryOptions)
+        public ITestActionResult Delete(int key, ODataQueryOptions<ETagsCustomer> queryOptions)
         {
             IEnumerable<ETagsCustomer> appliedCustomers = customers.Where(c => c.Id == key);
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
+                return BadRequest();
             }
 
             if (queryOptions.IfMatch != null)
@@ -134,13 +134,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             return Ok(customer);
         }
 
-        public IHttpActionResult Patch(int key, Delta<ETagsCustomer> patch, ODataQueryOptions<ETagsCustomer> queryOptions)
+        public ITestActionResult Patch(int key, Delta<ETagsCustomer> patch, ODataQueryOptions<ETagsCustomer> queryOptions)
         {
             IEnumerable<ETagsCustomer> appliedCustomers = customers.Where(c => c.Id == key);
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
+                return BadRequest();
             }
 
             if (queryOptions.IfMatch != null)

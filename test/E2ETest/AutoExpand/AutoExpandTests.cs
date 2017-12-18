@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

@@ -4,12 +4,12 @@
 #if NETCORE
 using System.Linq;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 #else
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 #endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand

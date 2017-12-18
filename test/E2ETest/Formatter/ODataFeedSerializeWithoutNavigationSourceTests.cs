@@ -6,8 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,6 +13,8 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -25,16 +25,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[] { typeof(AnyController), typeof(MetadataController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            config.AddControllers(controllers);
 
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.MapODataServiceRoute("odata", "odata", GetModel());
+            config.MapODataServiceRoute("odata", "odata", GetModel(config));
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<DerivedTypeA>("SetA");
             builder.EntitySet<DerivedTypeB>("SetB");
 
@@ -73,7 +71,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
     }
 
-    public class AnyController : ODataController
+    public class AnyController : TestController
     {
         public static IList<BaseType> Entities = new List<BaseType>();
 
@@ -98,7 +96,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
         [HttpGet]
         [ODataRoute("ReturnAll")]
-        public IHttpActionResult ReturnAll()
+        public ITestActionResult ReturnAll()
         {
             return Ok(Entities);
         }

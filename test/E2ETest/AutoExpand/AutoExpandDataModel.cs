@@ -3,11 +3,10 @@
 
 using System.Data.Entity;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.Test.E2E.AspNetCore.OData.Common;
 
 namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
-    public class AutoExpandCustomerContext : TestDbContext
+    public class AutoExpandCustomerContext : DbContext
     {
         public static string ConnectionString =
             @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandCustomerContext";
@@ -20,7 +19,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         public DbSet<Customer> Customers { get; set; }
     }
 
-    public class AutoExpandPeopleContext : TestDbContext
+    public class AutoExpandPeopleContext : DbContext
     {
         public static string ConnectionString =
             @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandPeopleContext";
@@ -33,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         public DbSet<People> People { get; set; }
     }
 
-    public class AutoExpandOrdersContext : TestDbContext
+    public class AutoExpandOrdersContext : DbContext
     {
         public static string ConnectionString =
             @"Data Source=(LocalDb)\MSSQLLocalDB;Integrated Security=True;Initial Catalog=AutoExpandOrdersContext";

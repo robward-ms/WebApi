@@ -5,10 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
@@ -17,6 +14,7 @@ using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -30,7 +28,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public decimal Decimal { get; set; }
     }
 
-    public class ValidatorTestsController : ApiController
+    public class ValidatorTestsController : TestController
     {
         private static List<ValidatorTests_Todo> todoes = new List<ValidatorTests_Todo>();
         static ValidatorTestsController()

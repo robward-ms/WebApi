@@ -8,9 +8,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -22,7 +22,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+#if !NETCORE
             configuration.Formatters.JsonFormatter.Indent = true;
+#endif
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.EnableDependencyInjection();
         }
@@ -282,7 +284,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     }
 
-    public class JsonSelectCustomerController : ApiController
+    public class JsonSelectCustomerController : TestController
     {
         public IList<JsonSelectCustomer> Customers { get; set; }
 

@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -18,6 +16,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.UriParserExtension;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
@@ -27,24 +26,21 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[] { typeof(CustomersController), typeof(OrdersController), typeof(AddressesController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.Services.Replace(typeof(IAssembliesResolver), resolver);
+            config.AddControllers(controllers);
 
             config.Routes.Clear();
 
             config.MapODataServiceRoute("odata", "",
                 builder =>
-                    builder.AddService(ServiceLifetime.Singleton, sp => GetModel())
+                    builder.AddService(ServiceLifetime.Singleton, sp => GetModel(config))
                         .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
                             ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
                         .AddService(ServiceLifetime.Singleton, sp => new CaseInsensitiveResolver()));
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<Customer>("Customers");
             builder.EntityType<VipCustomer>().DerivesFrom<Customer>();
             builder.EntitySet<Order>("Orders");
@@ -112,10 +108,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         public VipCustomer VipCustomer { get; set; }
     }
 
-    public class AddressesController : ODataController
+    public class AddressesController : TestController
     {
         [AcceptVerbs("PUT")]
-        public IHttpActionResult CreateRefToVipCustomer([FromODataUri] int key, [FromBody] Uri reference)
+        public ITestActionResult CreateRefToVipCustomer([FromODataUri] int key, [FromBody] Uri reference)
         {
             if (key == 5 && reference.ToString() == "http://localhost:12345/Orders(25)")
             {
@@ -124,7 +120,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return BadRequest();
         }
 
-        public IHttpActionResult DeleteRefToVipCustomer([FromODataUri] int key)
+        public ITestActionResult DeleteRefToVipCustomer([FromODataUri] int key)
         {
             if (key == 25)
             {
@@ -134,10 +130,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         }
     }
 
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         [AcceptVerbs("POST")]
-        public IHttpActionResult CreateRefToOrders([FromODataUri] int key, [FromBody] Uri reference)
+        public ITestActionResult CreateRefToOrders([FromODataUri] int key, [FromBody] Uri reference)
         {
             if (key == 5 && reference.ToString().Equals("http://localhost:12345/Orders(25)"))
             {
@@ -146,7 +142,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return BadRequest();
         }
 
-        public IHttpActionResult DeleteRefToOrders([FromODataUri] int key, string relatedKey)
+        public ITestActionResult DeleteRefToOrders([FromODataUri] int key, string relatedKey)
         {
             if (key == 5 && relatedKey.Equals("25"))
             {
@@ -155,7 +151,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return BadRequest();
         }
 
-        public IHttpActionResult DeleteRefToAddressesFromVipCustomer([FromODataUri] int key, string relatedKey)
+        public ITestActionResult DeleteRefToAddressesFromVipCustomer([FromODataUri] int key, string relatedKey)
         {
             if (key == 5 && relatedKey.Equals("25"))
             {
@@ -165,7 +161,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         }
 
         [AcceptVerbs("POST", "PUT")]
-        public IHttpActionResult CreateRefToAddressesFromVipCustomer([FromODataUri] int key, [FromBody] Uri reference)
+        public ITestActionResult CreateRefToAddressesFromVipCustomer([FromODataUri] int key, [FromBody] Uri reference)
         {
             if (key == 5 && reference.ToString() == "http://localhost:12345/Orders(25)")
             {
@@ -175,7 +171,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         }
 
         [AcceptVerbs("POST", "PUT")]
-        public IHttpActionResult CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri reference)
+        public ITestActionResult CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri reference)
         {
             if (key == 5 && navigationProperty == "Information" && reference.ToString() == "http://localhost:12345/Orders(25)")
             {
@@ -184,7 +180,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return BadRequest();
         }
 
-        public IHttpActionResult DeleteRef([FromODataUri] int key, string navigationProperty)
+        public ITestActionResult DeleteRef([FromODataUri] int key, string navigationProperty)
         {
             if (key == 5 && navigationProperty == "Information")
             {
@@ -194,9 +190,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         }
     }
 
-    public class OrdersController : ODataController
+    public class OrdersController : TestController
     {
-        public IHttpActionResult DeleteRefToCustomer([FromODataUri] int key)
+        public ITestActionResult DeleteRefToCustomer([FromODataUri] int key)
         {
             if (key == 25)
             {

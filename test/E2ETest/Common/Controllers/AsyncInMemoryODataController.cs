@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 #else
 using System;
 using System.Collections.Concurrent;
@@ -18,7 +19,7 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 #endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
@@ -26,7 +27,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 #if !NETCORE
     [ModelStateErrorHandling]
 #endif
-    public abstract class InMemoryODataController<TEntity, TKey> : ODataController
+    public abstract class InMemoryODataController<TEntity, TKey> : TestController
         where TEntity : class
     {
         private static ConcurrentDictionary<Type, ConcurrentDictionary<TKey, TEntity>> repository =

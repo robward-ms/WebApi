@@ -3,18 +3,18 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
-    public class StableOrderController : ApiController
+    public class StableOrderController : TestController
     {
         private static List<Product> products = new List<Product>();
         static StableOrderController()

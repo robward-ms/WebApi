@@ -3,7 +3,6 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
@@ -11,6 +10,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using JsonLightModel = Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
@@ -25,9 +25,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             configuration.AddODataQueryFilter();
         }
 
-        protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var entitySet = builder.EntitySet<JsonLightModel.EntityWithComplexProperties>("EntityWithComplexProperties");
             return builder.GetEdmModel();
         }

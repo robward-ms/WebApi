@@ -8,6 +8,7 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
@@ -32,9 +33,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return builder.GetEdmModel();
         }
 
-        public static IEdmModel GetConventionModel()
+        public static IEdmModel GetConventionModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<File>("Files");
 
             BuildFunctions(builder);

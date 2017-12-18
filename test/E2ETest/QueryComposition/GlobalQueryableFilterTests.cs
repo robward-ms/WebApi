@@ -7,12 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -24,21 +25,29 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             this.PageSize = 3;
         }
 
+#if NETCORE
+        public override void ValidateQuery(Microsoft.AspNetCore.Http.HttpRequest request, ODataQueryOptions queryOptions)
+#else
         public override void ValidateQuery(HttpRequestMessage request, ODataQueryOptions queryOptions)
+#endif
         {
-            //base.ValidateQuery(request, queryOptions);
+            // Skip validation.
         }
     }
 
     public class DerivedODataQueryOptions : ODataQueryOptions
     {
+#if NETCORE
+        public DerivedODataQueryOptions(ODataQueryContext context, Microsoft.AspNetCore.Http.HttpRequest request)
+#else
         public DerivedODataQueryOptions(ODataQueryContext context, HttpRequestMessage request)
+#endif
             : base(context, request)
         {
         }
     }
 
-    public class GlobalQueryableFilterController : ApiController
+    public class GlobalQueryableFilterController : TestController
     {
         private static List<Product> products = new List<Product>();
         static GlobalQueryableFilterController()
@@ -98,7 +107,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         public HttpResponseMessage GetHttpResponseMessage()
         {
-            return this.Request.CreateResponse<IQueryable<Product>>(HttpStatusCode.OK, products.AsQueryable());
+            return this.CreateResponse<IQueryable<Product>>(HttpStatusCode.OK, products.AsQueryable());
         }
 
         public Task<IQueryable> GetTaskIQueryableT()
@@ -156,7 +165,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class DerivedEnitySetController : ODataController
+    public class DerivedEnitySetController : TestController
     {
         [DerivedQueryable]
         public IQueryable<Product> Get()
@@ -231,7 +240,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class GlobalQueryableFilterWithResultLimitTests : GlobalQueryableFilterWithoutResultLimitTests
     {
-        internal static void UpdateConfiguration1(HttpConfiguration configuration)
+        internal static void UpdateConfiguration1(WebRouteConfiguration configuration)
         {
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 3 });
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);

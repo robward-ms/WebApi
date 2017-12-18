@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -14,6 +13,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -32,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
         public string Name { get; set; }
     }
 
-    public class LinkGeneration_Model1Controller : ODataController
+    public class LinkGeneration_Model1Controller : TestController
     {
         public IQueryable<LinkGeneration_Model_v1> Get()
         {
@@ -55,7 +55,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
             };
         }
     }
-    public class LinkGeneration_Model2Controller : ODataController
+    public class LinkGeneration_Model2Controller : TestController
     {
         public IQueryable<LinkGeneration_Model_v2> Get()
         {
@@ -81,17 +81,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
             configuration.Routes.MapHttpRoute("ApiDefault", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional });
         }
 
-        protected static IEdmModel GetEdmModel1(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel1(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder(configuration);
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<LinkGeneration_Model_v1>("LinkGeneration_Model1");
             mb.EntitySet<LinkGeneration_Model_v2>("LinkGeneration_Model2");
             return mb.GetEdmModel();
         }
 
-        protected static IEdmModel GetEdmModel2(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel2(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder(configuration);
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<LinkGeneration_Model_v2>("LinkGeneration_Model2");
             return mb.GetEdmModel();
         }

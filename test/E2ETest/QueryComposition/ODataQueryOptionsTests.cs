@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -40,7 +41,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public string NextPage { get; set; }
     }
 
-    public class ODataQueryOptionsController : ApiController
+    public class ODataQueryOptionsController : TestController
     {
         private static List<ODataQueryOptions_Todo> todoes = new List<ODataQueryOptions_Todo>();
         static ODataQueryOptionsController()
@@ -148,7 +149,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();
 
-            ODataQueryContext context = new ODataQueryContext(GetEdmModel(), typeof(ODataQueryOptions_Todo), path: null);
+            ODataQueryContext context = new ODataQueryContext(GetEdmModel(config), typeof(ODataQueryOptions_Todo), path: null);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$orderby=Name desc");
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.EnableDependencyInjection();
@@ -173,9 +174,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Assert.Equal("One", result.List.Single());
         }
 
-        private Microsoft.OData.Edm.IEdmModel GetEdmModel()
+        private Microsoft.OData.Edm.IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             builder.EntityType<ODataQueryOptions_Todo>();
             return builder.GetEdmModel();
         }

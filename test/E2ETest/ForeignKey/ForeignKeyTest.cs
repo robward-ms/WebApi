@@ -6,15 +6,11 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -33,13 +29,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
             configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
-            configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(routeName: "explicit", routePrefix: "explicit",
                 model: ForeignKeyEdmModel.GetExplicitModel(foreignKey: true));
 
             configuration.MapODataServiceRoute(routeName: "convention", routePrefix: "convention",
-                model: ForeignKeyEdmModel.GetConventionModel());
+                model: ForeignKeyEdmModel.GetConventionModel(configuration));
 
             configuration.MapODataServiceRoute(routeName: "noncascade", routePrefix: "noncascade",
                 model: ForeignKeyEdmModel.GetExplicitModel(foreignKey: false));

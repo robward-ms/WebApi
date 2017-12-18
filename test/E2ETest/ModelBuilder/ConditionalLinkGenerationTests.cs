@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
@@ -66,12 +65,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 }
             });
 
-            configuration.EnableODataSupport(GetImplicitEdmModel());
+            configuration.EnableODataSupport(GetImplicitEdmModel(configuration));
         }
 
-        private static Microsoft.OData.Edm.IEdmModel GetImplicitEdmModel()
+        private static Microsoft.OData.Edm.IEdmModel GetImplicitEdmModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = configuration.CreateConventionModelBuilder();
             var products = modelBuilder.EntitySet<Product>("ConditionalLinkGeneration_Products");
             products.HasEditLink(
                ctx => { return (Uri)null; },
@@ -81,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     ctx.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(ctx.Url.CreateODataLink(
+                    return new Uri(ctx.InternalUrlHelper.CreateODataLink(
                                     new EntitySetSegment(ctx.NavigationSource as IEdmEntitySet),
                                     new KeySegment(new[] {new KeyValuePair<string, object>("Id", id)}, ctx.StructuredType as IEdmEntityType, null)));
                 },

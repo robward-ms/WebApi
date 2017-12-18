@@ -1,28 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Batch;
-using Microsoft.AspNet.OData.Extensions;
-using Microsoft.OData;
-using Microsoft.OData.Client;
-using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
-using Newtonsoft.Json.Linq;
-using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
@@ -56,6 +37,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             var controllers = new[] { typeof(AccountsController), typeof(AnonymousAccountController), typeof(MetadataController) };
             configuration.AddControllers(controllers);
 
+#if !NETCORE
             configuration.Routes.Clear();
             HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
@@ -70,9 +52,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
                     routePrefix: "explicit",
                     model: ContainmentEdmModels.GetExplicitModel(),
                     batchHandler: new DefaultODataBatchHandler(httpServer));
+#endif
             configuration.EnsureInitialized();
         }
 
+#if !NETCORE
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -123,7 +107,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal("Container", container.Name);
         }
 
-        #region CRUD on containing entity
+#region CRUD on containing entity
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -460,9 +444,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             HttpResponseMessage response = await Client.DeleteAsync(requestUri);
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
-        #endregion
+#endregion
 
-        #region CRUD on containment navigation properties
+#region CRUD on containment navigation properties
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -935,9 +919,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             var account = await response.Content.ReadAsAsync<JObject>();
             Assert.Null(account["Steatement"]);
         }
-        #endregion
+#endregion
 
-        #region Actions and Functions
+#region Actions and Functions
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -999,9 +983,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal(2, count);
         }
 
-        #endregion
+#endregion
 
-        #region singleton
+#region singleton
         [Theory]
         [MemberData(nameof(MediaTypes))]
         public async Task ExpandContainmentNavigationPropertyOnSingleton(string mode, string mime)
@@ -1075,9 +1059,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             }
         }
 
-        #endregion
+#endregion
 
-        #region batch
+#region batch
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -1121,7 +1105,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.DoesNotContain(changedAccountsList, (x) => x.AccountID == accountToDelete.AccountID);
 
             Proxy.Account account = newClient.Accounts.Where(a => a.AccountID == 100).Single();
-            newClient.LoadProperty(account, "PayinPIs");
+            await newClient.LoadPropertyAsync(account, "PayinPIs");
             var payinPIList = account.PayinPIs.ToList();
 
             Assert.DoesNotContain(payinPIList, (pi) => pi.PaymentInstrumentID == 102);
@@ -1130,12 +1114,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             Assert.Equal("updatedName", payinPIList.Single(pi => pi.PaymentInstrumentID == 101).FriendlyName);
         }
 
-        #endregion
+#endregion
         private async Task<HttpResponseMessage> ResetDatasource()
         {
             var uriReset = this.BaseAddress + "/convention/ResetDataSource";
             var response = await this.Client.PostAsync(uriReset, null);
             return response;
         }
+#endif
     }
 }

@@ -6,10 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
@@ -19,6 +16,7 @@ using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
+#if !NETCORE
     [ODataJsonOnlyFormatting]
     public class JsonLight_BlogPostsController : InMemoryODataController<BlogPost, int>
     {
@@ -50,9 +48,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
-        private static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder(configuration);
+            var builder = configuration.CreateConventionModelBuilder();
             var post = builder.EntitySet<BlogPost>("JsonLight_BlogPosts").EntityType;
             post.Ignore(p => p.BlogComments);
             post.Ignore(p => p.Language);
@@ -133,4 +131,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("application/xml", response.Content.Headers.ContentType.MediaType);
         }
     }
+#endif
 }

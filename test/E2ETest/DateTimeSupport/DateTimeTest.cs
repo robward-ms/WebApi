@@ -7,17 +7,14 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -39,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             configuration.MapODataServiceRoute(
                 routeName: "convention",
                 routePrefix: "convention",
-                model: DateTimeEdmModel.GetConventionModel());
+                model: DateTimeEdmModel.GetConventionModel(configuration));
 
             configuration.MapODataServiceRoute(
                 routeName: "explicit",

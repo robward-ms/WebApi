@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,6 +14,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -25,12 +25,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
-            config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("odata", "odata", GetModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             EntitySetConfiguration<PatchCustomer> patchCustomer = builder.EntitySet<PatchCustomer>("PatchCustomers");
             patchCustomer.EntityType.Property(p => p.ExtraProperty).IsRequired();
             return builder.GetEdmModel();
@@ -87,10 +87,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
     }
 
 
-    public class PatchCustomersController : ODataController
+    public class PatchCustomersController : TestController
     {
         [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] int key, Delta<PatchCustomer> patch)
+        public ITestActionResult Patch([FromODataUri] int key, Delta<PatchCustomer> patch)
         {
             PatchCustomer c = new PatchCustomer() { Id = key, ExtraProperty = "Some value" };
             patch.Patch(c);

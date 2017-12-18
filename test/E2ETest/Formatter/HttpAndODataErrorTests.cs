@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,6 +14,7 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
@@ -46,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         public string Name { get; set; }
     }
 
-    public class HttpError_TodoController : ODataController
+    public class HttpError_TodoController : TestController
     {
         [HttpPost]
         public HttpError_Todo Get(int key)
@@ -215,9 +215,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             configuration.AddODataQueryFilter(new EnableQueryAttribute() { PageSize = 100 });
         }
 
-        public static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        public static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder(configuration);
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<HttpError_Todo>("HttpError_Todo");
             mb.EntitySet<HttpError_Item>("HttpError_Item");
             return mb.GetEdmModel();

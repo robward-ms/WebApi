@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys

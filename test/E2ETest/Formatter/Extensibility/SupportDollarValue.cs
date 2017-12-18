@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -16,6 +14,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
@@ -28,7 +27,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         public long? NullableLongProperty { get; set; }
     }
 
-    public class EntityWithPrimitiveAndBinaryPropertyController : ODataController
+    public class EntityWithPrimitiveAndBinaryPropertyController : TestController
     {
         private static readonly EntityWithPrimitiveAndBinaryProperty ENTITY;
 
@@ -72,9 +71,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
                     defaultHandler: HttpClientFactory.CreatePipeline(innerHandler: new HttpControllerDispatcher(configuration), handlers: new[] { new ODataNullValueMessageHandler() }));
         }
 
-        protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var parentSet = builder.EntitySet<EntityWithPrimitiveAndBinaryProperty>("EntityWithPrimitiveAndBinaryProperty");
             return builder.GetEdmModel();
         }

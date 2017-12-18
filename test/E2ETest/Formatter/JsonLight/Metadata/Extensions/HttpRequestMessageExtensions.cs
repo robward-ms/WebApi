@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Web.Http;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extensions
 {

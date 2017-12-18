@@ -4,9 +4,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,6 +13,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Routing
@@ -24,12 +23,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
-            config.MapODataServiceRoute("odata", "", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("odata", "", GetModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             builder.EntitySet<AROCustomer>("AROCustomers");
             builder.EntityType<AROVipCustomer>().DerivesFrom<AROCustomer>();
             builder.EntitySet<AROAddress>("AROAddresses");
@@ -83,9 +82,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
         public int Id { get; set; }
     }
 
-    public class AROCustomersController : ODataController
+    public class AROCustomersController : TestController
     {
-        public IHttpActionResult PostToOrders([FromODataUri] int key, [FromBody] AROOrder order)
+        public ITestActionResult PostToOrders([FromODataUri] int key, [FromBody] AROOrder order)
         {
             if (key == 5 && order != null && order.Id == 5)
             {
@@ -94,7 +93,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             return BadRequest();
         }
 
-        public IHttpActionResult PutToAddressFromAROVipCustomer([FromODataUri] int key, [FromBody] AROAddress entity)
+        public ITestActionResult PutToAddressFromAROVipCustomer([FromODataUri] int key, [FromBody] AROAddress entity)
         {
             if (key == 5 && entity != null && entity.Id == 5)
             {

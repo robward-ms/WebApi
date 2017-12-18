@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
@@ -13,6 +12,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.ProductFamilies;
 using Xunit;
 
@@ -43,10 +43,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
                         new
                         {
-                            odataPath = entityContext.Url.CreateODataLink(
+                            odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                                 new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                                 new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null))
                         }));
@@ -57,10 +57,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
                         new
                         {
-                            odataPath = entityContext.Url.CreateODataLink(
+                            odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                                 new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                                 new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null))
                         }));
@@ -71,10 +71,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(ODataTestConstants.DefaultRouteName, 
+                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName, 
                         new
                         {
-                            odataPath = entityContext.Url.CreateODataLink(
+                            odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                                 new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                                 new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null))
                         }));
@@ -119,10 +119,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
                 new
                 {
-                    odataPath = entityContext.Url.CreateODataLink(
+                    odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                         new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                         new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null),
                         new NavigationPropertySegment(navigationProperty, null))
@@ -135,10 +135,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
                 new
                 {
-                    odataPath = entityContext.Url.CreateODataLink(
+                    odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                         new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                         new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null),
                         new NavigationPropertySegment(navigationProperty, null))
@@ -151,11 +151,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.Url.Link(
+                    return new Uri(entityContext.InternalUrlHelper.Link(
                 ODataTestConstants.DefaultRouteName,
                 new
                 {
-                    odataPath = entityContext.Url.CreateODataLink(
+                    odataPath = entityContext.InternalUrlHelper.CreateODataLink(
                         new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                         new KeySegment(new[] { new KeyValuePair<string, object>("ID", id) }, entityContext.StructuredType as IEdmEntityType, null),
                         new NavigationPropertySegment(navigationProperty, null))

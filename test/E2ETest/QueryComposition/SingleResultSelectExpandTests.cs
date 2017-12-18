@@ -4,17 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -29,9 +28,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.MapODataServiceRoute("selectexpand", "selectexpand", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder(configuration);
+            var builder = configuration.CreateConventionModelBuilder();
 
             builder.EntitySet<SingleResultCustomer>("SingleResultCustomers")
                    .EntityType
@@ -216,7 +215,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     }
 
-    public class SingleResultCustomersController : ODataController
+    public class SingleResultCustomersController : TestController
     {
         public IList<SingleResultCustomer> Customers { get; set; }
 

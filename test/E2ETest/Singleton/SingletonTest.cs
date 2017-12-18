@@ -4,24 +4,24 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#if !NETCORE
 using HttpClientExtensions = System.Net.Http.HttpClientExtensions;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
+#if !NETCORE
     public class SingletonTest : WebHostTestBase
     {
         private const string NameSpace = "Microsoft.Test.E2E.AspNet.OData.Singleton";
@@ -35,12 +35,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("ModelBuilderWithConventionRouting", "expCon", SingletonEdmModel.GetExplicitModel("Umbrella"), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("ModelBuilderWithAttributeRouting", "expAttr", SingletonEdmModel.GetExplicitModel("MonstersInc"));
-            configuration.MapODataServiceRoute("ConventionBuilderwithConventionRouting", "conCon", SingletonEdmModel.GetConventionModel("Umbrella"), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
-            configuration.MapODataServiceRoute("ConventionBuilderwithAttributeRouting", "conAttr", SingletonEdmModel.GetConventionModel("MonstersInc"));
+            configuration.MapODataServiceRoute("ConventionBuilderwithConventionRouting", "conCon", SingletonEdmModel.GetConventionModel(configuration, "Umbrella"), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("ConventionBuilderwithAttributeRouting", "conAttr", SingletonEdmModel.GetConventionModel(configuration, "MonstersInc"));
             configuration.EnsureInitialized();
         }
 
-        #region Test
+#region Test
 
         [Theory]
         [InlineData("expCon", "Umbrella")]
@@ -403,7 +403,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             var company = result.GetValue("Company") as JObject;
             Assert.Equal(singletonName, company.GetValue("Name"));
         }
-        #endregion
+#endregion
 
         private async Task<HttpResponseMessage> ResetDataSource(string model, string controller)
         {
@@ -413,4 +413,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             return response;
         }
     }
+#endif
 }

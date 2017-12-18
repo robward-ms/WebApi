@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,6 +14,7 @@ using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -33,26 +33,26 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             configuration.AddODataQueryFilter();
         }
 
-        private static IEdmModel GetInheritanceModel(HttpConfiguration config)
+        private static IEdmModel GetInheritanceModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var baseEntitySet = builder.EntitySet<BaseEntity>("BaseEntity");
             var derivedEntityType = builder.EntityType<DerivedEntity>().DerivesFrom<BaseEntity>();
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetRelationshipsModel(HttpConfiguration config)
+        private static IEdmModel GetRelationshipsModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var oneToOneParentSet = builder.EntitySet<OneToOneParent>("OneToOneParent");
             var oneToOneChildSet = builder.EntitySet<OneToOneChild>("OneToOneChild");
             oneToOneParentSet.HasOptionalBinding(x => x.Child, "OneToOneChild");
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetCustomNavigationPropertyConventionsModel(HttpConfiguration config)
+        private static IEdmModel GetCustomNavigationPropertyConventionsModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var oneToOneChildSet = builder.EntitySet<OneToOneChild>("OneToOneChild");
             var oneToOneParentSet = builder.EntitySet<OneToOneParent>("OneToOneParent");
             var oneToOneParentEntity = oneToOneParentSet.EntityType;
@@ -62,27 +62,27 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetCustomReadLinkConventionsModel(HttpConfiguration config)
+        private static IEdmModel GetCustomReadLinkConventionsModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var oneToOneParentSet = builder.EntitySet<OneToOneParent>("OneToOneParent");
             oneToOneParentSet.EntityType.Ignore(x => x.Child);
             oneToOneParentSet.HasReadLink(eic => new Uri("http://localhost:5000/CustomReadLink"), followsConventions: false);
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetCustomEditLinkConventionsModel(HttpConfiguration config)
+        private static IEdmModel GetCustomEditLinkConventionsModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var oneToOneParentSet = builder.EntitySet<OneToOneParent>("OneToOneParent");
             oneToOneParentSet.EntityType.Ignore(x => x.Child);
             oneToOneParentSet.HasEditLink(eic => new Uri("http://localhost:5000/CustomEditLink"), followsConventions: false);
             return builder.GetEdmModel();
         }
 
-        private static IEdmModel GetCustomIdLinkConventionsModel(HttpConfiguration config)
+        private static IEdmModel GetCustomIdLinkConventionsModel(WebRouteConfiguration config)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = config.CreateConventionModelBuilder();
             var oneToOneParentSet = builder.EntitySet<OneToOneParent>("OneToOneParent");
             oneToOneParentSet.EntityType.Ignore(x => x.Child);
             oneToOneParentSet.HasIdLink(eic => new Uri("http://localhost:5000/CustomIdLink"), followsConventions: false);

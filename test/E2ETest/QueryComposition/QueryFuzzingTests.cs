@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.SelfHost;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;

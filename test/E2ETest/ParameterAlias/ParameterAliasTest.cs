@@ -4,13 +4,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -24,13 +22,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ParameterAlias
             configuration.AddControllers(controllers);
 
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
-            configuration.MapODataServiceRoute("OData", "", GetModel());
+            configuration.MapODataServiceRoute("OData", "", GetModel(configuration));
             configuration.EnsureInitialized();
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             EntitySetConfiguration<Trade> tradesConfiguration = builder.EntitySet<Trade>("Trades");
 
             //Add bound function

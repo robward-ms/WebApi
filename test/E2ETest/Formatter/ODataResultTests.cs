@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -69,12 +68,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
-            configuration.EnableODataSupport(GetEdmModel());
+            configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var mb = new ODataConventionModelBuilder();
+            var mb = configuration.CreateConventionModelBuilder();
             mb.EntitySet<ODataResult_Model1>("ODataResult_Model1");
             mb.EntitySet<ODataResult_Model2>("ODataResult_Model2");
 
@@ -86,7 +85,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             // Arrange
             var ctx = new DataServiceContext(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
-            ctx.Format.UseJson(GetEdmModel());
+            ctx.Format.UseJson(GetEdmModel(configuration));
 
             ctx.AddObject(
                 "ODataResult_Model1",

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
@@ -16,6 +15,8 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -116,10 +117,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         }
     }
 
-    public class ETagUntypedCustomersController : ODataController
+    public class ETagUntypedCustomersController : TestController
     {
         [EnableQuery]
-        public IHttpActionResult Get(int key)
+        public ITestActionResult Get(int key)
         {
             IEdmModel model = Request.GetModel();
             IEdmEntityType entityType = model.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");

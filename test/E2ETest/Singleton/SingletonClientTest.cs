@@ -6,14 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web.Http;
-using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Singleton
@@ -61,7 +58,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             ClientContext.UpdateObject(umbrella);
             await ClientContext.SaveChangesAsync();
 
-            var name = ClientContext.Execute<string>(new Uri("Umbrella/Name", UriKind.Relative)).Single();
+            var name = await ClientContext.ExecuteAsync<string>(new Uri("Umbrella/Name", UriKind.Relative)).Single();
             Assert.Equal("UpdatedName", name);
 
             // $select
@@ -79,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             await ClientContext.SaveChangesAsync();
 
             // Load navigation property
-            ClientContext.LoadProperty(umbrella, "Partners");
+            await ClientContext.LoadPropertyAsync(umbrella, "Partners");
             Assert.NotNull(umbrella.Partners);
 
             // Add navigation target which is a singleton to entity
@@ -87,7 +84,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             ClientContext.SetLink(partner, "Company", umbrella);
             await ClientContext.SaveChangesAsync();
 
-            ClientContext.LoadProperty(partner, "Company");
+            await ClientContext.LoadPropertyAsync(partner, "Company");
             Assert.NotNull(partner.Company);
 
             // Update singleton
@@ -96,7 +93,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             ClientContext.UpdateRelatedObject(partner, "Company", navigatedCompany);
             await ClientContext.SaveChangesAsync();
 
-            ClientContext.LoadProperty(partner, "Company");
+            await ClientContext.LoadPropertyAsync(partner, "Company");
             navigatedCompany = partner.Company;
             Assert.Equal(100, navigatedCompany.Revenue);
 
@@ -108,14 +105,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         }
 
         [Fact]
-        public void SingletonQueryInBatchTest()
+        public async Task SingletonQueryInBatchTest()
         {
             var serviceRoot = this.BaseAddress + "/clientTest/";
             var ClientContext = new Client.Container(new Uri(serviceRoot));
 
             // Reset data source
-            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
-            ClientContext.Execute(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
                                   "POST");
 
             DataServiceRequest[] requests = new DataServiceRequest[] {
@@ -123,7 +120,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                         ClientContext.CreateQuery<Client.Partner>("Partners")
             };
 
-            DataServiceResponse responses = ClientContext.ExecuteBatch(requests);
+            DataServiceResponse responses = await ClientContext.ExecuteBatchAsync(requests);
 
             foreach (var response in responses)
             {
@@ -149,8 +146,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             var ClientContext = new Client.Container(new Uri(serviceRoot));
 
             // Reset data source
-            ClientContext.Execute(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
-            ClientContext.Execute(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Umbrella/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"), "POST");
+            await ClientContext.ExecuteAsync(new Uri(serviceRoot + "Partners/Microsoft.Test.E2E.AspNet.OData.Singleton.ResetDataSource"),
                                   "POST");
 
             var umbrella = ClientContext.Umbrella.Single();

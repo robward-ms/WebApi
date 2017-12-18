@@ -463,9 +463,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton.Client
                 throw new System.Exception("cannot find entity");
             }
 
+#if !NETCORE
             global::System.Uri requestUri = new global::System.Uri(resource.Identity.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount");
             return global::System.Linq.Enumerable.Single(Context.Execute<int>(requestUri, "GET", true,
                 new global::Microsoft.OData.Client.OperationParameter[] {  }));
+#else
+            return 0;
+#endif
         }
         /// <summary>
         /// There are no comments for ResetDataSource in the schema.
@@ -483,11 +487,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton.Client
                 new global::Microsoft.OData.Client.OperationParameter[] {  });
         }
 #endif
-    }
-    /// <summary>
-    /// There are no comments for Office in the schema.
-    /// </summary>
-    public partial class Office : global::System.ComponentModel.INotifyPropertyChanged
+        }
+        /// <summary>
+        /// There are no comments for Office in the schema.
+        /// </summary>
+        public partial class Office : global::System.ComponentModel.INotifyPropertyChanged
     {
         /// <summary>
         /// There are no comments for Property City in the schema.

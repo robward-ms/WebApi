@@ -3,7 +3,6 @@
 
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;

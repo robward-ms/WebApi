@@ -5,7 +5,6 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
@@ -21,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.WriterClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel());
+            ctx.Format.UseJson(GetEdmModel(configuration));
 
             return ctx;
         }
@@ -30,7 +29,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.ReaderClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel());
+            ctx.Format.UseJson(GetEdmModel(configuration));
 
             return ctx;
         }
@@ -65,7 +64,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
-            configuration.EnableODataSupport(GetEdmModel());
+            configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
         [Theory]

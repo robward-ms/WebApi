@@ -18,7 +18,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
 using Microsoft.Owin.Hosting;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Owin;
 using Xunit;
 #endif
@@ -148,6 +148,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                             // Add ourself to the container so WebHostTestStartup
                             // can call UpdateCOnfiguration.
                             services.AddSingleton<WebHostTestBase>(this);
+                        })
+                        .ConfigureLogging((hostingContext, logging) =>
+                        {
+                            logging.AddDebug();
+                            logging.SetMinimumLevel(LogLevel.Warning);
                         })
                         .Build();
 

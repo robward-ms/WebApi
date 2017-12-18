@@ -7,14 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -29,7 +28,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 
             configuration.Routes.Clear();
 
-            configuration.MapODataServiceRoute(routeName: "odata", routePrefix: "odata", model: GetEdmModel());
+            configuration.MapODataServiceRoute(routeName: "odata", routePrefix: "odata", model: GetEdmModel(configuration));
 
             configuration.EnsureInitialized();
         }
@@ -64,16 +63,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             contentOfJObject["value"].Select(e => e["Location"]["Address"]["@odata.type"]).Select(c => (string)c));
         }
 
-        public static IEdmModel GetEdmModel()
+        public static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<InheritanceCustomer>("InheritanceCustomers");
             builder.ComplexType<InheritanceLocation>();
             return builder.GetEdmModel();
         }
     }
 
-    public class InheritanceCustomersController : ODataController
+    public class InheritanceCustomersController : TestController
     {
         private readonly IList<InheritanceCustomer> _customers;
         public InheritanceCustomersController()
@@ -111,7 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(_customers);
         }

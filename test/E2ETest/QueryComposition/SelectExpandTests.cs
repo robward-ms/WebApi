@@ -9,8 +9,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -18,6 +16,8 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -35,9 +35,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.MapODataServiceRoute("selectexpand", "selectexpand", GetEdmModel(configuration));
         }
 
-        private static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder(configuration);
+            var builder = configuration.CreateConventionModelBuilder();
 
             EntitySetConfiguration<SelectCustomer> customers = builder.EntitySet<SelectCustomer>("SelectCustomer");
             customers.EntityType.Action("CreditRating").Returns<double>();
@@ -593,7 +593,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class SelectCustomerController : ODataController
+    public class SelectCustomerController : TestController
     {
         public IList<SelectCustomer> Customers { get; set; }
 
@@ -671,19 +671,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class EFSelectCustomersController : ODataController
+    public class EFSelectCustomersController : TestController
     {
         private readonly SampleContext _db = new SampleContext();
 
         [EnableQuery(PageSize = 2)]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(_db.Customers);
         }
 
         [HttpGet]
         [ODataRoute("ResetDataSource")]
-        public IHttpActionResult ResetDataSource()
+        public ITestActionResult ResetDataSource()
         {
             if (!_db.Customers.Any())
             {

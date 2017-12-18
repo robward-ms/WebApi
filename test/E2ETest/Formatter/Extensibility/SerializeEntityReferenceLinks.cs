@@ -9,21 +9,23 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Formatter.Deserialization;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
@@ -41,7 +43,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         public int Id { get; set; }
     }
 
-    public class ParentEntityController : ODataController
+    public class ParentEntityController : TestController
     {
         private static readonly ParentEntity PARENT_ENTITY;
 
@@ -54,12 +56,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             };
         }
 
+#if !NETCORE
         public HttpResponseMessage GetLinksForChildren(int key)
+#else
+        public HttpResponse GetLinksForChildren(int key)
+#endif
         {
             IEdmModel model = Request.GetModel();
             IEdmEntitySet childEntity = model.EntityContainer.FindEntitySet("ChildEntity");
 
-            return Request.CreateResponse(HttpStatusCode.OK,
+            return CreateResponse(HttpStatusCode.OK,
                 PARENT_ENTITY.Children.Select(x => Url.CreateODataLink(
                     new EntitySetSegment(childEntity),
                     new KeySegment(new[] { new KeyValuePair<string, object>("Id", x.Id)}, childEntity.EntityType(), null)
@@ -109,7 +115,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         {
         }
 
+#if NETCORE
+        public override ODataSerializer GetODataPayloadSerializer(Type type, Microsoft.AspNetCore.Http.HttpRequest request)
+#else
         public override ODataSerializer GetODataPayloadSerializer(Type type, HttpRequestMessage request)
+#endif
         {
             if (type == null)
             {
@@ -129,28 +139,26 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
 
     public class GetRefRoutingConvention : RefRoutingConvention
     {
+#if NETCORE
+        /// <inheritdoc/>
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
+        internal override string SelectAction(RouteContext routeContext, SelectControllerResult controllerResult, IEnumerable<ControllerActionDescriptor> actionDescriptors)
+        {
+            WebApiControllerContext internalControllerContext = new WebApiControllerContext(routeContext, controllerResult);
+            WebApiActionMap actionMap = new WebApiActionMap(actionDescriptors);
+
+            ODataPath odataPath = routeContext.HttpContext.ODataFeature().Path;
+            ODataRequestMethod requestMethod = internalControllerContext.Request.Method;
+#else
         public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
         {
-            if (odataPath == null)
-            {
-                throw new ArgumentNullException("odataPath");
-            }
-
-            if (controllerContext == null)
-            {
-                throw new ArgumentNullException("controllerContext");
-            }
-
-            if (actionMap == null)
-            {
-                throw new ArgumentNullException("actionMap");
-            }
-
-            HttpMethod requestMethod = controllerContext.Request.Method;
-            if (odataPath.PathTemplate == "~/entityset/key/navigation/$ref" && requestMethod == HttpMethod.Get)
+            WebApiControllerContext internalControllerContext = new WebApiControllerContext(controllerContext);
+            ODataRequestMethod requestMethod = internalControllerContext.Request.Method;
+#endif
+            if (odataPath.PathTemplate == "~/entityset/key/navigation/$ref" && requestMethod == ODataRequestMethod.Get)
             {
                 KeySegment keyValueSegment = odataPath.Segments[1] as KeySegment;
-                controllerContext.AddKeyValueToRouteData(keyValueSegment);
+                internalControllerContext.AddKeyValueToRouteData(keyValueSegment);
                 NavigationPropertyLinkSegment navigationLinkSegment = odataPath.Segments[2] as NavigationPropertyLinkSegment;
                 IEdmNavigationProperty navigationProperty = navigationLinkSegment.NavigationProperty;
                 IEdmEntityType declaredType = navigationProperty.DeclaringType as IEdmEntityType;
@@ -158,7 +166,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
                 string action = requestMethod + "LinksFor" + navigationProperty.Name + "From" + declaredType.Name;
                 return actionMap.Contains(action) ? action : requestMethod + "LinksFor" + navigationProperty.Name;
             }
+
+#if NETCORE
+            return base.SelectAction(routeContext, controllerResult, actionDescriptors);
+#else
             return base.SelectAction(odataPath, controllerContext, actionMap);
+#endif
         }
     }
 
@@ -166,10 +179,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+#if !NETCORE
             configuration.Formatters.InsertRange(0,
                 ODataMediaTypeFormatters.Create(
                     new CustomODataSerializerProvider(new MockContainer()),
                     new DefaultODataDeserializerProvider(new MockContainer())));
+#endif
             var routingConventions = ODataRoutingConventions.CreateDefault();
             routingConventions.Insert(4, new GetRefRoutingConvention());
             configuration.MapODataServiceRoute(
@@ -178,9 +193,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
                 GetEdmModel(configuration), new DefaultODataPathHandler(), routingConventions);
         }
 
-        protected static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(configuration);
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var parentSet = builder.EntitySet<ParentEntity>("ParentEntity");
             var childSet = builder.EntitySet<ChildEntity>("ChildEntity");
 

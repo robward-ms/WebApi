@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.SingleResultTest
 {
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private readonly SingleResultContext _db = new SingleResultContext();
 

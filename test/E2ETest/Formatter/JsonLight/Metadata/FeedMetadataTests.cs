@@ -4,13 +4,13 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Model;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -24,9 +24,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata
             configuration.AddODataQueryFilter();
         }
 
-        protected static IEdmModel GetEdmModel(HttpConfiguration config)
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder(config);
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             var entitySet = builder.EntitySet<StubEntity>("StubEntity");
             entitySet.EntityType.Collection.Action("Paged").ReturnsCollectionFromEntitySet<StubEntity>("StubEntity");
             return builder.GetEdmModel();

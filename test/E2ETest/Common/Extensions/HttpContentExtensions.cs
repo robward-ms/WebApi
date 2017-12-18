@@ -11,7 +11,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 #endif
 
-namespace Microsoft.Test.E2E.AspNetCore.OData.Common.Extensions
+namespace Microsoft.Test.E2E.AspNet.OData.Common.Extensions
 {
 #if NETCORE
     /// <summary>

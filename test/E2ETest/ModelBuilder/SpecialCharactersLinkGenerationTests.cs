@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
@@ -24,7 +24,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         public string Name { get; set; }
     }
 
-    public class SpecialCharactersLinkGenerationTestsController : ODataController
+    public class SpecialCharactersLinkGenerationTestsController : TestController
     {
         static SpecialCharactersLinkGenerationTestsController()
         {
@@ -64,7 +64,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         }
     }
 
-    public class SpecialCharactersLinkGenerationWebTestsController : ODataController
+    public class SpecialCharactersLinkGenerationWebTestsController : TestController
     {
         static SpecialCharactersLinkGenerationWebTestsController()
         {
@@ -106,15 +106,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 
     public class SpecialCharactersLinkGenerationTests : WebHostTestBase
     {
+        IEdmModel _model;
+
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            configuration.EnableODataSupport(GetEdmModel());
+            _model = GetEdmModel(configuration);
+            configuration.EnableODataSupport(_model);
         }
 
-        public static IEdmModel GetEdmModel()
+        public static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<SpecialCharactersLinkGenerationTestsModel>("SpecialCharactersLinkGenerationTests");
 
             return builder.GetEdmModel();
@@ -124,7 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var context = new DataServiceContext(new Uri(this.BaseAddress));
-            context.Format.UseJson(GetEdmModel());
+            context.Format.UseJson(_model);
 
             var query = context.CreateQuery<SpecialCharactersLinkGenerationTestsModel>("SpecialCharactersLinkGenerationTests");
             var todoes = await query.ExecuteAsync();
@@ -153,16 +156,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
 
     public class SpecialCharactersLinkGenerationWebTests : WebHostTestBase
     {
+        IEdmModel _model;
+
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-
-            configuration.EnableODataSupport(GetEdmModel());
+            _model = GetEdmModel(configuration);
+            configuration.EnableODataSupport(_model);
         }
 
-        public static IEdmModel GetEdmModel()
+        public static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<SpecialCharactersLinkGenerationTestsModel>("SpecialCharactersLinkGenerationWebTests");
             return builder.GetEdmModel();
         }
@@ -171,7 +176,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         public async Task TestSpecialCharactersInPrimaryKey()
         {
             var client = new DataServiceContext(new Uri(this.BaseAddress));
-            client.Format.UseJson(GetEdmModel());
+            client.Format.UseJson(_model);
 
             var query = client.CreateQuery<SpecialCharactersLinkGenerationTestsModel>("SpecialCharactersLinkGenerationWebTests");
             var todoes = await query.ExecuteAsync();

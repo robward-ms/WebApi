@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.E2E.AspNetCore.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ODataCountTest
 {

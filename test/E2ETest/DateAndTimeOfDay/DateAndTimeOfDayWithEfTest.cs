@@ -11,14 +11,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -33,7 +32,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("odata", "odata", BuildEdmModel());
+            configuration.MapODataServiceRoute("odata", "odata", BuildEdmModel(configuration));
             configuration.EnsureInitialized();
             CreateDatabase();
         }
@@ -269,9 +268,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        private static IEdmModel BuildEdmModel()
+        private static IEdmModel BuildEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<DateAndTimeOfDayModel>("DateAndTimeOfDayModels");
 
             var type = builder.EntityType<DateAndTimeOfDayModel>();
@@ -315,18 +314,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         }
     }
 
-    public class DateAndTimeOfDayModelsController : ODataController
+    public class DateAndTimeOfDayModelsController : TestController
     {
         private EfDateAndTimeOfDayModelContext db = new EfDateAndTimeOfDayModelContext();
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(db.DateTimes);
         }
 
         [EnableQuery]
-        public IHttpActionResult Get(int key)
+        public ITestActionResult Get(int key)
         {
             DateAndTimeOfDayModel dtm = db.DateTimes.FirstOrDefault(e => e.Id == key);
             if (dtm == null)
@@ -337,7 +336,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             return Ok(dtm);
         }
 
-        public IHttpActionResult Post(DateAndTimeOfDayModel dt)
+        public ITestActionResult Post(DateAndTimeOfDayModel dt)
         {
             Assert.NotNull(dt);
 
@@ -349,7 +348,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             return Created(dt);
         }
 
-        public IHttpActionResult Put(int key, Delta<DateAndTimeOfDayModel> dt)
+        public ITestActionResult Put(int key, Delta<DateAndTimeOfDayModel> dt)
         {
             Assert.Equal(new[] { "Birthday", "CreatedTime" }, dt.GetChangedPropertyNames());
 

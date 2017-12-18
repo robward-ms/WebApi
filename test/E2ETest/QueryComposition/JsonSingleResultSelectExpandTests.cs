@@ -8,9 +8,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -268,7 +268,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class JsonSingleResultCustomerController : ApiController
+    public class JsonSingleResultCustomerController : TestController
     {
         [EnableQuery(MaxExpansionDepth = 10)]
         public SingleResult<JsonSingleResultCustomer> Get(int id)

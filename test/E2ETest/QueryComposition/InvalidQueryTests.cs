@@ -4,7 +4,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -12,6 +11,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -23,12 +23,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
-            config.MapODataServiceRoute("odata", "odata", GetModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("odata", "odata", GetModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetModel()
+        private static IEdmModel GetModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             EntitySetConfiguration<InvalidQueryCustomer> invalidQueryCustomers = builder.EntitySet<InvalidQueryCustomer>("InvalidQueryCustomers");
             return builder.GetEdmModel();
         }
@@ -49,16 +49,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class InvalidQueryCustomersController : ODataController
+    public class InvalidQueryCustomersController : TestController
     {
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 2)]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(Enumerable.Range(0, 1).Select(i => new InvalidQueryCustomer { }).AsQueryable());
         }
 
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 2)]
-        public IHttpActionResult Get([FromODataUri] int key)
+        public ITestActionResult Get([FromODataUri] int key)
         {
             return Ok(SingleResult.Create(Enumerable.Range(0, 1).Select(i => new InvalidQueryCustomer { }).AsQueryable()));
         }

@@ -7,17 +7,15 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -32,8 +30,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("convention", "convention", EnumsEdmModel.GetConventionModel());
-            configuration.MapODataServiceRoute("explicit", "explicit", EnumsEdmModel.GetExplicitModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            configuration.MapODataServiceRoute("convention", "convention", EnumsEdmModel.GetConventionModel(configuration));
+            configuration.MapODataServiceRoute("explicit", "explicit", EnumsEdmModel.GetExplicitModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.EnsureInitialized();
         }
 

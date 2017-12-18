@@ -9,13 +9,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
