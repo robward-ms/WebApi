@@ -463,13 +463,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton.Client
                 throw new System.Exception("cannot find entity");
             }
 
-#if !NETCORE
             global::System.Uri requestUri = new global::System.Uri(resource.Identity.OriginalString.Trim('/') + "/Microsoft.Test.E2E.AspNet.OData.Singleton.GetPartnersCount");
             return global::System.Linq.Enumerable.Single(Context.Execute<int>(requestUri, "GET", true,
                 new global::Microsoft.OData.Client.OperationParameter[] {  }));
-#else
-            return 0;
-#endif
         }
         /// <summary>
         /// There are no comments for ResetDataSource in the schema.

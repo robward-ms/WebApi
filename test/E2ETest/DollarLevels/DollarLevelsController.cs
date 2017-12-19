@@ -55,14 +55,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             }
             catch (ODataException e)
             {
-                var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                responseMessage.Content = new StringContent(
+                var responseMessage = new StringContent(
                     String.Format("The query specified in the URI is not valid. {0}", e.Message));
-                return ResponseMessage(responseMessage);
+                return BadRequest(responseMessage);
             }
 
             var managers = queryOptions.ApplyTo(_DLManagers.AsQueryable()).AsQueryable();
+#if !NETCORE
             return Ok(managers, managers.GetType());
+#else
+            return Ok(managers);
+#endif
         }
 
         [EnableQuery(MaxExpansionDepth = 4)]
@@ -72,11 +75,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
 
         }
 
-        private ITestActionResult Ok(object content, Type type)
+#if !NETCORE
+        private ITestActionResult Ok(object content, Type type)#if !NETCORE
+
         {
             var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
             return Activator.CreateInstance(resultType, content, this) as ITestActionResult;
         }
+#endif
     }
 
     public class DLEmployeesController : TestController
@@ -121,14 +127,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             }
             catch (ODataException e)
             {
-                var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                responseMessage.Content = new StringContent(
+                var responseMessage = new StringContent(
                     String.Format("The query specified in the URI is not valid. {0}", e.Message));
-                return ResponseMessage(responseMessage);
+                return BadRequest(responseMessage);
             }
 
             var employees = queryOptions.ApplyTo(_DLEmployees.AsQueryable()).AsQueryable();
+#if !NETCORE
             return Ok(employees, employees.GetType());
+#else
+            return Ok(employees);
+#endif
         }
 
         public ITestActionResult Get(int key, ODataQueryOptions<DLEmployee> queryOptions)
@@ -142,21 +151,26 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
             }
             catch (ODataException e)
             {
-                var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                responseMessage.Content = new StringContent(
+                var responseMessage = new StringContent(
                     String.Format("The query specified in the URI is not valid. {0}", e.Message));
-                return ResponseMessage(responseMessage);
+                return BadRequest(responseMessage);
             }
 
             var employee = _DLEmployees.Single(e=>e.ID == key);
             var appliedEmployee = queryOptions.ApplyTo(employee, new ODataQuerySettings());
+#if !NETCORE
             return Ok(appliedEmployee, appliedEmployee.GetType());
+#else
+            return Ok(appliedEmployee);
+#endif
         }
 
+#if !NETCORE
         private ITestActionResult Ok(object content, Type type)
         {
             var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
             return Activator.CreateInstance(resultType, content, this) as ITestActionResult;
         }
+#endif
     }
 }

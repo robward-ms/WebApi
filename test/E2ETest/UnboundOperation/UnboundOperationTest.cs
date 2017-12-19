@@ -25,9 +25,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
         #region Set up
 
         private readonly string EdmSchemaNamespace = typeof(ConventionCustomer).Namespace;
+        private WebRouteConfiguration _configuration;
 
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+            _configuration = configuration;
+
             var controllers = new[] { 
                 typeof(ConventionCustomersController), 
                 typeof(MetadataController) };
@@ -139,7 +142,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
             //Assert
             var oDataMessageReaderSettings = new ODataMessageReaderSettings();
             IODataResponseMessage message = new ODataMessageWrapper(stream, response.Content.Headers);
-            var reader = new ODataMessageReader(message, oDataMessageReaderSettings, UnboundFunctionEdmModel.GetEdmModel(configuration));
+            var reader = new ODataMessageReader(message, oDataMessageReaderSettings, UnboundFunctionEdmModel.GetEdmModel(_configuration));
             var oDataWorkSpace = reader.ReadServiceDocument();
 
             var function1 = oDataWorkSpace.FunctionImports.Where(odataResourceCollectionInfo => odataResourceCollectionInfo.Name == "GetAllConventionCustomers");

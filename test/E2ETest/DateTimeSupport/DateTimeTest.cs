@@ -31,19 +31,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             configuration.SetTimeZoneInfo(timeZoneInfo);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute(
                 routeName: "convention",
                 routePrefix: "convention",
                 model: DateTimeEdmModel.GetConventionModel(configuration));
 
+#if !NETCORE
+            HttpServer httpServer = configuration.GetHttpServer();
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
                 model: DateTimeEdmModel.GetExplicitModel(),
                 batchHandler: new DefaultODataBatchHandler(httpServer));
-
+#endif
             configuration.EnsureInitialized();
         }
 
@@ -79,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.False(modifiedDates.Type.IsNullable);
         }
 
-        #region CRUD on DateTime related entity
+#region CRUD on DateTime related entity
         [Theory]
         [InlineData("convention")]
         [InlineData("explicit")]
@@ -235,9 +236,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             response = await this.Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
-        #endregion
+#endregion
 
-        #region Query option on DateTime
+#region Query option on DateTime
 
         [Theory]
         [InlineData("convention")]
@@ -298,9 +299,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
                 Assert.Equal("File #" + i, content["value"][5 - i]["Name"]);
             }
         }
-        #endregion
+#endregion
 
-        #region function/action on DateTime
+#region function/action on DateTime
 
         [Theory]
         [InlineData("convention")]
@@ -341,7 +342,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             Assert.Contains("\"value\":\"2014-12-24T09:02:03+06:00\"", await response.Content.ReadAsStringAsync());
         }
 
-        #endregion
+#endregion
         private async Task<HttpResponseMessage> ResetDatasource()
         {
             var uriReset = this.BaseAddress + "/convention/ResetDataSource";

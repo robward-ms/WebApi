@@ -2,8 +2,9 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
-using Microsoft.AspNet.OData.Adapters;
-using Microsoft.AspNet.OData.Interfaces;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Mvc;
 #else
 using System.Net.Http;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,12 +16,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Extensions
     /// <summary>
     /// Extensions for IWebApiUrlHelper.
     /// </summary>
-    internal static class IWebApiUrlHelperExtensions
+    public static class ResourceContextExtensions
     {
-        public static string Link(this IWebApiUrlHelper urlHelper, string routeName, object values)
+#if NETCORE
+        public static IUrlHelper GetUrlHelper(this ResourceContext context)
         {
-            WebApiUrlHelper internalUrlHelper = urlHelper as WebApiUrlHelper;
-            return internalUrlHelper.innerHelper.Link(routeName, values);
+            return context.Request.HttpContext.GetUrlHelper();
         }
+#else
+        public static UrlHelper GetUrlHelper(this ResourceContext context)
+        {
+            return context.Url;
+        }
+#endif
     }
 }

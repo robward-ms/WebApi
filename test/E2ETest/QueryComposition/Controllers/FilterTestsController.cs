@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models;
 using Microsoft.Test.E2E.AspNet.OData.Common.Models.Products;
@@ -34,9 +35,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Controllers
         }
 
         [EnableQuery(PageSize = 999999)]
-        public HttpResponseMessage GetProductsHttpResponse()
+        public ITestActionResult GetProductsHttpResponse()
         {
-            return this.CreateResponse<IEnumerable<Product>>(System.Net.HttpStatusCode.OK, GetProducts());
+            return Ok(GetProducts());
         }
 
         [EnableQuery(PageSize = 999999)]

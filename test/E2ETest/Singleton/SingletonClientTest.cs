@@ -19,12 +19,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+#if !NETCORE
             HttpServer server = configuration.GetHttpServer();
 
             if (server == null)
             {
                 throw new Exception("Inappropriate http server");
             }
+#endif
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
@@ -33,8 +35,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                 "clientTest",
                 SingletonEdmModel.GetExplicitModel("Umbrella"),
                 new DefaultODataPathHandler(),
+#if !NETCORE
                 ODataRoutingConventions.CreateDefault(),
                 new DefaultODataBatchHandler(server));
+#else
+                ODataRoutingConventions.CreateDefault());
+#endif
+
         }
 
         [Fact]
@@ -58,7 +65,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             ClientContext.UpdateObject(umbrella);
             await ClientContext.SaveChangesAsync();
 
-            var name = await ClientContext.ExecuteAsync<string>(new Uri("Umbrella/Name", UriKind.Relative)).Single();
+            var name = (await ClientContext.ExecuteAsync<string>(new Uri("Umbrella/Name", UriKind.Relative))).Single();
             Assert.Equal("UpdatedName", name);
 
             // $select

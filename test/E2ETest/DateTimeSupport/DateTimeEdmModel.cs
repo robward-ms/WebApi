@@ -9,6 +9,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
@@ -64,7 +65,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         {
             object id;
             entityContext.EdmObject.TryGetPropertyValue("FileId", out id);
-            string uri = entityContext.Url.CreateODataLink(
+            string uri = entityContext.GetUrlHelper().CreateODataLink(
                             new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                             new KeySegment(new[] { new KeyValuePair<string, object>("FileId", id) }, entityContext.StructuredType as IEdmEntityType, null));
             return new Uri(uri);

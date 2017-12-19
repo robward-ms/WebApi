@@ -78,7 +78,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
             var model2 = GetEdmModel2(configuration);
             configuration.MapODataServiceRoute("OData1", "v1", model1, new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             configuration.MapODataServiceRoute("OData2", "v2", model2, new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
-            configuration.Routes.MapHttpRoute("ApiDefault", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional });
+#if !NETCORE
+            configuration.MapHttpRoute("ApiDefault", "api/{controller}/{action}/{id}", new { id = RouteParameter.Optional });
+#else
+            configuration.MapHttpRoute("ApiDefault", "api/{controller}/{action}/{id?}");
+#endif
         }
 
         protected static IEdmModel GetEdmModel1(WebRouteConfiguration configuration)

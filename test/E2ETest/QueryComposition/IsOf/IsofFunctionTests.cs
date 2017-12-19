@@ -24,11 +24,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             var controllers = new[]
-            {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
+                {typeof (BillingCustomersController), typeof (BillingsController), typeof (MetadataController)};
+            config.AddControllers(controllers);
 
-            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            config.Services.Replace(typeof (IAssembliesResolver), resolver);
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
 

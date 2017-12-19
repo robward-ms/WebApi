@@ -24,7 +24,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.Routes.MapHttpRoute("api", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+#if !NETCORE
+            configuration.MapHttpRoute("api", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+#else
+            configuration.MapHttpRoute("api", "api/{controller}/{id?}");
+#endif
             configuration.EnableDependencyInjection();
         }
 

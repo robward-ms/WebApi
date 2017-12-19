@@ -26,7 +26,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extension
                     var key = odataPath.Segments[1] as KeySegment;
                     controllerContext.AddKeyValueToRouteData(key);
                     controllerContext.RouteData.Add("property", property.Name);
-                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString());
+                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString().ToUpperInvariant());
                     if (string.IsNullOrEmpty(prefix))
                     {
                         return null;

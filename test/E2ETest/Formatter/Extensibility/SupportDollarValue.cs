@@ -58,6 +58,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
         }
     }
 
+#if !NETCORE
     public class SupportDollarValueTest : WebHostTestBase
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
@@ -126,4 +127,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
     }
+#endif
 }

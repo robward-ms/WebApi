@@ -21,11 +21,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Controlle
             }
         }
 
-        public HttpResponseMessage GetProperty(int key, string property)
+        public ITestActionResult GetProperty(int key, string property)
         {
             var entity = LocalTable[key];
             object propertyValue = entity.GetType().GetProperty(property).GetValue(entity, null);
-            var result = Request.CreateResponse(HttpStatusCode.OK, propertyValue, entity.GetType().GetProperty(property).PropertyType);
+            var result = Ok(propertyValue
+#if !NETCORE
+                , entity.GetType().GetProperty(property).PropertyType);
+#else
+                    );
+#endif
             return result;
         }
     }

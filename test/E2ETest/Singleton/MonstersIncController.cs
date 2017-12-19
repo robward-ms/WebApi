@@ -57,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             {
                 return Ok(subCompany);
             }
-            return BadRequest();
+            return BadRequest("The target cannot be casted");
         }
 
         [ODataRoute("Revenue")]
@@ -86,7 +86,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             {
                 return Ok(subCompany.Location);
             }
-            return BadRequest();
+            return BadRequest("The target cannot be casted");
         }
 
         [HttpGet]
@@ -98,7 +98,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
             {
                 return Ok(subCompany.Office);
             }
-            return BadRequest();
+            return BadRequest("The target cannot be casted");
         }
 
         [HttpGet]
@@ -140,7 +140,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         [ODataRoute("Partners/$ref")]
         public ITestActionResult AddOrUpdateNavigationLink([FromBody] Uri link)
         {
-            int relatedKey = Request.GetKeyValue<int>(link);
+            int relatedKey = GetRequestValue<int>(link);
             Partner partner = PartnersController.Partners.First(x => x.ID == relatedKey);
             MonstersInc.Partners.Add(partner);
 

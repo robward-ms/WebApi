@@ -64,8 +64,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public class ODataResultTests : WebHostTestBase
     {
+        private WebRouteConfiguration _configuration;
+
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+            _configuration = configuration;
+
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
@@ -85,7 +89,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             // Arrange
             var ctx = new DataServiceContext(new Uri(this.BaseAddress), ODataProtocolVersion.V4);
-            ctx.Format.UseJson(GetEdmModel(configuration));
+            ctx.Format.UseJson(GetEdmModel(_configuration));
 
             ctx.AddObject(
                 "ODataResult_Model1",

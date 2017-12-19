@@ -46,7 +46,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
         public TestStatusCodeResult StatusCode(HttpStatusCode statusCode) { return new TestStatusCodeResult(base.StatusCode((int)statusCode)); }
 
         [NonAction]
+        public TestStatusCodeObjectResult StatusCode(HttpStatusCode statusCode, object value) { return new TestStatusCodeObjectResult(base.StatusCode((int)statusCode, value)); }
+
+        [NonAction]
         public new TestNotFoundResult NotFound() { return new TestNotFoundResult(base.NotFound()); }
+
+        [NonAction]
+        public new TestNotFoundObjectResult NotFound(object value) { return new TestNotFoundObjectResult(base.NotFound(value)); }
 
         [NonAction]
         public new TestOkResult Ok() { return new TestOkResult(base.Ok()); }
@@ -63,6 +69,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 
         [NonAction]
 #if NETCORE
+        public new TestBadRequestObjectResult BadRequest(object error) { return new TestBadRequestObjectResult(base.BadRequest(error)); }
+#else
+        public new TestBadRequestObjectResult BadRequest(object error) { return new TestBadRequestObjectResult(base.BadRequest()); }
+#endif
+
+
+        [NonAction]
+#if NETCORE
         public new TestOkObjectResult Ok(object value) { return new TestOkObjectResult(value); }
 #else
         public new TestOkObjectResult<T> Ok<T>(T value) { return new TestOkObjectResult<T>(base.Ok<T>(value)); }
@@ -73,38 +87,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 
         [NonAction]
         public new TestUpdatedODataResult<T> Updated<T>(T entity) { return new TestUpdatedODataResult<T>(entity); }
-
-        [NonAction]
-        public HttpResponse CreateResponse(HttpStatusCode statusCode)
-        {
-#if !NETCORE
-            return Request.CreateResponse(statusCode);
-#else
-            Response.StatusCode = (int)statusCode;
-            return Response;
-#endif
-        }
-
-        [NonAction]
-        public HttpResponse CreateResponse<T>(HttpStatusCode statusCode, T value)
-        {
-#if !NETCORE
-            return Request.CreateResponse(statusCode, value);
-#else
-            Response.StatusCode = (int)statusCode;
-            return Response;
-#endif
-        }
-
-        [NonAction]
-        public HttpResponse CreateErrorResponse(HttpStatusCode statusCode, string message)
-        {
-#if NETCORE
-            return Response;
-#else
-            return Request.CreateErrorResponse(statusCode, message);
-#endif
-        }
 
         protected string GetServiceRootUri()
         {
@@ -169,6 +151,27 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
     }
 
     /// <summary>
+    /// Wrapper for NotFoundObjectResult
+    /// </summary>
+#if NETCORE
+    public class TestNotFoundObjectResult : TestObjectResult
+    {
+        public TestNotFoundObjectResult(NotFoundObjectResult innerResult)
+            : base(innerResult)
+        {
+        }
+    }
+#else
+    public class TestNotFoundObjectResult : TestActionResult
+    {
+        public TestOkObjectResult(OkNegotiatedContentResult<T> innerResult)
+            : base(innerResult)
+        {
+        }
+    }
+#endif
+
+    /// <summary>
     /// Wrapper for OkResult
     /// </summary>
     public class TestOkResult : TestActionResult
@@ -230,6 +233,28 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
         public TestBadRequestObjectResult(InvalidModelStateResult innerResult)
             : base(innerResult)
         {
+        }
+    }
+#endif
+
+    /// <summary>
+    /// Wrapper for StatusCodeObjectResult
+    /// </summary>
+#if NETCORE
+    public class TestStatusCodeObjectResult : TestObjectResult
+    {
+        public TestStatusCodeObjectResult(ObjectResult innerResult)
+            : base(innerResult)
+        {
+        }
+    }
+#else
+    public class TestStatusCodeObjectResult : TestActionResult
+    {
+        public TestStatusCodeObjectResult(StatusCodeResult statusCode, object innerResult)
+            : base(innerResult)
+        {
+            this.StatusCode = statusCode;
         }
     }
 #endif

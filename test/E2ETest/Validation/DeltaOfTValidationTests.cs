@@ -94,7 +94,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Validation
         {
             PatchCustomer c = new PatchCustomer() { Id = key, ExtraProperty = "Some value" };
             patch.Patch(c);
+#if !NETCORE
             Validate(c);
+#endif
             if (ModelState.IsValid)
             {
                 return Ok(c);

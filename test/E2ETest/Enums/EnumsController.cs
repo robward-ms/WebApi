@@ -157,7 +157,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
             if (appliedEmployees.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with ID {0} doesn't exist", key));
             }
 
             Employee employee = appliedEmployees.Single();

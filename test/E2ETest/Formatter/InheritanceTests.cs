@@ -67,36 +67,40 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
         [HttpPut]
-#if !NETCORE
-        public HttpResponseMessage CreateRefToSingleNavigationPropertyOnCar(int key, [FromBody] Uri link)
-#else
-        public AspNetCore.Http.HttpResponse CreateRefToSingleNavigationPropertyOnCar(int key, [FromBody] Uri link)
-#endif
+        public ITestActionResult CreateRefToSingleNavigationPropertyOnCar(int key, [FromBody] Uri link)
         {
             var found = this.LocalTable[key] as Car;
             if (found == null)
             {
-                return CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Car with key {0} is not found", key));
+                return NotFound(string.Format("Car with key {0} is not found", key));
             }
 
             int relatedKey = GetRequestValue<int>(link);
             var relatedObj = this.LocalTable[relatedKey];
             if (relatedObj == null)
             {
-                return CreateErrorResponse(HttpStatusCode.NotFound, string.Format("The link with key {0} is not found", relatedKey));
+                return NotFound(string.Format("The link with key {0} is not found", relatedKey));
             }
 
             found.SingleNavigationProperty = relatedObj;
 
-            return CreateResponse(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        public Task<Vehicle> GetSingleNavigationPropertyOnCar(int key)
+#if !NETCORE
+        public Task<ITestActionResult> GetSingleNavigationPropertyOnCar(int key)
+#else
+        public ITestActionResult GetSingleNavigationPropertyOnCar(int key)
+#endif
         {
+#if !NETCORE
             return Task.Factory.StartNew(() =>
             {
-                return (this.LocalTable[key] as Car).SingleNavigationProperty;
+#endif
+            return Ok((this.LocalTable[key] as Car).SingleNavigationProperty);
+#if !NETCORE
             });
+#endif
         }
     }
 
@@ -116,26 +120,30 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
 #if !NETCORE
-        public Task<HttpResponseMessage> PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
+        public Task<ITestActionResult> PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
 #else
-        public Task<AspNetCore.Http.HttpResponse> PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
+        public ITestActionResult PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
 #endif
         {
+#if !NETCORE
             return Task.Factory.StartNew(() =>
             {
+#endif
                 new InheritanceTests_VehiclesController().LocalTable.AddOrUpdate(vehicle.Id, vehicle, (id, v) => vehicle);
                 this.LocalTable[key].BaseTypeNavigationProperty.Add(vehicle);
 
                 IEdmEntitySet entitySet = Request.GetModel().EntityContainer.FindEntitySet("InheritanceTests_Vehicles");
 
-                var response = this.CreateResponse(HttpStatusCode.Created, vehicle);
+                var response = Created(vehicle);
 #if !NETCORE
                 response.Headers.Location = new Uri(this.Url.CreateODataLink(
                         new EntitySetSegment(entitySet),
                         new KeySegment(new[] { new KeyValuePair<string, object>("Id", vehicle.Id) }, entitySet.EntityType(), null)));
 #endif
                 return response;
+#if !NETCORE
             });
+#endif
         }
 
         public Task<IEnumerable<Vehicle>> GetDerivedTypeNavigationProperty(int key)
@@ -147,27 +155,30 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         }
 
 #if !NETCORE
-        public Task<HttpResponseMessage> PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
+        public Task<ITestActionResult> PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
 #else
-        public Task<AspNetCore.Http.HttpResponse> PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
+        public ITestActionResult PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
 #endif
-
         {
+#if !NETCORE
             return Task.Factory.StartNew(() =>
             {
-                new InheritanceTests_VehiclesController().LocalTable.AddOrUpdate(vehicle.Id, vehicle, (id, v) => vehicle);
+#endif
+            new InheritanceTests_VehiclesController().LocalTable.AddOrUpdate(vehicle.Id, vehicle, (id, v) => vehicle);
                 this.LocalTable[key].DerivedTypeNavigationProperty.Add(vehicle);
 
                 IEdmEntitySet entitySet = Request.GetModel().EntityContainer.FindEntitySet("InheritanceTests_Vehicles");
 
-                var response = this.CreateResponse(System.Net.HttpStatusCode.Created, vehicle);
+                var response = Created(vehicle);
 #if !NETCORE
                 response.Headers.Location = new Uri(this.Url.CreateODataLink(
                         new EntitySetSegment(entitySet),
                         new KeySegment(new[] { new KeyValuePair<string, object>("Id", vehicle.Id) }, entitySet.EntityType(), null)));
 #endif
                 return response;
+#if !NETCORE
             });
+#endif
         }
 
         public Task DeleteRef(int key, string relatedKey, string navigationProperty)

@@ -68,7 +68,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         {
             if (key != file.FileId)
             {
-                return BadRequest();
+                return BadRequest("The FileId of file is not matched with the key");
             }
 
             File original = _files.FirstOrDefault(c => c.FileId == key);

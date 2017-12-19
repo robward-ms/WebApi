@@ -140,29 +140,29 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [EnableQuery]
-        public IQueryable<ComplextTypeCollectionTests_Address> GetAddresses([FromODataUri]int key)
+        public ITestActionResult GetAddresses([FromODataUri]int key)
         {
             ComplextTypeCollectionTests_Person person = Persons.FirstOrDefault(p => p.Id == key);
 
             if (person == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
-            return person.Addresses.AsQueryable();
+            return Ok(person.Addresses.AsQueryable());
         }
 
         [EnableQuery(PageSize = 2)]
-        public IQueryable<ComplexTypeCollectionTests_PersonInfo> GetPersonInfos([FromODataUri]int key)
+        public ITestActionResult GetPersonInfos([FromODataUri]int key)
         {
             ComplextTypeCollectionTests_Person person = Persons.FirstOrDefault(p => p.Id == key);
 
             if (person == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
-            return person.PersonInfos.AsQueryable();
+            return Ok(person.PersonInfos.AsQueryable());
         }
     }
 

@@ -100,8 +100,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
             var response = await this.Client.GetAsync(this.BaseAddress + "/api/MixScenarioTests_WebApi/ThrowExceptionInAction");
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            var result = await response.Content.ReadAsAsync<HttpError>();
-            Assert.Contains("Something wrong", result["ExceptionMessage"].ToString());
+            var result = await response.Content.ReadAsStringAsync();
+            Assert.Contains("Something wrong", result);
         }
 
         [Fact]

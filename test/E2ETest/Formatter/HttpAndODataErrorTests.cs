@@ -16,6 +16,7 @@ using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
+using Microsoft.Test.AspNet.OData.Extensions;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
@@ -49,17 +50,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
     public class HttpError_TodoController : TestController
     {
         [HttpPost]
-        public HttpError_Todo Get(int key)
+        public ITestActionResult Get(int key)
         {
-            return null;
+            return Ok(null);
         }
 
         [EnableQuery]
-        public HttpResponseMessage Post(HttpError_Todo todo)
+        public ITestActionResult Post(HttpError_Todo todo)
         {
             if (!ModelState.IsValid)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                return BadRequest(ModelState);
             }
 
             switch (todo.ErrorType)
@@ -67,28 +68,22 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
                 case ErrorType.ThrowExceptionInAction:
                     throw new Exception("ThrowExceptionInAction");
                 case ErrorType.ThrowHttpResponseExceptionInAction:
-                    throw new HttpResponseException(
-                        this.Request.CreateErrorResponse(
-                            HttpStatusCode.NotFound,
-                            new Exception("ThrowHttpResponseExceptionInAction")));
+                    return NotFound(new Exception("ThrowHttpResponseExceptionInAction"));
                 case ErrorType.ResponseErrorResponseInAction:
-                    return this.Request.CreateErrorResponse(
-                        HttpStatusCode.NotFound,
-                        new Exception("ResponseErrorResponseInAction"));
+                    return NotFound(new Exception("ResponseErrorResponseInAction"));
                 case ErrorType.ReturnODataErrorResponseInAction:
-                    return this.Request.CreateErrorResponse(HttpStatusCode.InternalServerError, new ODataError()
+                    return StatusCode(HttpStatusCode.InternalServerError, new ODataError()
                     {
                         Message = "ReturnODataErrorResponseInActionMessage",
                         ErrorCode = "ReturnODataErrorResponseInActionCode",
                         InnerError = new ODataInnerError(new Exception("ReturnODataErrorResponseInActionException"))
                     });
+#if !NETCORE
                 case ErrorType.ResponseHttpErrorResponseInAction:
-                    return
-                        this.Request.CreateResponse<HttpError>(
-                            HttpStatusCode.NotFound,
-                            new HttpError("ResponseHttpErrorResponseInAction"));
+                    return NotFound(new HttpError("ResponseHttpErrorResponseInAction"));
+#endif
                 default:
-                    return null;
+                    return Ok(null);
             }
         }
 

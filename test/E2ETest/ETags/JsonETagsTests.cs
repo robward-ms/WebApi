@@ -29,7 +29,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
-            configuration.MessageHandlers.Add(new ETagMessageHandler());
+            configuration.AddETagMessageHandler(new ETagMessageHandler());
         }
 
         private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)

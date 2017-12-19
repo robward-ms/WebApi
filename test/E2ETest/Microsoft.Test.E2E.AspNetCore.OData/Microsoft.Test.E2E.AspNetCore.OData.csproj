@@ -12,13 +12,14 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <OutputPath>..\..\..\bin\$(Configuration)\E2ETest\</OutputPath>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
-    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x</DefineConstants>
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x;PORTABLELIB</DefineConstants>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\Extensions\IWebApiUrlHelperExtensions.cs" />
+    <Compile Include="Common\Extensions\HttpRequestExtensions.cs" />
+    <Compile Include="Common\Extensions\ResourceContextExtensions.cs" />
     <Compile Include="Common\TestEntitySetRoutingConvention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="App.config" />

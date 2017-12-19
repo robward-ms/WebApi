@@ -10,6 +10,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
@@ -117,15 +118,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             }
             catch (ODataException e)
             {
-                HttpResponseMessage resoponse = Request.CreateErrorResponse(HttpStatusCode.BadRequest, e.Message, e);
-                return ResponseMessage(resoponse);
+                return BadRequest(e);
             }
 
             var querySettings = new ODataQuerySettings();
             Employee employee = _employees.Single(e => e.ID == key);
             var result = options.ApplyTo(employee, new ODataQuerySettings());
-            Type type = result.GetType();
-            return Ok(result, type);
+            return Ok(result);
 
         }
 
@@ -207,10 +206,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             return this.StatusCode(HttpStatusCode.NoContent);
         }
 
+#if !NETCORE
         private ITestActionResult Ok(object content, Type type)
         {
             var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
             return Activator.CreateInstance(resultType, content, this) as ITestActionResult;
         }
+#endif
     }
 }

@@ -173,26 +173,20 @@ namespace WebStack.QA.Test.OData.OpenComplexType.Typed.Client
         /// </summary>
         public void ResetDataSource()
         {
-#if !NETCORE
             global::System.Uri requestUri = new global::System.Uri(this.BaseUri.OriginalString.Trim('/') + "/ResetDataSource");
             this.Execute(requestUri, "POST",
                 new global::Microsoft.OData.Client.OperationParameter[] { });
-#endif
         }
         /// <summary>
         /// There are no comments for UpdateAddressAction in the schema.
         /// </summary>
         public global::WebStack.QA.Test.OData.OpenComplexType.Typed.Client.Address UpdateAddressAction(global::WebStack.QA.Test.OData.OpenComplexType.Typed.Client.Address Address, int ID)
         {
-#if !NETCORE
             global::System.Uri requestUri = new global::System.Uri(this.BaseUri.OriginalString.Trim('/') + "/UpdateAddressAction");
             return global::System.Linq.Enumerable.Single(this.Execute<global::WebStack.QA.Test.OData.OpenComplexType.Typed.Client.Address>(requestUri, "POST", true,
                 new global::Microsoft.OData.Client.OperationParameter[] { new global::Microsoft.OData.Client.BodyOperationParameter("Address", Address),
                     new global::Microsoft.OData.Client.BodyOperationParameter("ID", ID) }));
-#else
             return null;
-#endif
-
         }
 #endif
         }

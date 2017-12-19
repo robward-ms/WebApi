@@ -73,6 +73,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             configuration.EnableODataSupport(GetEdmModel(configuration));
+#if !NETCORE
             configuration.Services.Replace(typeof(IHttpControllerTypeResolver), new DynamicHttpControllerTypeResolver(
                 controllers =>
                 {
@@ -81,6 +82,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
                 }));
 
             configuration.MaxReceivedMessageSize = int.MaxValue;
+#endif
         }
 
         // [Theory(Skip = "github Issue #324 random deadlock")]

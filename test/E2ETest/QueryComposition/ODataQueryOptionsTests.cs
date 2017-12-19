@@ -81,10 +81,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [HttpGet]
-        public HttpResponseMessage OptionsOnHttpResponseMessage(ODataQueryOptions<ODataQueryOptions_Todo> options)
+        public ITestActionResult OptionsOnHttpResponseMessage(ODataQueryOptions<ODataQueryOptions_Todo> options)
         {
             var t = options.ApplyTo(todoes.AsQueryable()) as IQueryable<ODataQueryOptions_Todo>;
-            return this.Request.CreateResponse(System.Net.HttpStatusCode.OK, new { Todoes = t });
+            return Ok(new { Todoes = t });
         }
 
         [HttpGet]
@@ -104,8 +104,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     public class ODataQueryOptionsTests : WebHostTestBase
     {
+        private WebRouteConfiguration _configuration;
+
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+            _configuration = configuration;
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.AddODataQueryFilter();
@@ -144,6 +147,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             Console.WriteLine(actual);
         }
 
+#if !NETCORE
         [Fact]
         public void UnitTestOptionsShouldWork()
         {
@@ -164,7 +168,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
             ODataQueryOptionsController controller = new ODataQueryOptionsController();
 
-            ODataQueryContext context = new ODataQueryContext(new ODataConventionModelBuilder().GetEdmModel(), typeof(string), path: null);
+            ODataQueryContext context = new ODataQueryContext(_configuration.CreateConventionModelBuilder().GetEdmModel(), typeof(string), path: null);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?$top=1");
             HttpConfiguration configuration = new HttpConfiguration();
             configuration.EnableDependencyInjection();
@@ -173,7 +177,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var result = controller.OptionsWithString(options);
             Assert.Equal("One", result.List.Single());
         }
-
+#endif
         private Microsoft.OData.Edm.IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
             ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();

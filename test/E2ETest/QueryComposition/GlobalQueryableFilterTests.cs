@@ -105,9 +105,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return products.AsQueryable();
         }
 
-        public HttpResponseMessage GetHttpResponseMessage()
+        public ITestActionResult GetHttpResponseMessage()
         {
-            return this.CreateResponse<IQueryable<Product>>(HttpStatusCode.OK, products.AsQueryable());
+            return Ok(products.AsQueryable());
         }
 
         public Task<IQueryable> GetTaskIQueryableT()

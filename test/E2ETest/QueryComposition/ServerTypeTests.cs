@@ -189,6 +189,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             return sb.ToString();
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(TypeData))]
         public void RunQueryableOnAllPossibleTypes(Type type, string queryString)
@@ -243,5 +244,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                     ae.Message);
             }
         }
+#endif
     }
 }

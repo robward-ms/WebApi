@@ -39,8 +39,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
 
     public class UnicodeRouteTests : WebHostTestBase
     {
+        private WebRouteConfiguration _configuration;
+
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+            _configuration = configuration;
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.EnableODataSupport(GetEdmModel(configuration), "odataü");
         }
@@ -92,7 +95,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ODataPathHandler
         private DataServiceContext CreateClient(Uri address)
         {
             var client = new DataServiceContext(address, ODataProtocolVersion.V4);
-            client.Format.UseJson(GetEdmModel());
+            client.Format.UseJson(GetEdmModel(_configuration));
 
             return client;
         }

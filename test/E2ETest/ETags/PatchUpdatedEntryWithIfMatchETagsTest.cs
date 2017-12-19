@@ -17,6 +17,7 @@ using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
+#if !NETCORE
     public class PatchUpdatedEntryWithIfMatchETagsTest : WebHostTestBase
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
@@ -76,4 +77,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             Assert.Equal(HttpStatusCode.PreconditionFailed, response.StatusCode);
         }
     }
+#endif
 }

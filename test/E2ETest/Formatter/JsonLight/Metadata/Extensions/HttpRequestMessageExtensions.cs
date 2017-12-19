@@ -11,6 +11,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extension
 {
     internal static class HttpRequestMessageExtensions
     {
+#if !NETCORE
         public static HttpResponseMessage CreateResponse(this HttpRequestMessage request, HttpStatusCode statusCode, object value, Type type)
         {
             var configuration = request.GetConfiguration();
@@ -41,5 +42,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extension
                 };
             }
         }
+#endif
     }
 }

@@ -46,7 +46,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest("The key is not valid");
             }
 
             if (queryOptions.IfNoneMatch != null)
@@ -68,7 +68,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
         {
             if (key != eTagsCustomer.Id)
             {
-                return BadRequest();
+                return BadRequest("The Id of customer is not matched with the key");
             }
 
             IEnumerable<ETagsCustomer> appliedCustomers = customers.Where(c => c.Id == eTagsCustomer.Id);
@@ -116,7 +116,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
             }
 
             if (queryOptions.IfMatch != null)
@@ -140,7 +140,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
 
             if (appliedCustomers.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
             }
 
             if (queryOptions.IfMatch != null)

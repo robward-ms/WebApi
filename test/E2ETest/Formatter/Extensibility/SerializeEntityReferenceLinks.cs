@@ -56,17 +56,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
             };
         }
 
-#if !NETCORE
-        public HttpResponseMessage GetLinksForChildren(int key)
-#else
-        public HttpResponse GetLinksForChildren(int key)
-#endif
+        public ITestActionResult GetLinksForChildren(int key)
         {
             IEdmModel model = Request.GetModel();
             IEdmEntitySet childEntity = model.EntityContainer.FindEntitySet("ChildEntity");
 
-            return CreateResponse(HttpStatusCode.OK,
-                PARENT_ENTITY.Children.Select(x => Url.CreateODataLink(
+            return Ok(PARENT_ENTITY.Children.Select(x => Url.CreateODataLink(
                     new EntitySetSegment(childEntity),
                     new KeySegment(new[] { new KeyValuePair<string, object>("Id", x.Id)}, childEntity.EntityType(), null)
                 )).ToArray());

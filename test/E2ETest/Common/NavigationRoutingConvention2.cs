@@ -22,7 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
                 IEdmEntityType declaringType = navigationProperty.DeclaringType as IEdmEntityType;
                 if (declaringType != null)
                 {
-                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString());
+                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString().ToUpperInvariant());
                     if (string.IsNullOrEmpty(prefix))
                     {
                         return null;

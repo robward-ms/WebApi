@@ -32,9 +32,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Controllers
         }
 
         [EnableQuery(PageSize = 999999)]
-        public HttpResponseMessage GetHttpResponseByQuerableAttribute()
+        public ITestActionResult GetHttpResponseByQuerableAttribute()
         {
-            return this.Request.CreateResponse<IEnumerable<Customer>>(System.Net.HttpStatusCode.OK, GetByQuerableAttribute());
+            return Ok(GetByQuerableAttribute());
         }
 
         [EnableQuery(PageSize = 999999)]

@@ -58,9 +58,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+#if !NETCORE
             configuration.MaxReceivedMessageSize = int.MaxValue;
 
             configuration.Formatters.Clear();
+#endif
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
@@ -73,6 +75,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return builder.GetEdmModel();
         }
 
+#if !NETCORE
         [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
@@ -95,7 +98,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             var content = await response.Content.ReadAsStringAsync();
             Assert.Contains("The depth limit for entries in nested expanded navigation links was reached", content);
         }
-
         [Theory]
         [InlineData("application/json")]
         [InlineData("application/json;odata.metadata=none")]
@@ -139,5 +141,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
             Assert.False(response.IsSuccessStatusCode);
         }
+#endif
     }
 }

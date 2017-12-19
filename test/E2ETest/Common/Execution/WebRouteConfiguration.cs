@@ -5,11 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Test.AspNet.OData.TestCommon;
@@ -69,6 +71,22 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
 
         /// <summary>
+        /// Enable http route.
+        /// </summary>
+        public void MapHttpRoute(string name, string template)
+        {
+            this.MapRoute(name, template);
+        }
+
+        /// <summary>
+        /// Enable http route.
+        /// </summary>
+        public void MapHttpRoute(string name, string template, object defaults)
+        {
+            this.MapRoute(name, template, defaults);
+        }
+
+        /// <summary>
         /// Create an <see cref="ODataConventionModelBuilder"/>.
         /// </summary>
         /// <returns>An <see cref="ODataConventionModelBuilder"/></returns>
@@ -87,7 +105,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             return new AttributeRoutingConvention(name, routeBuilder.ServiceProvider, new DefaultODataPathHandler());
         }
 
-        public WebRouteConfiguration AddControllers(params Type[] controllers)
+        public void AddControllers(params Type[] controllers)
         {
             ApplicationPartManager applicationPartManager =
                 routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
@@ -101,7 +119,42 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             // Add a new AssemblyPart with the controllers.
             AssemblyPart part = new AssemblyPart(new TestAssembly(controllers));
             applicationPartManager.ApplicationParts.Add(part);
-            return this;
+        }
+
+        /// <summary>
+        /// Enables query support for actions with an <see cref="IQueryable" /> or <see cref="IQueryable{T}" /> return
+        /// type. To avoid processing unexpected or malicious queries, use the validation settings on
+        /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
+        /// http://go.microsoft.com/fwlink/?LinkId=279712.
+        /// </summary>
+        public void AddODataQueryFilter()
+        {
+#if !NETCORE
+#endif
+        }
+
+        /// <summary>
+        /// Enables query support for actions with an <see cref="IQueryable" /> or <see cref="IQueryable{T}" /> return
+        /// type. To avoid processing unexpected or malicious queries, use the validation settings on
+        /// <see cref="EnableQueryAttribute"/> to validate incoming queries. For more information, visit
+        /// http://go.microsoft.com/fwlink/?LinkId=279712.
+        /// </summary>
+        /// <param name="services">The services collection.</param>
+        /// <param name="queryFilter">The action filter that executes the query.</param>
+        public void AddODataQueryFilter(IActionFilter queryFilter)
+        {
+#if !NETCORE
+#endif
+        }
+
+        /// <summary>
+        /// Add an <see cref="ETagMessageHandler"/> to the configuration.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public void AddETagMessageHandler(ETagMessageHandler handler)
+        {
+            //configuration.MessageHandlers.Add(new ETagMessageHandler());
         }
 
         /// <summary>
@@ -114,7 +167,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
     }
 #else
-    public class WebRouteConfiguration : HttpConfiguration
+        public class WebRouteConfiguration : HttpConfiguration
     {
         public WebRouteConfiguration AddControllers(params Type[] controllers)
         {
@@ -123,6 +176,32 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                 new TestAssemblyResolver(controllers));
 
             return this;
+        }
+
+        /// <summary>
+        /// Enable http route.
+        /// </summary>
+        public void MapHttpRoute(string name, string template)
+        {
+            this.Routes.MapHttpRoute(name, template);
+        }
+
+        /// <summary>
+        /// Enable http route.
+        /// </summary>
+        public void MapHttpRoute(string name, string template, object defaults)
+        {
+            this.Routes.MapHttpRoute(name, template, defaults);
+        }
+
+        /// <summary>
+        /// Add an <see cref="ETagMessageHandler"/> to the configuration.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public void AddETagMessageHandler(ETagMessageHandler handler)
+        {
+            configuration.MessageHandlers.Add(new ETagMessageHandler());
         }
 
         /// <summary>

@@ -42,7 +42,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+#if !NETCORE
             configuration.Formatters.Clear();
+#endif
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 

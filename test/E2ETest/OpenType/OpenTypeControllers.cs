@@ -343,7 +343,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
             if (appliedAccounts.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
             }
 
             if (queryOptions.IfMatch != null)
@@ -352,7 +352,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
                 if (ifMatchAccounts.Count() == 0)
                 {
-                    return BadRequest();
+                    return BadRequest(string.Format("The entry with Id {0} has been updated", key));
                 }
             }
 
@@ -370,7 +370,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
             if (appliedAccounts.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with Id {0} doesn't exist", key));
             }
 
             if (queryOptions.IfMatch != null)
@@ -379,7 +379,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
                 if (ifMatchAccounts.Count() == 0)
                 {
-                    return BadRequest();
+                    return BadRequest(string.Format("The entry with Id {0} has been updated", key));
                 }
             }
 
@@ -394,7 +394,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         {
             if (key != account.Id)
             {
-                return BadRequest();
+                return BadRequest("The ID of customer is not matched with the key");
             }
 
             Account originalAccount = Accounts.Where(a => a.Id == account.Id).Single();
@@ -409,7 +409,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         {
             if (key != account.Id)
             {
-                return BadRequest();
+                return BadRequest("The ID of customer is not matched with the key");
             }
 
             Account originalAccount = Accounts.Where(a => a.Id == account.Id).Single();
@@ -445,7 +445,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
             if (appliedAccounts.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with ID {0} doesn't exist", key));
             }
 
             Account account = appliedAccounts.Single();
@@ -461,7 +461,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
             if (appliedAccounts.Count() == 0)
             {
-                return BadRequest();
+                return BadRequest(string.Format("The entry with ID {0} doesn't exist", key));
             }
 
             Account account = appliedAccounts.Single();

@@ -20,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.WriterClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel(configuration));
+            ctx.Format.UseJson(GetEdmModel(_configuration));
 
             return ctx;
         }
@@ -29,7 +29,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.ReaderClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel(configuration));
+            ctx.Format.UseJson(GetEdmModel(_configuration));
 
             return ctx;
         }

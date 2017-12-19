@@ -24,7 +24,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
                 {
                     var key = odataPath.Segments[1] as KeySegment;
                     controllerContext.AddKeyValueToRouteData(key);
-                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString());
+                    string prefix = ODataHelper.GetHttpPrefix(controllerContext.Request.Method.ToString().ToUpperInvariant());
                     if (string.IsNullOrEmpty(prefix))
                     {
                         return null;

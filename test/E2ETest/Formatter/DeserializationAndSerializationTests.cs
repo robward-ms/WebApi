@@ -59,6 +59,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 
     public abstract class DeserializationAndSerializationTests : ODataFormatterTestBase
     {
+        protected WebRouteConfiguration _configuration;
+
         protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
             var builder = configuration.CreateConventionModelBuilder();

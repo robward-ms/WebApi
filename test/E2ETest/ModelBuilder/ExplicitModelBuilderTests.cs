@@ -43,7 +43,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.GetUrlHelper().Link(ODataTestConstants.DefaultRouteName,
                         new
                         {
                             odataPath = entityContext.InternalUrlHelper.CreateODataLink(
@@ -57,7 +57,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.GetUrlHelper().Link(ODataTestConstants.DefaultRouteName,
                         new
                         {
                             odataPath = entityContext.InternalUrlHelper.CreateODataLink(
@@ -71,7 +71,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName, 
+                    return new Uri(entityContext.GetUrlHelper().Link(ODataTestConstants.DefaultRouteName, 
                         new
                         {
                             odataPath = entityContext.InternalUrlHelper.CreateODataLink(
@@ -119,7 +119,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.GetUrlHelper().Link(ODataTestConstants.DefaultRouteName,
                 new
                 {
                     odataPath = entityContext.InternalUrlHelper.CreateODataLink(
@@ -135,7 +135,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(ODataTestConstants.DefaultRouteName,
+                    return new Uri(entityContext.GetUrlHelper().Link(ODataTestConstants.DefaultRouteName,
                 new
                 {
                     odataPath = entityContext.InternalUrlHelper.CreateODataLink(
@@ -151,7 +151,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                 {
                     object id;
                     entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                    return new Uri(entityContext.InternalUrlHelper.Link(
+                    return new Uri(entityContext.GetUrlHelper().Link(
                 ODataTestConstants.DefaultRouteName,
                 new
                 {

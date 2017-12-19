@@ -20,7 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
-            config.MapODataServiceRoute("convention", "convention", GetConventionModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("convention", "convention", GetConventionModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
             config.MapODataServiceRoute("explicit", "explicit", GetExplicitModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 

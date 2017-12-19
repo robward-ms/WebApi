@@ -49,6 +49,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             }
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(AddRelatedObjectConventionsWorkPropertyData))]
         public async Task AddRelatedObjectConventionsWork(string method, string url)
@@ -59,6 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             HttpResponseMessage response = await Client.SendAsync(request);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+#endif
     }
 
     public class AROCustomer

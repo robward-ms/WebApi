@@ -131,9 +131,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
                 _db.Customers.Remove(customer);
                 _db.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -212,9 +212,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ForeignKey
                 _db.Orders.Remove(order);
                 _db.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
 
             return StatusCode(HttpStatusCode.NoContent);

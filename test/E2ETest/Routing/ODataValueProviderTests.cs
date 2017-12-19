@@ -30,10 +30,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Routing
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();
             conventions.Insert(0, new CustomEntityRoutingConvention());
             config.MapODataServiceRoute("odata", "odata", GetModel(config), new DefaultODataPathHandler(), conventions);
-
-#if !NETCORE
-            config.Routes.MapHttpRoute("api", "api/{controller}/{keyAsCustomer}", new { keyAsCustomer = new BindCustomer { Id = -1 } });
-#endif
+            config.MapHttpRoute("api", "api/{controller}/{keyAsCustomer}", new { keyAsCustomer = new BindCustomer { Id = -1 } });
         }
 
         private static IEdmModel GetModel(WebRouteConfiguration config)

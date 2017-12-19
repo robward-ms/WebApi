@@ -19,7 +19,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
-            config.Routes.MapHttpRoute("api", "{controller}");
+            config.MapHttpRoute("api", "{controller}");
         }
 
         public static TheoryDataSet<string> Queries

@@ -33,19 +33,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             configuration.SetTimeZoneInfo(timeZoneInfo);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
                 routeName: "convention",
                 routePrefix: "convention",
                 model: DateAndTimeOfDayEdmModel.GetConventionModel(configuration));
 
+#if !NETCORE
+            HttpServer httpServer = configuration.GetHttpServer();
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
                 model: DateAndTimeOfDayEdmModel.GetExplicitModel(),
                 batchHandler: new DefaultODataBatchHandler(httpServer));
-
+#endif
             configuration.EnsureInitialized();
         }
 
@@ -304,7 +305,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             Assert.Equal(expect, sb.ToString());
         }
 
-        #region function/action on Date & TimeOfDay
+#region function/action on Date & TimeOfDay
 
         public static TheoryDataSet<string, string> FunctionData
         {
@@ -386,7 +387,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Contains("\"value\":true", await response.Content.ReadAsStringAsync());
         }
-        #endregion
+#endregion
 
         private static void AssertHasProperty(IEdmEntityType entityType, string propertyName, EdmTypeKind expectKind,
             string expectTypeName, bool isNullable)
