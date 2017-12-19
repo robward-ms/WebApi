@@ -60,7 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AlternateKeys
 
         [HttpPatch]
         [ODataRoute("Customers(SSN={ssnKey})")]
-        public ITestActionResult PatchCustomerBySSN([FromODataUri]string ssnKey, EdmEntityObject delta)
+        public ITestActionResult PatchCustomerBySSN([FromODataUri]string ssnKey, [FromBody]EdmEntityObject delta)
         {
             Assert.Equal("SSN-6-T-006", ssnKey);
 

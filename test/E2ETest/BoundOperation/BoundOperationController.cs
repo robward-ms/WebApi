@@ -317,7 +317,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
         // ~/Employees/Namespace.IncreaseSalary
         [EnableQuery]
         [HttpPost]
-        public ITestActionResult IncreaseSalary(ODataUntypedActionParameters odataActionParameters)
+        public ITestActionResult IncreaseSalary([FromBody]ODataUntypedActionParameters odataActionParameters)
         {
             string name = odataActionParameters["Name"] as string;
             IEnumerable<Employee> candidates = _employees.Where(e => e.Name.StartsWith(name));
@@ -329,7 +329,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
         [HttpPost]
         [EnableQuery]
         [ODataRoute("Employees/Default.IncreaseSalary")]
-        public ITestActionResult IncreaseSalaryAttributeRouting(ODataUntypedActionParameters odataActionParameters)
+        public ITestActionResult IncreaseSalaryAttributeRouting([FromBody]ODataUntypedActionParameters odataActionParameters)
         {
             string name = odataActionParameters["Name"] as string;
             IEnumerable<Employee> candidates = _employees.Where(e => e.Name.StartsWith(name));
@@ -339,7 +339,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
         // ~/Employees/Namespace.Manager/Namespace.IncreaseSalary
         [HttpPost]
-        public ITestActionResult IncreaseSalaryOnCollectionOfManager(ODataUntypedActionParameters odataActionParameters)
+        public ITestActionResult IncreaseSalaryOnCollectionOfManager([FromBody]ODataUntypedActionParameters odataActionParameters)
         {
             string name = odataActionParameters["Name"] as string;
             IEnumerable<Employee> candidates = _managers.Where(e => e.Name.StartsWith(name));
@@ -351,7 +351,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
         [HttpPost]
         [EnableQuery]
         [ODataRoute("Employees/NS.Manager/Default.IncreaseSalary")]
-        public ITestActionResult IncreaseSalaryOnCollectionOfManagerAttributeRouting(ODataUntypedActionParameters odataActionParameters)
+        public ITestActionResult IncreaseSalaryOnCollectionOfManagerAttributeRouting([FromBody]ODataUntypedActionParameters odataActionParameters)
         {
             string name = odataActionParameters["Name"] as string;
             IEnumerable<Employee> candidates = _managers.Where(e => e.Name.StartsWith(name));
@@ -400,7 +400,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
         [HttpPost]
         [ODataRoute("Employees/Default.PrimitiveAction")]
-        public ITestActionResult PrimitiveAction(ODataActionParameters parameters)
+        public ITestActionResult PrimitiveAction([FromBody]ODataActionParameters parameters)
         {
             Assert.Equal(4, parameters.Count);
             Assert.Equal(7, parameters["param"]);
@@ -420,7 +420,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
         [HttpPost]
         [ODataRoute("Employees/Default.EnumAction")]
-        public ITestActionResult EnumAction(ODataActionParameters parameters)
+        public ITestActionResult EnumAction([FromBody]ODataActionParameters parameters)
         {
             Assert.Equal(3, parameters.Count);
             Assert.Equal(Color.Red, parameters["bkColor"]);
@@ -438,7 +438,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
         [HttpPost]
         [ODataRoute("Employees/Default.ComplexAction")]
-        public ITestActionResult ComplexAction(ODataActionParameters parameters)
+        public ITestActionResult ComplexAction([FromBody]ODataActionParameters parameters)
         {
             Assert.Equal(3, parameters.Count);
 
@@ -466,7 +466,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.BoundOperation
 
         [HttpPost]
         [ODataRoute("Employees/Default.EntityAction")]
-        public ITestActionResult EntityAction(ODataActionParameters parameters)
+        public ITestActionResult EntityAction([FromBody]ODataActionParameters parameters)
         {
             Assert.Equal(3, parameters.Count);
 
