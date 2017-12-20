@@ -306,7 +306,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
         // POST ~/Accounts(100)/PayinPIs/Namespace.Clear
         [HttpPost]
         [ODataRoute("Accounts({accountId})/PayinPIs/Microsoft.Test.E2E.AspNet.OData.Containment.Clear")]
-        public ITestActionResult ClearPayoutPIFromAccount(int accountId, ODataActionParameters parameters)
+        public ITestActionResult ClearPayoutPIFromAccount(int accountId, [FromBody]ODataActionParameters parameters)
         {
             var account = _dataSource.Accounts.Single(a => a.AccountID == accountId);
             var nameContains = parameters["nameContains"] as string;

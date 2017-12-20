@@ -5,6 +5,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -146,8 +147,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                         .ConfigureServices(services =>
                         {
                             // Add ourself to the container so WebHostTestStartup
-                            // can call UpdateCOnfiguration.
+                            // can call UpdateConfiguration.
                             services.AddSingleton<WebHostTestBase>(this);
+                            services.AddODataQueryFilter();
                         })
                         .ConfigureLogging((hostingContext, logging) =>
                         {

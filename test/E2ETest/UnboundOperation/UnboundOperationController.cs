@@ -158,7 +158,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
         [EnableQuery]
         [ODataRoute("UpdateAddress")]
         [ODataRoute("UpdateAddressImport")]
-        public ITestActionResult UpdateAddress(ODataUntypedActionParameters parameters)
+        public ITestActionResult UpdateAddress([FromBody]ODataUntypedActionParameters parameters)
         {
             if (!ModelState.IsValid)
             {
@@ -204,7 +204,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.UnboundOperation
 
         [HttpPost]
         [ODataRoute("AdvancedAction")]
-        public ITestActionResult AdvancedAction(ODataActionParameters parameters)
+        public ITestActionResult AdvancedAction([FromBody]ODataActionParameters parameters)
         {
             Assert.NotNull(parameters);
             Assert.Equal(new[] { 4, 5, 6 }, parameters["nums"] as IEnumerable<int>);

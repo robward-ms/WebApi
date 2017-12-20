@@ -419,7 +419,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPost]
-        public ITestActionResult Post(Account account)
+        public ITestActionResult Post([FromBody]Account account)
         {
             account.Id = Accounts.Count + 1;
             account.DynamicProperties["OwnerGender"] = Gender.Male;// Defect 2371564 odata.type is missed in client payload for dynamic enum type
@@ -430,7 +430,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         [HttpPost]
         [ODataRoute("Accounts")]
-        public ITestActionResult PostAttributeRouting(Account account)
+        public ITestActionResult PostAttributeRouting([FromBody]Account account)
         {
             account.Id = Accounts.Count + 1;
             Accounts.Add(account);
@@ -572,7 +572,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         [HttpPost]
         [ODataRoute("UpdateAddressAction")]
-        public Address UpdateAddressActionAttributeRouting(ODataActionParameters parameters)
+        public Address UpdateAddressActionAttributeRouting([FromBody]ODataActionParameters parameters)
         {
             var id = (int)parameters["ID"];
             var address = parameters["Address"] as Address;
@@ -584,7 +584,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         [HttpPost]
         [ODataRoute("Accounts({key})/Microsoft.Test.E2E.AspNet.OData.OpenType.AddShipAddress")]
-        public ITestActionResult AddShipAddress(int key, ODataActionParameters parameters)
+        public ITestActionResult AddShipAddress(int key, [FromBody]ODataActionParameters parameters)
         {
             Account account = Accounts.Single(c => c.Id == key);
             if (account.DynamicProperties["ShipAddresses"] == null)

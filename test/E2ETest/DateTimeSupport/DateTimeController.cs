@@ -125,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         [HttpPost]
-        public ITestActionResult CopyFiles(int key, ODataActionParameters parameters)
+        public ITestActionResult CopyFiles(int key, [FromBody]ODataActionParameters parameters)
         {
             object value;
             if (!parameters.TryGetValue("createdDate", out value))

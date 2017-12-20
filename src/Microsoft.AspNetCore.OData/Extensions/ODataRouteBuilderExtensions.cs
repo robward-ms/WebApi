@@ -11,6 +11,7 @@ using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -469,6 +470,10 @@ namespace Microsoft.AspNet.OData.Extensions
             // Create an service provider for this route. Add the default services to the custom configuration actions.
             Action<IContainerBuilder> builderAction = ConfigureDefaultServices(builder, configureAction);
             IServiceProvider serviceProvider = perRouteContainer.CreateODataRootContainer(routeName, builderAction);
+
+            // Make sure the MetadataController is registered with the ApplicationPartManager.
+            ApplicationPartManager applicationPartManager = builder.ServiceProvider.GetRequiredService<ApplicationPartManager>();
+            applicationPartManager.ApplicationParts.Add(new AssemblyPart(typeof(MetadataController).Assembly));
 
             // Resolve the path handler and set URI resolver to it.
             IODataPathHandler pathHandler = serviceProvider.GetRequiredService<IODataPathHandler>();

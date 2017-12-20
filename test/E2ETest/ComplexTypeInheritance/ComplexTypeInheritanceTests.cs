@@ -57,12 +57,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 
 #if !NETCORE
             HttpServer httpServer = configuration.GetHttpServer();
+#endif
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
-                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel(),
-                    batchHandler: new DefaultODataBatchHandler(httpServer));
+                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel()
+#if !NETCORE
+                    , batchHandler: new DefaultODataBatchHandler(httpServer)
 #endif
+                    );
+
             configuration.EnsureInitialized();
         }
 

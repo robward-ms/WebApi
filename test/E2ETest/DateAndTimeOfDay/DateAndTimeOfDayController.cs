@@ -88,7 +88,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         }
 
         [HttpPost]
-        public ITestActionResult BoundAction(int key, ODataActionParameters parameters)
+        public ITestActionResult BoundAction(int key, [FromBody]ODataActionParameters parameters)
         {
             VerifyActionParameters(parameters);
             return Ok(true);
@@ -96,13 +96,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 
         [HttpPost]
         [ODataRoute("UnboundAction")]
-        public ITestActionResult UnboundAction(ODataActionParameters parameters)
+        public ITestActionResult UnboundAction([FromBody]ODataActionParameters parameters)
         {
             VerifyActionParameters(parameters);
             return Ok(true);
         }
 
-        private static void VerifyActionParameters(ODataActionParameters parameters)
+        private static void VerifyActionParameters([FromBody]ODataActionParameters parameters)
         {
             Assert.True(parameters.ContainsKey("modifiedDate"));
             Assert.True(parameters.ContainsKey("modifiedTime"));

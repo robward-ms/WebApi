@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 
@@ -37,22 +38,28 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             var controllers = new[] { typeof(AccountsController), typeof(AnonymousAccountController), typeof(MetadataController) };
             configuration.AddControllers(controllers);
 
-#if !NETCORE
             configuration.Routes.Clear();
+#if !NETCORE
             HttpServer httpServer = configuration.GetHttpServer();
+#endif
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration
                 .MapODataServiceRoute(routeName: "convention",
                     routePrefix: "convention",
-                    model: ContainmentEdmModels.GetConventionModel(),
-                    batchHandler: new DefaultODataBatchHandler(httpServer));
+                    model: ContainmentEdmModels.GetConventionModel(configuration)
+#if !NETCORE
+                    , batchHandler: new DefaultODataBatchHandler(httpServer));
+#endif
+                    );
 
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
-                    model: ContainmentEdmModels.GetExplicitModel(),
-                    batchHandler: new DefaultODataBatchHandler(httpServer));
+                    model: ContainmentEdmModels.GetExplicitModel()
+#if !NETCORE
+                    , batchHandler: new DefaultODataBatchHandler(httpServer));
 #endif
+                    );
             configuration.EnsureInitialized();
         }
 

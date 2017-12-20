@@ -166,7 +166,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
         }
 
         [HttpPost]
-        public ITestActionResult AddSkill([FromODataUri] int key, ODataActionParameters parameters)
+        public ITestActionResult AddSkill([FromODataUri] int key, [FromBody]ODataActionParameters parameters)
         {
             if (!ModelState.IsValid)
             {
@@ -194,7 +194,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Enums
 
         [HttpPost]
         [ODataRoute("SetAccessLevel")]
-        public ITestActionResult SetAccessLevel(ODataActionParameters parameters)
+        public ITestActionResult SetAccessLevel([FromBody]ODataActionParameters parameters)
         {
             if (!ModelState.IsValid)
             {

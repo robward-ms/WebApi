@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData;
 using Microsoft.Test.AspNet.OData.TestCommon;
 using Newtonsoft.Json;
 #else
@@ -54,6 +55,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         public IList<IRouter> Routes => routeBuilder.Routes;
         public IRouter Build() => routeBuilder.Build();
 
+    /// <summary>
+    /// Gets or sets the ReferenceLoopHandling property on the Json formatter.
+    /// </summary>
+    public ReferenceLoopHandling JsonReferenceLoopHandling
+        {
+            get { return ReferenceLoopHandling.Error; }
+            set { }
+        }
+
         /// <summary>
         /// Ensure the configuration is initialized.
         /// </summary>
@@ -71,7 +81,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
 
         /// <summary>
-        /// Enable http route.
+        /// Enable HTTP route.
         /// </summary>
         public void MapHttpRoute(string name, string template)
         {
@@ -79,7 +89,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
 
         /// <summary>
-        /// Enable http route.
+        /// Enable HTTP route.
         /// </summary>
         public void MapHttpRoute(string name, string template, object defaults)
         {
@@ -105,6 +115,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             return new AttributeRoutingConvention(name, routeBuilder.ServiceProvider, new DefaultODataPathHandler());
         }
 
+        /// <summary>
+        /// Add a list of controllers to be discovered by the application.
+        /// </summary>
+        /// <param name="controllers"></param>
         public void AddControllers(params Type[] controllers)
         {
             ApplicationPartManager applicationPartManager =
@@ -129,8 +143,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         /// </summary>
         public void AddODataQueryFilter()
         {
-#if !NETCORE
-#endif
+            // This is enabled by default.
         }
 
         /// <summary>
@@ -155,15 +168,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         public void AddETagMessageHandler(ETagMessageHandler handler)
         {
             //configuration.MessageHandlers.Add(new ETagMessageHandler());
-        }
-
-        /// <summary>
-        /// Gets or sets the ReferenceLoopHandling property on the Json formatter.
-        /// </summary>
-        public ReferenceLoopHandling JsonReferenceLoopHandling
-        {
-            get { return ReferenceLoopHandling.Error; }
-            set { }
         }
     }
 #else
