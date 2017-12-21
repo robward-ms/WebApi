@@ -51,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [EnableQuery]
-        public ITestActionResult Post(Employee employee)
+        public ITestActionResult Post([FromBody]Employee employee)
         {
             employee.Id = Employees.Count + 1;
             Employees.Add(employee);
@@ -59,7 +59,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [EnableQuery]
-        public ITestActionResult Put(int key, Employee employee)
+        public ITestActionResult Put(int key, [FromBody]Employee employee)
         {
             Employee originalEmployee = Employees.Single(e => e.Id == key);
             employee.Id = key;
@@ -69,7 +69,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [EnableQuery]
-        public ITestActionResult Patch(int key, Delta<Employee> employee)
+        public ITestActionResult Patch(int key, [FromBody]Delta<Employee> employee)
         {
             Employee originalEmployee = Employees.Single(e => e.Id == key);
             employee.Patch(originalEmployee);
@@ -93,7 +93,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [EnableQuery]
-        public ITestActionResult PutManager(int key, Manager employee)
+        public ITestActionResult PutManager(int key, [FromBody]Manager employee)
         {
             Manager originalEmployee = Employees.OfType<Manager>().Single(e => e.Id == key);
             employee.Id = key;
@@ -104,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [EnableQuery]
-        public ITestActionResult PatchManager(int key, Delta<Manager> employee)
+        public ITestActionResult PatchManager(int key, [FromBody]Delta<Manager> employee)
         {
             Manager originalEmployee = Employees.OfType<Manager>().Single(e => e.Id == key);
             employee.Patch(originalEmployee);
@@ -337,7 +337,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPatch]
-        public ITestActionResult Patch(int key, Delta<Account> patch, ODataQueryOptions<Account> queryOptions)
+        public ITestActionResult Patch(int key, [FromBody]Delta<Account> patch, ODataQueryOptions<Account> queryOptions)
         {
             IEnumerable<Account> appliedAccounts = Accounts.Where(a => a.Id == key);
 
@@ -364,7 +364,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         [HttpPatch]
         [ODataRoute("Accounts({key})")]
-        public ITestActionResult PatchAttributeRouting(int key, Delta<Account> patch, ODataQueryOptions<Account> queryOptions)
+        public ITestActionResult PatchAttributeRouting(int key, [FromBody]Delta<Account> patch, ODataQueryOptions<Account> queryOptions)
         {
             IEnumerable<Account> appliedAccounts = Accounts.Where(a => a.Id == key);
 
@@ -390,7 +390,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPut]
-        public ITestActionResult Put(int key, Account account)
+        public ITestActionResult Put(int key, [FromBody]Account account)
         {
             if (key != account.Id)
             {
@@ -405,7 +405,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
 
         [HttpPut]
         [ODataRoute("Accounts({key})")]
-        public ITestActionResult PutAttributeRouting(int key, Account account)
+        public ITestActionResult PutAttributeRouting(int key, [FromBody]Account account)
         {
             if (key != account.Id)
             {
@@ -470,7 +470,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPatch]
-        public ITestActionResult PatchToAddress(int key, Delta<Address> address)
+        public ITestActionResult PatchToAddress(int key, [FromBody]Delta<Address> address)
         {
             Account account = Accounts.FirstOrDefault(a => a.Id == key);
             if (account == null)
@@ -489,7 +489,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPatch]
-        public ITestActionResult PatchToAddressOfGlobalAddress(int key, Delta<GlobalAddress> address)
+        public ITestActionResult PatchToAddressOfGlobalAddress(int key, [FromBody]Delta<GlobalAddress> address)
         {
             Account account = Accounts.FirstOrDefault(a => a.Id == key);
             if (account == null)
@@ -508,7 +508,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.OpenType
         }
 
         [HttpPut]
-        public ITestActionResult PutToAddress(int key, Delta<Address> address)
+        public ITestActionResult PutToAddress(int key, [FromBody]Delta<Address> address)
         {
             Account account = Accounts.FirstOrDefault(a => a.Id == key);
             if (account == null)

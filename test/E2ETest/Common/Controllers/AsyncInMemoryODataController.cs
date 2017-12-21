@@ -89,7 +89,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
                 });
         }
 
-        public virtual async Task<ITestActionResult> Post(TEntity entity)
+        public virtual async Task<ITestActionResult> Post([FromBody]TEntity entity)
         {
             TEntity createdEntity = await CreateEntityAsync(entity);
             return Created<TEntity>(createdEntity);
@@ -134,7 +134,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
             this.LocalTable.Clear();
         }
 
-        protected Task<TEntity> PatchEntityAsync(TKey key, Delta<TEntity> patch)
+        protected Task<TEntity> PatchEntityAsync(TKey key, [FromBody]Delta<TEntity> patch)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -144,13 +144,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
             });
         }
 
-        public async Task<ITestActionResult> Patch([FromODataUri]TKey key, Delta<TEntity> patch)
+        public async Task<ITestActionResult> Patch([FromODataUri]TKey key, [FromBody]Delta<TEntity> patch)
         {
             TEntity patchedEntity = await PatchEntityAsync(key, patch);
             return Updated(patchedEntity);
         }
 
-        protected Task<TEntity> UpdateEntityAsync(TKey key, TEntity update)
+        protected Task<TEntity> UpdateEntityAsync(TKey key, [FromBody]TEntity update)
         {
             return Task.Factory.StartNew(() =>
             {

@@ -20,6 +20,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
             config.MapHttpRoute("api", "{controller}");
+            config.EnableDependencyInjection();
         }
 
         public static TheoryDataSet<string> Queries

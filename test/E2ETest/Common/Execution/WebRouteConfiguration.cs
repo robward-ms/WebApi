@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +39,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
     public class WebRouteConfiguration : IRouteBuilder
     {
         private IRouteBuilder routeBuilder;
+        private ApplicationPartManager _fullScopePartManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebRouteConfiguration"/> class.
@@ -77,7 +80,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         /// </summary>
         public void EnableDependencyInjection()
         {
-            // This is a no-op on AspNetCore.
+            routeBuilder.EnableDependencyInjection();
         }
 
         /// <summary>
@@ -102,6 +105,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         /// <returns>An <see cref="ODataConventionModelBuilder"/></returns>
         public ODataConventionModelBuilder CreateConventionModelBuilder()
         {
+            if (_fullScopePartManager != null)
+            {
+                return new ODataConventionModelBuilder(new WebApiAssembliesResolver(_fullScopePartManager));
+            }
+
             return new ODataConventionModelBuilder(routeBuilder.ServiceProvider);
         }
 
@@ -125,6 +133,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                 routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
 
             // Strip out all the IApplicationPartTypeProvider parts.
+            _fullScopePartManager = new ApplicationPartManager();
+            foreach (var existingPart in applicationPartManager.ApplicationParts)
+            {
+                _fullScopePartManager.ApplicationParts.Add(existingPart);
+            }
+
             IList<ApplicationPart> parts = applicationPartManager.ApplicationParts;
             IList<ApplicationPart> nonAssemblyParts = parts.Where(p => p.GetType() != typeof(IApplicationPartTypeProvider)).ToList();
             applicationPartManager.ApplicationParts.Clear();

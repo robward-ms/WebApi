@@ -104,6 +104,12 @@ namespace Microsoft.AspNet.OData.Formatter
                 throw Error.InvalidOperation(SRResources.ReadFromStreamAsyncMustHaveRequest);
             }
 
+            // Ignore non-OData requests.
+            if (request.ODataFeature().Path == null)
+            {
+                return false;
+            }
+
             // Allow the base class to make its determination, which includes
             // checks for SupportedMediaTypes.
             bool suportedMediaTypeFound = false;
@@ -131,7 +137,7 @@ namespace Microsoft.AspNet.OData.Formatter
             Type type = context.ObjectType ?? context.Object?.GetType();
             if (type == null)
             {
-                throw Error.ArgumentNull("type");
+                return false;
             }
 
             // Ensure the _serializerProvider has the services form the request and see if

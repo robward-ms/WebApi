@@ -541,6 +541,44 @@ namespace Microsoft.AspNet.OData.Extensions
         }
 
         /// <summary>
+        /// Enables dependency injection support for HTTP routes.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/> to add the container to.</param>
+        public static void EnableDependencyInjection(this IRouteBuilder builder)
+        {
+            builder.EnableDependencyInjection(null);
+        }
+
+        /// <summary>
+        /// Enables dependency injection support for HTTP routes.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/> to add the container to.</param>
+        /// <param name="configureAction">The configuring action to add the services to the root container.</param>
+        public static void EnableDependencyInjection(this IRouteBuilder builder,
+            Action<IContainerBuilder> configureAction)
+        {
+            if (builder == null)
+            {
+                throw Error.ArgumentNull("builder");
+            }
+
+            IPerRouteContainer perRouteContainer = builder.ServiceProvider.GetRequiredService<IPerRouteContainer>();
+            if (perRouteContainer == null)
+            {
+                throw Error.ArgumentNull("routeName");
+            }
+
+            if (perRouteContainer.GetODataRootContainer(null) != null)
+            {
+                throw Error.InvalidOperation(SRResources.CannotReEnableDependencyInjection);
+            }
+
+            // Get the per-route container and create a new non-route container.
+            perRouteContainer.CreateODataRootContainer(null, ConfigureDefaultServices(builder, configureAction));
+        }
+
+
+        /// <summary>
         /// Remote the trailing slash from a route prefix string.
         /// </summary>
         /// <param name="routePrefix">The route prefix string.</param>
