@@ -34,10 +34,7 @@ namespace Microsoft.AspNet.OData.Builder
         /// Initializes a new instance of the <see cref="ODataConventionModelBuilder"/> class.
         /// </summary>
         /// <param name="provider">The service provider to use.</param>
-        /// <remarks>
-        /// While this function does not use types that are AspNetCore-specific,
-        /// the functionality is due to the way assembly resolution is done in AspNet vs AspnetCore.
-        /// </remarks>
+        /// <remarks>This signature uses types that are AspNetCore-specific.</remarks>
         public ODataConventionModelBuilder(IServiceProvider provider)
             : this(provider, isQueryCompositionMode: false)
         {

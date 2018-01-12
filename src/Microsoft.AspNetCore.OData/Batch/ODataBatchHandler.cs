@@ -3,12 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Batch;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace Microsoft.AspNet.OData.Batch
 {
@@ -16,31 +14,31 @@ namespace Microsoft.AspNet.OData.Batch
     /// Defines the abstraction for handling OData batch requests.
     /// </summary>
     /// <remarks>
-    /// This class implements a BatchHandler semantics for AspNet, which uses
-    /// an <see cref="HttpBatchHandler"/> for dispatching requests.
+    /// This class implements a BatchHandler semantics for AspNetCore, which uses
+    /// an <see cref="IRouter"/> for dispatching requests.
     /// </remarks>
-    public abstract partial class ODataBatchHandler : HttpBatchHandler
+    public abstract partial class ODataBatchHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ODataBatchHandler"/> class.
+        /// Gets or sets the default Microsoft.AspNetCore.Routing.IRouter that is used as
+        /// a handler for the individual requests.
         /// </summary>
-        /// <param name="httpServer">The <see cref="HttpServer"/> for handling the individual batch requests.</param>
-        protected ODataBatchHandler(HttpServer httpServer)
-            : base(httpServer)
-        {
-        }
+        public IRouter DefaultHandler { get; set; }
+
+        /// <summary>
+        /// Abstract method for processing a batch request.
+        /// </summary>
+        /// <param name="context">The http content.</param>
+        /// <returns></returns>
+        public abstract Task ProcessBatchAsync(HttpContext context);
 
         /// <summary>
         /// Creates the batch response message.
         /// </summary>
         /// <param name="responses">The responses for the batch requests.</param>
         /// <param name="request">The original request containing all the batch requests.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>The batch response message.</returns>
-        public virtual Task<HttpResponseMessage> CreateResponseMessageAsync(
-            IEnumerable<ODataBatchResponseItem> responses,
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
+        public virtual Task CreateResponseMessageAsync(IEnumerable<ODataBatchResponseItem> responses, HttpRequest request)
         {
             if (request == null)
             {
@@ -54,14 +52,15 @@ namespace Microsoft.AspNet.OData.Batch
         /// Validates the incoming request that contains the batch request messages.
         /// </summary>
         /// <param name="request">The request containing the batch request messages.</param>
-        public virtual void ValidateRequest(HttpRequestMessage request)
+        /// <returns>true if the request is valid, otherwise false.</returns>
+        public virtual Task<bool> ValidateRequest(HttpRequest request)
         {
             if (request == null)
             {
                 throw Error.ArgumentNull("request");
             }
 
-            request.ValidateODataBatchRequest();
+            return request.ValidateODataBatchRequest();
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// </summary>
         /// <param name="request">The original request containing all the batch requests.</param>
         /// <returns>The base URI.</returns>
-        public virtual Uri GetBaseUri(HttpRequestMessage request)
+        public virtual Uri GetBaseUri(HttpRequest request)
         {
             if (request == null)
             {
