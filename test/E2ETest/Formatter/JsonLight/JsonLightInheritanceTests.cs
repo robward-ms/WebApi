@@ -112,7 +112,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             await AddAndRemoveBaseNavigationPropertyInDerivedType();
         }
 
-#if !NETCORE
         [Theory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=false")]
@@ -128,7 +127,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             AcceptHeader = acceptHeader;
             await AddAndRemoveDerivedNavigationPropertyInDerivedType();
         }
-#endif
 
         [Theory]
         [InlineData("application/json;odata.metadata=minimal;odata.streaming=true")]

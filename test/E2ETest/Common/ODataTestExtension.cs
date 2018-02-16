@@ -2,13 +2,20 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 #if NETCORE
+using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 #else
 using System;
 using System.Linq;
@@ -66,13 +73,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
             configuration.EnableODataSupport(model, routePrefix: null);
         }
 
-#if !NETCORE
         /// <summary>
         /// Helper method to get the odata path for an arbitrary odata uri.
         /// </summary>
         /// <param name="request">The request instance in current context</param>
         /// <param name="uri">OData uri</param>
         /// <returns>The parsed odata path</returns>
+#if NETCORE
+        public static ODataPath CreateODataPath(this HttpRequest request, Uri uri)
+        {
+            return null;
+        }
+#else
         public static ODataPath CreateODataPath(this HttpRequestMessage request, Uri uri)
         {
             if (uri == null)
@@ -98,6 +110,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
 
             return newRequest.ODataProperties().Path;
         }
+#endif
 
         /// <summary>
         /// Helper method to get the key value from a uri.
@@ -107,7 +120,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
         /// <param name="request">The request instance in current context</param>
         /// <param name="uri">OData uri that contains the key value</param>
         /// <returns>The key value</returns>
+#if NETCORE
+        public static TKey GetKeyValue<TKey>(this HttpRequest request, Uri uri)
+#else
         public static TKey GetKeyValue<TKey>(this HttpRequestMessage request, Uri uri)
+#endif
         {
             if (uri == null)
             {
@@ -141,17 +158,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common
                 {
                     if (modelState[key].Errors.Count > 0)
                     {
+#if NETCORE
+                        errorMessageBuilder.AppendLine(key + ":" + ((modelState[key] != null) ? modelState[key].RawValue : "null"));
+#else
                         errorMessageBuilder.AppendLine(key + ":" + ((modelState[key].Value != null) ? modelState[key].Value.RawValue : "null"));
+#endif
                     }
                 }
             }
 
             return errorMessageBuilder.ToString();
         }
-#endif
     }
 
-#if !NETCORE
+#if NOTHING
     public class EntityTypeConstraint : IHttpRouteConstraint
     {
         public bool Match(System.Net.Http.HttpRequestMessage request, IHttpRoute route, string parameterName, System.Collections.Generic.IDictionary<string, object> values, HttpRouteDirection routeDirection)

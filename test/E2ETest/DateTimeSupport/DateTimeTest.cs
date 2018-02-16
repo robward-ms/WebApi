@@ -17,6 +17,10 @@ using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#if !NETCORE
+using System.Web.Http;
+using Microsoft.AspNet.OData.Batch;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
@@ -45,7 +49,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
                 routePrefix: "explicit",
                 model: DateTimeEdmModel.GetExplicitModel()
 #if !NETCORE
-                , batchHandler: new DefaultODataBatchHandler(httpServer));
+                , batchHandler: new DefaultODataBatchHandler(httpServer)
 #endif
                 );
             configuration.EnsureInitialized();

@@ -15,6 +15,7 @@ using ODataPath = Microsoft.AspNet.OData.Routing.ODataPath;
 #else
 using System.Linq;
 using System.Net.Http;
+using System.Web.Http.Controllers;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 #endif
@@ -55,7 +56,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Swagger
 
         public string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
         {
-            if public (odataPath != null && odataPath.PathTemplate == "~/$swagger")
+            if (odataPath != null && odataPath.PathTemplate == "~/$swagger")
             {
                 return "GetSwagger";
             }

@@ -174,12 +174,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Extensibility
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-#if !NETCORE
-            configuration.Formatters.InsertRange(0,
-                ODataMediaTypeFormatters.Create(
-                    new CustomODataSerializerProvider(new MockContainer()),
-                    new DefaultODataDeserializerProvider(new MockContainer())));
-#endif
+            configuration.InsertFormatters(FormatterFactory.CreateOData(
+                new CustomODataSerializerProvider(new MockContainer()),
+                new DefaultODataDeserializerProvider(new MockContainer())));
             var routingConventions = ODataRoutingConventions.CreateDefault();
             routingConventions.Insert(4, new GetRefRoutingConvention());
             configuration.MapODataServiceRoute(

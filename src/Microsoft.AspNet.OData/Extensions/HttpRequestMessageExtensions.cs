@@ -413,7 +413,7 @@ namespace Microsoft.AspNet.OData.Extensions
                 throw Error.Argument("request", SRResources.RequestMustContainConfiguration);
             }
 
-           IServiceProvider rootContainer = configuration.GetODataRootContainer(routeName);
+            IServiceProvider rootContainer = configuration.GetODataRootContainer(routeName);
             return rootContainer.GetRequiredService<IServiceScopeFactory>().CreateScope();
         }
     }

@@ -43,7 +43,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -52,7 +52,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -346,9 +346,6 @@
     <Compile Include="..\Common\Execution\WebRouteConfiguration.cs">
       <Link>Common\Execution\WebRouteConfiguration.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Extensions\DirectoryInfoExtension.cs">
-      <Link>Common\Extensions\DirectoryInfoExtension.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Extensions\HttpClientExtension.cs">
       <Link>Common\Extensions\HttpClientExtension.cs</Link>
     </Compile>
@@ -363,9 +360,6 @@
     </Compile>
     <Compile Include="..\Common\HttpClientExtensions.cs">
       <Link>Common\HttpClientExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\HttpControllerContextExtensions.cs">
-      <Link>Common\HttpControllerContextExtensions.cs</Link>
     </Compile>
     <Compile Include="..\Common\Instancing\CharsToUseBuilder.cs">
       <Link>Common\Instancing\CharsToUseBuilder.cs</Link>

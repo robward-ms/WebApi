@@ -21,6 +21,7 @@ using Xunit;
 #else
 using System;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Results;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Results;
 #endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
@@ -86,6 +88,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
         public new TestCreatedODataResult<T> Created<T>(T entity) { return new TestCreatedODataResult<T>(entity); }
 
         [NonAction]
+        public new TestCreatedODataResult<object> Created(string uri, object entity) { return new TestCreatedODataResult<object>(uri, entity); }
+
+        [NonAction]
         public new TestUpdatedODataResult<T> Updated<T>(T entity) { return new TestUpdatedODataResult<T>(entity); }
 
         protected string GetServiceRootUri()
@@ -120,11 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 
         protected T GetRequestValue<T>(Uri value)
         {
-#if !NETCORE
             return Request.GetKeyValue<T>(value);
-#else
-            return default(T);
-#endif
         }
     }
 
@@ -164,7 +165,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 #else
     public class TestNotFoundObjectResult : TestActionResult
     {
-        public TestOkObjectResult(OkNegotiatedContentResult<T> innerResult)
+        public TestNotFoundObjectResult(NotFoundObjectResult innerResult)
             : base(innerResult)
         {
         }
@@ -267,6 +268,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
         public TestCreatedODataResult(T entity)
             : base(entity)
         {
+        }
+
+        public TestCreatedODataResult(string uri, T entity)
+            : base(entity)
+        {
+#if !NETCORE
+#endif
         }
     }
 
@@ -416,14 +424,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
     }
 #endif
 
-    /// <summary>
-    /// Platform-agnostic version of formatting attributes.
-    /// </summary>
+/// <summary>
+/// Platform-agnostic version of formatting attributes.
+/// </summary>
+#if NETCORE
     public class FromBodyAttribute : Microsoft.AspNetCore.Mvc.FromBodyAttribute { }
+#endif
 
     /// <summary>
     /// An attribute that specifies that the value can be bound from the query string or route data.
     /// </summary>
+#if NETCORE
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
     public class FromUriAttribute : Attribute, IBindingSourceMetadata, IModelNameProvider
     {
@@ -437,4 +448,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
         /// <inheritdoc />
         public string Name { get; set; }
     }
+#endif
 }

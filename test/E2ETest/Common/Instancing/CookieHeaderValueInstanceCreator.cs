@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETFX // This class is only used in the AspNet version.
 using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
+using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
 {
@@ -51,7 +53,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
             DomainSyntax = subdomain | " ";
         }
 
-#if !NETCORE
         public static CookieHeaderValue CreateInstanceOfCookieHeaderValue(Random rndGen, CreatorSettings creatorSettings)
         {
             creatorSettings.NullValueProbability = 0.0;
@@ -76,7 +77,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
 
             return header;
         }
-#endif
+
         public static string CreateRandomCookieName(Random rndGen, CreatorSettings creatorSettings)
         {
             return PrimitiveCreator.CreateRandomString(rndGen, -1, Token, new CreatorSettings(creatorSettings) { MinStringLength = 1 });
@@ -112,3 +113,4 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
         }
     }
 }
+#endif

@@ -79,18 +79,11 @@ namespace Microsoft.AspNet.OData.Routing
             ODataPath odataPath = context.HttpContext.ODataFeature().Path;
             if (odataPath != null && routeData.Values.ContainsKey(ODataRouteConstants.Action))
             {
-                // Find the action with the greatest number of matched parameters.
+                // Find the action with the greatest number of matched parameters including
+                // matches with no parameters.
                 var matchedCandidates = candidates
-                    .Where(c => c.Parameters.Any(p => context.RouteData.Values.ContainsKey(p.Name)))
+                    .Where(c => !c.Parameters.Any() || c.Parameters.Any(p => context.RouteData.Values.ContainsKey(p.Name)))
                     .OrderByDescending(c => c.Parameters.Count);
-
-                // Add the candidates with no parameters.
-                if (!matchedCandidates.Any())
-                {
-                    matchedCandidates = candidates
-                        .Where(c => c.Parameters.Count == 0)
-                        .OrderBy(c => c.DisplayName);
-                }
 
                 // Return either the best matched candidate or the first
                 // candidate if none matched.

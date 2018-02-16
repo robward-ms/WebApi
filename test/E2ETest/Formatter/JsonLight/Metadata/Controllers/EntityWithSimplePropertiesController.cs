@@ -25,12 +25,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Controlle
         {
             var entity = LocalTable[key];
             object propertyValue = entity.GetType().GetProperty(property).GetValue(entity, null);
-            var result = Ok(propertyValue
-#if !NETCORE
-                , entity.GetType().GetProperty(property).PropertyType);
-#else
-                    );
-#endif
+            var result = Ok(propertyValue);
             return result;
         }
     }

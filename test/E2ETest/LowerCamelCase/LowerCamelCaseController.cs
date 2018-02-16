@@ -175,7 +175,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
         }
 
         [ODataRoute("SetAddress")]
-        public ITestActionResult SetAddress(ODataActionParameters parameters)
+        public ITestActionResult SetAddress([FromBody]ODataActionParameters parameters)
         {
             int id = int.Parse(parameters["id"].ToString());
             Address address = parameters["address"] as Address;
@@ -205,13 +205,5 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             InitEmployeesAndManagers();
             return this.StatusCode(HttpStatusCode.NoContent);
         }
-
-#if !NETCORE
-        private ITestActionResult Ok(object content, Type type)
-        {
-            var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
-            return Activator.CreateInstance(resultType, content, this) as ITestActionResult;
-        }
-#endif
     }
 }

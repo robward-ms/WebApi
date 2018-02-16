@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+#if !NETCORE
+using System.Web.Http.Results;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
@@ -76,8 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DollarLevels
         }
 
 #if !NETCORE
-        private ITestActionResult Ok(object content, Type type)#if !NETCORE
-
+        private ITestActionResult Ok(object content, Type type)
         {
             var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
             return Activator.CreateInstance(resultType, content, this) as ITestActionResult;

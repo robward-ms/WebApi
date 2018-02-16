@@ -87,20 +87,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-#if !NETCORE
         public Task<ITestActionResult> GetSingleNavigationPropertyOnCar(int key)
-#else
-        public ITestActionResult GetSingleNavigationPropertyOnCar(int key)
-#endif
         {
-#if !NETCORE
-            return Task.Factory.StartNew(() =>
+            return Task< ITestActionResult>.Factory.StartNew(() =>
             {
-#endif
-            return Ok((this.LocalTable[key] as Car).SingleNavigationProperty);
-#if !NETCORE
+                return Ok((LocalTable[key] as Car).SingleNavigationProperty);
             });
-#endif
         }
     }
 
@@ -119,16 +111,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             });
         }
 
-#if !NETCORE
         public Task<ITestActionResult> PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
-#else
-        public ITestActionResult PostBaseTypeNavigationProperty(int key, Vehicle vehicle)
-#endif
         {
-#if !NETCORE
-            return Task.Factory.StartNew(() =>
+            return Task<ITestActionResult>.Factory.StartNew(() =>
             {
-#endif
                 new InheritanceTests_VehiclesController().LocalTable.AddOrUpdate(vehicle.Id, vehicle, (id, v) => vehicle);
                 this.LocalTable[key].BaseTypeNavigationProperty.Add(vehicle);
 
@@ -141,9 +127,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
                         new KeySegment(new[] { new KeyValuePair<string, object>("Id", vehicle.Id) }, entitySet.EntityType(), null)));
 #endif
                 return response;
-#if !NETCORE
             });
-#endif
         }
 
         public Task<IEnumerable<Vehicle>> GetDerivedTypeNavigationProperty(int key)
@@ -154,16 +138,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             });
         }
 
-#if !NETCORE
         public Task<ITestActionResult> PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
-#else
-        public ITestActionResult PostDerivedTypeNavigationProperty(int key, MiniSportBike vehicle)
-#endif
         {
-#if !NETCORE
-            return Task.Factory.StartNew(() =>
+            return Task<ITestActionResult>.Factory.StartNew(() =>
             {
-#endif
             new InheritanceTests_VehiclesController().LocalTable.AddOrUpdate(vehicle.Id, vehicle, (id, v) => vehicle);
                 this.LocalTable[key].DerivedTypeNavigationProperty.Add(vehicle);
 
@@ -176,9 +154,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
                         new KeySegment(new[] { new KeyValuePair<string, object>("Id", vehicle.Id) }, entitySet.EntityType(), null)));
 #endif
                 return response;
-#if !NETCORE
             });
-#endif
         }
 
         public Task DeleteRef(int key, string relatedKey, string navigationProperty)

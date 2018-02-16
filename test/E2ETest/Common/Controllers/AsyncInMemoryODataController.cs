@@ -24,9 +24,7 @@ using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Controllers
 {
-#if !NETCORE
     [ModelStateErrorHandling]
-#endif
     public abstract class InMemoryODataController<TEntity, TKey> : TestController
         where TEntity : class
     {

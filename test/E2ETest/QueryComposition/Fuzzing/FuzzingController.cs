@@ -34,7 +34,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.Fuzzing
             return context.EntityTypeModel1Set.AsEnumerable();
         }
 
-#if NETFX
+#if NETFX // IDisposable is only implemented in the AspNet version.
         protected override void Dispose(bool disposing)
         {
             context.Dispose();

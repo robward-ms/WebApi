@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
@@ -16,26 +14,11 @@ using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter
 {
-#if !NETCORE
-    [ODataJsonOnlyFormatting]
     public class JsonLight_BlogPostsController : InMemoryODataController<BlogPost, int>
     {
         public JsonLight_BlogPostsController()
             : base("Id")
         {
-        }
-    }
-
-    public class ODataJsonOnlyFormattingAttribute : Attribute, IControllerConfiguration
-    {
-        public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
-        {
-            controllerSettings.Formatters.Clear();
-            var odataFormatters = ODataMediaTypeFormatters.Create();
-            odataFormatters = odataFormatters.Where(f =>
-                f.SupportedMediaTypes.Any(t =>
-                    string.Equals(t.MediaType, "application/json", StringComparison.InvariantCultureIgnoreCase))).ToList();
-            controllerSettings.Formatters.InsertRange(0, odataFormatters);
         }
     }
 
@@ -131,5 +114,4 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             Assert.Equal("application/xml", response.Content.Headers.ContentType.MediaType);
         }
     }
-#endif
 }

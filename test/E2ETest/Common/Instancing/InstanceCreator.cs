@@ -103,7 +103,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Instancing
             {
                 return JTokenInstanceCreator.CreateInstanceOfJArray(rndGen, creatorSettings);
             }
-#if !NETCORE
+#if NETFX // CookieHeaderValue is only supported in the AspNet version.
             else if (type == typeof(System.Net.Http.Headers.CookieHeaderValue))
             {
                 return CookieHeaderValueInstanceCreator.CreateInstanceOfCookieHeaderValue(rndGen, creatorSettings);

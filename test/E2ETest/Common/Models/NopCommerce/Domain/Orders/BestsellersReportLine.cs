@@ -5,7 +5,6 @@ using System;
 
 namespace Nop.Core.Domain.Orders
 {
-#if !NETCORE
     /// <summary>
     /// Represents a best sellers report line
     /// </summary>
@@ -27,5 +26,4 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public int TotalQuantity { get; set; }
     }
-#endif
 }

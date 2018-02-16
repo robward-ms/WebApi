@@ -22,6 +22,9 @@ using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Microsoft.Test.AspNet.OData.Extensions;
+#if !NETCORE
+using System.Net.Http.Formatting;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
 {
@@ -127,19 +130,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
         }
 
 
-#if !NETCORE
         [Fact]
         public async Task UntypedActionParametersRoundtrip()
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, BaseAddress + "/untyped/UntypedCustomers/Default.UntypedParameters");
             object payload = new { address = CreateAddress(5), value = 5, addresses = CreateAddresses(10), values = Enumerable.Range(0, 5) };
-            request.Content = new ObjectContent<object>(payload, new JsonMediaTypeFormatter());
+            request.Content = new StringContent((JToken.FromObject(payload) as JObject).ToString());
             request.Content.Headers.ContentType = MediaTypeWithQualityHeaderValue.Parse("application/json");
             var body = await request.Content.ReadAsStringAsync();
             HttpResponseMessage response = await Client.SendAsync(request);
             Assert.True(response.IsSuccessStatusCode);
         }
-#endif
+
         private static JArray CreateAddresses(int i)
         {
             JArray addresses = new JArray();
@@ -251,7 +253,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
             return Ok(postedCustomer);
         }
 
-#if !NETCORE
         public ITestActionResult Post(IEdmEntityObject customer)
         {
             if (!ModelState.IsValid)
@@ -264,9 +265,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.Untyped
 
             IEdmEntitySet entitySet = Request.GetModel().EntityContainer.FindEntitySet("UntypedCustomers");
             return Created(Url.CreateODataLink(new EntitySetSegment(entitySet),
-                new KeySegment(new[] {new KeyValuePair<string, object>("Id", id)}, entitySet.EntityType(), null)), customer));
+                new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, entitySet.EntityType(), null)), customer);
         }
-#endif
+
         public ITestActionResult PrimitiveCollection()
         {
             return Ok(Enumerable.Range(1, 10));

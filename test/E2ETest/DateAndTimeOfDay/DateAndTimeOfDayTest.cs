@@ -19,6 +19,10 @@ using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#if !NETCORE
+using Microsoft.AspNet.OData.Batch;
+using System.Web.Http;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
@@ -47,7 +51,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
                 routePrefix: "explicit",
                 model: DateAndTimeOfDayEdmModel.GetExplicitModel()
 #if !NETCORE
-                , batchHandler: new DefaultODataBatchHandler(httpServer));
+                , batchHandler: new DefaultODataBatchHandler(httpServer)
 #endif
                 );
             configuration.EnsureInitialized();

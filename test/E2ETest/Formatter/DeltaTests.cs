@@ -8,6 +8,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -59,9 +60,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         public DateTimeOffset DateTimeOffset { get; set; }
         public byte Byte { get; set; }
         public byte[] ByteArray { get; set; }
-#if !NETCORE
         public XElement XElement { get; set; }
-#endif
     }
 
     [EntitySet("DeltaTests_Todoes")]
@@ -157,12 +156,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
             PropertyDescriptorCollection descriptors = new PropertyDescriptorCollection(null);
             foreach (PropertyDescriptor descriptor in base.GetProperties(attributes))
             {
-#if !NETCORE
                 if (descriptor.PropertyType == typeof(XElement))
                 {
                     continue;
                 }
-#endif
                 descriptors.Add(descriptor);
             }
 

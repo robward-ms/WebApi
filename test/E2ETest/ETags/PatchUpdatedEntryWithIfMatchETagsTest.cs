@@ -17,7 +17,6 @@ using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ETags
 {
-#if !NETCORE
     public class PatchUpdatedEntryWithIfMatchETagsTest : WebHostTestBase
     {
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
@@ -31,10 +30,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
                     routePrefix: "odata",
                     model: model,
                     pathHandler: new DefaultODataPathHandler(),
-                    routingConventions: ODataRoutingConventions.CreateDefault(),
-                    defaultHandler: HttpClientFactory.CreatePipeline(
+                    routingConventions: ODataRoutingConventions.CreateDefault()
+#if !NETCORE
+                    , defaultHandler: HttpClientFactory.CreatePipeline(
                         innerHandler: new HttpControllerDispatcher(configuration),
-                        handlers: new[] { new Microsoft.AspNet.OData.ETagMessageHandler() }));
+                        handlers: new[] { new Microsoft.AspNet.OData.ETagMessageHandler() })
+#endif
+                    );
         }
 
         private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
@@ -77,5 +79,4 @@ namespace Microsoft.Test.E2E.AspNet.OData.ETags
             Assert.Equal(HttpStatusCode.PreconditionFailed, response.StatusCode);
         }
     }
-#endif
 }

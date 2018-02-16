@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
@@ -29,11 +30,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Swagger
             configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
-
-#if !NETCORE
-            JsonMediaTypeFormatter jsonFormatter = new JsonMediaTypeFormatter();
-            configuration.Formatters.Add(jsonFormatter);
-#endif
+            configuration.InsertFormatter(FormatterFactory.CreateJson(configuration));
 
             IODataPathHandler handler = new SwaggerPathHandler();
             IList<IODataRoutingConvention> conventions = ODataRoutingConventions.CreateDefault();

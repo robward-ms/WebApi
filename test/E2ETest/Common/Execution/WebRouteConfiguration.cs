@@ -9,11 +9,13 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
@@ -58,13 +60,37 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         public IList<IRouter> Routes => routeBuilder.Routes;
         public IRouter Build() => routeBuilder.Build();
 
-    /// <summary>
-    /// Gets or sets the ReferenceLoopHandling property on the Json formatter.
-    /// </summary>
-    public ReferenceLoopHandling JsonReferenceLoopHandling
+        /// <summary>
+        /// Gets or sets the ReferenceLoopHandling property on the Json formatter.
+        /// </summary>
+        public ReferenceLoopHandling JsonReferenceLoopHandling
         {
             get { return ReferenceLoopHandling.Error; }
             set { }
+#if !NETCORE
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the Indent property on the Json formatter.
+        /// </summary>
+        public bool JsonFormatterIndent
+        {
+            get { return false; }
+            set { }
+#if !NETCORE
+#endif
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum received message size.
+        /// </summary>
+        public int MaxReceivedMessageSize
+        {
+            get { return int.MaxValue; }
+            set { }
+#if !NETCORE
+#endif
         }
 
         /// <summary>
@@ -100,6 +126,37 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
 
         /// <summary>
+        /// Clear the formatters from the configuration.
+        /// </summary>
+        public void ClearFormatters()
+        {
+#if !NETCORE
+#endif
+        }
+
+        /// <summary>
+        /// Add a formatters to the configuration.
+        /// </summary>
+        /// <param name="formatters">The formatter.</param>
+        public void InsertFormatter(OutputFormatter formatter)
+        {
+#if !NETCORE
+            //configuration.Formatters.InsertRange(0,
+#endif
+        }
+
+        /// <summary>
+        /// Add a formatters to the configuration.
+        /// </summary>
+        /// <param name="formatters">One or more formatters.</param>
+        public void InsertFormatters(IList<ODataOutputFormatter> formatters)
+        {
+#if !NETCORE
+            //configuration.Formatters.InsertRange(0,
+#endif
+        }
+
+        /// <summary>
         /// Create an <see cref="ODataConventionModelBuilder"/>.
         /// </summary>
         /// <returns>An <see cref="ODataConventionModelBuilder"/></returns>
@@ -132,13 +189,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             ApplicationPartManager applicationPartManager =
                 routeBuilder.ApplicationBuilder.ApplicationServices.GetRequiredService<ApplicationPartManager>();
 
-            // Strip out all the IApplicationPartTypeProvider parts.
+            // This works OK but still has a problem: In some cases, the model builder
+            // wants to use the default applicationPartManager before we modified it
+            // so it can discover types not supplied by the modified applicationPartManager.
             _fullScopePartManager = new ApplicationPartManager();
             foreach (var existingPart in applicationPartManager.ApplicationParts)
             {
                 _fullScopePartManager.ApplicationParts.Add(existingPart);
             }
 
+            // Strip out all the IApplicationPartTypeProvider parts.
             IList<ApplicationPart> parts = applicationPartManager.ApplicationParts;
             IList<ApplicationPart> nonAssemblyParts = parts.Where(p => p.GetType() != typeof(IApplicationPartTypeProvider)).ToList();
             applicationPartManager.ApplicationParts.Clear();
@@ -213,6 +273,23 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         }
 
         /// <summary>
+        /// Clear the formatters from the configuration.
+        /// </summary>
+        public void ClearFormatters()
+        {
+            configuration.Formatters.Clear();
+        }
+
+        /// <summary>
+        /// Add a formatters to the configuration.
+        /// </summary>
+        /// <param name="formatters">One or more formatters.</param>
+        public void InsertFormatters(params MediaTypeFormatter[] formatters)
+        {
+            configuration.Formatters.InsertRange(0, formatters);
+        }
+
+        /// <summary>
         /// Add an <see cref="ETagMessageHandler"/> to the configuration.
         /// </summary>
         /// <param name="handler"></param>
@@ -265,6 +342,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         {
             get { return this.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling; }
             set { this.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the Indent property on the Json formatter.
+        /// </summary>
+        public bool JsonFormatterIndent
+        {
+            get { return this.Formatters.JsonFormatter.Indent; }
+            set { this.Formatters.JsonFormatter.Indent = value; }
+
         }
 
         /// <summary>

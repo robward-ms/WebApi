@@ -1,10 +1,32 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Web.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Batch;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Client;
+using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Containment
 {
@@ -48,7 +70,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
                     routePrefix: "convention",
                     model: ContainmentEdmModels.GetConventionModel(configuration)
 #if !NETCORE
-                    , batchHandler: new DefaultODataBatchHandler(httpServer));
+                    , batchHandler: new DefaultODataBatchHandler(httpServer)
 #endif
                     );
 
@@ -57,7 +79,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
                     routePrefix: "explicit",
                     model: ContainmentEdmModels.GetExplicitModel()
 #if !NETCORE
-                    , batchHandler: new DefaultODataBatchHandler(httpServer));
+                    , batchHandler: new DefaultODataBatchHandler(httpServer)
 #endif
                     );
             configuration.EnsureInitialized();

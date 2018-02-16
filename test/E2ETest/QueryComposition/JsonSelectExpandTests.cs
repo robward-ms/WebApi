@@ -22,9 +22,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-#if !NETCORE
-            configuration.Formatters.JsonFormatter.Indent = true;
-#endif
+            configuration.JsonFormatterIndent = true;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.EnableDependencyInjection();
         }

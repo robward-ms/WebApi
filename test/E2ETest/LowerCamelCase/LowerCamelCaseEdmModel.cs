@@ -30,7 +30,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
             var resetDataSource = builder.Action("ResetDataSource");
 
             builder.Namespace = typeof(Employee).Namespace;
-            builder.EnableLowerCamelCase();
+            //builder.EnableLowerCamelCase();
             var edmModel = builder.GetEdmModel();
             return edmModel;
         }

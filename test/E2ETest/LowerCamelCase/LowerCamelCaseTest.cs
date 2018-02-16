@@ -28,7 +28,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
 
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.MapODataServiceRoute("OData", "odata", LowerCamelCaseEdmModel.GetConventionModel(configuration));
+            configuration.MapODataServiceRoute("odata", "odata", LowerCamelCaseEdmModel.GetConventionModel(configuration));
             configuration.EnsureInitialized();
         }
 
@@ -321,7 +321,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.LowerCamelCase
         public async Task ExpandFromSingleManagerToSingleEmployeeWithNestedExpand(string format)
         {
             string requestUri = this.BaseAddress +
-                "/odata/Employees(1)/manager?$expand=next($levels=2;$select=name;$expand=manager($levels=2;$select=id))&$select=id,name,next&$format=" +
+                "/odata/employees(1)/manager?$expand=next($levels=2;$select=name;$expand=manager($levels=2;$select=id))&$select=id,name,next&$format=" +
                 format;
 
             HttpResponseMessage response = await this.Client.GetAsync(requestUri);

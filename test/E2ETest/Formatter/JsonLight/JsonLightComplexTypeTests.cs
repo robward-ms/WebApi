@@ -31,9 +31,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-#if !NETCORE
-            configuration.Formatters.Clear();
-#endif
+            configuration.ClearFormatters();
             configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 

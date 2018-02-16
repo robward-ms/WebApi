@@ -130,9 +130,6 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
                     IEnumerable<ControllerActionDescriptor> actionDescriptors =
                         actionDescriptorCollectionProvider.ActionDescriptors.Items.OfType<ControllerActionDescriptor>();
 
-                    // For testing, this gets all controllers and all models, which can be a problem. We need to limit the
-                    // list of controllers somehow to those supported by 
-
                     _attributeMappings = BuildAttributeMappings(actionDescriptors);
                 }
 

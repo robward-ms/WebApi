@@ -19,7 +19,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
 using Microsoft.Owin.Hosting;
-using using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Owin;
 using Xunit;
 #endif
@@ -33,7 +33,8 @@ using Xunit;
 // web servers running at any point during the test run, currently ~500. Without this, there would be a
 // web server per test case since Xunit 2.0 spawns a new test class instance for each test case.
 //
-[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
+//[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, DisableTestParallelization = true)]
+[assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly, MaxParallelThreads = 1)]
 //[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
@@ -149,7 +150,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                             // Add ourself to the container so WebHostTestStartup
                             // can call UpdateConfiguration.
                             services.AddSingleton<WebHostTestBase>(this);
-                            services.AddODataQueryFilter();
+                            //services.AddODataQueryFilter();
                         })
                         .ConfigureLogging((hostingContext, logging) =>
                         {
