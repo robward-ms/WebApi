@@ -1,13 +1,21 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 {
@@ -15,7 +23,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
     /// Present a singleton named "Umbrella"
     /// Use convention routing
     /// </summary>
-    public class UmbrellaController : ODataController
+    public class UmbrellaController : TestController
     {
         public static Company Umbrella;
 
@@ -39,77 +47,77 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
         #region Query
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(Umbrella);
         }
 
-        public IHttpActionResult GetFromSubCompany()
+        public ITestActionResult GetFromSubCompany()
         {
             var subCompany = Umbrella as SubCompany;
             if (subCompany != null)
             {
                 return Ok(subCompany);
             }
-            return BadRequest("The target cannot be casted");
+            return BadRequest();
         }
 
-        public IHttpActionResult GetRevenueFromCompany()
+        public ITestActionResult GetRevenueFromCompany()
         {
             return Ok(Umbrella.Revenue);
         }
 
-        public IHttpActionResult GetNameFromCompany()
+        public ITestActionResult GetNameFromCompany()
         {
             return Ok(Umbrella.Name);
         }
 
-        public IHttpActionResult GetCategoryFromCompany()
+        public ITestActionResult GetCategoryFromCompany()
         {
             return Ok(Umbrella.Category);
         }
 
-        public IHttpActionResult GetLocationFromSubCompany()
+        public ITestActionResult GetLocationFromSubCompany()
         {
             var subCompany = Umbrella as SubCompany;
             if (subCompany != null)
             {
                 return Ok(subCompany.Location);
             }
-            return BadRequest("The target cannot be casted");
+            return BadRequest();
         }
 
-        public IHttpActionResult GetOffice()
+        public ITestActionResult GetOffice()
         {
             var subCompany = Umbrella as SubCompany;
             if (subCompany != null)
             {
                 return Ok(subCompany.Office);
             }
-            return BadRequest("The target cannot be casted");
+            return BadRequest();
         }
 
         [EnableQuery]
-        public IHttpActionResult GetPartnersFromCompany()
+        public ITestActionResult GetPartnersFromCompany()
         {
             return Ok(Umbrella.Partners);
         }
         #endregion
 
         #region Update
-        public IHttpActionResult Put(Company newCompany)
+        public ITestActionResult Put(Company newCompany)
         {
             Umbrella = newCompany;
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        public IHttpActionResult PutUmbrellaFromSubCompany(SubCompany newCompany)
+        public ITestActionResult PutUmbrellaFromSubCompany(SubCompany newCompany)
         {
             Umbrella = newCompany;
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        public IHttpActionResult Patch(Delta<Company> item)
+        public ITestActionResult Patch(Delta<Company> item)
         {
             item.Patch(Umbrella);
             return StatusCode(HttpStatusCode.NoContent);
@@ -118,9 +126,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
         #region Navigation link
         [AcceptVerbs("POST")]
-        public IHttpActionResult CreateRef(string navigationProperty, [FromBody] Uri link)
+        public ITestActionResult CreateRef(string navigationProperty, [FromBody] Uri link)
         {
-            int relatedKey = Request.GetKeyValue<int>(link);
+            int relatedKey = GetRequestValue<int>(link);
             Partner partner = PartnersController.Partners.First(x => x.ID == relatedKey);
 
             if (navigationProperty != "Partners" || partner == null)
@@ -133,7 +141,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         }
 
         [AcceptVerbs("DELETE")]
-        public IHttpActionResult DeleteRef(string relatedKey, string navigationProperty)
+        public ITestActionResult DeleteRef(string relatedKey, string navigationProperty)
         {
             int key = int.Parse(relatedKey);
             Partner partner = Umbrella.Partners.First(x => x.ID == key);
@@ -148,7 +156,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
         }
 
         [HttpPost]
-        public IHttpActionResult PostToPartners([FromBody] Partner partner)
+        public ITestActionResult PostToPartners([FromBody] Partner partner)
         {
             PartnersController.Partners.Add(partner);
             if (Umbrella.Partners == null)
@@ -166,13 +174,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
         #region Action and Function
         [HttpPost]
-        public IHttpActionResult ResetDataSourceOnCompany()
+        public ITestActionResult ResetDataSourceOnCompany()
         {
             InitData();
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        public IHttpActionResult GetPartnersCount()
+        public ITestActionResult GetPartnersCount()
         {
             return Ok(Umbrella.Partners.Count);
         }

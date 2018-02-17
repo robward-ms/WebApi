@@ -13,7 +13,7 @@ namespace Microsoft.AspNet.OData.Routing.Conventions
     /// implementations of SelectControl(). Any design which makes this class public
     /// should find an alternative design.
     /// </remarks>
-    internal class SelectControllerResult
+    public class SelectControllerResult
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectControllerResult"/> class.

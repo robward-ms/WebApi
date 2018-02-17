@@ -1,17 +1,27 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
-    public class FilesController : ODataController
+    public class FilesController : TestController
     {
         private static IList<File> _files;
 
@@ -40,13 +50,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(_files);
         }
 
         [EnableQuery]
-        public IHttpActionResult Get([FromODataUri] int key)
+        public ITestActionResult Get([FromODataUri] int key)
         {
             File file = _files.FirstOrDefault(c => c.FileId == key);
             if (file == null)
@@ -56,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return Ok(file);
         }
 
-        public IHttpActionResult Post(File file)
+        public ITestActionResult Post(File file)
         {
             file.FileId = _files.Count + 1;
             file.ModifiedDates.Add(new DateTime(2014, 12, 24, 9, 2, 3, DateTimeKind.Utc));
@@ -64,7 +74,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return Created(file);
         }
 
-        public IHttpActionResult Put(int key, File file)
+        public ITestActionResult Put(int key, File file)
         {
             if (key != file.FileId)
             {
@@ -77,7 +87,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return Updated(file);
         }
 
-        public IHttpActionResult Patch(int key, Delta<File> patch)
+        public ITestActionResult Patch(int key, Delta<File> patch)
         {
             File original = _files.FirstOrDefault(c => c.FileId == key);
             if (original == null)
@@ -89,7 +99,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return Updated(original);
         }
 
-        public IHttpActionResult Delete(int key)
+        public ITestActionResult Delete(int key)
         {
             File original = _files.FirstOrDefault(c => c.FileId == key);
             if (original == null)
@@ -101,7 +111,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        public IHttpActionResult GetCreatedDate(int key)
+        public ITestActionResult GetCreatedDate(int key)
         {
             File file = _files.FirstOrDefault(c => c.FileId == key);
             if (file == null)
@@ -113,7 +123,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         [HttpGet]
-        public IHttpActionResult GetFilesModifiedAt(DateTimeOffset modifiedDate)
+        public ITestActionResult GetFilesModifiedAt(DateTimeOffset modifiedDate)
         {
             IEnumerable<File> files = _files.Where(f => f.ModifiedDates.Any(m => m == modifiedDate));
             if (!files.Any())
@@ -125,7 +135,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         [HttpPost]
-        public IHttpActionResult CopyFiles(int key, ODataActionParameters parameters)
+        public ITestActionResult CopyFiles(int key, [FromBody]ODataActionParameters parameters)
         {
             object value;
             if (!parameters.TryGetValue("createdDate", out value))
@@ -140,7 +150,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         }
 
         [ODataRoute("ResetDataSource")]
-        public IHttpActionResult ResetDataSource()
+        public ITestActionResult ResetDataSource()
         {
             InitFiles();
             return StatusCode(HttpStatusCode.NoContent);

@@ -3,10 +3,11 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttributeTest
 {
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private List<Customer> _customers;
 
@@ -61,7 +62,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         }
     }
 
-    public class OrdersController : ODataController
+    public class OrdersController : TestController
     {
         private List<Order> _orders;
         private List<SpecialOrder> _specialOrders;
@@ -130,7 +131,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.FilterAttribut
         }
     }
 
-    public class CarsController : ODataController
+    public class CarsController : TestController
     {
         private List<Car> _cars;
 

@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
@@ -21,10 +21,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Count().Filter().OrderBy().Expand().MaxTop(null);
-            config.Routes.MapHttpRoute("api", "{controller}");
+            config.MapHttpRoute("api", "{controller}");
+            config.EnableDependencyInjection();
         }
 
         public static TheoryDataSet<string> Queries
@@ -212,9 +213,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         //public float? Property20 { get; set; }
     }
 
-    public class TypeWithManyPropertiesController : ApiController
+    public class TypeWithManyPropertiesController : TestController
     {
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(Enumerable.Range(0, 10).Select(i =>
                     new TypeWithManyProperties

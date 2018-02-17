@@ -25,7 +25,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.SxS
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[]
             {
@@ -33,9 +33,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.SxS
                 typeof(ProductsV2Controller), typeof(PartsV2Controller), typeof(ODataV4Stack.MetadataController) 
             };
 
-            var resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
 

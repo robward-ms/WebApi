@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Linq;
 using System.Net;
@@ -8,8 +9,21 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
@@ -18,6 +32,7 @@ using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
@@ -51,27 +66,30 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             }
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(WindowsController), typeof(MetadataController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration
                 .MapODataServiceRoute(routeName: "convention",
                     routePrefix: "convention",
-                    model: ComplexTypeInheritanceEdmModels.GetConventionModel());
+                    model: ComplexTypeInheritanceEdmModels.GetConventionModel(configuration));
 
+#if !NETCORE
+            var httpServer = configuration.GetHttpServer();
+#endif
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
-                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel(),
-                    batchHandler: new DefaultODataBatchHandler(httpServer));
+                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel()
+#if !NETCORE
+                    , batchHandler: new DefaultODataBatchHandler(httpServer)
+#endif
+                    );
+
             configuration.EnsureInitialized();
         }
 
@@ -118,7 +136,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                 response.StatusCode,
                 requestUri,
                 contentOfString));
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             string name = (string)contentOfJObject["Name"];
             Assert.True("Name4" == name);
             int radius = (int)contentOfJObject["CurrentShape"]["Radius"];
@@ -148,7 +166,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     response.StatusCode,
                     requestUri,
                     contentOfString));
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             JArray windows = content["value"] as JArray;
             Assert.True(3 == windows.Count);
 
@@ -176,7 +194,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     response.StatusCode,
                     requestUri,
                     contentOfString));
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             JArray windows = content["value"] as JArray;
             Assert.True(1 == windows.Count,
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}", 1, windows.Count, requestUri, contentOfString));
@@ -223,7 +241,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             string name = (string)contentOfJObject["Name"];
             Assert.True("Name30" == name);
             int radius = (int)contentOfJObject["CurrentShape"]["Radius"];
@@ -268,7 +286,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
             }
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             string name = (string)contentOfJObject["Name"];
             Assert.True("AnotherPopup" == name);
             int radius = (int)contentOfJObject["CurrentShape"]["Radius"];
@@ -312,7 +330,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     response.StatusCode,
                     requestUri,
                     contentOfString));
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             bool hasBorder = (bool)content["HasBorder"];
             Assert.True(hasBorder,
                 String.Format("\nExpected that HasBorder is true, but actually not,\n request uri: {0},\n response payload: {1}", requestUri, contentOfString));
@@ -338,7 +356,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             JArray optionalShapes = (JArray)contentOfJObject["value"];
             Assert.True(1 == optionalShapes.Count);
         }
@@ -360,7 +378,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             JArray optionalShapes = (JArray)contentOfJObject["value"];
             Assert.True(2 == optionalShapes.Count);
         }
@@ -381,7 +399,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     response.StatusCode,
                     requestUri,
                     contentOfString));
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             bool hasBorder = (bool)content["value"];
             Assert.True(hasBorder,
                 String.Format("\nExpected that HasBorder is true, but actually not,\n request uri: {0},\n response payload: {1}", requestUri, contentOfString));
@@ -403,7 +421,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     response.StatusCode,
                     requestUri,
                     contentOfString));
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             int radius = (int)content["value"];
             Assert.True(2 == radius,
                 String.Format("\nExpected that Radius: 2, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
@@ -447,7 +465,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             Assert.True(2 == contentOfJObject.Count,
                 String.Format("\nExpected count: {0},\n actual: {1},\n request uri: {2},\n response payload: {3}",
                 2,
@@ -485,7 +503,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     requestUri,
                     contentOfString));
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             int radius = (int)contentOfJObject["Radius"];
             Assert.True(5 == radius,
                 String.Format("\nExpected that Radius: 5, but actually: {0},\n request uri: {1},\n response payload: {2}", radius, requestUri, contentOfString));
@@ -532,7 +550,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject contentOfJObject = await response.Content.ReadAsAsync<JObject>();
+            JObject contentOfJObject = await response.Content.ReadAsObject<JObject>();
             int radius = (int)contentOfJObject["Radius"];
             Assert.Equal(15, radius);
         }

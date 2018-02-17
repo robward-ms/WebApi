@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using EdmPrimitiveTypeKind = Microsoft.OData.Edm.EdmPrimitiveTypeKind;
 using IEdmModel = Microsoft.OData.Edm.IEdmModel;
 
@@ -49,9 +51,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             return builder.GetEdmModel();
         }
 
-        public static IEdmModel GetConventionModel()
+        public static IEdmModel GetConventionModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<DCustomer>("DCustomers");
 
             BuildFunctions(builder);
@@ -102,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         {
             object id;
             entityContext.EdmObject.TryGetPropertyValue("Id", out id);
-            string uri = entityContext.Url.CreateODataLink(
+            string uri = ResourceContextHelper.CreateODataLink(entityContext,
                             new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                             new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, entityContext.StructuredType as IEdmEntityType, null));
             return new Uri(uri);

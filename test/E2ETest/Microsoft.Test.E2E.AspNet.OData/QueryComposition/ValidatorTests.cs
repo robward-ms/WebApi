@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
@@ -17,7 +15,27 @@ using Microsoft.OData;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Query.Validators;
+using Microsoft.OData;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Xunit;
+using System.Net.Http.Formatting;
+using System.Net.Http;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -30,7 +48,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         public decimal Decimal { get; set; }
     }
 
-    public class ValidatorTestsController : ApiController
+    public class ValidatorTestsController : TestController
     {
         private static List<ValidatorTests_Todo> todoes = new List<ValidatorTests_Todo>();
         static ValidatorTestsController()
@@ -49,55 +67,55 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
         [HttpGet]
         [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.Skip | AllowedQueryOptions.Top)]
-        public IQueryable<ValidatorTests_Todo> OnlySupportTopAndSkip()
+        public ITestActionResult OnlySupportTopAndSkip()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(MaxTop = 10, MaxSkip = 10)]
-        public IQueryable<ValidatorTests_Todo> MaxTopSkipIs10()
+        public ITestActionResult MaxTopSkipIs10()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(AllowedOrderByProperties = "ID")]
-        public IQueryable<ValidatorTests_Todo> OnlySupportOrderByID()
+        public ITestActionResult OnlySupportOrderByID()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(AllowedLogicalOperators = AllowedLogicalOperators.Equal)]
-        public IQueryable<ValidatorTests_Todo> OnlySupportEqual()
+        public ITestActionResult OnlySupportEqual()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(AllowedArithmeticOperators = AllowedArithmeticOperators.Add | AllowedArithmeticOperators.Subtract)]
-        public IQueryable<ValidatorTests_Todo> OnlySupportAddAndSub()
+        public ITestActionResult OnlySupportAddAndSub()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(AllowedFunctions = AllowedFunctions.Substring)]
-        public IQueryable<ValidatorTests_Todo> OnlySupportSubString()
+        public ITestActionResult OnlySupportSubString()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
         [EnableQuery(AllowedFunctions = AllowedFunctions.Date | AllowedFunctions.Time)]
-        public IQueryable<ValidatorTests_Todo> OnlySupportDateAndTime()
+        public ITestActionResult OnlySupportDateAndTime()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpPost]
-        public IQueryable<ValidatorTests_Todo> ValidateOptions([FromBody]ODataValidationSettings settings, ODataQueryOptions options)
+        public ITestActionResult ValidateOptions([FromBody]ODataValidationSettings settings, ODataQueryOptions options)
         {
             try
             {
@@ -105,20 +123,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
             catch (ODataException ex)
             {
-                throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex));
+                return BadRequest(ex.Message);
             }
-            return options.ApplyTo(todoes.AsQueryable()) as IQueryable<ValidatorTests_Todo>;
+            return Ok(options.ApplyTo(todoes.AsQueryable()) as IQueryable<ValidatorTests_Todo>);
         }
 
         [HttpGet]
         [EnableQuery(AllowedFunctions = AllowedFunctions.AllFunctions)]
-        public IQueryable<ValidatorTests_Todo> SupportAllFunctions()
+        public ITestActionResult SupportAllFunctions()
         {
-            return todoes.AsQueryable();
+            return Ok(todoes.AsQueryable());
         }
 
         [HttpGet]
-        public IQueryable<ValidatorTests_Todo> ValidateWithCustomValidator(ODataQueryOptions options)
+        public ITestActionResult ValidateWithCustomValidator(ODataQueryOptions options)
         {
             if (options.Filter != null)
             {
@@ -134,9 +152,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
             catch (ODataException ex)
             {
-                throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex));
+                return BadRequest(ex.Message);
             }
-            return options.ApplyTo(todoes.AsQueryable()) as IQueryable<ValidatorTests_Todo>;
+            return Ok(options.ApplyTo(todoes.AsQueryable()) as IQueryable<ValidatorTests_Todo>);
         }
     }
 
@@ -232,10 +250,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.EnableDependencyInjection();
         }
@@ -271,6 +288,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             }
         }
 
+#if !NETCORE
         [Theory]
         [MemberData(nameof(ValidateOptionsData))]
         public async Task VerifyValidateOptions(string query, bool success)
@@ -299,7 +317,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             }
         }
-
+#endif
         [Theory]
         [MemberData(nameof(AllowedFunctionsData))]
         public void VerifyAllowedFunctions(AllowedFunctions value1, AllowedFunctions value2)

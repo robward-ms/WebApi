@@ -8,6 +8,8 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 
 namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
@@ -56,9 +58,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             return builder.GetEdmModel();
         }
 
-        public static IEdmModel GetConventionModel()
+        public static IEdmModel GetConventionModel(WebRouteConfiguration configuration)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = configuration.CreateConventionModelBuilder();
 
             builder.EntitySet<Window>("Windows");
             builder.Namespace = typeof(Window).Namespace;
@@ -70,7 +72,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             {
                 object id;
                 entityContext.EdmObject.TryGetPropertyValue("Id", out id);
-                string uri = entityContext.Url.CreateODataLink(
+                string uri = ResourceContextHelper.CreateODataLink(entityContext,
                                 new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                                 new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, entityContext.StructuredType as IEdmEntityType, null));
                 return new Uri(uri);

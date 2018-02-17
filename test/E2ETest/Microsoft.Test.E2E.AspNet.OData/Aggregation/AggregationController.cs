@@ -1,13 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System.Linq;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#else
+using System.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
-    public class BaseCustomersController : ODataController
+    public class BaseCustomersController : TestController
     {
         protected readonly AggregationContext _db = new AggregationContext();
 
@@ -75,11 +81,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         }
 
         [EnableQuery]
-        public SingleResult<Customer> Get(int key)
+        public Customer Get(int key)
         {
             ResetDataSource();
             var db = new AggregationContext();
-            return SingleResult.Create(db.Customers.Where(c => c.Id == key));
+            return db.Customers.Where(c => c.Id == key).FirstOrDefault();
         }
     }
 }

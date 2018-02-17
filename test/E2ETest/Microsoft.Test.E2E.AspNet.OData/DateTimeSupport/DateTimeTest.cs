@@ -7,19 +7,20 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#if !NETCORE
+using System.Web.Http;
+using Microsoft.AspNet.OData.Batch;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 {
@@ -30,31 +31,32 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(FilesController), typeof(MetadataController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"); // -8:00
             configuration.SetTimeZoneInfo(timeZoneInfo);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute(
                 routeName: "convention",
                 routePrefix: "convention",
-                model: DateTimeEdmModel.GetConventionModel());
+                model: DateTimeEdmModel.GetConventionModel(configuration));
 
+#if !NETCORE
+            HttpServer httpServer = configuration.GetHttpServer();
+#endif
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
-                model: DateTimeEdmModel.GetExplicitModel(),
-                batchHandler: new DefaultODataBatchHandler(httpServer));
-
+                model: DateTimeEdmModel.GetExplicitModel()
+#if !NETCORE
+                , batchHandler: new DefaultODataBatchHandler(httpServer)
+#endif
+                );
             configuration.EnsureInitialized();
         }
 
@@ -133,7 +135,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(5, content["value"].Count());
             for (int i = 1; i <= 5; i++)
@@ -178,7 +180,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(2, content["FileId"]);
             Assert.Equal("File #2", content["Name"]);
@@ -276,7 +278,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             Assert.Single(content["value"]);
 
             Assert.Equal(4, content["value"][0]["FileId"]);
@@ -299,7 +301,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(5, content["value"].Count());
 
@@ -326,7 +328,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(5, content["value"].Count());
         }

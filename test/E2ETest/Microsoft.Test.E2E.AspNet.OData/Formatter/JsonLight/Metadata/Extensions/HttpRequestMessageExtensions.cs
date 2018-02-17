@@ -5,14 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+#if !NETCORE
 using System.Web.Http;
+using System.Net.Http.Formatting;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extensions
 {
     internal static class HttpRequestMessageExtensions
     {
+#if !NETCORE
         public static HttpResponseMessage CreateResponse(this HttpRequestMessage request, HttpStatusCode statusCode, object value, Type type)
         {
             var configuration = request.GetConfiguration();
@@ -43,5 +46,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight.Metadata.Extension
                 };
             }
         }
+#endif
     }
 }

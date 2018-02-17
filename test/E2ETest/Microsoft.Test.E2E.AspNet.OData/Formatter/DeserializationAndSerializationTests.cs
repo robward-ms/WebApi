@@ -64,9 +64,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter
         {
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<UniverseEntity>("UniverseEntity")
                    .EntityType
                    .ComplexProperty(p => p.OptionalComplexProperty)

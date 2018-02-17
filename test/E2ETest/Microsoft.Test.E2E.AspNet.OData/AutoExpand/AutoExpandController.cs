@@ -1,13 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System.Linq;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#else
+using System.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
 {
-    public class CustomersController : ODataController
+    public class CustomersController : TestController
     {
         private readonly AutoExpandCustomerContext _db = new AutoExpandCustomerContext();
 
@@ -20,11 +26,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
 
         [EnableQuery]
-        public SingleResult<Customer> Get(int key)
+        public Customer Get(int key)
         {
             ResetDataSource();
             var db = new AutoExpandCustomerContext();
-            return SingleResult.Create(db.Customers.Where(c => c.Id == key));
+            return db.Customers.Where(c => c.Id == key).FirstOrDefault();
         }
 
         public void Generate()
@@ -110,7 +116,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
     }
 
-    public class PeopleController : ODataController
+    public class PeopleController : TestController
     {
         private readonly AutoExpandPeopleContext _db = new AutoExpandPeopleContext();
 
@@ -162,7 +168,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
     }
 
-    public class NormalOrdersController : ODataController
+    public class NormalOrdersController : TestController
     {
         private readonly AutoExpandOrdersContext _db = new AutoExpandOrdersContext();
 
@@ -175,11 +181,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.AutoExpand
         }
 
         [EnableQuery]
-        public SingleResult<NormalOrder> Get(int key)
+        public NormalOrder Get(int key)
         {
             ResetDataSource();
             var db = new AutoExpandOrdersContext();
-            return SingleResult.Create(db.NormalOrders.Where(o => o.Id == key));
+            return db.NormalOrders.Where(o => o.Id == key).FirstOrDefault();
         }
 
         public void Generate()
