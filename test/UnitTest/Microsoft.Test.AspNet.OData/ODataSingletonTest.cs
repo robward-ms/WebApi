@@ -13,7 +13,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace Microsoft.Test.AspNet.OData
 
         public ODataSingletonTest()
         {
-            _configuration = new[] { typeof(OscorpController), typeof(OscorpSubsController) }.GetHttpConfiguration();
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OscorpController), typeof(OscorpSubsController) });
             _configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpServer server = new HttpServer(_configuration);
             _client = new HttpClient(server);
@@ -35,7 +36,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.Singleton<Corporation>("Oscorp");
             builder.EntitySet<Subsidiary>("OscorpSubs");
             return builder.GetEdmModel();

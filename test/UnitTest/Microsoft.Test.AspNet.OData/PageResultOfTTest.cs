@@ -6,7 +6,7 @@ using System.IO;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.Common;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData

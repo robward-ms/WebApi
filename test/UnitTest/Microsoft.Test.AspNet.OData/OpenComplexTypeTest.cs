@@ -14,6 +14,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -28,7 +29,7 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             const string RequestUri = "http://localhost/odata/OpenCustomers(2)/Address";
-            var configuration = new[] { typeof(OpenCustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OpenCustomersController) });
             configuration.SetSerializeNullDynamicProperty(enableNullDynamicProperty);
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
 
@@ -79,7 +80,7 @@ namespace Microsoft.Test.AspNet.OData
 
             const string RequestUri = "http://localhost/odata/OpenCustomers";
 
-            HttpConfiguration configuration = new[] { typeof(OpenCustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OpenCustomersController) });
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpClient client = new HttpClient(new HttpServer(configuration));
 
@@ -112,7 +113,7 @@ namespace Microsoft.Test.AspNet.OData
 
             const string requestUri = "http://localhost/odata/OpenCustomers(1)/Address";
 
-            HttpConfiguration configuration = new[] { typeof(OpenCustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OpenCustomersController) });
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpClient client = new HttpClient(new HttpServer(configuration));
 
@@ -141,7 +142,7 @@ namespace Microsoft.Test.AspNet.OData
 
             const string requestUri = "http://localhost/odata/OpenCustomers(1)/Address";
 
-            HttpConfiguration configuration = new[] { typeof(OpenCustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OpenCustomersController) });
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpClient client = new HttpClient(new HttpServer(configuration));
 
@@ -162,7 +163,7 @@ namespace Microsoft.Test.AspNet.OData
             // Arrange
             const string requestUri = "http://localhost/odata/OpenCustomers(1)/Address";
 
-            HttpConfiguration configuration = new[] { typeof(OpenCustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OpenCustomersController) });
             configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
             HttpClient client = new HttpClient(new HttpServer(configuration));
 
@@ -177,7 +178,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<OpenCustomer>("OpenCustomers");
             return builder.GetEdmModel();
         }

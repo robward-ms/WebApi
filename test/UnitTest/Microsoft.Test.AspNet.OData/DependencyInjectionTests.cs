@@ -13,6 +13,7 @@ using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
@@ -43,7 +44,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient(DependencyInjectionModel instance)
         {
-            HttpConfiguration config = new[] { typeof(DependencyInjectionModelsController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(DependencyInjectionModelsController) });
             IEdmModel model = GetEdmModel();
             config.MapODataServiceRoute("odata", "odata", builder =>
                 builder.AddService(ServiceLifetime.Singleton, sp => instance)
@@ -55,7 +56,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private static IEdmModel GetEdmModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DependencyInjectionModel>("DependencyInjectionModels");
             return builder.GetEdmModel();
         }

@@ -9,14 +9,14 @@ using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData
@@ -137,10 +137,10 @@ namespace Microsoft.Test.AspNet.OData
         public void MapODataServiceRoute_ConfigEnsureInitialized_DoesNotThrowForValidPathTemplateWithAttributeRouting()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers");
             IEdmModel model = builder.GetEdmModel();
-            HttpConfiguration configuration = new[] { typeof(CustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(CustomersController) });
             configuration.MapODataServiceRoute(model);
 
             // Act & Assert
@@ -151,10 +151,10 @@ namespace Microsoft.Test.AspNet.OData
         public void MapODataServiceRoute_ConfigEnsureInitialized_DoesNotThrowForInvalidPathTemplateWithoutAttributeRouting()
         {
             // Arrange
-            var builder = new ODataConventionModelBuilder();
+            var builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Customer>("Customers").EntityType.Ignore(c => c.Name);
             IEdmModel model = builder.GetEdmModel();
-            HttpConfiguration configuration = new[] { typeof(CustomersController) }.GetHttpConfiguration();
+            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(CustomersController) });
             configuration.MapODataServiceRoute(
                 "RouteName",
                 "RoutePrefix",

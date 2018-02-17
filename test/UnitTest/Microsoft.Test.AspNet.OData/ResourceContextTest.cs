@@ -8,7 +8,7 @@ using System.Web.Http.Routing;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Formatter.Serialization;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.Common;
 using Moq;
 using Xunit;
 
@@ -291,11 +291,31 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Same(instance, entityContext.ResourceInstance);
         }
 
+        /// <summary>
+        /// A simple class with a property and collection property.
+        /// </summary>
         private class TestEntity
         {
             public int Property { get; set; }
 
             public int[] CollectionProperty { get; set; }
+        }
+
+        /// <summary>
+        /// An instance of IEdmEntityObject with no EdmType.
+        /// </summary>
+        private class NullEdmType : IEdmEntityObject
+        {
+            public IEdmTypeReference GetEdmType()
+            {
+                return null;
+            }
+
+            public bool TryGetPropertyValue(string propertyName, out object value)
+            {
+                value = null;
+                return false;
+            }
         }
     }
 }

@@ -7,9 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+#if !NETCORE
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+#else
+using Microsoft.AspNetCore.Mvc.Filters;
+#endif
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -17,15 +21,18 @@ using Microsoft.AspNet.OData.Query;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
-using Microsoft.Test.AspNet.OData.TestCommon;
+using Microsoft.Test.AspNet.OData.Common;
 using Xunit;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+using Microsoft.Test.AspNet.OData.Extensions;
 
 namespace Microsoft.Test.AspNet.OData.Query
 {
     public class QueryCompositionTests
     {
+#if !NETCORE
         private static IEdmModel _queryCompositionCustomerModel;
 
         [Theory]
@@ -42,7 +49,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpResponseMessage response = await GetResponse(client, server.Configuration,
                 String.Format("http://localhost:8080/{0}?$filter=Id ge 22 and Address/City ne 'seattle'&$orderby=Name&$skip=0&$top=1", controllerName));
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            var customers = await response.Content.ReadAsAsync<List<QueryCompositionCustomer>>();
+            var customers = await response.Content.ReadAsObject<List<QueryCompositionCustomer>>();
 
             Assert.Equal(new[] { 22 }, customers.Select(c => c.Id));
         }
@@ -56,7 +63,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpResponseMessage response = await GetResponse(client, server.Configuration,
                 String.Format("http://localhost:8080/QueryCompositionCustomer?$filter=Id ge 22 and Address/City ne 'seattle'&$orderby=Name&$skip=0&$top=1", "QueryCompositionCustomer"));
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            var customers = await response.Content.ReadAsAsync<List<QueryCompositionCustomer>>();
+            var customers = await response.Content.ReadAsObject<List<QueryCompositionCustomer>>();
 
             Assert.Equal(new[] { 22 }, customers.Select(c => c.Id));
         }
@@ -110,7 +117,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             HttpResponseMessage response = await GetResponse(client, server.Configuration,
                 "http://localhost:8080/QueryCompositionCustomerLowLevel_ODataQueryOptionsOfT/?$filter=Id ge 22");
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
-            int count = await response.Content.ReadAsAsync<int>();
+            int count = await response.Content.ReadAsObject<int>();
             Assert.Equal(2, count);
         }
 
@@ -145,7 +152,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             builder2.EntitySet<FormatterPerson>("People").HasIdLink(p => new Uri("http://link/"), false);
             var model2 = builder2.GetEdmModel();
 
-            var config = new[] { typeof(PeopleController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(PeopleController) }); ;
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
 
@@ -173,7 +180,7 @@ namespace Microsoft.Test.AspNet.OData.Query
                 "http://localhost:8080/QueryCompositionCustomerValidation/?$skip=1");
             ExceptionAssert.DoesNotThrow(() => response.EnsureSuccessStatusCode());
 
-            List<QueryCompositionCustomer> customers = await response.Content.ReadAsAsync<List<QueryCompositionCustomer>>();
+            List<QueryCompositionCustomer> customers = await response.Content.ReadAsObject<List<QueryCompositionCustomer>>();
             Assert.Equal(new[] { 11, 22, 33 }, customers.Select(customer => customer.Id));
 
             // skip = 2 exceeds the limit
@@ -206,8 +213,7 @@ namespace Microsoft.Test.AspNet.OData.Query
         [MemberData(nameof(PrimitiveTypesQueryCompositionData))]
         public virtual void PrimitiveTypesQueryComposition(string query, IEnumerable<int> expectedResults)
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, "http://localhost/?" + query);
-            message.EnableHttpDependencyInjectionSupport();
+            var message = RequestFactory.Create(HttpMethod.Get, "http://localhost/?" + query);
 
             ODataQueryOptions queryOptions = new ODataQueryOptions(new ODataQueryContext(EdmCoreModel.Instance, typeof(int)), message);
             var results = queryOptions.ApplyTo(Enumerable.Range(0, 100).AsQueryable()) as IQueryable<int>;
@@ -216,6 +222,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             Assert.Equal(expectedResults, results);
         }
 
+#if !NETCORE
         private static HttpConfiguration InitializeConfiguration(string controllerName, bool useCustomEdmModel,
             ODataUriResolver resolver = null)
         {
@@ -229,7 +236,8 @@ namespace Microsoft.Test.AspNet.OData.Query
                 typeof(QueryCompositionCustomerLowLevel_ODataQueryOptionsOfTController),
                 typeof(QueryCompositionCategoryController), typeof(QueryCompositionAnonymousTypesController)
             };
-            HttpConfiguration config = controllers.GetHttpConfiguration();
+
+            var config = RoutingConfigurationFactory.CreateWithTypes(controllers);
             config.Routes.MapHttpRoute("default", "{controller}/{key}", new { key = RouteParameter.Optional });
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -242,7 +250,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             {
                 if (_queryCompositionCustomerModel == null)
                 {
-                    ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+                    ODataModelBuilder modelBuilder = ODataConventionModelBuilderFactory.Create();
                     modelBuilder.EntitySet<QueryCompositionCustomer>(typeof(QueryCompositionCustomer).Name);
                     _queryCompositionCustomerModel = modelBuilder.GetEdmModel();
                 }
@@ -274,6 +282,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             request.EnableODataDependencyInjectionSupport("default");
             return await client.SendAsync(request);
         }
+#endif
 
         private static async Task AssertRespondsWithExpectedStatusCode(HttpClient client, string uri, HttpStatusCode expectedStatusCode)
         {
@@ -292,10 +301,18 @@ namespace Microsoft.Test.AspNet.OData.Query
                 _model = model;
             }
 
+#if !NETCORE
             public override void OnActionExecuting(HttpActionContext actionContext)
             {
                 Assert.Equal(_model, actionContext.Request.GetModel());
             }
+#else
+            public override void OnActionExecuting(ActionExecutingContext actionContext)
+            {
+                Assert.Equal(_model, actionContext.HttpContext.Request.GetModel());
+            }
+#endif
         }
+#endif
     }
 }

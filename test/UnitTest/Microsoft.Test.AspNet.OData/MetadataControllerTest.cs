@@ -15,8 +15,9 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Common.Types;
+using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
-using Microsoft.Test.AspNet.OData.TestCommon.Types;
 using Moq;
 using Xunit;
 
@@ -70,15 +71,15 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public async Task DollarMetadata_Works_WithMultipleModels()
         {
-            ODataConventionModelBuilder builder1 = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder1 = ODataConventionModelBuilderFactory.Create();
             builder1.EntitySet<FormatterPerson>("People1");
             var model1 = builder1.GetEdmModel();
 
-            ODataConventionModelBuilder builder2 = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder2 = ODataConventionModelBuilderFactory.Create();
             builder2.EntitySet<FormatterPerson>("People2");
             var model2 = builder2.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("OData1", "v1", model1);
             config.MapODataServiceRoute("OData2", "v2", model2);
@@ -92,11 +93,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_WithReferencialConstraint_IfForeignKeyAttributeOnNavigationProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ForeignCustomer>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -116,11 +117,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_ForNullableReferencialConstraint_WithfForeignKeyAttribute()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -155,7 +156,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -185,11 +186,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_ForNullableReferencialConstraint_WithForeignKeyAttributeAndRequiredAttribute()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct2>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -234,11 +235,11 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"FkSupplier3Id\" ReferencedProperty=\"Id\" />" +
                 "</NavigationProperty>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FkProduct3>("Products");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -258,11 +259,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_WithReferencialConstraint_IfForeignKeyAttributeOnForeignKeyProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ForeignCustomer2>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -295,7 +296,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -331,7 +332,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -365,7 +366,7 @@ namespace Microsoft.Test.AspNet.OData
 
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -389,12 +390,12 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"DerivedPrincipalEntityId\" ReferencedProperty=\"Id\" />" +
                 "</NavigationProperty>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<DerivedPrincipalEntity>("Principals");
             builder.EntitySet<DependentEntity>("Dependents");
             IEdmModel model = builder.GetEdmModel();
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -445,7 +446,7 @@ namespace Microsoft.Test.AspNet.OData
                     "<ReferentialConstraint Property=\"CustomerForeignKey\" ReferencedProperty=\"CustomerId\" />" +
                 "</NavigationProperty>";
 
-            HttpConfiguration config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             HttpServer server = new HttpServer(config);
             config.MapODataServiceRoute("odata", "odata", model);
 
@@ -464,11 +465,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_WithOpenComplexType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -487,11 +488,11 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DollarMetadata_Works_WithInheritanceOpenComplexType()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<FormatterAddress>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -527,11 +528,11 @@ namespace Microsoft.Test.AspNet.OData
                 "</Schema>" +
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.ComplexType<ComplexBaseType>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -565,7 +566,7 @@ namespace Microsoft.Test.AspNet.OData
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EntityTypeConfiguration<FormatterPerson> person = builder.EntityType<FormatterPerson>();
 
             ActionConfiguration action = person.Action("NullableAction").Returns<FormatterAddress>();
@@ -576,7 +577,7 @@ namespace Microsoft.Test.AspNet.OData
             action.Parameter<string>("param").OptionalParameter = false;
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -612,7 +613,7 @@ namespace Microsoft.Test.AspNet.OData
             "</edmx:DataServices>" +
             "</edmx:Edmx>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EntityTypeConfiguration<FormatterPerson> person = builder.EntityType<FormatterPerson>();
 
             FunctionConfiguration function = person.Function("NullableFunction").Returns<FormatterAddress>();
@@ -623,7 +624,7 @@ namespace Microsoft.Test.AspNet.OData
             function.Parameter<string>("param").OptionalParameter = false;
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -650,7 +651,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntityType<AbstractEntityType>().Abstract().Property(a => a.IntProperty);
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -696,7 +697,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntityType<AnotherSubEntityType>().HasKey(d => d.AnotherKey).DerivesFrom<AbstractEntityType>();
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -730,7 +731,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EnumType<SimpleEnum>().Namespace = "NS";
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -760,11 +761,11 @@ namespace Microsoft.Test.AspNet.OData
                     "</Annotation>" +
                 "</EntitySet>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<CustomerWithConcurrencyAttribute>("Customers");
             IEdmModel model = builder.GetEdmModel();
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -958,9 +959,9 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void Controller_DoesNotAppear_InApiDescriptions()
         {
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.Routes.MapHttpRoute("Default", "{controller}/{action}");
-            config.MapODataServiceRoute(new ODataConventionModelBuilder().GetEdmModel());
+            config.MapODataServiceRoute(ODataConventionModelBuilderFactory.Create().GetEdmModel());
             config.EnsureInitialized();
             var explorer = config.Services.GetApiExplorer();
 
@@ -973,10 +974,10 @@ namespace Microsoft.Test.AspNet.OData
         public async Task RequiredAttribute_Works_OnComplexTypeProperty()
         {
             // Arrange
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<FormatterAccount>("Accounts");
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1017,7 +1018,7 @@ namespace Microsoft.Test.AspNet.OData
                 .HasSinglePath(c => c.Location)
                 .HasRequiredBinding(a => a.City, "Cities");
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1056,7 +1057,7 @@ namespace Microsoft.Test.AspNet.OData
             bindingConfiguration.HasOptionalBinding((BindingUsAddress u) => u.UsCity, "Cities_A");
             bindingConfiguration.HasManyBinding((BindingUsAddress u) => u.UsCities, "Cities_B");
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1100,11 +1101,11 @@ namespace Microsoft.Test.AspNet.OData
                   "<EntitySet Name=\"Cities\" EntityType=\"Microsoft.Test.AspNet.OData.Formatter.BindingCity\" />" +
               "</EntityContainer>";
 
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<BindingCustomer>("Customers");
             builder.EntitySet<BindingCity>("Cities");
 
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
@@ -1119,7 +1120,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private HttpConfiguration GetConfiguration()
         {
-            var config = new[] { typeof(MetadataController) }.GetHttpConfiguration();
+            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.MapODataServiceRoute(ODataTestUtil.GetEdmModel());
             return config;
         }

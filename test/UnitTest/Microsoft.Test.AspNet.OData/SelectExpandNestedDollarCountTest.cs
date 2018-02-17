@@ -12,6 +12,7 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Factories;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData
@@ -25,11 +26,11 @@ namespace Microsoft.Test.AspNet.OData
 
         public SelectExpandNestedDollarCountTest()
         {
-            _configuration =
+            _configuration = RoutingConfigurationFactory.CreateWithTypes(
                 new[]
                 {
                     typeof(MsCustomersController), typeof(MetadataController)
-                }.GetHttpConfiguration();
+                });
             _configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
             _configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
@@ -125,7 +126,7 @@ namespace Microsoft.Test.AspNet.OData
 
         private IEdmModel GetModel()
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<MsCustomer>("MsCustomers");
             builder.EntitySet<MsOrder>("MsOrders");
             builder.EntitySet<MsCategory>("MsCategorys");
