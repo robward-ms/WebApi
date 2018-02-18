@@ -15,7 +15,6 @@ using Microsoft.Test.AspNet.OData.Extensions;
 #else
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;

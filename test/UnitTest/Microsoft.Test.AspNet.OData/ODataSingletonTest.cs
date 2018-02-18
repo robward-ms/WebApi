@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,20 +24,22 @@ namespace Microsoft.Test.AspNet.OData
     public class ODataSingletonTest
     {
         private const string BaseAddress = @"http://localhost";
-        private HttpConfiguration _configuration;
         private HttpClient _client;
 
         public ODataSingletonTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(OscorpController), typeof(OscorpSubsController) });
-            _configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
-            HttpServer server = new HttpServer(_configuration);
-            _client = new HttpClient(server);
+            Type[] controllers = new[] { typeof(OscorpController), typeof(OscorpSubsController), };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
+
+            _client = TestServerFactory.CreateClient(server);
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(ODataConventionModelBuilder builder)
         {
-            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.Singleton<Corporation>("Oscorp");
             builder.EntitySet<Subsidiary>("OscorpSubs");
             return builder.GetEdmModel();
@@ -127,22 +130,22 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         // Controllers
-        public class OscorpController : ODataController
+        public class OscorpController : TestController
         {
-            public IHttpActionResult Get()
+            public ITestActionResult Get()
             {
                 return Ok(ModelBase.Oscorp);
             }
 
-            public IHttpActionResult GetSubSidiaries()
+            public ITestActionResult GetSubSidiaries()
             {
                 return Ok(ModelBase.Oscorp.SubSidiaries);
             }
         }
 
-        public class OscorpSubsController : ODataController
+        public class OscorpSubsController : TestController
         {
-            public IHttpActionResult GetHeadQuarter(int key)
+            public ITestActionResult GetHeadQuarter(int key)
             {
                 Subsidiary sub = ModelBase.Oscorp.SubSidiaries.SingleOrDefault(s => s.SubId == key);
                 if (sub.HeadQuarter == null)
@@ -153,7 +156,7 @@ namespace Microsoft.Test.AspNet.OData
                 return Ok(sub.HeadQuarter);
             }
 
-            public IHttpActionResult DeleteRef(int key, string navigationProperty)
+            public ITestActionResult DeleteRef(int key, string navigationProperty)
             {
                 if (navigationProperty != "HeadQuarter")
                 { 

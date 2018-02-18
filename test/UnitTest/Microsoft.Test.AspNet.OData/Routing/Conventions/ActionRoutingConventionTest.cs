@@ -112,7 +112,7 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         {
             // Arrange
             ActionRoutingConvention actionConvention = new ActionRoutingConvention();
-            IEdmModel model = ODataRoutingModel.GetModel();
+            IEdmModel model = ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create());
             ODataPath odataPath = new DefaultODataPathHandler().Parse(model, _serviceRoot,"RoutingCustomers/Default.GetVIPs");
             var request = RequestFactory.Create(HttpMethod.Post, "http://localhost/");
             var actionMap = SelectActionHelper.CreateActionMap("GetVIPs");
@@ -149,7 +149,8 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void SelectAction_ReturnsNull_IfActionIsMissing(string path)
         {
             // Arrange
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(), _serviceRoot, path);
+            ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create()),
+                _serviceRoot, path);
             var request = RequestFactory.Create(HttpMethod.Post, "http://localhost/");
             var emptyActionMap = SelectActionHelper.CreateActionMap();
 

@@ -470,7 +470,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -493,7 +493,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -533,7 +533,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -578,7 +578,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -625,7 +625,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -652,7 +652,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -698,7 +698,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -732,7 +732,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -766,7 +766,7 @@ namespace Microsoft.Test.AspNet.OData
             IEdmModel model = builder.GetEdmModel();
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(model);
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
 
@@ -959,9 +959,10 @@ namespace Microsoft.Test.AspNet.OData
         [Fact]
         public void Controller_DoesNotAppear_InApiDescriptions()
         {
+            var model = ODataConventionModelBuilderFactory.Create().GetEdmModel();
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
             config.Routes.MapHttpRoute("Default", "{controller}/{action}");
-            config.MapODataServiceRoute(ODataConventionModelBuilderFactory.Create().GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, model);
             config.EnsureInitialized();
             var explorer = config.Services.GetApiExplorer();
 
@@ -978,7 +979,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<FormatterAccount>("Accounts");
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(builder.GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -1019,7 +1020,7 @@ namespace Microsoft.Test.AspNet.OData
                 .HasRequiredBinding(a => a.City, "Cities");
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(builder.GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -1058,7 +1059,7 @@ namespace Microsoft.Test.AspNet.OData
             bindingConfiguration.HasManyBinding((BindingUsAddress u) => u.UsCities, "Cities_B");
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(builder.GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -1106,7 +1107,7 @@ namespace Microsoft.Test.AspNet.OData
             builder.EntitySet<BindingCity>("Cities");
 
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(builder.GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, builder.GetEdmModel());
 
             HttpServer server = new HttpServer(config);
             HttpClient client = new HttpClient(server);
@@ -1121,7 +1122,7 @@ namespace Microsoft.Test.AspNet.OData
         private HttpConfiguration GetConfiguration()
         {
             var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(MetadataController) });
-            config.MapODataServiceRoute(ODataTestUtil.GetEdmModel());
+            config.MapODataServiceRoute("ignoredRoute", null, ODataTestUtil.GetEdmModel());
             return config;
         }
     }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Common;
 #endif
@@ -196,9 +197,10 @@ namespace Microsoft.Test.AspNet.OData.Factories
                 configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
             }
 
+            configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configureAction(configuration);
-            configuration.EnsureInitialized();
+            //configuration.EnsureInitialized();
 
             return new HttpServer(configuration);
         }

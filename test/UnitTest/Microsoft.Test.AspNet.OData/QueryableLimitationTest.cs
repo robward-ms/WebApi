@@ -22,30 +22,32 @@ namespace Microsoft.Test.AspNet.OData
     public class QueryableLimitationTest
     {
         private const string BaseAddress = @"http://localhost";
-        private HttpConfiguration _configuration;
         private HttpClient _client;
         private IEdmModel _model;
 
         public QueryableLimitationTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateWithTypes(new[]
+            Type[] controllers = new[]
             {
                 typeof(QueryLimitCustomersController),
                 typeof(OpenCustomersController),
                 typeof(MetadataController)
+            };
+
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                _model = GetEdmModel(builder);
+
+                config.Count().OrderBy().Filter().Expand().MaxTop(null);
+                config.MapODataServiceRoute("odata", "odata", _model);
             });
 
-            _model = GetEdmModel();
-
-            _configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
-            _configuration.MapODataServiceRoute("odata", "odata", _model);
-            HttpServer server = new HttpServer(_configuration);
-            _client = new HttpClient(server);
+            _client = TestServerFactory.CreateClient(server);
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(ODataConventionModelBuilder builder)
         {
-            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             EntitySetConfiguration<QueryLimitCustomer> customers = builder.EntitySet<QueryLimitCustomer>("QueryLimitCustomers");
             EntitySetConfiguration<QueryLimitOrder> orders = builder.EntitySet<QueryLimitOrder>("QueryLimitOrders");
 
@@ -449,7 +451,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         // Controller
-        public class QueryLimitCustomersController : ODataController
+        public class QueryLimitCustomersController : TestController
         {
             private IList<QueryLimitCustomer> customers = Enumerable.Range(0, 10).Select(i =>
                     new QueryLimitCustomer
@@ -480,31 +482,31 @@ namespace Microsoft.Test.AspNet.OData
                     }).ToList();
 
             [EnableQuery(PageSize = 10, MaxExpansionDepth = 5, MaxAnyAllExpressionDepth = 1)]
-            public IHttpActionResult Get()
+            public ITestActionResult Get()
             {
                 return Ok(customers);
             }
 
             [EnableQuery]
-            public IHttpActionResult GetAddresses(int key)
+            public ITestActionResult GetAddresses(int key)
             {
                 return Ok(customers.Single(customer => customer.Id == key).Addresses);
             }
 
             [EnableQuery]
-            public IHttpActionResult GetNumbers(int key)
+            public ITestActionResult GetNumbers(int key)
             {
                 return Ok(customers.Single(customer => customer.Id == key).Numbers);
             }
 
             [EnableQuery]
-            public IHttpActionResult GetImportantOrders(int key)
+            public ITestActionResult GetImportantOrders(int key)
             {
                 return Ok(customers.Single(customer => customer.Id == key).ImportantOrders);
             }
 
             [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.All ^ AllowedQueryOptions.Count)]
-            public IHttpActionResult GetNotes(int key)
+            public ITestActionResult GetNotes(int key)
             {
                 return Ok(customers.Single(customer => customer.Id == key).Notes);
             }

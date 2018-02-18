@@ -23,7 +23,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
     public class DefaultODataPathHandlerTest
     {
         private static DefaultODataPathHandler _parser = new DefaultODataPathHandler();
-        private static IEdmModel _model = ODataRoutingModel.GetModel();
+        private static IEdmModel _model = ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create());
         private const string _serviceRoot = "http://any/";
 
         public static TheoryDataSet<object, Type> NullFunctionParameterData

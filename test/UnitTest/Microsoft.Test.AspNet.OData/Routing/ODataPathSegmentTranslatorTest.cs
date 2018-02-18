@@ -6,6 +6,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
 using Xunit;
 
 namespace Microsoft.Test.AspNet.OData.Routing
@@ -17,7 +18,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
         public ODataPathSegmentTranslatorTest()
         {
-            _model = ODataRoutingModel.GetModel();
+            _model = ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create());
             _translator = new ODataPathSegmentTranslator(_model, new Dictionary<string, SingleValueNode>());
         }
 

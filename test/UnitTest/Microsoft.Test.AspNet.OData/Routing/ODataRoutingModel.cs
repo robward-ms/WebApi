@@ -9,16 +9,13 @@ using Microsoft.AspNet.OData.Builder;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Common.Types;
-using Microsoft.Test.AspNet.OData.Factories;
 
 namespace Microsoft.Test.AspNet.OData.Routing
 {
     public class ODataRoutingModel
     {
-        public static IEdmModel GetModel()
+        public static IEdmModel GetModel(ODataConventionModelBuilder builder)
         {
-            var configuration = RoutingConfigurationFactory.CreateWithTypes();
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create(configuration);
             builder.EntitySet<RoutingCustomer>("RoutingCustomers");
             builder.EntitySet<Product>("Products");
             builder.EntitySet<SalesPerson>("SalesPeople");

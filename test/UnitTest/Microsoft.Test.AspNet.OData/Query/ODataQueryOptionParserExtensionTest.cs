@@ -99,7 +99,7 @@ namespace Microsoft.Test.AspNet.OData.Query
             var configuration = RoutingConfigurationFactory.CreateWithRootContainer("OData", b => b.AddService(ServiceLifetime.Singleton, sp => resolver));
             var request = RequestFactory.Create(HttpMethod.Get, uri, configuration, "OData");
 
-            IEdmModel model = ODataRoutingModel.GetModel();
+            IEdmModel model = ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create(configuration));
 
             IEdmEntitySet entityset = model.EntityContainer.FindEntitySet("RoutingCustomers");
             IEdmEntityType entityType =

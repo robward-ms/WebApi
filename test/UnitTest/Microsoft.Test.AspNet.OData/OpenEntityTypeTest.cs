@@ -32,11 +32,16 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers(9)";
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) });
-            configuration.SetSerializeNullDynamicProperty(enableNullDynamicProperty);
-            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.SetSerializeNullDynamicProperty(enableNullDynamicProperty);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
+
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
@@ -72,10 +77,14 @@ namespace Microsoft.Test.AspNet.OData
         public async Task Get_OpenEntityTypeWithOrderbyAndFilter(string uri, int[] customerIds)
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -96,10 +105,14 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             const string RequestUri = "http://localhost/odata/UntypedSimpleOpenCustomers(1)";
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedSimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            Type[] controllers = new[] { typeof(UntypedSimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
+
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
@@ -123,10 +136,14 @@ namespace Microsoft.Test.AspNet.OData
         public async Task Get_UnTyped_DollarCount(string requestUri, string expectedResult)
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedSimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            Type[] controllers = new[] { typeof(UntypedSimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.Count().OrderBy().Filter().Expand().MaxTop(null);
+                config.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = await client.GetAsync(_untypedCustomerRequestRooturl + requestUri);
@@ -143,10 +160,13 @@ namespace Microsoft.Test.AspNet.OData
         public async Task Get_UnTyped_Enum_Collection_Property(string requestUri, string expectedContainsResult)
         {
             // Arrange
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedSimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            Type[] controllers = new[] { typeof(UntypedSimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpResponseMessage response = await client.GetAsync(_untypedCustomerRequestRooturl + requestUri);
@@ -164,10 +184,13 @@ namespace Microsoft.Test.AspNet.OData
                 ""Color"": ""0""
             }";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedSimpleOpenCustomersController) })
-            ; ; configuration.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            Type[] controllers = new[] { typeof(UntypedSimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, RequestUri);
@@ -184,10 +207,14 @@ namespace Microsoft.Test.AspNet.OData
         {
             // Arrange
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers?$select=Token";
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, RequestUri);
@@ -224,10 +251,14 @@ namespace Microsoft.Test.AspNet.OData
 
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, RequestUri);
@@ -256,10 +287,14 @@ namespace Microsoft.Test.AspNet.OData
 
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) });
-            configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, RequestUri);
@@ -294,10 +329,13 @@ namespace Microsoft.Test.AspNet.OData
               "\"FavoriteColors\":[\"0\", \"1\"]" +
             "}";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(UntypedSimpleOpenCustomersController) })
-            ; ; configuration.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            Type[] controllers = new[] { typeof(UntypedSimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetUntypedEdmModel());
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, _untypedCustomerRequestRooturl);
@@ -322,10 +360,14 @@ namespace Microsoft.Test.AspNet.OData
 
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers(2)";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("PATCH"), RequestUri);
@@ -362,10 +404,14 @@ namespace Microsoft.Test.AspNet.OData
 
             const string RequestUri = "http://localhost/odata/SimpleOpenCustomers(2)";
 
-            var configuration = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(SimpleOpenCustomersController) })
-            ; configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            Type[] controllers = new[] { typeof(SimpleOpenCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel(builder));
+            });
 
-            HttpClient client = new HttpClient(new HttpServer(configuration));
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("Put"), RequestUri);
@@ -379,9 +425,8 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(ODataConventionModelBuilder builder)
         {
-            ODataModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<SimpleOpenCustomer>("SimpleOpenCustomers");
             builder.EntitySet<SimpleOpenOrder>("SimpleOpenOrders");
             return builder.GetEdmModel();
@@ -442,7 +487,7 @@ namespace Microsoft.Test.AspNet.OData
     }
 
     // Controller
-    public class SimpleOpenCustomersController : ODataController
+    public class SimpleOpenCustomersController : TestController
     {
         [EnableQuery]
         public IQueryable<SimpleOpenCustomer> Get()
@@ -450,7 +495,7 @@ namespace Microsoft.Test.AspNet.OData
             return CreateCustomers().AsQueryable();
         }
 
-        public IHttpActionResult Get(int key)
+        public ITestActionResult Get(int key)
         {
             IList<SimpleOpenCustomer> customers = CreateCustomers();
             SimpleOpenCustomer customer = customers.FirstOrDefault(c => c.CustomerId == key);
@@ -470,7 +515,7 @@ namespace Microsoft.Test.AspNet.OData
             return Ok(customer);
         }
 
-        public IHttpActionResult GetAddress(int key)
+        public ITestActionResult GetAddress(int key)
         {
             IList<SimpleOpenCustomer> customers = CreateCustomers();
             SimpleOpenCustomer customer = customers.FirstOrDefault(c => c.CustomerId == key);
@@ -482,7 +527,7 @@ namespace Microsoft.Test.AspNet.OData
             return Ok(customer.Address);
         }
 
-        public IHttpActionResult PostSimpleOpenCustomer([FromBody]SimpleOpenCustomer customer)
+        public ITestActionResult PostSimpleOpenCustomer([FromBody]SimpleOpenCustomer customer)
         {
             // Verify there is a string dynamic property
             object countryValue;
@@ -514,7 +559,7 @@ namespace Microsoft.Test.AspNet.OData
             return Ok();
         }
 
-        public IHttpActionResult Patch(int key, Delta<SimpleOpenCustomer> patch)
+        public ITestActionResult Patch(int key, Delta<SimpleOpenCustomer> patch)
         {
             IList<SimpleOpenCustomer> customers = CreateCustomers();
             SimpleOpenCustomer customer = customers.FirstOrDefault(c => c.CustomerId == key);
@@ -530,7 +575,7 @@ namespace Microsoft.Test.AspNet.OData
             return Ok(customer);
         }
 
-        public IHttpActionResult Put(int key, SimpleOpenCustomer changedCustomer)
+        public ITestActionResult Put(int key, SimpleOpenCustomer changedCustomer)
         {
             Assert.Equal(99, changedCustomer.CustomerId);
             Assert.Equal("ChangedName", changedCustomer.Name);
@@ -600,23 +645,23 @@ namespace Microsoft.Test.AspNet.OData
     }
 
     // Controller
-    public class UntypedSimpleOpenCustomersController : ODataController
+    public class UntypedSimpleOpenCustomersController : TestController
     {
         private static EdmEntityObjectCollection _untypedSimpleOpenCustormers;
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(GetCustomers());
         }
 
-        public IHttpActionResult Get(int key)
+        public ITestActionResult Get(int key)
         {
             return Ok(GetCustomers()[0]);
         }
 
         [EnableQuery]
-        public IHttpActionResult GetDeclaredAddresses(int key)
+        public ITestActionResult GetDeclaredAddresses(int key)
         {
             object addresses;
             GetCustomers()[0].TryGetPropertyValue("DeclaredAddresses", out addresses);
@@ -625,7 +670,7 @@ namespace Microsoft.Test.AspNet.OData
 
 
         [EnableQuery]
-        public IHttpActionResult GetColor(int key)
+        public ITestActionResult GetColor(int key)
         {
             object color;
             GetCustomers()[0].TryGetPropertyValue("Color", out color);
@@ -633,7 +678,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [EnableQuery]
-        public IHttpActionResult GetDeclaredColors(int key)
+        public ITestActionResult GetDeclaredColors(int key)
         {
             object colors;
             GetCustomers()[0].TryGetPropertyValue("DeclaredColors", out colors);
@@ -641,7 +686,7 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [EnableQuery]
-        public IHttpActionResult GetDeclaredNumbers(int key)
+        public ITestActionResult GetDeclaredNumbers(int key)
         {
             object numbers;
             GetCustomers()[0].TryGetPropertyValue("DeclaredNumbers", out numbers);
@@ -649,13 +694,13 @@ namespace Microsoft.Test.AspNet.OData
         }
 
         [HttpPost]
-        public IHttpActionResult AddColor(int key, ODataUntypedActionParameters parameters)
+        public ITestActionResult AddColor(int key, ODataUntypedActionParameters parameters)
         {
             Assert.Equal("0", ((EdmEnumObject)parameters["Color"]).Value);
             return Ok();
         }
 
-        public IHttpActionResult PostUntypedSimpleOpenCustomer(EdmEntityObject customer)
+        public ITestActionResult PostUntypedSimpleOpenCustomer(EdmEntityObject customer)
         {
             // Verify there is a string dynamic property in OpenEntityType
             object nameValue;

@@ -19,7 +19,8 @@ namespace Microsoft.Test.AspNet.OData.Routing.Conventions
         public void SelectAction_ReturnsNull_IfActionIsMissing(string httpMethod)
         {
             // Arrange
-            ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(), "http://any/", "RoutingCustomers(10)");
+            ODataPath odataPath = new DefaultODataPathHandler().Parse(ODataRoutingModel.GetModel(ODataConventionModelBuilderFactory.Create()),
+                "http://any/", "RoutingCustomers(10)");
             var request = RequestFactory.Create(new HttpMethod(httpMethod), "http://localhost/");
             var emptyActionMap = SelectActionHelper.CreateActionMap();
 

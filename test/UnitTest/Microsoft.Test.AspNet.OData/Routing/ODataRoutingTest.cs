@@ -49,8 +49,6 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
         public ODataRoutingTest()
         {
-            var model = ODataRoutingModel.GetModel();
-
             var controllers = new[]
             {
                 typeof(DateTimeOffsetKeyCustomersController),
@@ -64,6 +62,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // Separate clients and servers so routes are not ambiguous.
             var nullPrefixServer = TestServerFactory.Create(controllers, (config) =>
             {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                var model = ODataRoutingModel.GetModel(builder);
+
                 config.MapODataServiceRoute("NullPrefixRoute", null, model);
             });
 
@@ -72,6 +73,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // FixedPrefixRoute has both a non-empty virtual path root and a fixed route prefix.
             var fixedPrefixServer = TestServerFactory.Create(controllers, (config) =>
             {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                var model = ODataRoutingModel.GetModel(builder);
+
                 config.MapODataServiceRoute("FixedPrefixRoute", "MyRoot/odata", model);
             });
 
@@ -79,6 +83,9 @@ namespace Microsoft.Test.AspNet.OData.Routing
 
             var parameterizedPrefixServer = TestServerFactory.Create(controllers, (config) =>
             {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                var model = ODataRoutingModel.GetModel(builder);
+
                 config.MapODataServiceRoute("ParameterizedPrefixRoute", "{a}", model);
             });
 

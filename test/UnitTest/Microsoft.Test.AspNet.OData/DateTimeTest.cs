@@ -1,6 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Factories;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +29,11 @@ using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -342,45 +359,43 @@ namespace Microsoft.Test.AspNet.OData
 
         private static HttpClient GetClient(TimeZoneInfo timeZoneInfo)
         {
-            HttpConfiguration config = RoutingConfigurationFactory.CreateWithTypes(
-                new[] { typeof(MetadataController), typeof(DateTimeModelsController) });
-            if (timeZoneInfo != null)
+            Type[] controllers = new[] { typeof(MetadataController), typeof(DateTimeModelsController), };
+            var server = TestServerFactory.Create(controllers, (config) =>
             {
-                config.SetTimeZoneInfo(timeZoneInfo);
-            }
-            else
-            {
-                config.SetTimeZoneInfo(TimeZoneInfo.Local);
-            }
+                if (timeZoneInfo != null)
+                {
+                    config.SetTimeZoneInfo(timeZoneInfo);
+                }
+                else
+                {
+                    config.SetTimeZoneInfo(TimeZoneInfo.Local);
+                }
 
-            config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("odata", "odata", GetEdmModel());
-            return new HttpClient(new HttpServer(config));
-        }
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                builder.EntitySet<DateTimeModel>("DateTimeModels");
+                FunctionConfiguration function = builder.EntityType<DateTimeModel>().Function("CalcBirthday");
+                function.Returns<DateTime>().Parameter<DateTime>("dto");
 
-        private static IEdmModel GetEdmModel()
-        {
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
-            builder.EntitySet<DateTimeModel>("DateTimeModels");
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+                config.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+            });
 
-            FunctionConfiguration function = builder.EntityType<DateTimeModel>().Function("CalcBirthday");
-            function.Returns<DateTime>().Parameter<DateTime>("dto");
-            return builder.GetEdmModel();
+            return TestServerFactory.CreateClient(server);
         }
     }
 
-    public class DateTimeModelsController : ODataController
+    public class DateTimeModelsController : TestController
     {
         private DateTimeModelContext db = new DateTimeModelContext();
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(db.DateTimes);
         }
 
         [EnableQuery]
-        public IHttpActionResult Get(int key)
+        public ITestActionResult Get(int key)
         {
             DateTimeModel dtm = db.DateTimes.FirstOrDefault(e => e.Id == key);
             if (dtm == null)
@@ -391,7 +406,7 @@ namespace Microsoft.Test.AspNet.OData
             return Ok(dtm);
         }
 
-        public IHttpActionResult Post([FromBody]DateTimeModel dt)
+        public ITestActionResult Post([FromBody]DateTimeModel dt)
         {
             Assert.NotNull(dt);
 
@@ -404,7 +419,7 @@ namespace Microsoft.Test.AspNet.OData
             return Created(dt);
         }
 
-        public IHttpActionResult Put(int key, Delta<DateTimeModel> dt)
+        public ITestActionResult Put(int key, Delta<DateTimeModel> dt)
         {
             Assert.Equal(new[] { "BirthdayA", "BirthdayB" }, dt.GetChangedPropertyNames());
 
@@ -422,7 +437,7 @@ namespace Microsoft.Test.AspNet.OData
             return Updated(dt);
         }
 
-        public IHttpActionResult GetBirthdayD(int key)
+        public ITestActionResult GetBirthdayD(int key)
         {
             DateTimeModel dtm = db.DateTimes.FirstOrDefault(e => e.Id == key);
             if (dtm == null)

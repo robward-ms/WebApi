@@ -16,6 +16,7 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,40 +29,39 @@ namespace Microsoft.Test.AspNet.OData
         private const string AcceptJsonFullMetadata = "application/json;odata.metadata=full";
         private const string AcceptJson = "application/json";
 
-        private HttpConfiguration _configuration;
         private HttpClient _client;
 
         public SelectExpandTest()
         {
-            _configuration = RoutingConfigurationFactory.CreateWithTypes(
-                new[]
-                {
-                    typeof(SelectExpandTestCustomersController), typeof(SelectExpandTestCustomersAliasController),
-                    typeof(PlayersController), typeof(NonODataSelectExpandTestCustomersController),
-                    typeof(AttributedSelectExpandCustomersController), typeof(SelectExpandTestCustomer),
-                    typeof(SelectExpandTestSpecialCustomer), typeof(SelectExpandTestCustomerWithAlias),
-                    typeof(SelectExpandTestOrder), typeof(SelectExpandTestSpecialOrder),
-                    typeof(SelectExpandTestSpecialOrderWithAlias),
-                    typeof(ReferenceNavigationPropertyExpandFilterController),
-                });
+            Type[] controllers = new[]
+            {
+                typeof(SelectExpandTestCustomersController), typeof(SelectExpandTestCustomersAliasController),
+                typeof(PlayersController), typeof(NonODataSelectExpandTestCustomersController),
+                typeof(AttributedSelectExpandCustomersController), typeof(SelectExpandTestCustomer),
+                typeof(SelectExpandTestSpecialCustomer), typeof(SelectExpandTestCustomerWithAlias),
+                typeof(SelectExpandTestOrder), typeof(SelectExpandTestSpecialOrder),
+                typeof(SelectExpandTestSpecialOrderWithAlias),
+                typeof(ReferenceNavigationPropertyExpandFilterController),
+            };
 
-            _configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            _configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
 
-            _configuration.MapODataServiceRoute("odata", "odata", GetModel());
-            _configuration.MapODataServiceRoute("odata-inheritance", "odata-inheritance", GetModelWithInheritance());
-            _configuration.MapODataServiceRoute("odata-alias", "odata-alias", GetModelWithCustomerAlias());
-            _configuration.MapODataServiceRoute(
-                "odata-alias2-inheritance",
-                "odata-alias2-inheritance",
-                GetModelWithCustomerAliasAndInheritance());
-            _configuration.MapODataServiceRoute("odata2", "odata2", GetModelWithOperations());
-            _configuration.MapODataServiceRoute("odata-expandfilter", "odata-expandfilter", GetModelWithReferenceNavigationPropertyFilter());
-            _configuration.Routes.MapHttpRoute("api", "api/{controller}", new { controller = "NonODataSelectExpandTestCustomers" });
-            _configuration.EnableDependencyInjection();
+                config.MapODataServiceRoute("odata", "odata", GetModel(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapODataServiceRoute("odata-inheritance", "odata-inheritance", GetModelWithInheritance(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapODataServiceRoute("odata-alias", "odata-alias", GetModelWithCustomerAlias(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapODataServiceRoute(
+                    "odata-alias2-inheritance",
+                    "odata-alias2-inheritance",
+                    GetModelWithCustomerAliasAndInheritance(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapODataServiceRoute("odata2", "odata2", GetModelWithOperations(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapODataServiceRoute("odata-expandfilter", "odata-expandfilter", GetModelWithReferenceNavigationPropertyFilter(ODataConventionModelBuilderFactory.Create(config)));
+                config.MapNonODataRoute("api", "api/{controller}", new { controller = "NonODataSelectExpandTestCustomers" });
+                config.EnableDependencyInjection();
+            });
 
-            HttpServer server = new HttpServer(_configuration);
-            _client = new HttpClient(server);
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Fact]
@@ -248,12 +248,15 @@ namespace Microsoft.Test.AspNet.OData
         public async Task SelectExpand_WithNonODataJson_Respects_JsonProperty()
         {
             // Arrange
-            string uri = "/api/AttributedSelectExpandCustomers?$select=Id,Orders&$expand=Orders($select=Total)";
+            string uri = "/api/NonODataSelectExpandTestCustomers?$select=Id,Orders&$expand=Orders($select=Total)";
 
             // Act
             HttpResponseMessage response = await GetResponse(uri, AcceptJson);
 
             // Assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
             JArray result = JArray.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal(1, result[0]["JsonId"]);
             Assert.Equal(1, result[0]["JsonOrders"][0]["JsonTotal"]);
@@ -263,12 +266,15 @@ namespace Microsoft.Test.AspNet.OData
         public async Task SelectExpand_WithNonODataJson_JsonProperty_Wins_OverDataMember()
         {
             // Arrange
-            string uri = "/api/AttributedSelectExpandCustomers?$select=DataMemberCustomerName";
+            string uri = "/api/NonODataSelectExpandTestCustomers?$select=DataMemberCustomerName";
 
             // Act
             HttpResponseMessage response = await GetResponse(uri, AcceptJson);
 
             // Assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
             JArray result = JArray.Parse(await response.Content.ReadAsStringAsync());
             Assert.Equal("Name 1", result[0]["JsonName"]);
         }
@@ -391,7 +397,6 @@ namespace Microsoft.Test.AspNet.OData
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://localhost" + uri);
             request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptHeader));
-            request.SetConfiguration(_configuration);
             return _client.SendAsync(request);
         }
 
@@ -419,9 +424,8 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(100, order["AmountAlias"]);
         }
 
-        private IEdmModel GetModel()
+        private IEdmModel GetModel(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             builder.Ignore<SelectExpandTestSpecialCustomer>();
@@ -429,35 +433,33 @@ namespace Microsoft.Test.AspNet.OData
             return builder.GetEdmModel();
         }
 
-        private IEdmModel GetModelWithInheritance()
+        private IEdmModel GetModelWithInheritance(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<SelectExpandTestCustomer>("SelectExpandTestCustomers");
             builder.EntitySet<SelectExpandTestOrder>("SelectExpandTestOrders");
             return builder.GetEdmModel();
         }
 
-        private IEdmModel GetModelWithCustomerAlias()
+        private IEdmModel GetModelWithCustomerAlias(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder { ModelAliasingEnabled = true };
+            builder.ModelAliasingEnabled = true;
             builder.EntitySet<SelectExpandTestCustomerWithAlias>("SelectExpandTestCustomersAlias");
             builder.EntitySet<SelectExpandTestOrderWithAlias>("SelectExpandTestOrdersAlias");
-            builder.Ignore<SelectExpandTestSpecialCustomerWithAlias>();
+            //builder.Ignore<SelectExpandTestSpecialCustomerWithAlias>();
             builder.Ignore<SelectExpandTestSpecialOrderWithAlias>();
             return builder.GetEdmModel();
         }
 
-        private IEdmModel GetModelWithCustomerAliasAndInheritance()
+        private IEdmModel GetModelWithCustomerAliasAndInheritance(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder { ModelAliasingEnabled = true };
+            builder.ModelAliasingEnabled = true;
             builder.EntitySet<SelectExpandTestCustomerWithAlias>("SelectExpandTestCustomersAlias");
             builder.EntitySet<SelectExpandTestOrderWithAlias>("SelectExpandTestOrdersAlias");
             return builder.GetEdmModel();
         }
 
-        private IEdmModel GetModelWithOperations()
+        private IEdmModel GetModelWithOperations(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<Player>("Players");
 
             // Actions
@@ -472,9 +474,8 @@ namespace Microsoft.Test.AspNet.OData
             return builder.GetEdmModel();
         }
 
-        private IEdmModel GetModelWithReferenceNavigationPropertyFilter()
+        private IEdmModel GetModelWithReferenceNavigationPropertyFilter(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<SelectExpandTestCustomer>("ReferenceNavigationPropertyExpandFilter");
             return builder.GetEdmModel();
         }
@@ -686,35 +687,48 @@ namespace Microsoft.Test.AspNet.OData
         }
     }
 
-    public class NonODataSelectExpandTestCustomersController : ApiController
+    public class NonODataSelectExpandTestCustomersController : NonODataController
     {
+        private IEnumerable<AttributedSelectExpandCustomer> customers = Enumerable.Range(1, 10)
+            .Select(i => new AttributedSelectExpandCustomer
+            {
+                Id = i,
+                Name = "Name " + i,
+                Orders = Enumerable.Range(1, 10).Select(j => new AttributedSelectExpandOrder
+                {
+                    CustomerName = "Customer Name" + j,
+                    Id = j,
+                    Total = i * j
+                }).ToList()
+            });
+
         [EnableQuery]
-        public IEnumerable<SelectExpandTestCustomer> Get()
+        public IEnumerable<AttributedSelectExpandCustomer> Get()
         {
-            return SelectExpandTestCustomer.Customers;
+            return customers;
         }
 
         [EnableQuery]
         public SingleResult Get(int id)
         {
-            IQueryable<SelectExpandTestCustomer> singleCustomer = SelectExpandTestCustomer.Customers
-                .Where(c => c.ID == id).AsQueryable();
+            IQueryable<AttributedSelectExpandCustomer> singleCustomer = customers
+                .Where(c => c.Id == id).AsQueryable();
             return SingleResult.Create(singleCustomer);
         }
     }
 
-    public class ReferenceNavigationPropertyExpandFilterController : ODataController
+    public class ReferenceNavigationPropertyExpandFilterController : TestController
     {
         [EnableQuery(HandleReferenceNavigationPropertyExpandFilter = true)]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(SelectExpandTestCustomer.Customers);
         }
     }
 
-    public class AttributedSelectExpandCustomersController : ApiController
+    public class AttributedSelectExpandCustomersController : TestController
     {
-        public IHttpActionResult Get(ODataQueryOptions<AttributedSelectExpandCustomer> options)
+        public ITestActionResult Get(ODataQueryOptions<AttributedSelectExpandCustomer> options)
         {
             IQueryable result = options.ApplyTo(Enumerable.Range(1, 10).Select(i => new AttributedSelectExpandCustomer
             {
@@ -731,7 +745,7 @@ namespace Microsoft.Test.AspNet.OData
         }
     }
 
-    public class PlayersController : ODataController
+    public class PlayersController : TestController
     {
         private IList<Player> players = Enumerable.Range(0, 5).Select(i =>
                     new Player
@@ -743,7 +757,7 @@ namespace Microsoft.Test.AspNet.OData
                     }).ToList();
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(players);
         }

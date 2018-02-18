@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,7 +15,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
 using Microsoft.Test.AspNet.OData.Builder.TestModels;
 using Microsoft.Test.AspNet.OData.Builder.TestModelss;
-using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -24,20 +24,19 @@ namespace Microsoft.Test.AspNet.OData
     public class ODataContainmentTest
     {
         private const string BaseAddress = @"http://localhost";
-        private HttpConfiguration _configuration;
         private HttpClient _client;
 
         public ODataContainmentTest()
         {
-            var controllers = new[] { typeof(MyOrdersController) };
-            var resolver = new TestAssemblyResolver(new MockAssembly(controllers));
-            _configuration = new HttpConfiguration { IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always };
-            _configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
+            Type[] controllers = new[] { typeof(MyOrdersController), typeof(MySpecialOrder), };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var builder = ODataConventionModelBuilderFactory.Create(config);
+                config.Count().OrderBy().Filter().Expand().MaxTop(null);
+                config.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            });
 
-            _configuration.Count().OrderBy().Filter().Expand().MaxTop(null);
-            _configuration.MapODataServiceRoute("odata", "odata", GetEdmModel());
-            var server = new HttpServer(_configuration);
-            _client = new HttpClient(server);
+            _client = TestServerFactory.CreateClient(server);
         }
 
         [Fact]
@@ -421,7 +420,7 @@ namespace Microsoft.Test.AspNet.OData
             }
         }
 
-        public class MyOrdersController : ODataController
+        public class MyOrdersController : TestController
         {
             private OrderHeader _orderHeader;
 
@@ -447,7 +446,7 @@ namespace Microsoft.Test.AspNet.OData
             }
 
             [ODataRoute("MyOrders")]
-            public IHttpActionResult PostToOrders(MyOrder order)
+            public ITestActionResult PostToOrders(MyOrder order)
             {
                 return Created(order);
             }
@@ -496,14 +495,14 @@ namespace Microsoft.Test.AspNet.OData
             }
 
             [ODataRoute("MyOrders({orderId})/OrderLines")]
-            public IHttpActionResult Post(int orderId, OrderLine orderLine)
+            public ITestActionResult Post(int orderId, OrderLine orderLine)
             {
                 orderLine.OrderId = orderId;
                 return Created(orderLine);
             }
 
             [ODataRoute("MyOrders({orderId})/OrderLines({lineId})")]
-            public IHttpActionResult Put(int orderId, int lineId, OrderLine orderLine)
+            public ITestActionResult Put(int orderId, int lineId, OrderLine orderLine)
             {
                 orderLine.OrderId = orderId;
                 orderLine.ID = lineId;
@@ -511,7 +510,7 @@ namespace Microsoft.Test.AspNet.OData
             }
 
             [ODataRoute("MyOrders({orderId})/OrderLines({lineId})")]
-            public IHttpActionResult Patch(int orderId, int lineId, Delta<OrderLine> patch)
+            public ITestActionResult Patch(int orderId, int lineId, Delta<OrderLine> patch)
             {
                 var orderLine = _orderLines.FirstOrDefault(o => o.ID == lineId && o.OrderId == orderId);
                 if (orderLine == null)
@@ -524,7 +523,7 @@ namespace Microsoft.Test.AspNet.OData
             }
 
             [ODataRoute("MyOrders({orderId})/OrderLines({lineId})")]
-            public IHttpActionResult Delete(int orderId, int lineId)
+            public ITestActionResult Delete(int orderId, int lineId)
             {
                 var orderLine = _orderLines.FirstOrDefault(o => o.ID == lineId && o.OrderId == orderId);
                 if (orderLine == null)
@@ -537,14 +536,14 @@ namespace Microsoft.Test.AspNet.OData
 
             [HttpGet]
             [ODataRoute("MyOrders({orderId})/OrderLines({lineId})/ns.Tag()")]
-            public IHttpActionResult Tag(int orderId, int lineId)
+            public ITestActionResult Tag(int orderId, int lineId)
             {
                 return Ok(1);
             }
 
             [HttpGet]
             [ODataRoute("MyOrders({orderId})/OrderLines/ns.MostExpensive()")]
-            public IHttpActionResult MostExpensive(int orderId)
+            public ITestActionResult MostExpensive(int orderId)
             {
                 return Ok(1.0);
             }

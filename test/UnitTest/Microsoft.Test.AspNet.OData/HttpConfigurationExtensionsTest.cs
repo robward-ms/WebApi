@@ -1,6 +1,24 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Common;
+using Moq;
+using Xunit;
+using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+#else
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +41,9 @@ using Microsoft.Test.AspNet.OData.Query;
 using Moq;
 using Xunit;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+#endif
 
+#if !NETCORE
 namespace Microsoft.Test.AspNet.OData
 {
     public class HttpConfigurationExtensionsTest
@@ -428,3 +448,4 @@ namespace Microsoft.Test.AspNet.OData
         private class TestService2 : ITestService { }
     }
 }
+#endif

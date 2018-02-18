@@ -23,7 +23,6 @@ using System.Web.Http;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.OData.Edm;
-using Microsoft.Test.AspNet.OData;
 #endif
 
 namespace Microsoft.Test.AspNet.OData.Factories

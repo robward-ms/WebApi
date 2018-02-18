@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -20,6 +20,26 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Formatter;
 using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
 using Xunit;
+#else
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.AspNet.OData.Formatter.Serialization;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.AspNet.OData.Builder.TestModels;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Formatter;
+using Microsoft.Test.AspNet.OData.Formatter.Deserialization;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -59,13 +79,14 @@ namespace Microsoft.Test.AspNet.OData
                 "messageWriter");
         }
 
+#if !NETCORE
         [Fact]
         public void WriteObject_Throws_ForNullWriteContextParameter()
         {
             // Arrange
             object graph = null;
             Type type = typeof(Color);
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost");
+            var httpRequestMessage = RequestFactory.Create(HttpMethod.Get, "http://localhost");
             httpRequestMessage.Content = new StringContent("");
             ODataMessageWriter messageWriter = new ODataMessageWriter(new HttpRequestODataMessage(httpRequestMessage));
             ODataSerializerContext writeContext = null;
@@ -75,6 +96,7 @@ namespace Microsoft.Test.AspNet.OData
                 () => new ODataEnumSerializer(_serializerProvider).WriteObject(graph, type, messageWriter, writeContext),
                 "writeContext");
         }
+#endif
 
         [Fact]
         public void WriteObject_Throws_ForWriteContextWithoutRootElementName()
@@ -108,6 +130,7 @@ namespace Microsoft.Test.AspNet.OData
                 "ODataEnumSerializer cannot write an object of type 'Edm.Int32'.");
         }
 
+#if !NETCORE
         [Fact]
         public async Task EnumTypeSerializerTestForOData()
         {
@@ -130,6 +153,7 @@ namespace Microsoft.Test.AspNet.OData
             // Act & Assert
             JsonAssert.Equal(enumComplexPayload, await content.ReadAsStringAsync());
         }
+#endif
 
         [Fact]
         public async Task NullableEnumParameter_Works_WithNotNullEnumValue()
@@ -140,9 +164,13 @@ namespace Microsoft.Test.AspNet.OData
                 "\"@odata.context\":\"http://localhost/odata/$metadata#Edm.Boolean\",\"value\":true" +
                 "}";
 
-            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullableEnumValueController) });
-            config.MapODataServiceRoute("odata", "odata", GetSampleModel());
-            HttpClient client = new HttpClient(new HttpServer(config));
+            Type[] controllers = new[] { typeof(NullableEnumValueController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetSampleModel());
+            });
+
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/NullableEnumFunction(ColorParameter=Microsoft.Test.AspNet.OData.Builder.TestModels.Color'Red')");
@@ -163,9 +191,13 @@ namespace Microsoft.Test.AspNet.OData
                 "\"@odata.context\":\"http://localhost/odata/$metadata#Edm.Boolean\",\"value\":false" +
                 "}";
 
-            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(NullableEnumValueController) });
-            config.MapODataServiceRoute("odata", "odata", GetSampleModel());
-            HttpClient client = new HttpClient(new HttpServer(config));
+            Type[] controllers = new[] { typeof(NullableEnumValueController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                config.MapODataServiceRoute("odata", "odata", GetSampleModel());
+            });
+
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
                 "http://localhost/odata/NullableEnumFunction(ColorParameter=null)");
@@ -177,6 +209,7 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(expect, await respone.Content.ReadAsStringAsync());
         }
 
+#if !NETCORE
         private static ODataMediaTypeFormatter GetFormatter()
         {
             var formatter = new ODataMediaTypeFormatter(new ODataPayloadKind[] { ODataPayloadKind.Resource })
@@ -195,6 +228,7 @@ namespace Microsoft.Test.AspNet.OData
             request.GetConfiguration().Routes.MapFakeODataRoute();
             return request;
         }
+#endif
 
         private static IEdmModel GetSampleModel()
         {
