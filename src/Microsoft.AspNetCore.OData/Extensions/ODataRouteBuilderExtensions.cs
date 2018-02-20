@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Interfaces;
@@ -494,10 +495,32 @@ namespace Microsoft.AspNet.OData.Extensions
                 .GetRequiredService<IInlineConstraintResolver>();
 
             // Resolve HTTP handler, create the OData route and register it.
+            ODataRoute route = null;
             routePrefix = RemoveTrailingSlash(routePrefix);
-            ODataRoute route = new ODataRoute(builder.DefaultHandler, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
-            builder.Routes.Add(route);
 
+            IRouter customRouter = serviceProvider.GetService<IRouter>();
+            if (customRouter != null)
+            {
+                route = new ODataRoute(customRouter, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
+            }
+            else
+            {
+                ODataBatchHandler batchHandler = serviceProvider.GetService<ODataBatchHandler>();
+                if (batchHandler != null)
+                {
+                    batchHandler.DefaultHandler = builder.DefaultHandler;
+                    batchHandler.ODataRouteName = routeName;
+                    string batchTemplate = String.IsNullOrEmpty(routePrefix)
+                        ? ODataRouteConstants.Batch
+                        : routePrefix + '/' + ODataRouteConstants.Batch;
+
+                    builder.MapRoute(batchTemplate, batchHandler.ProcessBatchAsync);
+                }
+
+                route = new ODataRoute(builder.DefaultHandler, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
+            }
+
+            builder.Routes.Add(route);
             return route;
         }
 
@@ -515,6 +538,26 @@ namespace Microsoft.AspNet.OData.Extensions
             return builder.MapODataServiceRoute(routeName, routePrefix, containerBuilder =>
                 containerBuilder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)
                        .AddService<IEnumerable<IODataRoutingConvention>>(Microsoft.OData.ServiceLifetime.Singleton, sp =>
+                           ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, builder)));
+        }
+
+        /// <summary>
+        /// Maps the specified OData route and the OData route attributes. When the <paramref name="batchHandler"/> is
+        /// non-<c>null</c>, it will create a '$batch' endpoint to handle the batch requests.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/> to add the route to.</param>
+        /// <param name="routeName">The name of the route to map.</param>
+        /// <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+        /// <param name="model">The EDM model to use for parsing OData paths.</param>
+        /// <param name="batchHandler">The <see cref="ODataBatchHandler"/>.</param>
+        /// <returns>The added <see cref="ODataRoute"/>.</returns>
+        public static ODataRoute MapODataServiceRoute(this IRouteBuilder builder, string routeName,
+            string routePrefix, IEdmModel model, ODataBatchHandler batchHandler)
+        {
+            return builder.MapODataServiceRoute(routeName, routePrefix, containerBuilder =>
+                containerBuilder.AddService(ServiceLifetime.Singleton, sp => model)
+                       .AddService(ServiceLifetime.Singleton, sp => batchHandler)
+                       .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
                            ODataRoutingConventions.CreateDefaultWithAttributeRouting(routeName, builder)));
         }
 
@@ -538,6 +581,31 @@ namespace Microsoft.AspNet.OData.Extensions
                 containerBuilder.AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => model)
                        .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => pathHandler)
                        .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => routingConventions.ToList().AsEnumerable()));
+        }
+
+        /// <summary>
+        /// Maps the specified OData route. When the <paramref name="batchHandler"/> is non-<c>null</c>, it will
+        /// create a '$batch' endpoint to handle the batch requests.
+        /// </summary>
+        /// <param name="builder">The <see cref="IRouteBuilder"/> to add the route to.</param>
+        /// <param name="routeName">The name of the route to map.</param>
+        /// <param name="routePrefix">The prefix to add to the OData route's path template.</param>
+        /// <param name="model">The EDM model to use for parsing OData paths.</param>
+        /// <param name="pathHandler">The <see cref="IODataPathHandler" /> to use for parsing the OData path.</param>
+        /// <param name="routingConventions">
+        /// The OData routing conventions to use for controller and action selection.
+        /// </param>
+        /// <param name="batchHandler">The <see cref="ODataBatchHandler"/>.</param>
+        /// <returns>The added <see cref="ODataRoute"/>.</returns>
+        public static ODataRoute MapODataServiceRoute(this IRouteBuilder builder, string routeName,
+            string routePrefix, IEdmModel model, IODataPathHandler pathHandler,
+            IEnumerable<IODataRoutingConvention> routingConventions, ODataBatchHandler batchHandler)
+        {
+            return builder.MapODataServiceRoute(routeName, routePrefix, containerBuilder =>
+                containerBuilder.AddService(ServiceLifetime.Singleton, sp => model)
+                       .AddService(ServiceLifetime.Singleton, sp => pathHandler)
+                       .AddService(ServiceLifetime.Singleton, sp => routingConventions.ToList().AsEnumerable())
+                       .AddService(ServiceLifetime.Singleton, sp => batchHandler));
         }
 
         /// <summary>
