@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);ASPNETODATA;ASPNETWEBAPI;NETCORE;NETCORE2x;EFCORE;NOT_CLS_COMPLIANT</DefineConstants>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Aggregation\AggregationController.cs" Link="Aggregation\AggregationController.cs" />
+    <Compile Include="..\Aggregation\AggregationDataModel.cs" Link="Aggregation\AggregationDataModel.cs" />
+    <Compile Include="..\Aggregation\AggregationEdmModel.cs" Link="Aggregation\AggregationEdmModel.cs" />
+    <Compile Include="..\Aggregation\AggregationTests.cs" Link="Aggregation\AggregationTests.cs" />
+    <Compile Include="..\Aggregation\PagedAggregationTests.cs" Link="Aggregation\PagedAggregationTests.cs" />
+    <Compile Include="..\Aggregation\PagedCustomersController.cs" Link="Aggregation\PagedCustomersController.cs" />
+    <Compile Include="..\Common\Controllers\TestController.cs" Link="Common\Controllers\TestController.cs" />
+    <Compile Include="..\Common\Execution\PortArranger.cs" Link="Common\Execution\PortArranger.cs" />
+    <Compile Include="..\Common\Execution\SecurityHelper.cs" Link="Common\Execution\SecurityHelper.cs" />
+    <Compile Include="..\Common\Execution\WebConfigHelper.cs" Link="Common\Execution\WebConfigHelper.cs" />
+    <Compile Include="..\Common\Execution\WebHostLogExceptionFilter.cs" Link="Common\Execution\WebHostLogExceptionFilter.cs" />
+    <Compile Include="..\Common\Execution\WebHostTestBase.cs" Link="Common\Execution\WebHostTestBase.cs" />
+    <Compile Include="..\Common\Execution\WebHostTestFixture.cs" Link="Common\Execution\WebHostTestFixture.cs" />
+    <Compile Include="..\Common\Execution\WebRouteConfiguration.cs" Link="Common\Execution\WebRouteConfiguration.cs" />
+    <Compile Include="..\Common\Extensions\HttpClientExtension.cs" Link="Common\Extensions\HttpClientExtension.cs" />
+    <Compile Include="..\Common\Extensions\HttpConfigurationExtensions.cs" Link="Common\Extensions\HttpConfigurationExtensions.cs" />
+    <Compile Include="..\Common\Extensions\HttpContentExtensions.cs" Link="Common\Extensions\HttpContentExtensions.cs" />
+    <Compile Include="..\Common\Extensions\HttpRequestExtensions.cs" Link="Common\Extensions\HttpRequestExtensions.cs" />
+    <Compile Include="..\Common\Extensions\ODataPathHandlerExtensions.cs" Link="Common\Extensions\ODataPathHandlerExtensions.cs" />
+    <Compile Include="..\Common\Extensions\ResourceContextExtensions.cs" Link="Common\Extensions\ResourceContextExtensions.cs" />
+    <Compile Include="..\Common\NavigationRoutingConvention2.cs" Link="Common\NavigationRoutingConvention2.cs" />
+    <Compile Include="..\Common\ODataHelper.cs" Link="Common\ODataHelper.cs" />
+    <Compile Include="..\Common\ODataTestConstants.cs" Link="Common\ODataTestConstants.cs" />
+    <Compile Include="..\Common\ODataTestExtension.cs" Link="Common\ODataTestExtension.cs" />
+    <Compile Include="..\Common\TestAssembly.cs" Link="Common\TestAssembly.cs" />
+    <Compile Include="..\Common\TestControllerContext.cs" Link="Common\TestControllerContext.cs" />
+    <Compile Include="..\Common\TestEntitySetRoutingConvention.cs" Link="Common\TestEntitySetRoutingConvention.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0-preview2-30148" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-preview2-30148" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview2-30148" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Aggregation\" />
+    <Folder Include="Common\Controllers\" />
+    <Folder Include="Common\Execution\" />
+    <Folder Include="Common\Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Microsoft.AspNetCore.OData\Microsoft.AspNetCore.OData.csproj" />
+  </ItemGroup>
+
+</Project>
