@@ -2,10 +2,16 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+#else
 using System;
 using System.Collections.Generic;
 using System.Web.Http.Filters;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 {
@@ -22,6 +28,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
     /// <summary>
     /// The WebHostTestFixture is create a web host to be used for a test.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class WebHostLogExceptionFilter : ActionFilterAttribute
     {
         /// <summary>
@@ -31,14 +38,24 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         {
             this.Exceptions = new List<WebHostErrorRecord>();
         }
-        
+
+#if NETCORE
+        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
+#else
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+#endif
         {
             // Log the exception to the console.
             if (actionExecutedContext.Exception != null)
             {
+#if NETCORE
+                ControllerActionDescriptor controllerActionDescriptor = actionExecutedContext?.ActionDescriptor as ControllerActionDescriptor;
+                string controller = controllerActionDescriptor?.ControllerName;
+                string method = controllerActionDescriptor?.ActionName;
+#else
                 string controller = actionExecutedContext?.ActionContext?.ControllerContext?.ControllerDescriptor?.ControllerName;
                 string method = actionExecutedContext?.ActionContext?.ActionDescriptor?.ActionName;
+#endif
                 WebHostErrorRecord record = new WebHostErrorRecord()
                 {
                     Controller = controller,
@@ -56,4 +73,3 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         public IList<WebHostErrorRecord> Exceptions { get; private set; }
     }
 }
-#endif

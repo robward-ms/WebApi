@@ -194,7 +194,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         {
             public void ConfigureServices(IServiceCollection services)
             {
-                services.AddMvcCore();
+                services.AddMvcCore(options =>
+                {
+                    options.Filters.Add(typeof(WebHostLogExceptionFilter));
+                });
+
                 services.AddOData();
             }
 
