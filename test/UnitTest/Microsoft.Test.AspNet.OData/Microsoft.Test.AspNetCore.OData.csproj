@@ -12,12 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Batch\**" />
-    <EmbeddedResource Remove="Batch\**" />
-    <None Remove="Batch\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="ContentIdHelpersTest.cs" />
     <Compile Remove="ContextUtil.cs" />
     <Compile Remove="DateAndTimeOfDayTest.cs" />

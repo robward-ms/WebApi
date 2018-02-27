@@ -187,9 +187,6 @@ namespace Microsoft.AspNet.OData.Batch
             HttpResponse response = request.HttpContext.Response;
             response.StatusCode = (int)HttpStatusCode.OK;
 
-            // Need to get the stream from ODataBatchContent.
-            // maybe use the shared class to define bahaviour and put
-            // HttpContent and public stream getter in platform-specific?
             ODataBatchContent batchContent = new ODataBatchContent(responses, requestContainer);
             return batchContent.SerializeToStreamAsync(response.Body);
         }

@@ -1,6 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Batch;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
+using Moq;
+using Xunit;
+#else
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +27,7 @@ using Microsoft.AspNet.OData.Batch;
 using Microsoft.Test.AspNet.OData.Common;
 using Moq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -21,10 +36,10 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Parameter_Constructor()
         {
-            HttpRequestMessage[] requests = new HttpRequestMessage[0];
-            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(requests);
+            var contexts = CreateRequestContext(0);
+            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(contexts);
 
-            Assert.Same(requests, requestItem.Requests);
+            Assert.Same(contexts, GetRequestContext(requestItem));
         }
 
         [Fact]
@@ -32,29 +47,42 @@ namespace Microsoft.Test.AspNet.OData.Batch
         {
             ExceptionAssert.ThrowsArgumentNull(
                 () => new ChangeSetRequestItem(null),
+#if NETCORE
+                "contexts");
+#else
                 "requests");
+#endif
         }
 
         [Fact]
         public async Task SendRequestAsync_NullInvoker_Throws()
         {
-            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(new HttpRequestMessage[0]);
+            var contexts = CreateRequestContext(0);
+            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(contexts);
 
             await ExceptionAssert.ThrowsArgumentNullAsync(
+#if NETCORE
+                () => requestItem.RouteAsync(null),
+                "router");
+#else
                 () => requestItem.SendRequestAsync(null, CancellationToken.None),
                 "invoker");
+#endif
         }
 
         [Fact]
         public async Task SendRequestAsync_ReturnsChangeSetResponse()
         {
-            HttpRequestMessage[] requests = new HttpRequestMessage[]
-                {
-                    new HttpRequestMessage(HttpMethod.Get, "http://example.com"),
-                    new HttpRequestMessage(HttpMethod.Post, "http://example.com")
-                };
-            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(requests);
+            int itemCount = 2;
+            var requestContexts = CreateRequestContext(itemCount);
+            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(requestContexts);
 
+#if NETCORE
+            Mock<IRouter> router = new Mock<IRouter>();
+            router.Setup(i => i.RouteAsync(It.IsAny<RouteContext>()));
+
+            var response = await requestItem.RouteAsync(router.Object);
+#else
             Mock<HttpMessageInvoker> invoker = new Mock<HttpMessageInvoker>(new HttpServer());
             invoker.Setup(i => i.SendAsync(It.IsAny<HttpRequestMessage>(), CancellationToken.None))
                 .Returns(() =>
@@ -63,22 +91,32 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 });
 
             var response = await requestItem.SendRequestAsync(invoker.Object, CancellationToken.None);
+#endif
 
             var changesetResponse = Assert.IsType<ChangeSetResponseItem>(response);
-            Assert.Equal(2, changesetResponse.Responses.Count());
+            Assert.Equal(itemCount, GetResponseContext(changesetResponse).Count());
         }
 
         [Fact]
         public async Task SendRequestAsync_ReturnsSingleErrorResponse()
         {
-            HttpRequestMessage[] requests = new HttpRequestMessage[]
-                {
-                    new HttpRequestMessage(HttpMethod.Get, "http://example.com"),
-                    new HttpRequestMessage(HttpMethod.Post, "http://example.com"),
-                    new HttpRequestMessage(HttpMethod.Put, "http://example.com")
-                };
-            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(requests);
+            int itemCount = 3;
+            var requestContexts = CreateRequestContext(itemCount);
+            ChangeSetRequestItem requestItem = new ChangeSetRequestItem(requestContexts);
 
+#if NETCORE
+            Mock<IRouter> router = new Mock<IRouter>();
+            router.Setup(i => i.RouteAsync(It.IsAny<RouteContext>()))
+                .Callback((RouteContext c) =>
+                {
+                    if (c.HttpContext.Request.Method == "POST")
+                    {
+                        c.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    }
+                });
+
+            var response = await requestItem.RouteAsync(router.Object);
+#else
             Mock<HttpMessageInvoker> invoker = new Mock<HttpMessageInvoker>(new HttpServer());
             invoker.Setup(i => i.SendAsync(It.IsAny<HttpRequestMessage>(), CancellationToken.None))
                 .Returns<HttpRequestMessage, CancellationToken>((req, c) =>
@@ -91,12 +129,14 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 });
 
             var response = await requestItem.SendRequestAsync(invoker.Object, CancellationToken.None);
+#endif
 
             var changesetResponse = Assert.IsType<ChangeSetResponseItem>(response);
-            Assert.Single(changesetResponse.Responses);
-            Assert.Equal(HttpStatusCode.BadRequest, changesetResponse.Responses.First().StatusCode);
+            Assert.Single(GetResponseContext(changesetResponse));
+            Assert.Equal((int)HttpStatusCode.BadRequest, GetResponseStatusCode(GetResponseContext(changesetResponse).First()));
         }
 
+#if NETFX // Only requests in AspNet as disposable.
         [Fact]
         public async Task SendRequestAsync_DisposesResponseInCaseOfException()
         {
@@ -167,5 +207,76 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 Assert.True(((MockHttpRequestMessage)request).IsDisposed);
             }
         }
+#endif
+
+#if NETCORE
+        private IEnumerable<HttpContext> CreateRequestContext(int itemCount)
+        {
+            HttpMethod[] methods = { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put };
+            List<HttpContext> contexts = new List<HttpContext>();
+            for (int i = 0; i < itemCount; i++)
+            {
+                DefaultHttpContext context = new DefaultHttpContext();
+                HttpRequest request = RequestFactory.Create(methods[i], "http://example.com");
+                context.Request.Method = methods[i].ToString();
+                context.Request.Scheme = request.Scheme;
+                context.Request.Host = request.Host;
+                context.Request.QueryString = request.QueryString;
+                context.Request.Path = request.Path;
+                contexts.Add(context);
+            }
+
+            return contexts;
+        }
+#else
+        private IEnumerable<HttpRequestMessage> CreateRequestContext(int itemCount)
+        {
+            HttpMethod[] methods = { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put };
+            List<HttpRequestMessage> contexts = new List<HttpRequestMessage>();
+            for (int i = 0; i < itemCount; i++)
+            {
+                HttpRequestMessage request = new HttpRequestMessage(methods[i], "http://example.com");
+                contexts.Add(request);
+            }
+
+            return contexts;
+        }
+#endif
+
+#if NETCORE
+        private IEnumerable<HttpContext> GetRequestContext(ChangeSetRequestItem batchRequest)
+        {
+            return batchRequest.Contexts;
+        }
+#else
+        private IEnumerable<HttpRequestMessage> GetRequestContext(ChangeSetRequestItem batchRequest)
+        {
+            return batchRequest.Requests;
+        }
+#endif
+
+#if NETCORE
+        private IEnumerable<HttpContext> GetResponseContext(ChangeSetResponseItem batchResponse)
+        {
+            return batchResponse.Contexts;
+        }
+#else
+        private IEnumerable<HttpResponseMessage> GetResponseContext(ChangeSetResponseItem batchResponse)
+        {
+            return batchResponse.Responses;
+        }
+#endif
+
+#if NETCORE
+        private int GetResponseStatusCode(HttpContext context)
+        {
+            return context.Response.StatusCode;
+        }
+#else
+        private int GetResponseStatusCode(HttpResponseMessage response)
+        {
+            return (int)response.StatusCode;
+        }
+#endif
     }
 }

@@ -1,6 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Batch;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
+using Xunit;
+#else
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +30,9 @@ using System.Web.Http.Routing;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Factories;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData.Batch
 {
@@ -23,13 +41,16 @@ namespace Microsoft.Test.AspNet.OData.Batch
         [Fact]
         public void Parameter_Constructor()
         {
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
 
+#if NETFX // Only the AspNet version as an invoker.
             Assert.NotNull(batchHandler.Invoker);
+#endif
             Assert.NotNull(batchHandler.MessageQuotas);
             Assert.Null(batchHandler.ODataRouteName);
         }
 
+#if NETFX // Only the AspNet version as an constructor with a parameter.
         [Fact]
         public void Constructor_Throws_IfHttpServerIsNull()
         {
@@ -37,53 +58,62 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 () => new DefaultODataBatchHandler(null),
                 "httpServer");
         }
+#endif
 
         [Fact]
         public async Task CreateResponseMessageAsync_Throws_IfResponsesAreNull()
         {
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport();
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("odata");
+            var request = RequestFactory.Create(config);
             await ExceptionAssert.ThrowsArgumentNullAsync(
-                () => batchHandler.CreateResponseMessageAsync(null, request, CancellationToken.None),
+                () => CreateResponseMessageAsync(batchHandler, null, request),
                 "responses");
         }
 
         [Fact]
         public async Task CreateResponseMessageAsync_Throws_IfRequestIsNull()
         {
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
             await ExceptionAssert.ThrowsArgumentNullAsync(
-                () => batchHandler.CreateResponseMessageAsync(new ODataBatchResponseItem[0], null, CancellationToken.None),
+                () => CreateResponseMessageAsync(batchHandler, new ODataBatchResponseItem[0], null),
                 "request");
         }
 
         [Fact]
         public async Task CreateResponseMessageAsync_ReturnsODataBatchContent()
         {
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
             ODataBatchResponseItem[] responses = new ODataBatchResponseItem[]
             {
-                new OperationResponseItem(new HttpResponseMessage(HttpStatusCode.OK))
+                new OperationResponseItem(CreateResponseContext(HttpStatusCode.OK))
             };
-            HttpRequestMessage request = new HttpRequestMessage();
-            request.EnableHttpDependencyInjectionSupport();
 
-            HttpResponseMessage response = await batchHandler.CreateResponseMessageAsync(responses, request, CancellationToken.None);
+            var config = RoutingConfigurationFactory.CreateWithRootContainer("odata");
+            var request = RequestFactory.Create(config);
 
+            var response = await CreateResponseMessageAsync(batchHandler, responses, request);
+
+#if NETCORE
+            // The AspNetCore version writes the body directly.
+            Assert.NotNull(response.Body);
+#else
+            // The AspNet version set the response Content.
             var batchContent = Assert.IsType<ODataBatchContent>(response.Content);
             Assert.Single(batchContent.Responses);
+#endif
         }
 
         [Fact]
         public async Task ProcessBatchAsync_Throws_IfRequestIsNull()
         {
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(new HttpServer());
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
             await ExceptionAssert.ThrowsArgumentNullAsync(
-                () => batchHandler.ProcessBatchAsync(null, CancellationToken.None),
+                () => ProcessBatchAsync(batchHandler, null),
                 "request");
         }
 
+#if NETFX // Only the AspNet version supports disposal.
         [Fact]
         public async Task ProcessBatchAsync_CallsRegisterForDispose()
         {
@@ -116,6 +146,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 Assert.Contains(expectedResource, resourcesForDisposal);
             }
         }
+#endif
 
         [Theory]
         [InlineData(true)]
@@ -142,25 +173,26 @@ namespace Microsoft.Test.AspNet.OData.Batch
                 }
                 return responseMessage;
             });
-            DefaultODataBatchHandler batchHandler = new DefaultODataBatchHandler(server);
-            HttpRequestMessage batchRequest = new HttpRequestMessage(HttpMethod.Post, "http://example.com/$batch")
+
+            DefaultODataBatchHandler batchHandler = CreateBatchHandler();
+            var config = RoutingConfigurationFactory.Create();
+            var batchRequest = RequestFactory.Create(HttpMethod.Post, "http://example.com/$batch", config);
+            batchRequest.Content = new MultipartContent("mixed")
             {
-                Content = new MultipartContent("mixed")
+                ODataBatchRequestHelper.CreateODataRequestContent(new HttpRequestMessage(HttpMethod.Get, "http://example.com/")),
+                new MultipartContent("mixed") // ChangeSet
                 {
-                    ODataBatchRequestHelper.CreateODataRequestContent(new HttpRequestMessage(HttpMethod.Get, "http://example.com/")),
-                    new MultipartContent("mixed") // ChangeSet
-                    {
-                        ODataBatchRequestHelper.CreateODataRequestContent(new HttpRequestMessage(HttpMethod.Post, "http://example.com/values")
-                        {
-                            Content = new StringContent("foo")
-                        })
-                    },
                     ODataBatchRequestHelper.CreateODataRequestContent(new HttpRequestMessage(HttpMethod.Post, "http://example.com/values")
                     {
-                        Content = new StringContent("bar")
-                    }),
-                }
+                        Content = new StringContent("foo")
+                    })
+                },
+                ODataBatchRequestHelper.CreateODataRequestContent(new HttpRequestMessage(HttpMethod.Post, "http://example.com/values")
+                {
+                    Content = new StringContent("bar")
+                }),
             };
+
             var enableContinueOnErrorconfig = new HttpConfiguration();
             enableContinueOnErrorconfig.EnableODataDependencyInjectionSupport();
             enableContinueOnErrorconfig.EnableContinueOnErrorHeader();
@@ -192,7 +224,7 @@ namespace Microsoft.Test.AspNet.OData.Batch
             }
 
             // Act
-            var response = await batchHandler.ProcessBatchAsync(batchRequest, CancellationToken.None);
+            var response = await ProcessBatchAsync(batchHandler, batchRequest);
             var batchContent = Assert.IsType<ODataBatchContent>(response.Content);
             var batchResponses = batchContent.Responses.ToArray();
             var responseWithPrefContinueOnError = await batchHandler.ProcessBatchAsync(batchRequestWithPrefContinueOnError, CancellationToken.None);
@@ -429,5 +461,58 @@ namespace Microsoft.Test.AspNet.OData.Batch
             Assert.Equal("The batch request must have a boundary specification in the \"Content-Type\" header.",
                 (await errorResponse.Response.Content.ReadAsAsync<HttpError>()).Message);
         }
+
+        private DefaultODataBatchHandler CreateBatchHandler()
+        {
+#if NETCORE
+            DefaultODataBatchHandler handler = new DefaultODataBatchHandler();
+            handler.DefaultHandler = RoutingConfigurationFactory.Create().DefaultHandler;
+            return handler;
+#else
+            return new DefaultODataBatchHandler(new HttpServer());
+#endif
+        }
+
+#if NETCORE
+        private async Task<HttpResponse> CreateResponseMessageAsync(DefaultODataBatchHandler handler, IEnumerable<ODataBatchResponseItem> responses, HttpRequest request)
+        {
+            await handler.CreateResponseMessageAsync(responses, request);
+            return request.HttpContext.Response;
+        }
+#else
+        private Task<HttpResponseMessage> CreateResponseMessageAsync(DefaultODataBatchHandler handler, IEnumerable<ODataBatchResponseItem> responses, HttpRequestMessage request)
+        {
+            return handler.CreateResponseMessageAsync(responses, request, CancellationToken.None);
+        }
+#endif
+
+#if NETCORE
+        private async Task<HttpResponse> ProcessBatchAsync(DefaultODataBatchHandler handler, HttpContext context)
+        {
+            await handler.ProcessBatchAsync(context);
+            return context.Response;
+        }
+#else
+        private Task<HttpResponseMessage> ProcessBatchAsync(DefaultODataBatchHandler handler, HttpRequestMessage request)
+        {
+            return handler.ProcessBatchAsync(request, CancellationToken.None);
+        }
+#endif
+
+#if NETCORE
+        private HttpContext CreateResponseContext(HttpStatusCode statusCode)
+        {
+            DefaultHttpContext context = new DefaultHttpContext();
+            context.Response.StatusCode = (int)statusCode;
+            return context;
+        }
+#else
+        private HttpResponseMessage CreateResponseContext(HttpStatusCode statusCode)
+        {
+            HttpResponseMessage response = new HttpResponseMessage(statusCode);
+            return response;
+        }
+#endif
+
     }
 }
