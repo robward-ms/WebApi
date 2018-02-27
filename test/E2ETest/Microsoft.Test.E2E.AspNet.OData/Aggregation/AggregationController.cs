@@ -1,7 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if NETCORE
+#if NETCORE && EFCORE
+using System.Linq;
+using Microsoft.AspNet.OData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+#elif NETCORE
 using System.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
@@ -63,6 +68,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
         protected void ResetDataSource()
         {
+#if EFCORE
+            _db.Database.EnsureCreated();
+#endif
             if (!_db.Customers.Any())
             {
                 Generate();
@@ -77,7 +85,33 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         {
             ResetDataSource();
             var db = new AggregationContext();
+#if EFCORE
+            // EFCore does not yet support lazy loading, making this scenario
+            // difficult to achieve.
+            // See: https://docs.microsoft.com/en-us/ef/core/querying/related-data
+            //
+            // When returning just Customers, there are no Orders and no way to get them
+            // since lazy loading is not supported. So when returning Customers, there is
+            // no Orders to aggregate so that results in nulls and issues in serialization.
+            //
+            // When adding order with .Include(), the Linq queires generated throw an exception
+            // in AggregationBinder::Bind after the on the IQueryable grouping variable.
+            // The exception is "One object should implment IComparable" but I tried implmenting
+            // IComparable on Customer and Order with no effect.
+            //
+            // Finally, this little gem works as desired by disconncting out Linq queries from
+            // EFCore entirely. However, the sort order is different that is was an EF so the
+            // test still fails in this case.
+            //
+            // In short, lack of lazy loading makes it super hard to implment [EnableQuery]
+            // since you have no idea what navigation need to be included. A better
+            // option would be to use ODataQueryOptions but it still requires loading of
+            // the correct navigation props and still likely has a problem in executing
+            // the currently generated Linq queries.
+            return db.Customers.Include(c => c.Order).ToList().AsQueryable();
+#else
             return db.Customers;
+#endif
         }
 
         [EnableQuery]
