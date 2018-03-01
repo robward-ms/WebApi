@@ -40,15 +40,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
 
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-#if !NETCORE
-            var server = configuration.GetHttpServer();
-
-            if (server == null)
-            {
-                throw new Exception("Inappropriate http server");
-            }
-#endif
-
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
@@ -56,13 +47,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Singleton
                 "clientTest",
                 SingletonEdmModel.GetExplicitModel("Umbrella"),
                 new DefaultODataPathHandler(),
-#if !NETCORE
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
-#else
-                ODataRoutingConventions.CreateDefault());
-#endif
-
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         [Fact]

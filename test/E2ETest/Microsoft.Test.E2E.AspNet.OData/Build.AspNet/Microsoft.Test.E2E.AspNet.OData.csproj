@@ -228,15 +228,6 @@
     <Compile Include="..\Batch\Client\DefaultBatchGeneratedClient.cs">
       <Link>Batch\Client\DefaultBatchGeneratedClient.cs</Link>
     </Compile>
-    <Compile Include="..\Batch\Client\JsonLightContent.cs">
-      <Link>Batch\Client\JsonLightContent.cs</Link>
-    </Compile>
-    <Compile Include="..\Batch\Client\ODataChangeSet.cs">
-      <Link>Batch\Client\ODataChangeSet.cs</Link>
-    </Compile>
-    <Compile Include="..\Batch\Client\ODataOperation.cs">
-      <Link>Batch\Client\ODataOperation.cs</Link>
-    </Compile>
     <Compile Include="..\Batch\Client\UnbufferedBatchGeneratedClient.cs">
       <Link>Batch\Client\UnbufferedBatchGeneratedClient.cs</Link>
     </Compile>

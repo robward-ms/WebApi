@@ -48,17 +48,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
                 routePrefix: "convention",
                 model: DateAndTimeOfDayEdmModel.GetConventionModel(configuration));
 
-#if !NETCORE
-            HttpServer httpServer = configuration.GetHttpServer();
-#endif
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
-                model: DateAndTimeOfDayEdmModel.GetExplicitModel()
-#if !NETCORE
-                , batchHandler: new DefaultODataBatchHandler(httpServer)
-#endif
-                );
+                model: DateAndTimeOfDayEdmModel.GetExplicitModel(),
+                batchHandler: configuration.CreateDefaultODataBatchHandler());
+
             configuration.EnsureInitialized();
         }
 

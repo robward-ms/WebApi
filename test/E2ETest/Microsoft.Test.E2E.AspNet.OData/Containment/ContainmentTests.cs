@@ -68,27 +68,19 @@ namespace Microsoft.Test.E2E.AspNet.OData.Containment
             configuration.AddControllers(controllers);
 
             configuration.Routes.Clear();
-#if !NETCORE
-            HttpServer httpServer = configuration.GetHttpServer();
-#endif
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration
                 .MapODataServiceRoute(routeName: "convention",
                     routePrefix: "convention",
-                    model: ContainmentEdmModels.GetConventionModel(configuration)
-#if !NETCORE
-                    , batchHandler: new DefaultODataBatchHandler(httpServer)
-#endif
-                    );
+                    model: ContainmentEdmModels.GetConventionModel(configuration),
+                    batchHandler: configuration.CreateDefaultODataBatchHandler());
 
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
-                    model: ContainmentEdmModels.GetExplicitModel()
-#if !NETCORE
-                    , batchHandler: new DefaultODataBatchHandler(httpServer)
-#endif
-                    );
+                    model: ContainmentEdmModels.GetExplicitModel(),
+                    batchHandler: configuration.CreateDefaultODataBatchHandler());
+
             configuration.EnsureInitialized();
         }
 

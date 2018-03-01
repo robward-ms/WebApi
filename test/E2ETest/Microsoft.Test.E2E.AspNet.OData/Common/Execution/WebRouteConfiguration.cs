@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Adapters;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Formatter;
@@ -180,6 +181,24 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         {
             // Since we could be building the container, we must supply the path handler.
             return new AttributeRoutingConvention(name, routeBuilder.ServiceProvider, new DefaultODataPathHandler());
+        }
+
+        /// <summary>
+        /// Create an <see cref="DefaultODataBatchHandler"/>.
+        /// </summary>
+        /// <returns>An <see cref="DefaultODataBatchHandler"/></returns>
+        public DefaultODataBatchHandler CreateDefaultODataBatchHandler()
+        {
+            return new DefaultODataBatchHandler();
+        }
+
+        /// <summary>
+        /// Create an <see cref="UnbufferedODataBatchHandler"/>.
+        /// </summary>
+        /// <returns>An <see cref="UnbufferedODataBatchHandler"/></returns>
+        public UnbufferedODataBatchHandler CreateUnbufferedODataBatchHandler()
+        {
+            return new UnbufferedODataBatchHandler();
         }
 
         /// <summary>

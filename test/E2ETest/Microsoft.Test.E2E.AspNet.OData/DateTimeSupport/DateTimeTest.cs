@@ -46,17 +46,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateTimeSupport
                 routePrefix: "convention",
                 model: DateTimeEdmModel.GetConventionModel(configuration));
 
-#if !NETCORE
-            HttpServer httpServer = configuration.GetHttpServer();
-#endif
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
-                model: DateTimeEdmModel.GetExplicitModel()
-#if !NETCORE
-                , batchHandler: new DefaultODataBatchHandler(httpServer)
-#endif
-                );
+                model: DateTimeEdmModel.GetExplicitModel(),
+                batchHandler: configuration.CreateDefaultODataBatchHandler());
+
             configuration.EnsureInitialized();
         }
 

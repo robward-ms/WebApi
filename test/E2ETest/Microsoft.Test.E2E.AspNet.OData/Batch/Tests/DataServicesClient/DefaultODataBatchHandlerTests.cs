@@ -78,7 +78,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
 
         public Task CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link)
         {
-            return Task.FromResult(Request.CreateResponse(HttpStatusCode.NoContent));
+            return Task.FromResult(StatusCode(HttpStatusCode.NoContent));
         }
     }
 
@@ -92,6 +92,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
 
     public class DefaultBatchHandlerCUDBatchTests : WebHostTestBase
     {
+        private IEdmModel model;
+
         public DefaultBatchHandlerCUDBatchTests(WebHostTestFixture fixture)
             :base(fixture)
         {
@@ -99,21 +101,20 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
 
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            var server = configuration.GetHttpServer();
-
+            this.model = GetEdmModel(configuration);
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
-                GetEdmModel(),
+                this.model,
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             EntitySetConfiguration<DefaultBatchCustomer> customers = builder.EntitySet<DefaultBatchCustomer>("DefaultBatchCustomer");
             EntitySetConfiguration<DefaultBatchOrder> orders = builder.EntitySet<DefaultBatchOrder>("DefaultBatchOrder");
             customers.EntityType.Collection.Action("OddCustomers").ReturnsCollectionFromEntitySet<DefaultBatchCustomer>("DefaultBatchCustomer");
@@ -226,7 +227,7 @@ Content-Type: application/json;odata.metadata=minimal
             var stream = await response.Content.ReadAsStreamAsync();
             IODataResponseMessage odataResponseMessage = new ODataMessageWrapper(stream, response.Content.Headers);
             int subResponseCount = 0;
-            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), GetEdmModel()))
+            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), this.model))
             {
                 var batchReader = messageReader.CreateODataBatchReader();
                 while (batchReader.Read())
@@ -258,15 +259,15 @@ Content-Type: application/json;odata.metadata=minimal
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
-                GetEdmModel(),
+                GetEdmModel(configuration),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
                 configuration.CreateDefaultODataBatchHandler());
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
             builder.EntitySet<DefaultBatchCustomer>("DefaultBatchCustomer")
                    .EntityType
                    .Collection
@@ -327,15 +328,15 @@ Content-Type: application/json;odata.metadata=minimal
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
-                GetEdmModel(),
+                GetEdmModel(configuration),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
                 configuration.CreateDefaultODataBatchHandler());
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
 
             builder.EntitySet<DefaultBatchCustomer>("DefaultBatchCustomer")
                    .EntityType
@@ -394,15 +395,15 @@ Content-Type: application/json;odata.metadata=minimal
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
-                GetEdmModel(),
+                GetEdmModel(configuration),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
                 configuration.CreateDefaultODataBatchHandler());
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder();
+            var builder = configuration.CreateConventionModelBuilder();
 
             builder.EntitySet<DefaultBatchCustomer>("DefaultBatchCustomer")
                    .EntityType
@@ -437,6 +438,8 @@ Content-Type: application/json;odata.metadata=minimal
 
     public class DefaultBatchHandlerContinueOnErrorBatchTests : WebHostTestBase
     {
+        private IEdmModel model;
+
         public DefaultBatchHandlerContinueOnErrorBatchTests(WebHostTestFixture fixture)
             :base(fixture)
         {
@@ -444,19 +447,22 @@ Content-Type: application/json;odata.metadata=minimal
 
         protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
+            this.model = GetEdmModel(configuration);
+
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
-                GetEdmModel(),
+                this.model,
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
                 configuration.CreateDefaultODataBatchHandler());
+
             configuration.EnableContinueOnErrorHeader();
         }
 
-        protected static IEdmModel GetEdmModel()
+        protected static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
+            ODataModelBuilder builder = configuration.CreateConventionModelBuilder();
             EntitySetConfiguration<DefaultBatchCustomer> customers = builder.EntitySet<DefaultBatchCustomer>("DefaultBatchCustomer");
             EntitySetConfiguration<DefaultBatchOrder> orders = builder.EntitySet<DefaultBatchOrder>("DefaultBatchOrder");
             customers.EntityType.Collection.Action("OddCustomers").ReturnsCollectionFromEntitySet<DefaultBatchCustomer>("DefaultBatchCustomer");
@@ -504,7 +510,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
             int subResponseCount = 0;
 
             // Assert
-            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), GetEdmModel()))
+            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), this.model))
             {
                 var batchReader = messageReader.CreateODataBatchReader();
                 while (batchReader.Read())
@@ -569,7 +575,7 @@ GET " + absoluteUri + @"(1) HTTP/1.1
             int subResponseCount = 0;
 
             // Assert
-            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), GetEdmModel()))
+            using (var messageReader = new ODataMessageReader(odataResponseMessage, new ODataMessageReaderSettings(), this.model))
             {
                 var batchReader = messageReader.CreateODataBatchReader();
                 while (batchReader.Read())

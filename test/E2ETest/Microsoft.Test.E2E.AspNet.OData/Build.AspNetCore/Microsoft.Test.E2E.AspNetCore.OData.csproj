@@ -18,6 +18,18 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Batch\Client\DefaultBatchGeneratedClient.cs">
+      <Link>Batch\Client\DefaultBatchGeneratedClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Batch\Client\UnbufferedBatchGeneratedClient.cs">
+      <Link>Batch\Client\UnbufferedBatchGeneratedClient.cs</Link>
+    </Compile>
+    <Compile Include="..\Batch\Tests\DataServicesClient\DefaultODataBatchHandlerTests.cs">
+      <Link>Batch\Tests\DataServicesClient\DefaultODataBatchHandlerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Batch\Tests\DataServicesClient\UnbufferedODataBatchHandlerTests.cs">
+      <Link>Batch\Tests\DataServicesClient\UnbufferedODataBatchHandlerTests.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Controllers\ModelStateErrorHandlingAttribute.cs">
       <Link>Common\Controllers\ModelStateErrorHandlingAttribute.cs</Link>
     </Compile>
@@ -1734,6 +1746,7 @@
       <HintPath>..\..\..\..\sln\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

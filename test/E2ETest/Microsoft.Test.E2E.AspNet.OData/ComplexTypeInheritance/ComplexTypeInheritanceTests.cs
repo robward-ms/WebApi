@@ -78,17 +78,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
                     routePrefix: "convention",
                     model: ComplexTypeInheritanceEdmModels.GetConventionModel(configuration));
 
-#if !NETCORE
-            var httpServer = configuration.GetHttpServer();
-#endif
             configuration
                 .MapODataServiceRoute(routeName: "explicit",
                     routePrefix: "explicit",
-                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel()
-#if !NETCORE
-                    , batchHandler: new DefaultODataBatchHandler(httpServer)
-#endif
-                    );
+                    model: ComplexTypeInheritanceEdmModels.GetExplicitModel(),
+                    batchHandler: configuration.CreateDefaultODataBatchHandler());
 
             configuration.EnsureInitialized();
         }
