@@ -20,7 +20,7 @@ namespace Microsoft.AspNet.OData.Batch
     public class UnbufferedODataBatchHandler : ODataBatchHandler
     {
         /// <inheritdoc/>
-        public override async Task ProcessBatchAsync(HttpContext context)
+        public override async Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next)
         {
             if (context == null)
             {
@@ -50,11 +50,11 @@ namespace Microsoft.AspNet.OData.Batch
                 ODataBatchResponseItem responseItem = null;
                 if (batchReader.State == ODataBatchReaderState.ChangesetStart)
                 {
-                    responseItem = await ExecuteChangeSetAsync(batchReader, batchId, request);
+                    responseItem = await ExecuteChangeSetAsync(batchReader, batchId, request, next);
                 }
                 else if (batchReader.State == ODataBatchReaderState.Operation)
                 {
-                    responseItem = await ExecuteOperationAsync(batchReader, batchId, request);
+                    responseItem = await ExecuteOperationAsync(batchReader, batchId, request, next);
                 }
                 if (responseItem != null)
                 {
@@ -75,8 +75,9 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="batchReader">The batch reader.</param>
         /// <param name="batchId">The batch id.</param>
         /// <param name="originalRequest">The original request containing all the batch requests.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>The response for the operation.</returns>
-        public virtual async Task<ODataBatchResponseItem> ExecuteOperationAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest)
+        public virtual async Task<ODataBatchResponseItem> ExecuteOperationAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, Func<HttpContext, Task> handler)
         {
             if (batchReader == null)
             {
@@ -85,6 +86,10 @@ namespace Microsoft.AspNet.OData.Batch
             if (originalRequest == null)
             {
                 throw Error.ArgumentNull("originalRequest");
+            }
+            if (handler == null)
+            {
+                throw Error.ArgumentNull("handler");
             }
 
             CancellationToken cancellationToken = originalRequest.HttpContext.RequestAborted;
@@ -95,7 +100,7 @@ namespace Microsoft.AspNet.OData.Batch
             operationContext.Request.DeleteRequestContainer(false);
             OperationRequestItem operation = new OperationRequestItem(operationContext);
 
-            ODataBatchResponseItem responseItem = await operation.RouteAsync(DefaultHandler);
+            ODataBatchResponseItem responseItem = await operation.RouteAsync(handler);
 
             return responseItem;
         }
@@ -106,8 +111,9 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="batchReader">The batch reader.</param>
         /// <param name="batchId">The batch id.</param>
         /// <param name="originalRequest">The original request containing all the batch requests.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>The response for the ChangeSet.</returns>
-        public virtual async Task<ODataBatchResponseItem> ExecuteChangeSetAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest)
+        public virtual async Task<ODataBatchResponseItem> ExecuteChangeSetAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, Func<HttpContext, Task> handler)
         {
             if (batchReader == null)
             {
@@ -116,6 +122,10 @@ namespace Microsoft.AspNet.OData.Batch
             if (originalRequest == null)
             {
                 throw Error.ArgumentNull("originalRequest");
+            }
+            if (handler == null)
+            {
+                throw Error.ArgumentNull("handler");
             }
 
             Guid changeSetId = Guid.NewGuid();
@@ -130,7 +140,7 @@ namespace Microsoft.AspNet.OData.Batch
                     changeSetOperationContext.Request.CopyBatchRequestProperties(originalRequest);
                     changeSetOperationContext.Request.DeleteRequestContainer(false);
 
-                    await ODataBatchRequestItem.RouteAsync(DefaultHandler, changeSetOperationContext, contentIdToLocationMapping);
+                    await ODataBatchRequestItem.RouteAsync(handler, changeSetOperationContext, contentIdToLocationMapping);
                     if (changeSetOperationContext.Response.IsSuccessStatusCode())
                     {
                         changeSetResponse.Add(changeSetOperationContext);

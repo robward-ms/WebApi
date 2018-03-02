@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNetCore.Http;
@@ -37,14 +38,14 @@ namespace Microsoft.AspNet.OData.Batch
         /// </summary>
         /// <param name="router">The router.</param>
         /// <returns>A <see cref="OperationResponseItem"/>.</returns>
-        public override async Task<ODataBatchResponseItem> RouteAsync(IRouter router)
+        public override async Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler)
         {
-            if (router == null)
+            if (handler == null)
             {
-                throw Error.ArgumentNull("router");
+                throw Error.ArgumentNull("handler");
             }
 
-            await RouteAsync(router, Context, null);
+            await RouteAsync(handler, Context, null);
             return new OperationResponseItem(Context);
         }
     }

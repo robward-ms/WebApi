@@ -23,11 +23,11 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="context">The context.</param>
         /// <param name="contentIdToLocationMapping">The Content-ID to Location mapping.</param>
         /// <returns></returns>
-        public static async Task RouteAsync(IRouter router, HttpContext context, Dictionary<string, string> contentIdToLocationMapping)
+        public static async Task RouteAsync(Func<HttpContext, Task> handler, HttpContext context, Dictionary<string, string> contentIdToLocationMapping)
         {
-            if (router == null)
+            if (handler == null)
             {
-                throw Error.ArgumentNull("router");
+                throw Error.ArgumentNull("handler");
             }
             if (context == null)
             {
@@ -38,14 +38,23 @@ namespace Microsoft.AspNet.OData.Batch
             {
                 string queryString = context.Request.QueryString.HasValue ? context.Request.QueryString.Value : String.Empty;
                 string resolvedRequestUrl = ContentIdHelpers.ResolveContentId(queryString, contentIdToLocationMapping);
-                context.Request.CopyAbsoluteUrl(new Uri(resolvedRequestUrl));
+                if (!string.IsNullOrEmpty(resolvedRequestUrl))
+                {
+                    Uri resolvedUri = new Uri(resolvedRequestUrl, UriKind.RelativeOrAbsolute);
+                    if (resolvedUri.IsAbsoluteUri)
+                    {
+                        context.Request.CopyAbsoluteUrl(resolvedUri);
+                    }
+                    else
+                    {
+                        context.Request.QueryString = new QueryString(resolvedRequestUrl);
+                    }
+                }
 
                 context.Request.SetODataContentIdMapping(contentIdToLocationMapping);
             }
 
-            RouteContext routeContext = new RouteContext(context);
-            routeContext.RouteData.Routers.Add(router);
-            await router.RouteAsync(routeContext);
+            await handler(context);
 
             string contentId = context.Request.GetODataContentId();
 
@@ -77,7 +86,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// </summary>
         /// <param name="router">The router.</param>
         /// <returns>A <see cref="ODataBatchResponseItem"/>.</returns>
-        public abstract Task<ODataBatchResponseItem> RouteAsync(IRouter router);
+        public abstract Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler);
 
     }
 }

@@ -12,13 +12,14 @@ using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
+
 
 namespace Microsoft.AspNet.OData.Extensions
 {
@@ -499,25 +500,70 @@ namespace Microsoft.AspNet.OData.Extensions
             routePrefix = RemoveTrailingSlash(routePrefix);
 
             IRouter customRouter = serviceProvider.GetService<IRouter>();
-            if (customRouter != null)
-            {
-                route = new ODataRoute(customRouter, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
-            }
-            else
-            {
-                ODataBatchHandler batchHandler = serviceProvider.GetService<ODataBatchHandler>();
-                if (batchHandler != null)
-                {
-                    batchHandler.DefaultHandler = builder.DefaultHandler;
-                    batchHandler.ODataRouteName = routeName;
-                    string batchTemplate = String.IsNullOrEmpty(routePrefix)
-                        ? ODataRouteConstants.Batch
-                        : routePrefix + '/' + ODataRouteConstants.Batch;
+            route = new ODataRoute(
+                customRouter != null ? customRouter : builder.DefaultHandler,
+                routeName,
+                routePrefix,
+                routeConstraint,
+                inlineConstraintResolver);
 
-                    builder.MapRoute(batchTemplate, batchHandler.ProcessBatchAsync);
-                }
+            // The batchHandler is in the pre-route request container. If it exists,
+            // this code adds it to the routing pipline for a given template IN ADDITION TO
+            // the route for OData. What should happen is that if the $batch request is made,
+            // then it goes to the batch handler instead and it expects to be able to execute the entire
+            // pipeline for requests is creates.
+            //
+            // In AspNetCore, we either need to be MiddleWare upstream of the filters or a filter
+            // middleware that is upstream of all other filters. We coudl do something like MiddlewareFilterAttribute 
+            // does and insert a MiddlewareFilter into the filter pipeine, which would run early enough but
+            // would process for all requests. I'm not sure we really want that, it seems a branched middleware
+            // is more like what we want to do.
+            //
+            // To do that, we'd want to handle the incoming context, which our ODataBatchHandler can already take
+            // then branch off the request into a bunch of smaller requests that we handle then combine them
+            // back together. We ONLY want this to run if the path ends with "$batch" and matches an OData prefix.
+            // routing knows what the prefixes are but we could add those prefixes to a list somewhere.
+            //
+            // SO let's say we inject a persistent bit of middleware for all requests and if the request matches the
+            // path we want, execute it. This is a lot like MapMiddleware(), which does a "starts with", then messes with
+            // the path and sends it to the handler. We want the same but without messing with the path, rip aparts the body
+            // and pass those request to the rest of the pipeline.
+            //
+            // So we need to be in the pipline beofre MVC and routing somehow so they handle the requests.
+            // And when registering for a batch handler, put the batch paths in a singleton that the middleware can access
+            // then the middle checks, matches the path, hands it to the batch handler, then returns. If no match, do next().
+            //
+            // The batch handler is instantiated here before a request anyway from the objects in the per-request
+            // container. So we just need to be able to the let middleware request is batch handler from the right
+            // per-request container, which has already been configured. So store the route name, which can be used to
+            // find the container, as well as the prefix which is used for path maching and the middleware can get the
+            // batch handler with full support for DI.
+            //
+            // Store the batch route name and prefix on a batch route object the middleware can access.
+            // easy? let's hope so.
+            //
+            // Middle ware is is noit easily injected given the current APIs as it needs access to the
+            // Application builder. Hangon, let's see. Well, we can do it with:
+            //    builder.ApplicationBuilder.Use(async (context, next) => {});
+            // but this will NOT run upstream of MVC as it;s being executed in UseMvc and it occurs after
+            // MVC has been configured. For Middleware to work, we'd need to go before Mvc and that requires the user
+            // to call something new. Can we try as a filter?
+            //
+            // What iff we inject a FilterFactory() like MiddlewareFilterAttribute  is in the case
+            // we need batching and let it return a middleware filter. That middlware works just like
+            // it's stated above.
+            ODataBatchHandler batchHandler = serviceProvider.GetService<ODataBatchHandler>();
+            if (batchHandler != null)
+            {
+                //batchHandler.ODataRoute = route;
+                batchHandler.ODataRouteName = routeName;
 
-                route = new ODataRoute(builder.DefaultHandler, routeName, routePrefix, routeConstraint, inlineConstraintResolver);
+                string batchTemplate = String.IsNullOrEmpty(routePrefix)
+                    ? ODataRouteConstants.Batch
+                    : routePrefix + '/' + ODataRouteConstants.Batch;
+
+                ODataBatchPathMapping batchMapping = builder.ServiceProvider.GetRequiredService<ODataBatchPathMapping>();
+                batchMapping.AddTemplate(routeName, batchTemplate);
             }
 
             builder.Routes.Add(route);

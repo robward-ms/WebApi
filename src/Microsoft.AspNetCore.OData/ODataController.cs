@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNet.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.AspNet.OData.Batch;
 
 namespace Microsoft.AspNet.OData
 {
@@ -17,6 +18,7 @@ namespace Microsoft.AspNet.OData
     /// <remarks>These attributes and signature uses types that are AspNetCore-specific.</remarks>
     [ODataFormatting]
     [ODataRouting]
+    [ODataBatchMiddlewareFilterAttribute]
     [ApiExplorerSettings(IgnoreApi = true)]
     public abstract partial class ODataController : ControllerBase
     {

@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
@@ -215,13 +217,13 @@ namespace Microsoft.AspNet.OData.Batch
                 await response.WriteAsync(SRResources.BatchRequestMissingContentType);
                 return false;
             }
-            if (!String.Equals(contentType.MediaType.Buffer, BatchMediaType, StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(contentType.MediaType.ToString(), BatchMediaType, StringComparison.OrdinalIgnoreCase))
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                 await response.WriteAsync(Error.Format(SRResources.BatchRequestInvalidMediaType, BatchMediaType));
                 return false;
             }
-            NameValueHeaderValue boundary = contentType.Parameters.FirstOrDefault(p => String.Equals(p.Name.Buffer, Boundary, StringComparison.OrdinalIgnoreCase));
+            NameValueHeaderValue boundary = contentType.Parameters.FirstOrDefault(p => String.Equals(p.Name.ToString(), Boundary, StringComparison.OrdinalIgnoreCase));
             if (boundary == null || String.IsNullOrEmpty(boundary.Value.ToString()))
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -232,7 +234,7 @@ namespace Microsoft.AspNet.OData.Batch
             return true;
         }
 
-        internal static Uri GetODataBatchBaseUri(this HttpRequest request, string oDataRouteName)
+        internal static Uri GetODataBatchBaseUri(this HttpRequest request, string oDataRouteName, IRouter route)
         {
             Contract.Assert(request != null);
 
@@ -243,7 +245,20 @@ namespace Microsoft.AspNet.OData.Batch
             }
             else
             {
-                IUrlHelper helper = request.HttpContext.GetUrlHelper();
+                // The IActionContextAccessor and ActionContext will be present after routing but not before
+                // GetUrlHelper only uses the HttpContext and the Router, which we have so construct a dummy
+                // action context.
+                ActionContext actionContext = new ActionContext
+                {
+                    HttpContext = request.HttpContext,
+                    RouteData = new RouteData(),
+                    ActionDescriptor = new ActionDescriptor()
+                };
+
+                actionContext.RouteData.Routers.Add(route);
+                IUrlHelperFactory factory = request.HttpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
+                IUrlHelper helper = factory.GetUrlHelper(actionContext);
+
                 string baseAddress = helper.Link(oDataRouteName, new RouteValueDictionary() { { ODataRouteConstants.ODataPath, String.Empty } });
                 if (baseAddress == null)
                 {

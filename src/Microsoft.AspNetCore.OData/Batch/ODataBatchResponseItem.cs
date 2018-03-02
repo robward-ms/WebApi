@@ -47,8 +47,6 @@ namespace Microsoft.AspNet.OData.Batch
 
             if (context.Response.Body != null)
             {
-                context.Response.Body = batchResponse.GetStream();
-
                 using (Stream stream = batchResponse.GetStream())
                 {
                     context.RequestAborted.ThrowIfCancellationRequested();

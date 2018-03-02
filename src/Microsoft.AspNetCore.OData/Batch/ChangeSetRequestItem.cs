@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Common;
@@ -39,11 +40,11 @@ namespace Microsoft.AspNet.OData.Batch
         /// </summary>
         /// <param name="router">The router.</param>
         /// <returns>A <see cref="ChangeSetResponseItem"/>.</returns>
-        public override async Task<ODataBatchResponseItem> RouteAsync(IRouter router)
+        public override async Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler)
         {
-            if (router == null)
+            if (handler == null)
             {
-                throw Error.ArgumentNull("router");
+                throw Error.ArgumentNull("handler");
             }
 
             Dictionary<string, string> contentIdToLocationMapping = new Dictionary<string, string>();
@@ -51,7 +52,7 @@ namespace Microsoft.AspNet.OData.Batch
 
             foreach (HttpContext context in Contexts)
             {
-                await RouteAsync(router, context, contentIdToLocationMapping);
+                await RouteAsync(handler, context, contentIdToLocationMapping);
 
                 HttpResponse response = context.Response;
                 if (response.IsSuccessStatusCode())

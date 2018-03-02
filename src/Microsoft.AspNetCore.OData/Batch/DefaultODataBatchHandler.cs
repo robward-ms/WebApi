@@ -24,7 +24,7 @@ namespace Microsoft.AspNet.OData.Batch
     public class DefaultODataBatchHandler : ODataBatchHandler
     {
         /// <inheritdoc/>
-        public override async Task ProcessBatchAsync(HttpContext context)
+        public override async Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next)
         {
             if (context == null)
             {
@@ -36,32 +36,44 @@ namespace Microsoft.AspNet.OData.Batch
                 return;
             }
 
-            IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
+            try
+            {
 
-            SetContinueOnError(new WebApiRequestMessage(context.Request), new WebApiRequestHeaders(context.Request.Headers));
+                IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
 
-            IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(subRequests);
-            await CreateResponseMessageAsync(responses, context.Request);
+                SetContinueOnError(new WebApiRequestMessage(context.Request), new WebApiRequestHeaders(context.Request.Headers));
+
+                IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(subRequests, next);
+                await CreateResponseMessageAsync(responses, context.Request);
+            }catch (Exception ex)
+            {
+                string x = ex.ToString();
+            }
         }
 
         /// <summary>
         /// Executes the OData batch requests.
         /// </summary>
         /// <param name="requests">The collection of OData batch requests.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>A collection of <see cref="ODataBatchResponseItem"/> for the batch requests.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "We need to return a collection of response messages asynchronously.")]
-        public virtual async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests)
+        public virtual async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, Func<HttpContext, Task> handler)
         {
             if (requests == null)
             {
                 throw Error.ArgumentNull("requests");
+            }
+            if (handler == null)
+            {
+                throw Error.ArgumentNull("handler");
             }
 
             IList<ODataBatchResponseItem> responses = new List<ODataBatchResponseItem>();
 
             foreach (ODataBatchRequestItem request in requests)
             {
-                ODataBatchResponseItem responseItem = await request.RouteAsync(DefaultHandler);
+                ODataBatchResponseItem responseItem = await request.RouteAsync(handler);
                 responses.Add(responseItem);
 
                 if (responseItem != null && responseItem.IsResponseSuccessful() == false && ContinueOnError == false)

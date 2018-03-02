@@ -6,8 +6,10 @@ using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData;
 
@@ -74,9 +76,19 @@ namespace Microsoft.AspNet.OData.Extensions
                 throw Error.ArgumentNull("httpContext");
             }
 
-            // Get an IUrlHelper from the global service provider.
-            ActionContext actionContext = httpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
-            return httpContext.RequestServices.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(actionContext);
+            // Get an IUrlHelper from the global service provider. The IActionContextAccessor and ActionContext
+            // will be present after routing but not before, as is the case for batching. GetUrlHelper only uses
+            // the HttpContext, which we have so construct a dummy action context if one is not available.
+            IUrlHelperFactory factory = httpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
+            ActionContext defaultActionContext = httpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
+            ActionContext actionContext = (defaultActionContext != null) ? defaultActionContext : new ActionContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData(),
+                ActionDescriptor = new ActionDescriptor()
+            };
+
+            return factory.GetUrlHelper(actionContext);
         }
 
         /// <summary>

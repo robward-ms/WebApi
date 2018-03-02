@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -20,17 +22,12 @@ namespace Microsoft.AspNet.OData.Batch
     public abstract partial class ODataBatchHandler
     {
         /// <summary>
-        /// Gets or sets the default Microsoft.AspNetCore.Routing.IRouter that is used as
-        /// a handler for the individual requests.
-        /// </summary>
-        public IRouter DefaultHandler { get; set; }
-
-        /// <summary>
         /// Abstract method for processing a batch request.
         /// </summary>
         /// <param name="context">The http content.</param>
+        /// ><param name="next">The next handler in the middle ware chain.</param>
         /// <returns></returns>
-        public abstract Task ProcessBatchAsync(HttpContext context);
+        public abstract Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next);
 
         /// <summary>
         /// Creates the batch response message.
@@ -75,7 +72,13 @@ namespace Microsoft.AspNet.OData.Batch
                 throw Error.ArgumentNull("request");
             }
 
-            return request.GetODataBatchBaseUri(ODataRouteName);
+            // get the router
+            IRouter route = request.HttpContext.GetRouteData()?.Routers?
+                .OfType<ODataRoute>()
+                .Where(r => r.Name == ODataRouteName)
+                .SingleOrDefault();
+
+            return request.GetODataBatchBaseUri(ODataRouteName, route);
         }
     }
 }

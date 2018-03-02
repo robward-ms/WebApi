@@ -6,10 +6,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Common;
+using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.OData;
@@ -142,9 +145,11 @@ namespace Microsoft.AspNet.OData.Batch
 
             foreach (var header in batchRequest.Headers)
             {
+                // Copy headers from batch, overwriting any existing
+                // headers.
                 string headerName = header.Key;
                 string headerValue = header.Value;
-                request.Headers.Add(headerName, headerValue);
+                request.Headers[headerName] = headerValue;
             }
 
             request.SetODataBatchId(batchId);
@@ -160,31 +165,49 @@ namespace Microsoft.AspNet.OData.Batch
 
         private static HttpContext CreateHttpContext(HttpContext originalContext)
         {
+            // Clone the features so that a new set is used for each context.
+            // The features themselves will be reused but not the collection. We
+            // store the request container as a feature of the request and we don't want
+            // the features add to one context/request to be visible on another.
+            IFeatureCollection features = new FeatureCollection();
+            foreach (KeyValuePair<Type, object> kvp in originalContext.Features)
+            {
+                // Don't include the OData features. They may already
+                // be present. This will get-recreated later.
+                if (kvp.Key == typeof(IODataBatchFeature) ||
+                    kvp.Key == typeof(IODataFeature))
+                {
+                    continue;
+                }
+
+                features[kvp.Key] = kvp.Value;
+            }
+
             // Create a context from the factory or use the default context.
             HttpContext context = null;
             IHttpContextFactory httpContextFactory = originalContext.RequestServices.GetRequiredService<IHttpContextFactory>();
             if (httpContextFactory != null)
             {
-                context = httpContextFactory.Create(originalContext.Features);
+                context = httpContextFactory.Create(features);
             }
             else
             {
-                context = new DefaultHttpContext(originalContext.Features);
+                context = new DefaultHttpContext(features);
             }
 
             // Clone the context.
-            context.User = originalContext.User;
-            context.Items = originalContext.Items;
-            context.RequestServices = originalContext.RequestServices;
-            context.RequestAborted = originalContext.RequestAborted;
-            context.TraceIdentifier = originalContext.TraceIdentifier;
+            //context.User = originalContext.User;
+            //context.Items = originalContext.Items;
+            //context.RequestServices = originalContext.RequestServices;
+            //context.RequestAborted = originalContext.RequestAborted;
+            //context.TraceIdentifier = originalContext.TraceIdentifier;
 
             // Clone parts of the request.
-            context.Request.Cookies = originalContext.Request.Cookies;
-            foreach (KeyValuePair<string, StringValues> header in originalContext.Request.Headers)
-            {
-                context.Request.Headers.Add(header);
-            }
+            //context.Request.Cookies = originalContext.Request.Cookies;
+            //foreach (KeyValuePair<string, StringValues> header in originalContext.Request.Headers)
+            //{
+            //    context.Request.Headers.Add(header);
+            //}
 
             return context;
         }
