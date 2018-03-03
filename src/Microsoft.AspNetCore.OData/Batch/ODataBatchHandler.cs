@@ -22,12 +22,17 @@ namespace Microsoft.AspNet.OData.Batch
     public abstract partial class ODataBatchHandler
     {
         /// <summary>
+        /// Gets or sets the OData route associated with this batch handler.
+        /// </summary>
+        public ODataRoute ODataRoute { get; set; }
+
+        /// <summary>
         /// Abstract method for processing a batch request.
         /// </summary>
         /// <param name="context">The http content.</param>
-        /// ><param name="next">The next handler in the middle ware chain.</param>
+        /// ><param name="nextHandler">The next handler in the middleware chain.</param>
         /// <returns></returns>
-        public abstract Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next);
+        public abstract Task ProcessBatchAsync(HttpContext context, RequestDelegate nextHandler);
 
         /// <summary>
         /// Creates the batch response message.
@@ -72,13 +77,7 @@ namespace Microsoft.AspNet.OData.Batch
                 throw Error.ArgumentNull("request");
             }
 
-            // get the router
-            IRouter route = request.HttpContext.GetRouteData()?.Routers?
-                .OfType<ODataRoute>()
-                .Where(r => r.Name == ODataRouteName)
-                .SingleOrDefault();
-
-            return request.GetODataBatchBaseUri(ODataRouteName, route);
+            return request.GetODataBatchBaseUri(ODataRouteName, ODataRoute);
         }
     }
 }

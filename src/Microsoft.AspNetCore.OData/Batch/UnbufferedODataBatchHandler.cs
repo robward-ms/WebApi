@@ -20,11 +20,15 @@ namespace Microsoft.AspNet.OData.Batch
     public class UnbufferedODataBatchHandler : ODataBatchHandler
     {
         /// <inheritdoc/>
-        public override async Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next)
+        public override async Task ProcessBatchAsync(HttpContext context, RequestDelegate nextHandler)
         {
             if (context == null)
             {
                 throw Error.ArgumentNull("context");
+            }
+            if (nextHandler == null)
+            {
+                throw Error.ArgumentNull("nextHandler");
             }
 
             if (!await ValidateRequest(context.Request))
@@ -50,11 +54,11 @@ namespace Microsoft.AspNet.OData.Batch
                 ODataBatchResponseItem responseItem = null;
                 if (batchReader.State == ODataBatchReaderState.ChangesetStart)
                 {
-                    responseItem = await ExecuteChangeSetAsync(batchReader, batchId, request, next);
+                    responseItem = await ExecuteChangeSetAsync(batchReader, batchId, request, nextHandler);
                 }
                 else if (batchReader.State == ODataBatchReaderState.Operation)
                 {
-                    responseItem = await ExecuteOperationAsync(batchReader, batchId, request, next);
+                    responseItem = await ExecuteOperationAsync(batchReader, batchId, request, nextHandler);
                 }
                 if (responseItem != null)
                 {
@@ -77,7 +81,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="originalRequest">The original request containing all the batch requests.</param>
         /// <param name="handler">The handler for processing a message.</param>
         /// <returns>The response for the operation.</returns>
-        public virtual async Task<ODataBatchResponseItem> ExecuteOperationAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, Func<HttpContext, Task> handler)
+        public virtual async Task<ODataBatchResponseItem> ExecuteOperationAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, RequestDelegate handler)
         {
             if (batchReader == null)
             {
@@ -100,7 +104,7 @@ namespace Microsoft.AspNet.OData.Batch
             operationContext.Request.DeleteRequestContainer(false);
             OperationRequestItem operation = new OperationRequestItem(operationContext);
 
-            ODataBatchResponseItem responseItem = await operation.RouteAsync(handler);
+            ODataBatchResponseItem responseItem = await operation.SendRequestAsync(handler);
 
             return responseItem;
         }
@@ -113,7 +117,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="originalRequest">The original request containing all the batch requests.</param>
         /// <param name="handler">The handler for processing a message.</param>
         /// <returns>The response for the ChangeSet.</returns>
-        public virtual async Task<ODataBatchResponseItem> ExecuteChangeSetAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, Func<HttpContext, Task> handler)
+        public virtual async Task<ODataBatchResponseItem> ExecuteChangeSetAsync(ODataBatchReader batchReader, Guid batchId, HttpRequest originalRequest, RequestDelegate handler)
         {
             if (batchReader == null)
             {
@@ -140,7 +144,7 @@ namespace Microsoft.AspNet.OData.Batch
                     changeSetOperationContext.Request.CopyBatchRequestProperties(originalRequest);
                     changeSetOperationContext.Request.DeleteRequestContainer(false);
 
-                    await ODataBatchRequestItem.RouteAsync(handler, changeSetOperationContext, contentIdToLocationMapping);
+                    await ODataBatchRequestItem.SendRequestAsync(handler, changeSetOperationContext, contentIdToLocationMapping);
                     if (changeSetOperationContext.Response.IsSuccessStatusCode())
                     {
                         changeSetResponse.Add(changeSetOperationContext);

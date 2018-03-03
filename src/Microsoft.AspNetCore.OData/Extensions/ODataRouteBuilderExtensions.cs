@@ -20,7 +20,6 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using ServiceLifetime = Microsoft.OData.ServiceLifetime;
 
-
 namespace Microsoft.AspNet.OData.Extensions
 {
     /// <summary>
@@ -552,18 +551,25 @@ namespace Microsoft.AspNet.OData.Extensions
             // What iff we inject a FilterFactory() like MiddlewareFilterAttribute  is in the case
             // we need batching and let it return a middleware filter. That middlware works just like
             // it's stated above.
+            // A class for adding a batch middleware filter for OData routes. This class is used
+            // to decorate the ODataController, enabling batch for all OData controllers. the OData
+            // batch middleware is responsible for applying the route.
+            // MiddlewareFilterAttribute is used as opposed to direct middleware to simply the configuration
+            // for the user. With middleware, the call needs to add a .Use() in Startup.Configure(). With the
+            // filter middleware approach, the middleware is injected into the filter pipeline without any
+            // additional work on the caller.
             ODataBatchHandler batchHandler = serviceProvider.GetService<ODataBatchHandler>();
             if (batchHandler != null)
             {
-                //batchHandler.ODataRoute = route;
+                batchHandler.ODataRoute = route;
                 batchHandler.ODataRouteName = routeName;
-
-                string batchTemplate = String.IsNullOrEmpty(routePrefix)
-                    ? ODataRouteConstants.Batch
-                    : routePrefix + '/' + ODataRouteConstants.Batch;
+            
+                string batchPath = String.IsNullOrEmpty(routePrefix)
+                    ? '/' + ODataRouteConstants.Batch
+                    : '/' + routePrefix + '/' + ODataRouteConstants.Batch;
 
                 ODataBatchPathMapping batchMapping = builder.ServiceProvider.GetRequiredService<ODataBatchPathMapping>();
-                batchMapping.AddTemplate(routeName, batchTemplate);
+                batchMapping.AddRoute(routeName, batchPath);
             }
 
             builder.Routes.Add(route);

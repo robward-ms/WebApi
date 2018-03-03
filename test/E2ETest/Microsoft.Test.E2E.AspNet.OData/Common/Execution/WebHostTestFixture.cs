@@ -4,6 +4,7 @@
 #if NETCORE
 using System;
 using System.Net;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -200,6 +201,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 
             public void Configure(IApplicationBuilder app, IHostingEnvironment env)
             {
+                app.UseODataBatching();
                 app.UseMvc(routeBuilder =>
                 {
                     routeBuilder.MapRoute("api default", "api/{controller}/{action?}");

@@ -21,8 +21,6 @@ namespace Microsoft.AspNet.OData.Batch
     /// </remarks>
     public partial class ODataBatchContent
     {
-        private HeaderDictionary _headers = new HeaderDictionary();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataBatchContent"/> class.
         /// </summary>
@@ -32,10 +30,15 @@ namespace Microsoft.AspNet.OData.Batch
         public ODataBatchContent(IEnumerable<ODataBatchResponseItem> responses, IServiceProvider requestContainer)
         {
             Initialize(responses, requestContainer);
-            _headers[HeaderNames.ContentType] = String.Format(CultureInfo.InvariantCulture, "multipart/mixed;boundary=batchresponse_{0}", Guid.NewGuid());
+            Headers[HeaderNames.ContentType] = String.Format(CultureInfo.InvariantCulture, "multipart/mixed;boundary=batchresponse_{0}", Guid.NewGuid());
             ODataVersion version = _writerSettings.Version ?? ODataVersionConstraint.DefaultODataVersion;
-            _headers.Add(ODataVersionConstraint.ODataServiceVersionHeader, ODataUtils.ODataVersionToString(version));
+            Headers.Add(ODataVersionConstraint.ODataServiceVersionHeader, ODataUtils.ODataVersionToString(version));
         }
+
+        /// <summary>
+        /// Gets the Headers for the batch content.
+        /// </summary>
+        public HeaderDictionary Headers { get; } = new HeaderDictionary();
 
         /// <summary>
         /// Serialize the batch content to a stream.
@@ -45,7 +48,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// <remarks>This function uses types that are AspNetCore-specific.</remarks>
         public Task SerializeToStreamAsync(Stream stream)
         {
-            IODataResponseMessage responseMessage = ODataMessageWrapperHelper.Create(stream, _headers, _requestContainer);
+            IODataResponseMessage responseMessage = ODataMessageWrapperHelper.Create(stream, Headers, _requestContainer);
             return WriteToResponseMessageAsync(responseMessage);
         }
     }

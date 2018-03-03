@@ -38,9 +38,9 @@ namespace Microsoft.AspNet.OData.Batch
         /// <summary>
         /// Sends the ChangeSet request.
         /// </summary>
-        /// <param name="router">The router.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>A <see cref="ChangeSetResponseItem"/>.</returns>
-        public override async Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler)
+        public override async Task<ODataBatchResponseItem> SendRequestAsync(RequestDelegate handler)
         {
             if (handler == null)
             {
@@ -52,7 +52,7 @@ namespace Microsoft.AspNet.OData.Batch
 
             foreach (HttpContext context in Contexts)
             {
-                await RouteAsync(handler, context, contentIdToLocationMapping);
+                await SendRequestAsync(handler, context, contentIdToLocationMapping);
 
                 HttpResponse response = context.Response;
                 if (response.IsSuccessStatusCode())

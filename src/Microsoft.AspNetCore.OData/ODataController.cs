@@ -18,7 +18,6 @@ namespace Microsoft.AspNet.OData
     /// <remarks>These attributes and signature uses types that are AspNetCore-specific.</remarks>
     [ODataFormatting]
     [ODataRouting]
-    [ODataBatchMiddlewareFilterAttribute]
     [ApiExplorerSettings(IgnoreApi = true)]
     public abstract partial class ODataController : ControllerBase
     {

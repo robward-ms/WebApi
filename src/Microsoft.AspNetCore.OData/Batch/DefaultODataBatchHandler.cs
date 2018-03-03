@@ -24,11 +24,15 @@ namespace Microsoft.AspNet.OData.Batch
     public class DefaultODataBatchHandler : ODataBatchHandler
     {
         /// <inheritdoc/>
-        public override async Task ProcessBatchAsync(HttpContext context, Func<HttpContext, Task> next)
+        public override async Task ProcessBatchAsync(HttpContext context, RequestDelegate nextHandler)
         {
             if (context == null)
             {
                 throw Error.ArgumentNull("context");
+            }
+            if (nextHandler == null)
+            {
+                throw Error.ArgumentNull("nextHandler");
             }
 
             if (!await ValidateRequest(context.Request))
@@ -36,19 +40,12 @@ namespace Microsoft.AspNet.OData.Batch
                 return;
             }
 
-            try
-            {
+            IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
 
-                IList<ODataBatchRequestItem> subRequests = await ParseBatchRequestsAsync(context);
+            SetContinueOnError(new WebApiRequestMessage(context.Request), new WebApiRequestHeaders(context.Request.Headers));
 
-                SetContinueOnError(new WebApiRequestMessage(context.Request), new WebApiRequestHeaders(context.Request.Headers));
-
-                IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(subRequests, next);
-                await CreateResponseMessageAsync(responses, context.Request);
-            }catch (Exception ex)
-            {
-                string x = ex.ToString();
-            }
+            IList<ODataBatchResponseItem> responses = await ExecuteRequestMessagesAsync(subRequests, nextHandler);
+            await CreateResponseMessageAsync(responses, context.Request);
         }
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace Microsoft.AspNet.OData.Batch
         /// <param name="handler">The handler for processing a message.</param>
         /// <returns>A collection of <see cref="ODataBatchResponseItem"/> for the batch requests.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "We need to return a collection of response messages asynchronously.")]
-        public virtual async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, Func<HttpContext, Task> handler)
+        public virtual async Task<IList<ODataBatchResponseItem>> ExecuteRequestMessagesAsync(IEnumerable<ODataBatchRequestItem> requests, RequestDelegate handler)
         {
             if (requests == null)
             {
@@ -73,7 +70,7 @@ namespace Microsoft.AspNet.OData.Batch
 
             foreach (ODataBatchRequestItem request in requests)
             {
-                ODataBatchResponseItem responseItem = await request.RouteAsync(handler);
+                ODataBatchResponseItem responseItem = await request.SendRequestAsync(handler);
                 responses.Add(responseItem);
 
                 if (responseItem != null && responseItem.IsResponseSuccessful() == false && ContinueOnError == false)

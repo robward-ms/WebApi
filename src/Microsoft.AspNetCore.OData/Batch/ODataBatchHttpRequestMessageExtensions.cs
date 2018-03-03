@@ -193,6 +193,12 @@ namespace Microsoft.AspNet.OData.Batch
             // maybe use the shared class to define bahaviour and put
             // HttpContent and public stream getter in platform-specific?
             ODataBatchContent batchContent = new ODataBatchContent(responses, requestContainer);
+            foreach (var header in batchContent.Headers)
+            {
+                // Copy headers from batch content, overwriting any existing headers.
+                response.Headers[header.Key] = header.Value;
+            }
+
             return batchContent.SerializeToStreamAsync(response.Body);
         }
 

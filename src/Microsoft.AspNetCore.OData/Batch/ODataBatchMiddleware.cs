@@ -11,55 +11,51 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Microsoft.AspNet.OData.Batch
 {
     /// <summary>
-    /// Defines the middle ware for handling OData batch requests. This middle ware essentially
-    /// acts like branching middle ware, <see cref="MapExtensions "/>, and redirects OData batch
+    /// Defines the middleware for handling OData batch requests. This middleware essentially
+    /// acts like branching middleware, <see cref="MapExtensions "/>, and redirects OData batch
     /// requests to the appropriate ODataBatchHandler.
     /// </summary>
     public class ODataBatchMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate next;
 
+        /// <summary>
+        /// Instantiates a new instance of <see cref="ODataBatchMiddleware"/>.
+        /// </summary>
         public ODataBatchMiddleware(RequestDelegate next)
         {
-            _next = next;
-        }
-
-        public Task Invoke(HttpContext context)
-        {
-            return this._next(context);
+            this.next = next;
         }
 
         /// <summary>
-        /// Configure the middle ware.
+        /// Invoke the middleware.
         /// </summary>
-        /// <param name="applicationBuilder">The application builder to use.</param>
-        public void Configure(IApplicationBuilder applicationBuilder)
+        /// <param name="context">The http context.</param>
+        /// <returns>A task that can be awaited.</returns>
+        public async Task Invoke(HttpContext context)
         {
+            // Attempt to match the path to a bach route.
+            ODataBatchPathMapping batchMapping = context.RequestServices.GetRequiredService<ODataBatchPathMapping>();
 
-            return applicationBuilder.UseMiddleware<ODataBatchMiddleware>();
-
-            applicationBuilder.Use(async (context, next) =>
+            string routeName;
+            if (batchMapping.TryGetRouteName(context.Request.Path, out routeName))
             {
-                ODataBatchPathMapping batchMapping = context.RequestServices.GetRequiredService<ODataBatchPathMapping>();
-
-                string routeName;
-                if (batchMapping.TryGetRouteName(context.Request.Path, out routeName))
+                // Get the per-route continer and retrieve the batch handler.
+                IPerRouteContainer perRouteContainer = context.RequestServices.GetRequiredService<IPerRouteContainer>();
+                if (perRouteContainer == null)
                 {
-                    IPerRouteContainer perRouteContainer = context.RequestServices.GetRequiredService<IPerRouteContainer>();
-                    if (perRouteContainer == null)
-                    {
-                        throw Error.InvalidOperation(SRResources.MissingODataServices, nameof(IPerRouteContainer));
-                    }
+                    throw Error.InvalidOperation(SRResources.MissingODataServices, nameof(IPerRouteContainer));
+                }
 
-                    IServiceProvider rootContainer = perRouteContainer.GetODataRootContainer(routeName);
-                    ODataBatchHandler batchHandler = rootContainer.GetRequiredService<ODataBatchHandler>();
-                    await batchHandler.ProcessBatchAsync(context, next);
-                }
-                else
-                {
-                    await next.Invoke();
-                }
-            });
+                IServiceProvider rootContainer = perRouteContainer.GetODataRootContainer(routeName);
+                ODataBatchHandler batchHandler = rootContainer.GetRequiredService<ODataBatchHandler>();
+
+                await batchHandler.ProcessBatchAsync(context, next);
+            }
+            else
+            {
+                await this.next(context);
+            }
         }
     }
 }

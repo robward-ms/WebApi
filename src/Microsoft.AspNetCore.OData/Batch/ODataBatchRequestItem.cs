@@ -19,11 +19,11 @@ namespace Microsoft.AspNet.OData.Batch
         /// <summary>
         /// Routes a single OData batch request.
         /// </summary>
-        /// <param name="router">The router.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <param name="context">The context.</param>
         /// <param name="contentIdToLocationMapping">The Content-ID to Location mapping.</param>
         /// <returns></returns>
-        public static async Task RouteAsync(Func<HttpContext, Task> handler, HttpContext context, Dictionary<string, string> contentIdToLocationMapping)
+        public static async Task SendRequestAsync(RequestDelegate handler, HttpContext context, Dictionary<string, string> contentIdToLocationMapping)
         {
             if (handler == null)
             {
@@ -84,9 +84,9 @@ namespace Microsoft.AspNet.OData.Batch
         /// <summary>
         /// Routes the request.
         /// </summary>
-        /// <param name="router">The router.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>A <see cref="ODataBatchResponseItem"/>.</returns>
-        public abstract Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler);
+        public abstract Task<ODataBatchResponseItem> SendRequestAsync(RequestDelegate handler);
 
     }
 }

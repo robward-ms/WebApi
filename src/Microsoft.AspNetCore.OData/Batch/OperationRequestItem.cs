@@ -36,16 +36,16 @@ namespace Microsoft.AspNet.OData.Batch
         /// <summary>
         /// Sends the Operation request.
         /// </summary>
-        /// <param name="router">The router.</param>
+        /// <param name="handler">The handler for processing a message.</param>
         /// <returns>A <see cref="OperationResponseItem"/>.</returns>
-        public override async Task<ODataBatchResponseItem> RouteAsync(Func<HttpContext, Task> handler)
+        public override async Task<ODataBatchResponseItem> SendRequestAsync(RequestDelegate handler)
         {
             if (handler == null)
             {
                 throw Error.ArgumentNull("handler");
             }
 
-            await RouteAsync(handler, Context, null);
+            await SendRequestAsync(handler, Context, null);
             return new OperationResponseItem(Context);
         }
     }

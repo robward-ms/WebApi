@@ -155,7 +155,6 @@ namespace Microsoft.AspNet.OData.Formatter
 
                 Action<Exception> logErrorAction = (ex) =>
                 {
-                    throw ex;
                 };
 
                 List<IDisposable> toDispose = new List<IDisposable>();

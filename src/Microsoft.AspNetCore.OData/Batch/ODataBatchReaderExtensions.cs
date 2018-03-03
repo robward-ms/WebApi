@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.OData.Common;
@@ -145,8 +146,7 @@ namespace Microsoft.AspNet.OData.Batch
 
             foreach (var header in batchRequest.Headers)
             {
-                // Copy headers from batch, overwriting any existing
-                // headers.
+                // Copy headers from batch, overwriting any existing headers.
                 string headerName = header.Key;
                 string headerValue = header.Value;
                 request.Headers[headerName] = headerValue;
@@ -168,20 +168,44 @@ namespace Microsoft.AspNet.OData.Batch
             // Clone the features so that a new set is used for each context.
             // The features themselves will be reused but not the collection. We
             // store the request container as a feature of the request and we don't want
-            // the features add to one context/request to be visible on another.
+            // the features added to one context/request to be visible on another.
+            //
+            // Note that just about everything inm the HttpContext and HttpRequest is
+            // backed by one of these features. So reusing the features means the HttContext
+            // and HttpRequests are the same without needing to copy properties. To make them
+            // different, we need to avoid copying certain features to that the objects don't
+            // share the same storage/
             IFeatureCollection features = new FeatureCollection();
             foreach (KeyValuePair<Type, object> kvp in originalContext.Features)
             {
                 // Don't include the OData features. They may already
                 // be present. This will get-recreated later.
+                //
+                // Also, clear out the items feature, which is used
+                // to store a few object, the one that is an issue here is the Url
+                // helper, which has an affinity to the context. If we leave it,
+                // the context of the helper no longer matches the new context and
+                // the resulting url helper doesn't have access to the OData feature
+                // because it's looking in the wrong context.
+                //
+                // Because we need a different request and response, leave those features
+                // out as well.
                 if (kvp.Key == typeof(IODataBatchFeature) ||
-                    kvp.Key == typeof(IODataFeature))
+                    kvp.Key == typeof(IODataFeature) ||
+                    kvp.Key == typeof(IItemsFeature) ||
+                    kvp.Key == typeof(IHttpRequestFeature) ||
+                    kvp.Key == typeof(IHttpResponseFeature))
                 {
                     continue;
                 }
 
                 features[kvp.Key] = kvp.Value;
             }
+
+            // Add in an items, request and response feature.
+            features[typeof(IItemsFeature)] = new ItemsFeature();
+            features[typeof(IHttpRequestFeature)] = new HttpRequestFeature();
+            features[typeof(IHttpResponseFeature)] = new HttpResponseFeature();
 
             // Create a context from the factory or use the default context.
             HttpContext context = null;
@@ -195,19 +219,17 @@ namespace Microsoft.AspNet.OData.Batch
                 context = new DefaultHttpContext(features);
             }
 
-            // Clone the context.
-            //context.User = originalContext.User;
-            //context.Items = originalContext.Items;
-            //context.RequestServices = originalContext.RequestServices;
-            //context.RequestAborted = originalContext.RequestAborted;
-            //context.TraceIdentifier = originalContext.TraceIdentifier;
+            // Clone parts of the request. All other parts of the request will be 
+            // populated during batch processing.
+            context.Request.Cookies = originalContext.Request.Cookies;
+            foreach (KeyValuePair<string, StringValues> header in originalContext.Request.Headers)
+            {
+                context.Request.Headers.Add(header);
+            }
 
-            // Clone parts of the request.
-            //context.Request.Cookies = originalContext.Request.Cookies;
-            //foreach (KeyValuePair<string, StringValues> header in originalContext.Request.Headers)
-            //{
-            //    context.Request.Headers.Add(header);
-            //}
+            // Create a response body as the default response feature does not
+            // have a valid stream.
+            context.Response.Body = new MemoryStream();
 
             return context;
         }
