@@ -54,13 +54,24 @@ namespace Microsoft.AspNet.OData.Batch
                 context.Request.SetODataContentIdMapping(contentIdToLocationMapping);
             }
 
-            await handler(context);
-
-            string contentId = context.Request.GetODataContentId();
-
-            if (contentIdToLocationMapping != null && contentId != null)
+            try
             {
-                AddLocationHeaderToMapping(context.Response, contentIdToLocationMapping, contentId);
+                await handler(context);
+
+                string contentId = context.Request.GetODataContentId();
+
+                if (contentIdToLocationMapping != null && contentId != null)
+                {
+                    AddLocationHeaderToMapping(context.Response, contentIdToLocationMapping, contentId);
+                }
+            }
+            catch (Exception)
+            {
+                // Unlike AspNet, the exception handling is (by default) upstream of this middleware
+                // so we need to trap exceptions on our own. This code is similar to the
+                // ExceptionHandlerMiddleware class in AspNetCore.
+                context.Response.Clear();
+                context.Response.StatusCode = 500;
             }
         }
 

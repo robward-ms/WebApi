@@ -54,10 +54,10 @@ namespace Microsoft.AspNet.OData.Batch
         }
 
         /// <summary>
-        /// Copy an obsolute Uri to a <see cref="HttpRequest"/> stream.
+        /// Copy an absolute Uri to a <see cref="HttpRequest"/> stream.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <param name="uri">The absolte uri to copy.</param>
+        /// <param name="uri">The absolute uri to copy.</param>
         public static void CopyAbsoluteUrl(this HttpRequest request, Uri uri)
         {
             request.Scheme = uri.Scheme;

@@ -128,20 +128,16 @@ namespace Microsoft.AspNet.OData.Batch
             request.Method = batchRequest.Method;
             request.CopyAbsoluteUrl(batchRequest.Url);
 
-            if (bufferContentStream)
+            // Not using bufferContentStream. Unlike AspNet, AspNetCore cannot guarantee the disposal
+            // of the stream in the context of execution so there is no choice but to copy the stream
+            // from the batch reader.
+            using (Stream stream = batchRequest.GetStream())
             {
-                using (Stream stream = batchRequest.GetStream())
-                {
-                    MemoryStream bufferedStream = new MemoryStream();
-                    // Passing in the default buffer size of 81920 so that we can also pass in a cancellation token
-                    await stream.CopyToAsync(bufferedStream, bufferSize: 81920, cancellationToken: cancellationToken);
-                    bufferedStream.Position = 0;
-                    request.Body = bufferedStream;
-                }
-            }
-            else
-            {
-                request.Body = batchRequest.GetStream();
+                MemoryStream bufferedStream = new MemoryStream();
+                // Passing in the default buffer size of 81920 so that we can also pass in a cancellation token
+                await stream.CopyToAsync(bufferedStream, bufferSize: 81920, cancellationToken: cancellationToken);
+                bufferedStream.Position = 0;
+                request.Body = bufferedStream;
             }
 
             foreach (var header in batchRequest.Headers)

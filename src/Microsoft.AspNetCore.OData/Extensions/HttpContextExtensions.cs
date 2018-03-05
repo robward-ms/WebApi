@@ -76,18 +76,9 @@ namespace Microsoft.AspNet.OData.Extensions
                 throw Error.ArgumentNull("httpContext");
             }
 
-            // Get an IUrlHelper from the global service provider. The IActionContextAccessor and ActionContext
-            // will be present after routing but not before, as is the case for batching. GetUrlHelper only uses
-            // the HttpContext, which we have so construct a dummy action context if one is not available.
+            // Get an IUrlHelper from the global service provider.
             IUrlHelperFactory factory = httpContext.RequestServices.GetRequiredService<IUrlHelperFactory>();
-            ActionContext defaultActionContext = httpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
-            ActionContext actionContext = (defaultActionContext != null) ? defaultActionContext : new ActionContext
-            {
-                HttpContext = new DefaultHttpContext(),
-                RouteData = new RouteData(),
-                ActionDescriptor = new ActionDescriptor()
-            };
-
+            ActionContext actionContext = httpContext.RequestServices.GetRequiredService<IActionContextAccessor>().ActionContext;
             return factory.GetUrlHelper(actionContext);
         }
 
