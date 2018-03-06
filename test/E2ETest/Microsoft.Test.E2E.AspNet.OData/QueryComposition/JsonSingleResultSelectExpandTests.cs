@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,27 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -24,13 +40,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Routes.Clear();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            configuration.Routes.MapHttpRoute("api", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+#if !NETCORE
+            configuration.MapHttpRoute("api", "api/{controller}/{id}", new { id = System.Web.Http.RouteParameter.Optional });
+#else
+            configuration.MapHttpRoute("api", "api/{controller}/{id?}");
+#endif
             configuration.EnableDependencyInjection();
         }
 
@@ -274,12 +293,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
     }
 
-    public class JsonSingleResultCustomerController : ApiController
+    public class JsonSingleResultCustomerController : TestController
     {
         [EnableQuery(MaxExpansionDepth = 10)]
-        public SingleResult<JsonSingleResultCustomer> Get(int id)
+        public TestSingleResult<JsonSingleResultCustomer> Get(int id)
         {
-            return SingleResult.Create(Enumerable.Range(0, 10).Select(i => new JsonSingleResultCustomer
+            return TestSingleResult.Create(Enumerable.Range(0, 10).Select(i => new JsonSingleResultCustomer
             {
                 Id = i,
                 Name = string.Format("Customer{0}", i),

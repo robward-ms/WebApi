@@ -5,7 +5,6 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.OData.Client;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
@@ -15,6 +14,8 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
 {
     public class JsonLightDeserializationAndSerializationTests : DeserializationAndSerializationTests
     {
+        private WebRouteConfiguration _configuration;
+
         public JsonLightDeserializationAndSerializationTests(WebHostTestFixture fixture)
             :base(fixture)
         {
@@ -26,7 +27,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.WriterClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel());
+            ctx.Format.UseJson(GetEdmModel(_configuration));
 
             return ctx;
         }
@@ -35,7 +36,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
         {
             var ctx = base.ReaderClient(serviceRoot, protocolVersion);
             //new JsonLightConfigurator(ctx, AcceptHeader).Configure();
-            ctx.Format.UseJson(GetEdmModel());
+            ctx.Format.UseJson(GetEdmModel(_configuration));
 
             return ctx;
         }
@@ -66,12 +67,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Formatter.JsonLight
             }
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-
-            configuration.EnableODataSupport(GetEdmModel());
+            _configuration = configuration;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.EnableODataSupport(GetEdmModel(configuration));
         }
 
         [Theory]

@@ -9,19 +9,20 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
-using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.ModelBuilder;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#if !NETCORE
+using Microsoft.AspNet.OData.Batch;
+using System.Web.Http;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 {
@@ -32,31 +33,32 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
             var controllers = new[] { typeof(DCustomersController), typeof(MetadataController), typeof(EfCustomersController) };
-            TestAssemblyResolver resolver = new TestAssemblyResolver(new TypesInjectionAssembly(controllers));
-            configuration.Services.Replace(typeof(IAssembliesResolver), resolver);
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            configuration.AddControllers(controllers);
 
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"); // -8:00
             configuration.SetTimeZoneInfo(timeZoneInfo);
 
             configuration.Routes.Clear();
-            HttpServer httpServer = configuration.GetHttpServer();
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
                 routeName: "convention",
                 routePrefix: "convention",
-                model: DateAndTimeOfDayEdmModel.GetConventionModel());
+                model: DateAndTimeOfDayEdmModel.GetConventionModel(configuration));
 
+#if !NETCORE
+            HttpServer httpServer = configuration.GetHttpServer();
+#endif
             configuration.MapODataServiceRoute(
                 routeName: "explicit",
                 routePrefix: "explicit",
-                model: DateAndTimeOfDayEdmModel.GetExplicitModel(),
-                batchHandler: new DefaultODataBatchHandler(httpServer));
-
+                model: DateAndTimeOfDayEdmModel.GetExplicitModel()
+#if !NETCORE
+                , batchHandler: new DefaultODataBatchHandler(httpServer)
+#endif
+                );
             configuration.EnsureInitialized();
         }
 
@@ -135,7 +137,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             Assert.Equal(2, content["Id"]);
             Assert.Equal(DateTimeOffset.Parse("2017-01-01T17:02:03.004+08:00"), content["DateTime"]);
             Assert.Equal(DateTimeOffset.Parse("2015-03-01T01:02:03.004Z"), content["Offset"]);
@@ -237,7 +239,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(expect.Count, content["value"].Count());
 
@@ -301,7 +303,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(5, content["value"].Count());
 
@@ -351,7 +353,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(
                 "modifiedDate:2015-02-28,modifiedTime:01:02:03.0040000,nullableModifiedDate:null,nullableModifiedTime:null",
@@ -426,7 +428,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             var response = await Client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(2, content["Id"]);
             Assert.Equal(DateTimeOffset.Parse("2016-12-24T03:02:03.006-08:00"), content["DateTime"]);
@@ -535,7 +537,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
             Assert.Equal(expect.Count, content["value"].Count());
 
             IList<int> actual = new List<int>();
@@ -584,7 +586,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.DateAndTimeOfDay
             HttpResponseMessage response = await Client.GetAsync(requestUri);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            JObject content = await response.Content.ReadAsAsync<JObject>();
+            JObject content = await response.Content.ReadAsObject<JObject>();
 
             Assert.Equal(5, content["value"].Count());
 

@@ -1,20 +1,34 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#else
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 {
@@ -27,14 +41,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof (IAssembliesResolver),
-                new TestAssemblyResolver(typeof (CustomersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
-                Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.AddControllers(typeof (CustomersController));
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute("aggregation", "aggregation",
                 AggregationEdmModel.GetEdmModel(configuration));
@@ -56,7 +66,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -87,7 +97,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             var results = result["value"] as JArray;
             Assert.Equal(2, results.Count);
             Assert.Equal("30", results[0]["TotalId"].ToString());
@@ -115,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             var results = result["value"] as JArray;
             Assert.Equal(2, results.Count);
             Assert.Equal("20", results[0]["TotalId"].ToString());
@@ -142,7 +152,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -175,7 +185,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -260,7 +270,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
 
             // Assert
 
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -299,7 +309,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var results = result["value"] as JArray;
@@ -394,7 +404,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Aggregation
             HttpResponseMessage response = await client.SendAsync(request);
 
             // Assert
-            var result = await response.Content.ReadAsAsync<JObject>();
+            var result = await response.Content.ReadAsObject<JObject>();
             System.Console.WriteLine(result);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

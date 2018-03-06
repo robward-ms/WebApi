@@ -1,6 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
+using System;
+using System.Net;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Xunit;
+#else
 using System;
 using System.Linq;
 using System.Net;
@@ -10,6 +21,7 @@ using Microsoft.Owin.Hosting;
 using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
 using Owin;
 using Xunit;
+#endif
 
 // Parallelism in the test framework is a feature that is new for (Xunit) version 2. However,
 // since each test will spin up a number of web servers each with a listening port, disabling the
@@ -38,13 +50,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
     public class WebHostTestFixture : IDisposable
     {
         private static readonly string NormalBaseAddressTemplate = "http://{0}:{1}";
-        private static readonly string DefaultRouteTemplate = "api/{controller}/{action}";
 
         private int _port;
-        private IDisposable _katanaSelfHostServer = null;
-        private Action<HttpConfiguration> _testConfigurationAction = null;
         private bool disposedValue = false;
         private Object thisLock = new Object();
+        private Action<WebRouteConfiguration> _testConfigurationAction = null;
+
+#if NETCORE
+        private IWebHost _selfHostServer = null;
+#else
+        private IDisposable _selfHostServer = null;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebHostTestFixture"/> class
@@ -73,7 +89,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
         /// This is done lazily to allow the update configuration
         /// function to be passed in from the first test class instance.
         /// </remarks>
-        public bool Initialize(Action<HttpConfiguration> testConfigurationAction)
+        public bool Initialize(Action<WebRouteConfiguration> testConfigurationAction)
         {
             SecurityHelper.AddIpListen();
 
@@ -82,20 +98,48 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             {
                 try
                 {
-                    if (_katanaSelfHostServer == null)
+                    if (_selfHostServer == null)
                     {
                         lock (thisLock)
                         {
-                            if (_katanaSelfHostServer == null)
+                            if (_selfHostServer == null)
                             {
+#if NETCORE
+                                string serverName = "localhost";
+#else
+                                string serverName = Environment.MachineName;
+#endif
                                 // setup base address
                                 _port = PortArranger.Reserve();
-                                string baseAddress = string.Format(NormalBaseAddressTemplate, Environment.MachineName, _port.ToString());
-                                this.BaseAddress = baseAddress.Replace("localhost", Environment.MachineName);
+                                this.BaseAddress = string.Format(NormalBaseAddressTemplate, serverName, _port.ToString());
 
                                 // set up the server.
                                 _testConfigurationAction = testConfigurationAction;
-                                _katanaSelfHostServer = WebApp.Start(baseAddress, DefaultKatanaConfigure);
+
+#if NETCORE
+                                _selfHostServer = new WebHostBuilder()
+                                    .UseKestrel(options =>
+                                    {
+                                        options.Listen(IPAddress.Loopback, _port);
+                                    })
+                                    .UseStartup<WebHostTestStartup>()
+                                    .ConfigureServices(services =>
+                                    {
+                                        // Add ourself to the container so WebHostTestStartup
+                                        // can call UpdateConfiguration.
+                                        services.AddSingleton<WebHostTestFixture>(this);
+                                    })
+                                    .ConfigureLogging((hostingContext, logging) =>
+                                    {
+                                        logging.AddDebug();
+                                        logging.SetMinimumLevel(LogLevel.Warning);
+                                    })
+                                    .Build();
+
+                                _selfHostServer.Start();
+#else
+                                _selfHostServer = WebApp.Start(this.BaseAddress, DefaultKatanaConfigure);
+#endif
                             }
                         }
                     }
@@ -105,7 +149,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                 catch (HttpListenerException)
                 {
                     // Retry HttpListenerException up to 3 times.
-                    _katanaSelfHostServer = null;
+                    _selfHostServer = null;
                 }
             }
 
@@ -130,10 +174,14 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             {
                 if (disposing)
                 {
-                    if (_katanaSelfHostServer != null)
+                    if (_selfHostServer != null)
                     {
-                        _katanaSelfHostServer.Dispose();
-                        _katanaSelfHostServer = null;
+#if NETCORE
+                        _selfHostServer.StopAsync();
+                        _selfHostServer.WaitForShutdown();
+#endif
+                        _selfHostServer.Dispose();
+                        _selfHostServer = null;
                     }
                 }
 
@@ -141,6 +189,27 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
             }
         }
 
+#if NETCORE
+        private class WebHostTestStartup
+        {
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddMvcCore();
+                services.AddOData();
+            }
+
+            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+            {
+                app.UseMvc(routeBuilder =>
+                {
+                    routeBuilder.MapRoute("api default", "api/{controller}/{action?}");
+
+                    WebHostTestFixture testBase = routeBuilder.ServiceProvider.GetRequiredService<WebHostTestFixture>();
+                    testBase?._testConfigurationAction(new WebRouteConfiguration(routeBuilder));
+                });
+            }
+        }
+#else
         private void DefaultKatanaConfigure(IAppBuilder app)
         {
             // Set default principal to avoid OWIN selfhost bug with VS debugger
@@ -178,11 +247,11 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
                 }
             });
 
-            var configuration = new HttpConfiguration();
+            var configuration = new WebRouteConfiguration();
             configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Filters.Add(exceptionFilter);
 
-            configuration.Routes.MapHttpRoute("api default", DefaultRouteTemplate, new { action = RouteParameter.Optional });
+            configuration.Routes.MapHttpRoute("api default", "api/{controller}/{action}", new { action = RouteParameter.Optional });
 
             var httpServer = new HttpServer(configuration);
             configuration.SetHttpServer(httpServer);
@@ -191,5 +260,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Common.Execution
 
             app.UseWebApi(httpServer: httpServer);
         }
+#endif
     }
 }

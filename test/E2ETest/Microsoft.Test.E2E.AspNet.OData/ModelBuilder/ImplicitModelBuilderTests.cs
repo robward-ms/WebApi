@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData;
@@ -65,12 +64,24 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         public static string StaticProperty { get; set; }
     }
 
-    public class ImplicitModelBuilderTests
+    public class ImplicitModelBuilderTests : WebHostTestBase
     {
+        WebRouteConfiguration _configuration;
+
+        public ImplicitModelBuilderTests(WebHostTestFixture fixture)
+            :base(fixture)
+        {
+        }
+
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [Fact]
         public void ShouldIgnoreStaticProperty()
         {
-            ODataModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataModelBuilder modelBuilder = _configuration.CreateConventionModelBuilder();
             modelBuilder.EntityType<ImplicitModelBuilder_EntityWithStaticProperty>();
             var model = modelBuilder.GetEdmModel();
 
@@ -81,8 +92,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void ShouldIgnoreObjectProperties()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder(config);
+            ODataConventionModelBuilder modelBuilder = _configuration.CreateConventionModelBuilder();
             modelBuilder.EntitySet<ImplicitModelBuilder_EntityWithObjectProperty>("Entities");
             var model = modelBuilder.GetEdmModel();
 
@@ -94,7 +104,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void ShouldIgnoreIndexerProperty()
         {
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder modelBuilder = _configuration.CreateConventionModelBuilder();
             modelBuilder.EntitySet<ImplicitModelBuilder_EntityWithIndexers>("Entities");
             var model = modelBuilder.GetEdmModel();
 
@@ -106,8 +116,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void ChangeBaseTypeShouldWork()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            ODataConventionModelBuilder mb = new ODataConventionModelBuilder(config);
+            ODataConventionModelBuilder mb = _configuration.CreateConventionModelBuilder();
             mb.EntitySet<Vehicle>("Vehicles");
             mb.EntityType<SportBike>().DerivesFrom<Vehicle>();
 
@@ -119,8 +128,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void ChangeRequiredOnNavigationPropertyShouldWork()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            ODataConventionModelBuilder mb = new ODataConventionModelBuilder(config);
+            ODataConventionModelBuilder mb = _configuration.CreateConventionModelBuilder();
             mb.EntityType<Product>().HasRequired(p => p.Family);
             //mb.EntitySet<Product>("Products");
 
@@ -133,8 +141,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void ChangeNavigationLinkShouldWork()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            ODataConventionModelBuilder mb = new ODataConventionModelBuilder(config);
+            ODataConventionModelBuilder mb = _configuration.CreateConventionModelBuilder();
             var products = mb.EntitySet<Product>("Products");
             mb.OnModelCreating = mb2 =>
                 {
@@ -144,7 +151,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
                         {
                             object id;
                             entityContext.EdmObject.TryGetPropertyValue("ID", out id);
-                            return new Uri(entityContext.Url.CreateODataLink(
+                            return new Uri(ResourceContextHelper.CreateODataLink(entityContext,
                                 new EntitySetSegment(entityContext.NavigationSource as IEdmEntitySet),
                                 new KeySegment(new[] {new KeyValuePair<string, object>("ID", id)}, entityContext.StructuredType as IEdmEntityType, null),
                                 new NavigationPropertySegment(navigationProperty, null)));
@@ -158,8 +165,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         [Fact]
         public void MultiplicityAssociationShouldWork()
         {
-            HttpConfiguration config = new HttpConfiguration();
-            ODataConventionModelBuilder mb = new ODataConventionModelBuilder(config);
+            ODataConventionModelBuilder mb = _configuration.CreateConventionModelBuilder();
             mb.EntitySet<Car>("Cars");
             mb.EntitySet<Vehicle>("Vehicles");
             var model = mb.GetEdmModel();
@@ -176,16 +182,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBuilder
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            configuration.EnableODataSupport(GetImplicitEdmModel());
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.EnableODataSupport(GetImplicitEdmModel(configuration));
         }
 
-        private static IEdmModel GetImplicitEdmModel()
+        private static IEdmModel GetImplicitEdmModel(WebRouteConfiguration configuration)
         {
-            var modelBuilder = new ODataConventionModelBuilder();
+            var modelBuilder = configuration.CreateConventionModelBuilder();
             modelBuilder.EntitySet<Product>("Products");
             modelBuilder.EntitySet<Supplier>("Suppliers");
             modelBuilder.EntitySet<ProductFamily>("ProductFamilies");

@@ -1,15 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using Microsoft.AspNet.OData.Extensions;
-using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
 using Xunit;
 
@@ -27,18 +23,15 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.Services.Replace(
-                typeof (IAssembliesResolver),
-                new TestAssemblyResolver(typeof(CustomersController), typeof(OrdersController)));
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling =
+            configuration.AddControllers(typeof(CustomersController), typeof(OrdersController));
+            configuration.JsonReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.MapODataServiceRoute("enablequery", "enablequery",
-                CombinedEdmModel.GetEdmModel());
+                CombinedEdmModel.GetEdmModel(configuration));
             configuration.MapODataServiceRoute("modelboundapi", "modelboundapi",
-                CombinedEdmModel.GetEdmModelByModelBoundAPI());
+                CombinedEdmModel.GetEdmModelByModelBoundAPI(configuration));
         }
 
         [Theory]
@@ -51,7 +44,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
         [InlineData(ModelBoundCustomerBaseUrl + "?$count=true", "count")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$filter=Id eq 1", "filter")]
         [InlineData(ModelBoundCustomerBaseUrl + "?$orderby=Id", "orderby")]
-        [InlineData(ModelBoundOrderBaseUrl + "?$top=4", "top")]
+        [InlineData(ModelBoundOrderBaseUrl + "?$top=1", "top")]
         public async Task DefaultQuerySettings(string url, string error)
         {
             string queryUrl =
@@ -119,9 +112,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelBoundQuerySettings.CombinedTest
 
         [Theory]
         [InlineData(CustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
-        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order($top=3))", "top")]
+        [InlineData(OrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
         [InlineData(ModelBoundCustomerBaseUrl, "?$expand=Orders($expand=Customers($count=true))", "count")]
-        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Order($top=3))", "top")]
+        [InlineData(ModelBoundOrderBaseUrl, "?$expand=Customers2($expand=Order($top=2))", "top")]
         public async Task QuerySettingsOnPropertyNegative(string entitySetUrl, string url, string error)
         {
             string queryUrl =

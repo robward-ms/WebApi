@@ -1,22 +1,39 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Extensions;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 {
@@ -27,17 +44,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            configuration.JsonReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
             configuration.MapODataServiceRoute("selectexpand", "selectexpand", GetEdmModel(configuration), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetEdmModel(HttpConfiguration configuration)
+        private static IEdmModel GetEdmModel(WebRouteConfiguration configuration)
         {
-            var builder = new ODataConventionModelBuilder(configuration);
+            var builder = configuration.CreateConventionModelBuilder();
 
             builder.EntitySet<SingleResultCustomer>("SingleResultCustomers")
                    .EntityType
@@ -60,7 +76,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata=fullmetadata");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.True(json.Properties().All(p => p.Name != "#Container.CreditRating"));
         }
@@ -72,7 +88,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=full");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
         }
 
@@ -83,7 +99,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=full");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.Contains(json.Properties(), (p) => p.Name == "#Default.CreditRating");
         }
@@ -95,7 +111,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.Single(json.Properties());
             Assert.Equal("Name", json.Properties().Single().Name);
@@ -109,7 +125,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.Equal(3, json.Properties().Count());
             Assert.True((int)json["Id"] == ((JArray)json["SingleResultOrders"]).Count);
@@ -123,7 +139,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.Equal(2, json.Properties().Count());
         }
@@ -135,7 +151,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.True(json.Properties().Count() == 2);
 
@@ -156,7 +172,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.True(json.Properties().Count() == 3);
 
@@ -182,7 +198,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.True(json.Properties().Count() == 2);
 
@@ -209,7 +225,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
             var response = await Client.GetWithAcceptAsync(queryUrl, "application/json;odata.metadata=none");
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsAsync<JObject>();
+            var json = await response.Content.ReadAsObject<JObject>();
             Assert.NotNull(json);
             Assert.True(json.Properties().Count() == 2);
             JArray bonuses = json["Bonuses"] as JArray;
@@ -222,7 +238,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
 
     }
 
-    public class SingleResultCustomersController : ODataController
+    public class SingleResultCustomersController : TestController
     {
         public IList<SingleResultCustomer> Customers { get; set; }
 
@@ -257,9 +273,9 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition
         }
 
         [EnableQuery(MaxExpansionDepth = 10)]
-        public SingleResult<SingleResultCustomer> Get(int key)
+        public TestSingleResult<SingleResultCustomer> Get(int key)
         {
-            return new SingleResult<SingleResultCustomer>(Enumerable.Range(0, 10).Select(i => new SingleResultPremiumCustomer
+            return new TestSingleResult<SingleResultCustomer>(Enumerable.Range(0, 10).Select(i => new SingleResultPremiumCustomer
             {
                 Id = i,
                 Name = string.Format("Customer{0}", i),

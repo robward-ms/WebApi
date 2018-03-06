@@ -2,19 +2,19 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Net.Http;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
 
 namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
 {
-    public class BillingCustomersController : ODataController
+    public class BillingCustomersController : TestController
     {
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
-            if (RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
+            if (GetRoutePrefix() == "EF")
             {
                 return Ok(IsofDataSource.EfCustomers);
             }
@@ -25,12 +25,12 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
         }
     }
 
-    public class BillingsController : ODataController
+    public class BillingsController : TestController
     {
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
-            if (RoutePrefixHelper.GetRoutePrefix(Request) == "EF")
+            if (GetRoutePrefix() == "EF")
             {
                 return Ok(IsofDataSource.EfBillings);
             }
@@ -38,17 +38,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.QueryComposition.IsOf
             {
                 return Ok(IsofDataSource.InMemoryBillings);
             }
-        }
-    }
-
-    public static class RoutePrefixHelper
-    {
-        public static string GetRoutePrefix(HttpRequestMessage request)
-        {
-            ODataRoute oDataRoute = request.GetRouteData().Route as ODataRoute;
-            Assert.NotNull(oDataRoute);
-
-            return oDataRoute.RoutePrefix;
         }
     }
 }

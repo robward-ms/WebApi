@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
@@ -47,7 +46,6 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
         {
             if (!_initialized)
             {
-                _initialized = true;
                 IList<DefaultBatchCustomer> customers = Enumerable.Range(0, 10).Select(i =>
                    new DefaultBatchCustomer
                    {
@@ -58,15 +56,17 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
                 {
                     LocalTable.AddOrUpdate(customer.Id, customer, (key, oldEntity) => oldEntity);
                 }
+                _initialized = true;
             }
         }
 
-        protected override Task<DefaultBatchCustomer> CreateEntityAsync(DefaultBatchCustomer entity)
+        protected override Task<ITestActionResult> CreateEntityAsync(DefaultBatchCustomer entity)
         {
             if (entity.Id < 0)
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+                return Task.FromResult(BadRequest() as ITestActionResult);
             }
+
             return base.CreateEntityAsync(entity);
         }
 
@@ -97,11 +97,10 @@ namespace Microsoft.Test.E2E.AspNet.OData.Batch.Tests.DataServicesClient
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
+            var server = configuration.GetHttpServer();
 
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.Count().Filter().OrderBy().Expand().MaxTop(null);
             configuration.MapODataServiceRoute(
                 "batch",
@@ -254,18 +253,15 @@ Content-Type: application/json;odata.metadata=minimal
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -326,18 +322,15 @@ Content-Type: application/json;odata.metadata=minimal
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -396,18 +389,15 @@ Content-Type: application/json;odata.metadata=minimal
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
         }
 
         protected static IEdmModel GetEdmModel()
@@ -452,18 +442,15 @@ Content-Type: application/json;odata.metadata=minimal
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration configuration)
+        protected override void UpdateConfiguration(WebRouteConfiguration configuration)
         {
-            HttpServer server = configuration.GetHttpServer();
-
-            configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             configuration.MapODataServiceRoute(
                 "batch",
                 "DefaultBatch",
                 GetEdmModel(),
                 new DefaultODataPathHandler(),
                 ODataRoutingConventions.CreateDefault(),
-                new DefaultODataBatchHandler(server));
+                configuration.CreateDefaultODataBatchHandler());
             configuration.EnableContinueOnErrorHeader();
         }
 

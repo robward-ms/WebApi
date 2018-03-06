@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,9 +15,29 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using ModelAliasing;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#else
+using System;
+using System.Collections.ObjectModel;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.OData.Edm;
+using Microsoft.Test.E2E.AspNet.OData.Common.Execution;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using ModelAliasing;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
 {
@@ -28,16 +48,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         {
         }
 
-        protected override void UpdateConfiguration(HttpConfiguration config)
+        protected override void UpdateConfiguration(WebRouteConfiguration config)
         {
             config.Routes.Clear();
             config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("convention", "convention", GetConventionModel(), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
+            config.MapODataServiceRoute("convention", "convention", GetConventionModel(config), new DefaultODataPathHandler(), ODataRoutingConventions.CreateDefault());
         }
 
-        private static IEdmModel GetConventionModel()
+        private static IEdmModel GetConventionModel(WebRouteConfiguration config)
         {
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            ODataConventionModelBuilder builder = config.CreateConventionModelBuilder();
             EntitySetConfiguration<ModelAliasingMetadataCustomer> customers = builder.EntitySet<ModelAliasingMetadataCustomer>("ModelAliasingCustomers");
             customers.EntityType.Name = "Customer";
             customers.EntityType.Namespace = "ModelAliasing";
@@ -233,16 +253,16 @@ namespace Microsoft.Test.E2E.AspNet.OData.ModelAliasing
         }
     }
 
-    public class ModelAliasingCustomersController : ODataController
+    public class ModelAliasingCustomersController : TestController
     {
         private static ModelAliasingMetadataCustomer customer = new ModelAliasingMetadataCustomer();
         [EnableQuery(PageSize = 10, MaxExpansionDepth = 4)]
-        public IHttpActionResult Get([FromODataUri]int key)
+        public ITestActionResult Get([FromODataUri]int key)
         {
             return Ok(customer);
         }
 
-        public IHttpActionResult Post([FromBody] ModelAliasingMetadataCustomer entity)
+        public ITestActionResult Post([FromBody] ModelAliasingMetadataCustomer entity)
         {
             customer = entity;
             return Created(customer);

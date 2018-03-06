@@ -1,17 +1,27 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
+#if NETCORE
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
 using Xunit;
+#else
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.Test.E2E.AspNet.OData.Common.Controllers;
+using Xunit;
+#endif
 
 namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 {
-    public class WindowsController : ODataController
+    public class WindowsController : TestController
     {
         private IList<Window> _windows = new List<Window>();
 
@@ -63,18 +73,18 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(_windows);
         }
 
         [EnableQuery]
-        public SingleResult<Window> GetWindow([FromODataUri] int key)
+        public TestSingleResult<Window> GetWindow([FromODataUri] int key)
         {
-            return SingleResult.Create<Window>(_windows.Where(w => w.Id == key).AsQueryable());
+            return TestSingleResult.Create<Window>(_windows.Where(w => w.Id == key).AsQueryable());
         }
 
-        public IHttpActionResult Post(Window window)
+        public ITestActionResult Post(Window window)
         {
             _windows.Add(window);
             window.Id = _windows.Count + 1;
@@ -88,7 +98,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [ODataRoute("Windows({key})")]
-        public IHttpActionResult Patch(int key, Delta<Window> delta)
+        public ITestActionResult Patch(int key, Delta<Window> delta)
         {
             delta.TrySetPropertyValue("Id", key); // It is the key property, and should not be updated.
 
@@ -104,7 +114,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             return Ok(window);
         }
 
-        public IHttpActionResult Put(int key, Window window)
+        public ITestActionResult Put(int key, Window window)
         {
             if (key != window.Id)
             {
@@ -131,7 +141,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [EnableQuery]
-        public IHttpActionResult Delete([FromODataUri] int key)
+        public ITestActionResult Delete([FromODataUri] int key)
         {
             Window window = _windows.Single(w => w.Id == key);
             _windows.Remove(window);
@@ -139,7 +149,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [ODataRoute("Windows({key})/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle")]
-        public IHttpActionResult GetCurrentShape(int key)
+        public ITestActionResult GetCurrentShape(int key)
         {
             Window window = _windows.FirstOrDefault(w => w.Id == key);
             if (window == null)
@@ -156,7 +166,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [ODataRoute("Windows({key})/CurrentShape/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle/Radius")]
-        public IHttpActionResult GetRadius(int key)
+        public ITestActionResult GetRadius(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -168,7 +178,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [ODataRoute("Windows({key})/CurrentShape/HasBorder")]
-        public IHttpActionResult GetHasBorder(int key)
+        public ITestActionResult GetHasBorder(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -179,7 +189,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             return Ok(window.CurrentShape.HasBorder);
         }
 
-        public IHttpActionResult GetOptionalShapes(int key)
+        public ITestActionResult GetOptionalShapes(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -191,7 +201,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [ODataRoute("Windows({key})/OptionalShapes/Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance.Circle")]
-        public IHttpActionResult GetOptionalShapesOfCircle(int key)
+        public ITestActionResult GetOptionalShapesOfCircle(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -203,7 +213,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [HttpPut]
-        public IHttpActionResult PutToCurrentShapeOfCircle(int key, Delta<Circle> shape)
+        public ITestActionResult PutToCurrentShapeOfCircle(int key, Delta<Circle> shape)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -223,7 +233,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
 
         [HttpPut]
         [ODataRoute("Windows({key})/OptionalShapes")]
-        public IHttpActionResult ReplaceOptionalShapes(int key, IEnumerable<Shape> shapes)
+        public ITestActionResult ReplaceOptionalShapes(int key, IEnumerable<Shape> shapes)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -237,13 +247,13 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
         }
 
         [HttpPatch]
-        public IHttpActionResult PatchToOptionalShapes(int key, Delta<Shape> shapes)
+        public ITestActionResult PatchToOptionalShapes(int key, Delta<Shape> shapes)
         {
             return Ok("Not Supported");
         }
 
         [HttpPatch]
-        public IHttpActionResult PatchToCurrentShapeOfCircle(int key, Delta<Circle> shape)
+        public ITestActionResult PatchToCurrentShapeOfCircle(int key, Delta<Circle> shape)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
@@ -261,7 +271,7 @@ namespace Microsoft.Test.E2E.AspNet.OData.ComplexTypeInheritance
             return Ok(origin);
         }
 
-        public IHttpActionResult DeleteToCurrentShape(int key)
+        public ITestActionResult DeleteToCurrentShape(int key)
         {
             Window window = _windows.FirstOrDefault(e => e.Id == key);
             if (window == null)
