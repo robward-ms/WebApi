@@ -1,14 +1,35 @@
 ﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
-#if !NETCORE // TODO #939: Enable these test on AspNetCore.
+#if NETCORE
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.AspNet.OData.Common;
+using Microsoft.Test.AspNet.OData.Common.Models;
+using Microsoft.Test.AspNet.OData.Extensions;
+using Microsoft.Test.AspNet.OData.Factories;
+using Microsoft.Test.AspNet.OData.Routing;
+using Newtonsoft.Json.Linq;
+using Xunit;
+#else
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
@@ -23,6 +44,7 @@ using Microsoft.Test.AspNet.OData.Factories;
 using Microsoft.Test.AspNet.OData.Routing;
 using Newtonsoft.Json.Linq;
 using Xunit;
+#endif
 
 namespace Microsoft.Test.AspNet.OData
 {
@@ -65,8 +87,7 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DefaultResolver_DoesnotWork_CaseInsensitive(string httpMethod, string odataPath, string expect)
         {
             // Arrange
-            HttpClient client =
-                new HttpClient(new HttpServer(GetConfiguration(caseInsensitive: false, unqualifiedNameCall: false)));
+            HttpClient client = GetClient(caseInsensitive: false, unqualifiedNameCall: false);
 
             // Act
             HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(
@@ -83,8 +104,7 @@ namespace Microsoft.Test.AspNet.OData
         public async Task ExtensionResolver_Works_CaseInsensitive(string httpMethod, string odataPath, string expect)
         {
             // Arrange
-            HttpClient client =
-                new HttpClient(new HttpServer(GetConfiguration(caseInsensitive: true, unqualifiedNameCall: true)));
+            HttpClient client = GetClient(caseInsensitive: true, unqualifiedNameCall: true);
 
             // Act
             HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(
@@ -95,20 +115,13 @@ namespace Microsoft.Test.AspNet.OData
 
             if (!string.IsNullOrEmpty(expect))
             {
-                Assert.Equal(expect, (response.Content as ObjectContent<string>).Value);
+                var result = await response.Content.ReadAsStringAsync();
+                Assert.Equal(expect, result);
             }
         }
 
-        private static HttpConfiguration GetConfiguration(bool caseInsensitive, bool unqualifiedNameCall)
+        private static HttpClient GetClient(bool caseInsensitive, bool unqualifiedNameCall)
         {
-            IEdmModel model = ODataRoutingModel.GetModel();
-            HttpConfiguration config = RoutingConfigurationFactory.CreateWithTypes(new[]
-            {
-                typeof(MetadataController),
-                typeof(ProductsController),
-                typeof(RoutingCustomersController),
-            });
-
             ODataUriResolver resolver = new ODataUriResolver();
             if (unqualifiedNameCall)
             {
@@ -126,14 +139,27 @@ namespace Microsoft.Test.AspNet.OData
                 }
             }
 
-            config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("odata", "odata",
-                builder =>
-                    builder.AddService(ServiceLifetime.Singleton, sp => model)
-                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
-            return config;
+            Type[] controllers = new[]
+            {
+                typeof(MetadataController),
+                typeof(ProductsController),
+                typeof(RoutingCustomersController),
+            };
+
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                IEdmModel model = ODataRoutingModel.GetModel();
+
+                config.Count().Filter().OrderBy().Expand().MaxTop(null).Select();
+                config.MapODataServiceRoute("odata", "odata",
+                    builder =>
+                        builder.AddService(ServiceLifetime.Singleton, sp => model)
+                            .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
+                                ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
+                            .AddService(ServiceLifetime.Singleton, sp => resolver));
+            });
+
+            return TestServerFactory.CreateClient(server);
         }
 
         public static TheoryDataSet<string, string> QueryOptionCaseInsensitiveCases
@@ -164,7 +190,7 @@ namespace Microsoft.Test.AspNet.OData
         public async Task DefaultResolver_DoesnotWork_ForQueryOption(string queryOption, string caseInsensitive)
         {
             // Arrange
-            HttpClient client = new HttpClient(new HttpServer(GetQueryOptionConfiguration(caseInsensitive: false)));
+            HttpClient client = GetQueryOptionClient(caseInsensitive: false);
 
             // Act
             HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(
@@ -181,7 +207,7 @@ namespace Microsoft.Test.AspNet.OData
         public async Task ExtensionResolver_Works_ForQueryOption(string queryOption, string caseInsensitive)
         {
             // Arrange
-            HttpClient client = new HttpClient(new HttpServer(GetQueryOptionConfiguration(caseInsensitive: true)));
+            HttpClient client = GetQueryOptionClient(caseInsensitive: true);
 
             // Act
             HttpResponseMessage response = await client.SendAsync(new HttpRequestMessage(
@@ -197,8 +223,8 @@ namespace Microsoft.Test.AspNet.OData
         public async Task ExtensionResolver_ReturnsSameResult_ForCaseSensitiveAndCaseInsensitive(string queryOption, string caseInsensitive)
         {
             // Arrange
-            HttpClient caseSensitiveclient = new HttpClient(new HttpServer(GetQueryOptionConfiguration(caseInsensitive: true)));
-            HttpClient caseInsensitiveclient = new HttpClient(new HttpServer(GetQueryOptionConfiguration(caseInsensitive: true)));
+            HttpClient caseSensitiveclient = GetQueryOptionClient(caseInsensitive: true);
+            HttpClient caseInsensitiveclient = GetQueryOptionClient(caseInsensitive: true);
 
             // Act
             HttpResponseMessage response = await caseSensitiveclient.SendAsync(new HttpRequestMessage(
@@ -215,23 +241,29 @@ namespace Microsoft.Test.AspNet.OData
             Assert.Equal(caseSensitivePayload, caseInsensitivePayload);
         }
 
-        private static HttpConfiguration GetQueryOptionConfiguration(bool caseInsensitive)
+        private static HttpClient GetQueryOptionClient(bool caseInsensitive)
         {
-            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (caseInsensitive)
             {
                 resolver = new CaseInsensitiveResolver();
             }
 
-            config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
-            config.MapODataServiceRoute("query", "query",
-                builder =>
-                    builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel())
-                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
-            return config;
+            Type[] controllers = new[] { typeof(ParserExtenstionCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var modelBuilder = ODataConventionModelBuilderFactory.Create(config);
+
+                config.Count().OrderBy().Filter().Expand().MaxTop(null).Select();
+                config.MapODataServiceRoute("query", "query",
+                    builder =>
+                        builder.AddService(ServiceLifetime.Singleton, sp => GetEdmModel(modelBuilder))
+                            .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
+                                ODataRoutingConventions.CreateDefaultWithAttributeRouting("query", config))
+                            .AddService(ServiceLifetime.Singleton, sp => resolver));
+            });
+
+            return TestServerFactory.CreateClient(server);
         }
 
         [Theory]
@@ -244,21 +276,27 @@ namespace Microsoft.Test.AspNet.OData
         public async Task ExtensionResolver_Works_EnumPrefixFree(string parameter, bool enableEnumPrefix, HttpStatusCode statusCode)
         {
             // Arrange
-            IEdmModel model = GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (enableEnumPrefix)
             {
                 resolver = new StringAsEnumResolver();
             }
 
-            config.MapODataServiceRoute("odata", "odata",
-                builder =>
-                    builder.AddService(ServiceLifetime.Singleton, sp => model)
-                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
-            HttpClient client = new HttpClient(new HttpServer(config));
+            Type[] controllers = new[] { typeof(ParserExtenstionCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var modelBuilder = ODataConventionModelBuilderFactory.Create(config);
+                IEdmModel model = GetEdmModel(modelBuilder);
+
+                config.MapODataServiceRoute("odata", "odata",
+                    builder =>
+                        builder.AddService(ServiceLifetime.Singleton, sp => model)
+                            .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
+                                ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
+                            .AddService(ServiceLifetime.Singleton, sp => resolver));
+            });
+
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
@@ -270,7 +308,8 @@ namespace Microsoft.Test.AspNet.OData
 
             if (statusCode == HttpStatusCode.OK)
             {
-                Assert.Equal("GetCustomerByGender/Male", (response.Content as ObjectContent<string>).Value);
+                var result = await response.Content.ReadAsStringAsync();
+                Assert.Contains("GetCustomerByGender/Male", result);
             }
         }
 
@@ -293,21 +332,28 @@ namespace Microsoft.Test.AspNet.OData
         public async Task ExtensionResolver_Works_EnumPrefixFree_QueryOption(string query, bool enableEnumPrefix, HttpStatusCode statusCode, string output)
         {
             // Arrange
-            IEdmModel model = GetEdmModel();
-            var config = RoutingConfigurationFactory.CreateWithTypes(new[] { typeof(ParserExtenstionCustomersController) });
             ODataUriResolver resolver = new ODataUriResolver();
             if (enableEnumPrefix)
             {
                 resolver = new StringAsEnumResolver();
             }
 
-            config.MapODataServiceRoute("odata", "odata",
-                builder =>
-                    builder.AddService(ServiceLifetime.Singleton, sp => model)
-                        .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
-                            ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
-                        .AddService(ServiceLifetime.Singleton, sp => resolver));
-            HttpClient client = new HttpClient(new HttpServer(config));
+            Type[] controllers = new[] { typeof(ParserExtenstionCustomersController) };
+            var server = TestServerFactory.Create(controllers, (config) =>
+            {
+                var modelBuilder = ODataConventionModelBuilderFactory.Create(config);
+                IEdmModel model = GetEdmModel(modelBuilder);
+
+                config.Count().OrderBy().Filter().Expand().MaxTop(null);
+                config.MapODataServiceRoute("odata", "odata",
+                    builder =>
+                        builder.AddService(ServiceLifetime.Singleton, sp => model)
+                            .AddService<IEnumerable<IODataRoutingConvention>>(ServiceLifetime.Singleton, sp =>
+                                ODataRoutingConventions.CreateDefaultWithAttributeRouting("odata", config))
+                            .AddService(ServiceLifetime.Singleton, sp => resolver));
+            });
+
+            HttpClient client = TestServerFactory.CreateClient(server);
 
             // Act
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get,
@@ -319,7 +365,7 @@ namespace Microsoft.Test.AspNet.OData
 
             if (statusCode == HttpStatusCode.OK)
             {
-                JObject content = await response.Content.ReadAsAsync<JObject>();
+                JObject content = await response.Content.ReadAsObject<JObject>();
                 Assert.Equal(output, String.Join(",", content["value"].Select(e => e["Id"])));
             }
         }
@@ -348,9 +394,8 @@ namespace Microsoft.Test.AspNet.OData
         }
          * */
 
-        private static IEdmModel GetEdmModel()
+        private static IEdmModel GetEdmModel(ODataConventionModelBuilder builder)
         {
-            ODataConventionModelBuilder builder = ODataConventionModelBuilderFactory.Create();
             builder.EntitySet<ParserExtenstionCustomer>("ParserExtenstionCustomers");
             builder.EntitySet<ParserExtenstionCustomer>("ParserExtenstionCustomers2");
             builder.EntitySet<ParserExtenstionOrder>("ParserExtenstionOrders");
@@ -367,33 +412,33 @@ namespace Microsoft.Test.AspNet.OData
         }
     }
 
-    public class ParserExtenstionCustomersController : ODataController
+    public class ParserExtenstionCustomersController : TestODataController
     {
         [EnableQuery]
-        public IHttpActionResult Get()
+        public ITestActionResult Get()
         {
             return Ok(ParserExtensionCustomersContext.customers);
         }
 
         [EnableQuery]
-        public IHttpActionResult GetOrders(int key)
+        public ITestActionResult GetOrders(int key)
         {
             ParserExtenstionCustomer customer = ParserExtensionCustomersContext.customers.First(c => c.Id == key);
             return Ok(customer.Orders);
         }
 
         [HttpGet]
-        public IHttpActionResult GetCustomerByGender(Gender gender)
+        public ITestActionResult GetCustomerByGender(Gender gender)
         {
             return Ok("GetCustomerByGender/" + gender);
         }
     }
 
-    public class ParserExtenstionCustomers2Controller : ODataController
+    public class ParserExtenstionCustomers2Controller : TestODataController
     {
         [HttpGet]
         [ODataRoute("ParserExtenstionCustomers2/GetCustomerTitleById(id={id})")]
-        public IHttpActionResult GetCustomerByTitleVarN([FromODataUri]int id)
+        public ITestActionResult GetCustomerByTitleVarN([FromODataUri]int id)
         {
             var t = ModelState.IsValid;
             return Ok("GetCustomerTitleById/" + id);
@@ -433,4 +478,3 @@ namespace Microsoft.Test.AspNet.OData
         public decimal Price { get; set; }
     }
 }
-#endif

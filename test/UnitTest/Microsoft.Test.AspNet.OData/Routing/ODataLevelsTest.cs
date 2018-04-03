@@ -91,7 +91,7 @@ namespace Microsoft.Test.AspNet.OData.Routing
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             string result = await response.Content.ReadAsStringAsync();
-            Assert.Equal(
+            Assert.Contains(
                 "The query specified in the URI is not valid. The request includes a $expand path which is too deep. " +
                 "The maximum depth allowed is 5. To increase the limit, set the 'MaxExpansionDepth' property on " +
                 "EnableQueryAttribute or ODataValidationSettings, or set the 'MaxDepth' property in ExpandAttribute.",
@@ -672,28 +672,6 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 Entities[1].DerivedAncestors = new LevelsDerivedEntity[] { (LevelsDerivedEntity)Entities[3] };
             }
 
-#if !NETCORE // TODO #939: Fix Get method to return non-null.
-            public IHttpActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
-            {
-                var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
-
-                try
-                {
-                    queryOptions.Validate(validationSettings);
-                }
-                catch (ODataException e)
-                {
-                    var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    responseMessage.Content = new StringContent(
-                        Error.Format("The query specified in the URI is not valid. {0}", e.Message));
-                    return ResponseMessage(responseMessage);
-                }
-
-                var querySettings = new ODataQuerySettings();
-                var result = queryOptions.ApplyTo(Entities.AsQueryable(), querySettings).AsQueryable();
-                return Ok(result, result.GetType());
-            }
-#else
             public ITestActionResult Get(ODataQueryOptions<LevelsEntity> queryOptions)
             {
                 var validationSettings = new ODataValidationSettings { MaxExpansionDepth = 5 };
@@ -704,37 +682,28 @@ namespace Microsoft.Test.AspNet.OData.Routing
                 }
                 catch (ODataException e)
                 {
-                    var responseMessage = new HttpResponseMessage(HttpStatusCode.BadRequest);
-                    responseMessage.Content = new StringContent(
-                        Error.Format("The query specified in the URI is not valid. {0}", e.Message));
-                    return null; // ResponseMessage(responseMessage);
+                    return BadRequest(Error.Format("The query specified in the URI is not valid. {0}", e.Message));
                 }
 
                 var querySettings = new ODataQuerySettings();
                 var result = queryOptions.ApplyTo(Entities.AsQueryable(), querySettings).AsQueryable();
-                return Ok(result, result.GetType());
-            }
+
+#if NETCORE
+                return Ok(result);
+#else
+                var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(result.GetType());
+                var contentResult = Activator.CreateInstance(resultType, result, this);
+
+                var testResultType = typeof(TestOkObjectResult<>).MakeGenericType(result.GetType());
+                return Activator.CreateInstance(testResultType, contentResult) as ITestActionResult;
 #endif
+            }
 
             [EnableQuery(MaxExpansionDepth = 5)]
             public ITestActionResult Get(int key)
             {
                 return Ok(Entities.Single(e => e.ID == key));
             }
-
-#if !NETCORE // TODO #939: Fix Ok method to return non-null.
-            private IHttpActionResult Ok(object content, Type type)
-            {
-                var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
-                return Activator.CreateInstance(resultType, content, this) as IHttpActionResult;
-            }
-#else
-            private ITestActionResult Ok(object content, Type type)
-            {
-                //var resultType = typeof(OkNegotiatedContentResult<>).MakeGenericType(type);
-                return null; // Activator.CreateInstance(resultType, content, this) as IActionResult;
-            }
-#endif
         }
 
         public class LevelsBaseEntity
