@@ -1515,6 +1515,9 @@
     <Compile Include="..\QueryComposition\ComplextTypeCollectionTests.cs">
       <Link>QueryComposition\ComplextTypeCollectionTests.cs</Link>
     </Compile>
+    <Compile Include="..\QueryComposition\CompoundQueryTests.cs">
+      <Link>QueryComposition\CompoundQueryTests.cs</Link>
+    </Compile>
     <Compile Include="..\QueryComposition\Controllers\FilterTestsController.cs">
       <Link>QueryComposition\Controllers\FilterTestsController.cs</Link>
     </Compile>

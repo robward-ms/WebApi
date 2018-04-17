@@ -66,6 +66,9 @@
     <Compile Include="..\Common\TestEntitySetRoutingConvention.cs">
       <Link>Common\TestEntitySetRoutingConvention.cs</Link>
     </Compile>
+    <Compile Include="..\QueryComposition\CompoundQueryTests.cs">
+      <Link>QueryComposition\CompoundQueryTests.cs</Link>
+    </Compile>
     <Compile Include="..\QueryComposition\EFWideCustomer.cs">
       <Link>QueryComposition\EFWideCustomer.cs</Link>
     </Compile>
